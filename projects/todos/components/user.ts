@@ -5,4 +5,4 @@ export const user = {
 
     , password: secrets.user_password
     , name: secrets.user_name
-}
+};

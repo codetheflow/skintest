@@ -1,0 +1,27 @@
+{
+  "name": "testcloud",
+  "version": "0.0.1",
+  "description": "complete e2e tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codetheflow/testcloud.git"
+  },
+  "keywords": [
+    "e2e",
+    "test",
+    "cloud",
+    "qa"
+  ],
+  "author": "codetheflow",
+  "bugs": {
+    "url": "https://github.com/codetheflow/testcloud/issues"
+  },
+  "homepage": "https://github.com/codetheflow/testcloud#readme",
+  "dependencies": {
+    "typescript": "4.2.4"
+  }
+}

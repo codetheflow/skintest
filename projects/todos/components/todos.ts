@@ -8,6 +8,7 @@ export const todos = {
 
   , what_todo: select<HTMLTextAreaElement>('#todos-whattodo')
   , add_todo: select<HTMLButtonElement>('#todos-addtodo')
+  , clear_all: select<HTMLButtonElement>('#todos-clearall')
 
   , items: selectAll<HTMLElement>('li.todo-item')
   , item: (text: string) => select(`li.todo-item[innerText=${text}]`)
@@ -15,4 +16,4 @@ export const todos = {
 
   , upload_form: select<HTMLFormElement>('#todos-updload-form')
   , upload: select<HTMLButtonElement>('#todos-upload')
-}
+};

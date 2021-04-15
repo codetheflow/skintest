@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2015",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@testcloud": [
+        "api/public-api.ts"
+      ],
+      "@my/todos": [
+        "todos/public-api.ts"
+      ],
+      "@my/todos/components": [
+        "projects/todos/components/public-api.ts"
+      ],
+      "@my/todos/functions": [
+        "projects/todos/functions/public-api.ts"
+      ]
+    }
+  }
+}

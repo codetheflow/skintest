@@ -7,3 +7,4 @@ complete e2e testing tool
 * scenarios are sequantial or standalone?
 * how to store secrets?
 * sync feature name and file name
+* how to wait when angular/react/view etc. is loaded?

@@ -1,5 +1,5 @@
 import { feature, I } from '@testcloud';
-import { auth, home, user } from '@my/todos/components';
+import { auth, home, user, toolbar } from '@my/todos/components';
 
 feature('app authentication')
 
@@ -19,6 +19,5 @@ feature('app authentication')
     , I.fill(auth.password, user.password)
     , I.click(auth.sign_in)
     , I.waitUrl(home.url)
-    , I.see(home.user, user.name)
-    , I.say('signed in!')
+    , I.see(toolbar.user, user.name)
   )
