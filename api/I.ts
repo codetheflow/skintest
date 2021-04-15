@@ -1,8 +1,9 @@
+import { Definition } from './definition';
 import { MyStep } from './my-step';
 import { Selector } from './selector';
 
 export abstract class I {
-  static do(x: any): MyStep { throw new Error('not implemented'); };
+  static do<A1, A2, A3, A4>(action: (arg1: A1, arg2?: A2, arg3?: A3, arg4?: A4) => Definition, arg1: A1, arg2?: A2, arg3?: A3, arg4?: A4): MyStep { throw new Error('not implemented'); };
 
   static amOnPage(url: string): MyStep { throw new Error('not implemented'); };
   static waitUrl(url: string): MyStep { throw new Error('not implemented'); };

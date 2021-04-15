@@ -16,13 +16,13 @@
         "api/public-api.ts"
       ],
       "@my/todos": [
-        "todos/public-api.ts"
+        "projects/todos/project-api.ts"
       ],
       "@my/todos/components": [
-        "projects/todos/components/public-api.ts"
+        "projects/todos/component-api.ts"
       ],
       "@my/todos/functions": [
-        "projects/todos/functions/public-api.ts"
+        "projects/todos/function-api.ts"
       ]
     }
   }

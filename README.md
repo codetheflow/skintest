@@ -8,3 +8,4 @@ complete e2e testing tool
 * how to store secrets?
 * sync feature name and file name
 * how to wait when angular/react/view etc. is loaded?
+* think about cli
