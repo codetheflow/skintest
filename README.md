@@ -1,2 +1,9 @@
 # testcloud
 complete e2e testing tool
+
+### questions
+
+* reuse scenarios - is it good? how to implement?
+* scenarios are sequantial or standalone?
+* how to store secrets?
+* sync feature name and file name
