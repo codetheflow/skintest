@@ -1,7 +1,7 @@
-import { I, def, Definition } from '@testcloud';
+import { I, def, MyDefinition } from '@testcloud';
 import { auth, toolbar, user } from '@my/todos/components';
 
-export function login(identity: typeof user): Definition {
+export function login(identity: typeof user): MyDefinition {
   return def(`login with ${identity.name}`
     , I.fill(auth.login, identity.login)
     , I.fill(auth.password, identity.password)

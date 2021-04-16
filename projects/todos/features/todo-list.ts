@@ -1,13 +1,21 @@
 import { feature, I } from '@testcloud';
 import { todos, user } from '@my/todos/components';
 import { login } from '@my/todos/functions';
+import { clear_db } from '../functions/clear-db';
 
 feature('todo list')
 
   .before('feature'
     , I.do(login, user)
     , I.amOnPage(todos.url)
+  )
+
+  .before('scenario'
     , I.click(todos.clear_all)
+  )
+
+  .after('feature'
+    , I.do(clear_db, 'todo-list')
   )
 
   .scenario('add todo items'
@@ -29,7 +37,7 @@ feature('todo list')
     , I.dontSee(todos.item('meal my mouse'))
   )
 
-  .scenario('Remove todo item by keyboard'
+  .scenario('remove todo item by keyboard'
     , I.fill(todos.what_todo, 'clean my keyboard')
     , I.click(todos.add_todo)
     , I.see(todos.item('clean my keyboard'))

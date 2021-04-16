@@ -5,7 +5,6 @@ export function feature(name: string): Feature {
 };
 
 export interface Feature {
-  // TODO: maybe do it more strict
   before(what: 'feature' | 'scenario', ...steps: MyStep[]): Feature;
   after(what: 'feature' | 'scenario', ...steps: MyStep[]): Feature;
 

@@ -1,23 +1,30 @@
-import { Definition } from './definition';
+import { MyDefinition } from './definition';
 import { MyStep } from './my-step';
 import { Selector } from './selector';
 
-export abstract class I {
-  static do<A1, A2, A3, A4>(action: (arg1: A1, arg2?: A2, arg3?: A3, arg4?: A4) => Definition, arg1: A1, arg2?: A2, arg3?: A3, arg4?: A4): MyStep { throw new Error('not implemented'); };
+export interface Ego {
+  do(action: () => MyDefinition): MyStep;
+  do<A>(action: (arg: A) => MyDefinition, arg: A): MyStep;
+  do<A1, A2>(action: (arg1: A1, arg2: A2) => MyDefinition, arg1: A1, arg2: A2): MyStep;
+  do<A1, A2, A3>(action: (arg1: A1, arg2: A2, arg3: A3) => MyDefinition, arg1: A1, arg2: A2, arg3: A3): MyStep;
+  do<A1, A2, A3, A4>(action: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => MyDefinition, arg1: A1, arg2: A2, arg3: A3, arg4: A4): MyStep;
 
-  static amOnPage(url: string): MyStep { throw new Error('not implemented'); };
-  static waitUrl(url: string): MyStep { throw new Error('not implemented'); };
+  amOnPage(url: string): MyStep;
+  waitUrl(url: string): MyStep;
 
-  static click<S>(target: Selector<S>): MyStep { throw new Error('not implemented'); };
-  static press(key: string): MyStep { throw new Error('not implemented'); };
-  static fill<S, V>(target: Selector<S>, value: V): MyStep { throw new Error('not implemented'); };
-  static focus<S>(target: S): MyStep { throw new Error('not implemented'); };
+  click<S>(target: Selector<S>): MyStep;
+  press(key: string): MyStep;
+  fill<S, V>(target: Selector<S>, value: V): MyStep;
+  focus<S>(target: S): MyStep;
 
   // TODO: define file type
-  static attachFile(from: Selector<HTMLFormElement>, file: any): MyStep { throw new Error('not implemented'); };
+  attachFile(from: Selector<HTMLFormElement>, file: any): MyStep;
 
-  static see<S, E>(target: Selector<S> | boolean, expected?: E): MyStep { throw new Error('not implemented'); };
-  static dontSee<S, E>(target: Selector<S> | boolean, expected?: E): MyStep { throw new Error('not implemented'); };
+  see<S, E>(target: Selector<S> | boolean, expected?: E): MyStep;
+  dontSee<S, E>(target: Selector<S> | boolean, expected?: E): MyStep;
 
-  static say(message: string): MyStep { throw new Error('not implemented'); };
+  say(message: string): MyStep;
 }
+
+// TODO: implement
+export const I: Ego = null;

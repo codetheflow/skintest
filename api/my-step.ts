@@ -1,2 +1,4 @@
-export interface MyStep {
+export interface Step {
 }
+
+export type MyStep = Promise<Step>;
