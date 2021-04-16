@@ -1,4 +1,4 @@
-import { select, selectAll } from '@testcloud';
+import { select, selectAll, Selector } from '@testcloud';
 import { env, data } from '@my/todos';
 
 export const todos = {
