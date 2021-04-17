@@ -1,5 +1,5 @@
-import { select } from '@testcloud';
+import { $ } from '@testcloud';
 
 export const toolbar = {
-    user: select('#user-name')
+    user: $('#user-name')
 };

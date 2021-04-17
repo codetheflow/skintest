@@ -24,3 +24,7 @@ complete e2e testing tool
 * testsprint
 * testscene/testskin
 * skintest
+
+### code thoughts
+
+* rename select to `$`, selectAll to `$$`

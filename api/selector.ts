@@ -1,16 +1,16 @@
-export interface Selector<T> {
+export interface Select<T> {
  xxx: any; // TODO: define interface
 }
 
-export interface SelectorAll<T> {
+export interface SelectAll<T> {
   length: number;
-  get(index: number): Selector<T>;
+  get(index: number): Select<T>;
 }
 
-export function select<T>(query: string): Selector<T> {
+export function $<T>(query: string): Select<T> {
   throw new Error('not implemented');
 }
 
-export function selectAll<T>(query: string): SelectorAll<T> {
+export function $$<T>(query: string): SelectAll<T> {
   throw new Error('not implemented');
 }

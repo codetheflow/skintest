@@ -1,4 +1,4 @@
-import { select, selectAll, Selector } from '@testcloud';
+import { $, $$ } from '@testcloud';
 import { env, data } from '@my/todos';
 
 export const todos = {
@@ -6,14 +6,14 @@ export const todos = {
 
   , txt_file: data.todos_txt
 
-  , what_todo: select<HTMLTextAreaElement>('#todos-whattodo')
-  , add_todo: select<HTMLButtonElement>('#todos-addtodo')
-  , clear_all: select<HTMLButtonElement>('#todos-clearall')
+  , what_todo: $<HTMLTextAreaElement>('#todos-whattodo')
+  , add_todo: $<HTMLButtonElement>('#todos-addtodo')
+  , clear_all: $<HTMLButtonElement>('#todos-clearall')
 
-  , items: selectAll<HTMLElement>('li.todo-item')
-  , item: (text: string) => select(`li.todo-item[innerText=${text}]`)
-  , item_delete: (text: string) => select(`li.todo-item[innerText=${text}] .delete`)
+  , items: $$<HTMLElement>('li.todo-item')
+  , item: (text: string) => $(`li.todo-item[innerText=${text}]`)
+  , item_delete: (text: string) => $(`li.todo-item[innerText=${text}] .delete`)
 
-  , upload_form: select<HTMLFormElement>('#todos-updload-form')
-  , upload: select<HTMLButtonElement>('#todos-upload')
+  , upload_form: $<HTMLFormElement>('#todos-updload-form')
+  , upload: $<HTMLButtonElement>('#todos-upload')
 };
