@@ -1,4 +1,4 @@
-import { I, def, MyDefinition } from '@testcloud';
+import { I, def, MyDefinition } from '@skintest';
 import { auth, toolbar, user } from '@my/todos/components';
 
 export function login(identity: typeof user): MyDefinition {

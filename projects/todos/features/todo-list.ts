@@ -1,4 +1,4 @@
-import { feature, I } from '@testcloud';
+import { feature, I } from '@skintest';
 import { todos, user } from '@my/todos/components';
 import { login } from '@my/todos/functions';
 import { clear_db } from '../functions/clear-db';

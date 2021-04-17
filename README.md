@@ -1,4 +1,4 @@
-# testcloud
+# skintest
 complete e2e testing tool
 
 ### questions
@@ -14,7 +14,7 @@ complete e2e testing tool
 
 ### names
 
-* testcloud
+* skintest
 * quaken/quakken
 * testik
 * testmaster

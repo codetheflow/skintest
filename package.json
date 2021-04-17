@@ -1,5 +1,5 @@
 {
-  "name": "testcloud",
+  "name": "skintest",
   "version": "0.0.1",
   "description": "complete e2e tool",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codetheflow/testcloud.git"
+    "url": "git+https://github.com/codetheflow/skintest.git"
   },
   "keywords": [
     "e2e",
@@ -18,9 +18,9 @@
   ],
   "author": "codetheflow",
   "bugs": {
-    "url": "https://github.com/codetheflow/testcloud/issues"
+    "url": "https://github.com/codetheflow/skintest/issues"
   },
-  "homepage": "https://github.com/codetheflow/testcloud#readme",
+  "homepage": "https://github.com/codetheflow/skintest#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.22.0",

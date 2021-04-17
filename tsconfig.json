@@ -12,7 +12,7 @@
       "dom"
     ],
     "paths": {
-      "@testcloud": [
+      "@skintest": [
         "api/public-api.ts"
       ],
       "@my/todos": [

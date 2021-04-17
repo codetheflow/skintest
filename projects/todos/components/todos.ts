@@ -1,4 +1,4 @@
-import { $, $$ } from '@testcloud';
+import { $, $$ } from '@skintest';
 import { env, data } from '@my/todos';
 
 export const todos = {

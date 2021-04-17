@@ -1,4 +1,4 @@
-import { $ } from '@testcloud';
+import { $ } from '@skintest';
 
 export const toolbar = {
     user: $('#user-name')

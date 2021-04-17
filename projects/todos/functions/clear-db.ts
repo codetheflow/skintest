@@ -1,4 +1,4 @@
-import { def, MyDefinition } from '@testcloud';
+import { def, MyDefinition } from '@skintest';
 import { env } from '@my/todos';
 
 export async function clear_db(target: 'todo-list'): MyDefinition {

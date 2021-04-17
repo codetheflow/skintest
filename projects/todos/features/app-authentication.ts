@@ -1,4 +1,4 @@
-import { feature, I } from '@testcloud';
+import { feature, I } from '@skintest';
 import { auth, home, user, toolbar } from '@my/todos/components';
 
 feature('app authentication')

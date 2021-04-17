@@ -1,4 +1,4 @@
-import { feature, I } from '@testcloud';
+import { feature, I } from '@skintest';
 import { form } from '@my/pizza-palace/components';
 
 feature('submit a form')
