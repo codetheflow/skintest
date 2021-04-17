@@ -1,4 +1,5 @@
 export interface Selector<T> {
+ xxx: any; // TODO: define interface
 }
 
 export interface SelectorAll<T> {

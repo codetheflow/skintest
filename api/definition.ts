@@ -1,6 +1,7 @@
 import { MyStep } from './my-step';
 
 export interface Definition {
+  xxx: any; // TODO: define interface
 }
 
 export type MyDefinition = Promise<Definition>;
