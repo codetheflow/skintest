@@ -23,6 +23,15 @@
       ],
       "@my/todos/functions": [
         "projects/todos/function-api.ts"
+      ],
+      "@my/pizza-palace": [
+        "projects/pizza-palace/project-api.ts"
+      ],
+      "@my/pizza-palace/components": [
+        "projects/pizza-palace/component-api.ts"
+      ],
+      "@my/pizza-palace/functions": [
+        "projects/pizza-palace/function-api.ts"
       ]
     }
   }
