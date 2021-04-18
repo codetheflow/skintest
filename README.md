@@ -28,3 +28,12 @@ complete e2e testing tool
 ### code thoughts
 
 * rename select to `$`, selectAll to `$$`
+
+### code style
+
+* project page_objects
+* project function_names
+
+* api ClassNames and InterfaceNames
+* api CONSTANT_NAMES and SYMBOL_NAMES
+* api functionNames

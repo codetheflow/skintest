@@ -4,6 +4,7 @@
   "description": "complete e2e tool",
   "main": "index.js",
   "scripts": {
+    "start": "tsc ./sandbox/index.ts",
     "lint": "eslint . --ext .ts"
   },
   "repository": {
@@ -25,6 +26,10 @@
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.22.0",
     "eslint": "7.24.0",
+    "ts-node": "^9.1.1",
     "typescript": "4.2.4"
+  },
+  "dependencies": {
+    "playwright": "^1.10.0"
   }
 }

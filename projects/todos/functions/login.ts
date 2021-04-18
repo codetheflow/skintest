@@ -1,8 +1,8 @@
-import { I, def, MyDefinition } from '@skintest';
+import { I, play, Do } from '@skintest';
 import { auth, toolbar, user } from '@my/todos/components';
 
-export function login(identity: typeof user): MyDefinition {
-  return def(`login with ${identity.name}`
+export function login(identity: typeof user): Do {
+  return play(`login with ${identity.name}`
     , I.fill(auth.login, identity.login)
     , I.fill(auth.password, identity.password)
     , I.click(auth.sign_in)
