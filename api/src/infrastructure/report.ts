@@ -1,5 +1,5 @@
 export function createReport(name: string) {
-  return (name: string, message: string) => {
-    console.log(`${name}: ${message}`);
+  return (action: string, message: string) => {
+    console.log(`${name}/I ${action}: ${message}`);
   }
 }

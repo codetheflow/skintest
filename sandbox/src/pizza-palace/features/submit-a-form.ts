@@ -16,16 +16,16 @@ feature('submit a form')
     , I.drag(form.pie_size_handle, 100, 0)
 
     , I.say('select the toppings')
-    , I.click(form.next_step)
+    , I.click(form.next_step(1))
     , I.click(form.pizza('pepperoni'))
-    , I.click(form.next_step)
+    , I.click(form.next_step(2))
 
     , I.say('fill the address form')
     , I.click(form.confirm_addres)
     , I.fill(form.phone, '+1-541-754-3001')
-    , I.click(form.next_step)
+    , I.click(form.next_step(3))
 
-    , I.say('zoom into the iframe map')
+    //, I.say('zoom into the iframe map')
     //, I.switchToIframe('.restaurant-location iframe')
     , I.click(form.map_zoom_in)
 
