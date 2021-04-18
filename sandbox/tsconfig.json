@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "strict": true,
+    "sourceMap": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "ES2015",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+  },
+  "include": [
+    "./src/runner.ts"
+  ]
+}

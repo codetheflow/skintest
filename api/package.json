@@ -1,0 +1,40 @@
+{
+  "name": "@skintest/api",
+  "version": "0.0.1",
+  "description": "skintest api",
+  "main": "public-api.js",
+  "types": "public-api.d.ts",
+  "scripts": {
+    "build": "npm run build:pre && tsc",
+    "build:watch": "npm run build:pre && tsc --watch",
+    "build:pre": "rimraf dist && cpx package.json dist",
+    "lint": "eslint . --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codetheflow/skintest.git"
+  },
+  "keywords": [
+    "skintest",
+    "api",
+    "e2e",
+    "test",
+    "qa"
+  ],
+  "author": "codetheflow",
+  "bugs": {
+    "url": "https://github.com/codetheflow/skintest/issues"
+  },
+  "homepage": "https://github.com/codetheflow/skintest#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "4.22.0",
+    "@typescript-eslint/parser": "4.22.0",
+    "cpx": "^1.5.0",
+    "eslint": "7.24.0",
+    "rimraf": "^3.0.2",
+    "typescript": "4.2.4"
+  },
+  "dependencies": {
+    "playwright": "^1.10.0"
+  }
+}
