@@ -1,9 +1,7 @@
-import { launch, newProject, Project } from '@skintest/api';
+import { newProject, launch, Project } from '@skintest/api';
 
-const project = newProject('submit-a-form');
-import '../projects/pizza-palace/features/submit-a-form';
-run(project);
 
-async function run(project: Project) {
+newProject('submit-a-form', async (project: Project) => {
+  require('./pizza-palace/features/submit-a-form');
   await launch(project);
-}
+});

@@ -7,12 +7,16 @@ export class Project {
   ) { }
 }
 
-let currentProject = newProject('default');
+let currentProject: Project;
+newProject('default', project => {
+  currentProject = project;
+});
 
-export function newProject(name: string): Project {
+export function newProject(name: string, inScope: (project: Project) => void): void {
   const suite = new Suite();
   currentProject = new Project(name, suite);
-  return currentProject;
+
+  inScope(currentProject);
 }
 
 export function getProject() {
