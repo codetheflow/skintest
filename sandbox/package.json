@@ -1,7 +1,7 @@
 {
   "name": "skintest-sandbox",
   "version": "0.0.1",
-  "description": "complete e2e tool",
+  "description": "skintest",
   "scripts": {
     "start": "npm run start:pre && tsc && node ./dist/runner.js",
     "start:pre": "rimraf dist",

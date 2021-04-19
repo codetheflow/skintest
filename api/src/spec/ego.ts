@@ -1,6 +1,6 @@
 import { Do } from './play';
 import { Select } from './selector';
-import { Step } from '../command/step';
+import { Step } from './step';
 import {
   AmOnPageStep,
   AttachFileStep,
@@ -14,7 +14,7 @@ import {
   SayStep,
   SeeStep,
   WaitUrlStep
-} from '../command/step-bag';
+} from './step-bag';
 
 export interface Ego {
   see(that: boolean): Step;

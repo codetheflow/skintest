@@ -1,7 +1,7 @@
 import { $ } from '@skintest/api';
 import { env } from '../project';
 
-export const form = {
+export const order_form = {
   url: env.url
 
   , next_step: (id: number) => $<HTMLElement>(`#step${id} .next-step`)

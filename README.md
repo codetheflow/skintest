@@ -10,6 +10,8 @@ complete e2e testing tool
 * how to wait when angular/react/view etc. is loaded?
 * think about cli
 * eslint is very important
+* time travel?
+* better asserts
 
 
 ### names

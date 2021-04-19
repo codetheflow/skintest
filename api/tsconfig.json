@@ -15,6 +15,6 @@
     ],
   },
   "include": [
-    "./src/public-api.ts"
+    "src/public-api.ts"
   ]
 }

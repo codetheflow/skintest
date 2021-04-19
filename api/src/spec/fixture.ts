@@ -1,5 +1,5 @@
 import { Feature, Scenario } from './feature';
-import { Step } from '../command/step';
+import { Step } from './step';
 
 export class Fixture implements Feature, Scenario {
   beforeFeature: Step[] = [];

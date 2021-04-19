@@ -1,11 +1,10 @@
-import { createReport } from '../infrastructure/report';
+import { createReport } from './report';
 import { PlaywrightEngine } from './playwright';
-import { Project } from '../infrastructure/project';
 import { Scene } from './scene';
+import { Suite } from './suite';
 import * as playwright from 'playwright';
 
-export async function launch(project: Project) {
-  const { suite } = project;
+export async function launch(suite: Suite) {
   for (let fixture of suite.getFixtures()) {
     const browser = await playwright['chromium'].launch({ headless: false });
     const context = await browser.newContext();

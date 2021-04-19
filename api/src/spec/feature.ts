@@ -1,9 +1,15 @@
 import { Fixture } from './fixture';
-import { getProject } from '../infrastructure/project';
-import { Step } from '../command/step';
+import { getSuite } from '../platform/suite';
+import { Step } from './step';
+import { Guard } from '../infrastructure/guard';
 
 export function feature(name: string): Feature {
-  const { suite } = getProject();
+  const suite = getSuite();
+  Guard.notNull(
+    suite,
+    `suite is not defined, make sure that you are running tests by using skintest's platform() function`
+  );
+
   const fixture = new Fixture(name);
   suite.addFixture(fixture);
   return fixture;

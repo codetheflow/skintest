@@ -1,7 +1,7 @@
-export { $, $$, Select, SelectAll } from './definition/selector';
-export { Ego, I } from './definition/ego';
-export { feature, Feature } from './definition/feature';
-export { launch } from './execution/playwright-launcher';
-export { Project, newProject } from './infrastructure/project';
-export { play, Do } from './definition/play';
-export { Step } from './command/step';
+export { $, $$, Select, SelectAll } from './spec/selector';
+export { Ego, I } from './spec/ego';
+export { feature, Feature } from './spec/feature';
+export { play, Do } from './spec/play';
+export { Step } from './spec/step';
+export { platform, Platform } from './platform/platform';
+export { Project } from './platform/project';

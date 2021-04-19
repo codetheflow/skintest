@@ -1,4 +1,4 @@
-import { Step } from '../command/step';
+import { Step } from './step';
 
 export type Do = Promise<Step[]>;
 

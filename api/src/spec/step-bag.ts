@@ -1,4 +1,4 @@
-import { Select } from '../definition/selector';
+import { Select } from './selector';
 import { Step, StepContext } from './step';
 
 export class ClickStep implements Step {

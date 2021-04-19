@@ -1,7 +1,9 @@
-import { newProject, launch, Project } from '@skintest/api';
+import { platform } from '@skintest/api';
+import * as path from 'path';
 
-
-newProject('submit-a-form', async (project: Project) => {
-  require('./pizza-palace/features/submit-a-form');
-  await launch(project);
-});
+platform()
+  .newProject('pizza-palace', async project => {
+    const dir = path.join(__dirname, 'pizza-palace/features');
+    await project.addFeaturesFrom(dir);
+    await project.run();
+  });
