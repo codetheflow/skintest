@@ -1,4 +1,4 @@
-import { Do } from './play';
+import { Do } from './recipe';
 import { Select } from './selector';
 import { Step } from './step';
 import {

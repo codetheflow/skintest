@@ -1,4 +1,4 @@
-import { play, Do } from '@skintest/api';
+import { recipe, Do } from '@skintest/api';
 import { env } from '../project';
 
 export async function clear_db(target: 'todo-list'): Do {
@@ -10,5 +10,5 @@ export async function clear_db(target: 'todo-list'): Do {
     throw Error(say('fail'));
   }
 
-  return play(say('pass'));
+  return recipe(say('pass'));
 }
