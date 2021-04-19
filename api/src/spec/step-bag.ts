@@ -1,6 +1,18 @@
 import { Select } from './selector';
 import { Step, StepContext } from './step';
 
+export class PauseStep implements Step {
+  constructor() { }
+
+  execute(context: StepContext): Promise<void> {
+    const { engine, report } = context;
+
+    report('pause');
+    return engine.pause();
+  }
+}
+
+
 export class ClickStep implements Step {
   constructor(
     private selector: Select<any>

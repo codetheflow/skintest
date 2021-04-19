@@ -13,7 +13,8 @@ import {
   PressStep,
   SayStep,
   SeeStep,
-  WaitUrlStep
+  WaitUrlStep,
+  PauseStep
 } from './step-bag';
 
 export interface Ego {
@@ -40,7 +41,9 @@ export interface Ego {
   focus<S>(target: Select<S>): Step;
   press(key: string): Step;
   say(message: string): Step;
+
   waitUrl(url: string): Step;
+  pause(): Step;
 }
 
 class MyEgo implements Ego {
@@ -73,6 +76,10 @@ class MyEgo implements Ego {
 
   waitUrl(url: string): Step {
     return new WaitUrlStep(url);
+  }
+
+  pause(): Step {
+    return new PauseStep();
   }
 
   click<S>(target: Select<S>): Step {

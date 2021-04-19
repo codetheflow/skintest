@@ -8,18 +8,24 @@ export class Fixture implements Feature, Scenario {
   beforeScenario: Step[] = [];
   afterScenario: Step[] = [];
 
+  beforeStep: Step[] = [];
+  afterStep: Step[] = [];
+
   scenarios: Array<[string, Step[]]> = [];
 
-  constructor(public name: string) {
+  constructor(public readonly name: string) {
   }
 
-  before(what: 'feature' | 'scenario', ...steps: Step[]): Feature {
+  before(what: 'feature' | 'scenario' | 'step', ...steps: Step[]): Feature {
     switch (what) {
       case 'feature':
         this.beforeFeature.push(...steps);
         break;
       case 'scenario':
         this.beforeScenario.push(...steps);
+      case 'step':
+        this.beforeStep.push(...steps);
+        break;
       default:
         throw new Error(`Invalid argument what ${what}`);
     }
@@ -27,13 +33,17 @@ export class Fixture implements Feature, Scenario {
     return this;
   }
 
-  after(what: 'feature' | 'scenario', ...steps: Step[]): Feature {
+  after(what: 'feature' | 'scenario' | 'step', ...steps: Step[]): Feature {
     switch (what) {
       case 'feature':
         this.afterFeature.push(...steps);
         break;
       case 'scenario':
         this.afterScenario.push(...steps);
+        break;
+      case 'step':
+        this.afterStep.push(...steps);
+        break;
       default:
         throw new Error(`Invalid argument what ${what}`);
     }

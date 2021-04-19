@@ -5,6 +5,10 @@ export class PlaywrightEngine implements Engine {
   constructor(private page: playwright.Page) {
   }
 
+  pause(): Promise<void> {
+    return this.page.pause();
+  }
+
   select<T>(query: string): T | null {
     return this.page.$(query) as any;
   }

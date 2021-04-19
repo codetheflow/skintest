@@ -12,7 +12,7 @@ export async function launch(suite: Suite) {
     const page = await context.newPage();
     const engine = new PlaywrightEngine(page);
     const report = createReport(fixture.name);
-
+    
     const scene = new Scene({
       engine,
       report

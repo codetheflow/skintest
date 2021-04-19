@@ -16,8 +16,8 @@ export function feature(name: string): Feature {
 };
 
 export interface Feature {
-  before(what: 'feature' | 'scenario', ...steps: Step[]): Feature;
-  after(what: 'feature' | 'scenario', ...steps: Step[]): Feature;
+  before(what: 'feature' | 'scenario' | 'step', ...steps: Step[]): Feature;
+  after(what: 'feature' | 'scenario' | 'step', ...steps: Step[]): Feature;
 
   scenario(name: string, ...steps: Step[]): Scenario;
 }

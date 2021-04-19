@@ -14,4 +14,6 @@ export interface Engine {
 
   select<T>(query: string): T | null;
   selectAll<T>(query: string): T[];
+
+  pause(): Promise<void>;
 }

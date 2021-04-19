@@ -7,11 +7,11 @@ feature('order pizza')
     , I.amOnPage(order_form.url)
   )
 
-  .scenario('successfull complete'
+  .after('step'
+    , I.pause()
+  )
 
-    // , I.say('automatically dismiss dialog boxes')
-    // , I.setNativeDialogHandler(() => true)
-
+  .scenario('successfully complete'
     , I.say('drag the pizza size slider')
     , I.drag(order_form.pie_size_handle, 100, 0)
 
@@ -21,15 +21,11 @@ feature('order pizza')
     , I.click(order_form.next_step(2))
 
     , I.say('fill the address form')
+    , I.click(order_form.map_zoom_in)
     , I.click(order_form.confirm_addres)
     , I.fill(order_form.phone, '+1-541-754-3001')
     , I.click(order_form.next_step(3))
 
-    //, I.say('zoom into the iframe map')
-    //, I.switchToIframe('.restaurant-location iframe')
-    , I.click(order_form.map_zoom_in)
-
     , I.say('submit the order')
-    //, I.switchToMainWindow()
     , I.click(order_form.complete_order)
   )
