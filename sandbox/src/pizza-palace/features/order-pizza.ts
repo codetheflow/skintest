@@ -7,9 +7,9 @@ feature('order pizza')
     , I.amOnPage(order_form.url)
   )
 
-  .after('step'
-    , I.pause()
-  )
+  // .after('step'
+  //   , I.pause()
+  // )
 
   .scenario('successfully complete'
     , I.say('drag the pizza size slider')

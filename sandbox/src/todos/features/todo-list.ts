@@ -42,7 +42,7 @@ feature('todo list')
     , I.see(todos.item('clean my keyboard'))
 
     , I.focus(todos.item('clean my keyboard'))
-    , I.press('delete')
+    , I.press('Delete')
     , I.dontSee(todos.item('clean my keyboard'))
   )
 
