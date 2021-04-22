@@ -1,3 +1,4 @@
+import { KeyboardKey } from './keyboard';
 import { Select } from './selector';
 import { Step, StepContext } from './step';
 
@@ -28,12 +29,12 @@ export class ClickStep implements Step {
 
 export class PressStep implements Step {
   constructor(
-    private key: string
+    private key: KeyboardKey
   ) { }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
-
+    
     report('press', this.key);
     return engine.press(this.key);
   }

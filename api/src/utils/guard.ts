@@ -1,5 +1,5 @@
 import { error } from './error';
-import { isUndefined } from './utils';
+import { isUndefined } from './is';
 
 export class Guard {
   static notUndefined<T>(value: T, message: string) {

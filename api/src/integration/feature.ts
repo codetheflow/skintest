@@ -1,7 +1,7 @@
 import { Fixture } from './fixture';
 import { getSuite } from '../platform/suite';
 import { Step } from './step';
-import { Guard } from '../infrastructure/guard';
+import { Guard } from '../utils/guard';
 
 export function feature(name: string): Feature {
   const suite = getSuite();

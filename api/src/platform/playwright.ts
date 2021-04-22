@@ -1,5 +1,6 @@
 import * as playwright from 'playwright';
 import { Engine } from './engine';
+import { KeyboardKey } from '../integration/keyboard';
 
 export class PlaywrightEngine implements Engine {
   constructor(private page: playwright.Page) {
@@ -29,18 +30,16 @@ export class PlaywrightEngine implements Engine {
     return this.page.click(query) as Promise<any>;
   }
 
-  press(key: string): Promise<void> {
-    return this.page.press('document', key);
+  press(key: KeyboardKey): Promise<void> {
+    return this.page.keyboard.press(key);
   }
 
   fill(query: string, value: string): Promise<void> {
     return this.page.fill(query, value);
-
   }
 
   focus(query: string): Promise<void> {
     return this.page.focus(query);
-
   }
 
   drag(target: string, x: number, y: number): Promise<void> {

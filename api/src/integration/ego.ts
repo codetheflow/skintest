@@ -16,6 +16,7 @@ import {
   WaitUrlStep,
   PauseStep
 } from './step-bag';
+import { KeyboardKey } from './keyboard';
 
 export interface Ego {
   see(that: boolean): Step;
@@ -39,8 +40,9 @@ export interface Ego {
   drag<S>(target: Select<S>, x: number, y: number): Step;
   fill<S, V>(target: Select<S>, value: V): Step;
   focus<S>(target: Select<S>): Step;
-  press(key: string): Step;
   say(message: string): Step;
+
+  press(key: KeyboardKey): Step;
 
   waitUrl(url: string): Step;
   pause(): Step;
@@ -86,7 +88,7 @@ class MyEgo implements Ego {
     return new ClickStep(target);
   }
 
-  press(key: string): Step {
+  press(key: KeyboardKey): Step {
     return new PressStep(key);
   }
 

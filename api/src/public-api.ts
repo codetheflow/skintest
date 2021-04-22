@@ -1,7 +1,7 @@
-export { $, $$, Select, SelectAll } from './spec/selector';
-export { Ego, I } from './spec/ego';
-export { feature, Feature } from './spec/feature';
-export { recipe, Do } from './spec/recipe';
-export { Step } from './spec/step';
+export { $, $$, Select, SelectAll } from './integration/selector';
+export { Ego, I } from './integration/ego';
+export { feature, Feature } from './integration/feature';
+export { recipe, Do } from './integration/recipe';
+export { Step } from './integration/step';
 export { platform, Platform } from './platform/platform';
 export { Project } from './platform/project';

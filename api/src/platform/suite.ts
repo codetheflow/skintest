@@ -1,4 +1,4 @@
-import { Fixture } from '../spec/fixture';
+import { Fixture } from '../integration/fixture';
 
 export interface Suite {
   readonly name: string;

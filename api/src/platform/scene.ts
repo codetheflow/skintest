@@ -1,5 +1,5 @@
-import { Fixture } from '../spec/fixture';
-import { StepContext } from '../spec/step';
+import { Fixture } from '../integration/fixture';
+import { StepContext } from '../integration/step';
 
 export class Scene {
   constructor(private context: StepContext) {
