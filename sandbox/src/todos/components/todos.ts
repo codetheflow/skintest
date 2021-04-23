@@ -6,11 +6,11 @@ export const todos = {
 
   , txt_file: data.todos_txt
 
-  , what_todo: $<HTMLTextAreaElement>('#todos-whattodo')
+  , what: $<HTMLTextAreaElement>('#todos-whattodo')
   , add_todo: $<HTMLButtonElement>('#todos-addtodo')
   , clear_all: $<HTMLButtonElement>('#todos-clearall')
 
-  , items: $$<HTMLElement>('li.todo-item')
+  , list: $$<HTMLElement>('li.todo-item')
   , item: (text: string) => $(`li.todo-item[innerText=${text}]`)
   , item_delete: (text: string) => $(`li.todo-item[innerText=${text}] .delete`)
 

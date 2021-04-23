@@ -1,4 +1,4 @@
-import { feature, I } from '@skintest/api';
+import { feature, has, I } from '@skintest/api';
 import { todos, user } from '../components';
 import { login, clear_db } from '../functions';
 
@@ -18,17 +18,17 @@ feature('todo list')
   )
 
   .scenario('add todo items'
-    , I.fill(todos.what_todo, 'call to my friend')
+    , I.fill(todos.what, 'call to my friend')
     , I.click(todos.add_todo)
     , I.see(todos.item('call to my friend'))
 
-    , I.fill(todos.what_todo, 'make a video')
+    , I.fill(todos.what, 'make a video')
     , I.click(todos.add_todo)
     , I.see(todos.item('make a video'))
   )
 
   .scenario('remove todo item by mouse'
-    , I.fill(todos.what_todo, 'meal my mouse')
+    , I.fill(todos.what, 'meal my mouse')
     , I.click(todos.add_todo)
     , I.see(todos.item('meal my mouse'))
 
@@ -37,7 +37,7 @@ feature('todo list')
   )
 
   .scenario('remove todo item by keyboard'
-    , I.fill(todos.what_todo, 'clean my keyboard')
+    , I.fill(todos.what, 'clean my keyboard')
     , I.click(todos.add_todo)
     , I.see(todos.item('clean my keyboard'))
 
@@ -47,20 +47,20 @@ feature('todo list')
   )
 
   .scenario('clear all todo items'
-    , I.fill(todos.what_todo, 'say Hi to Bob')
+    , I.fill(todos.what, 'say Hi to Bob')
     , I.click(todos.add_todo)
     , I.see(todos.item('say Hi to Bob'))
 
-    , I.fill(todos.what_todo, 'say Hey to John')
+    , I.fill(todos.what, 'say Hey to John')
     , I.click(todos.add_todo)
     , I.see(todos.item('say Hey to John'))
 
     , I.click(todos.clear_all)
-    , I.see(todos.items.length, 0)
+    , I.see(todos.list, has.length, 0)
   )
 
   .scenario('export todos from txt file'
     , I.attachFile(todos.upload_form, todos.txt_file)
     , I.click(todos.upload)
-    , I.see(todos.items.length, 3)
+    , I.see(todos.list, has.length, 3)
   )
