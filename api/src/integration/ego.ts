@@ -1,5 +1,5 @@
 import { Do } from './recipe';
-import { Select } from './selector';
+import { Select, SelectAll } from './selector';
 import { Step } from './step';
 import {
   AmOnPageStep,
@@ -17,16 +17,16 @@ import {
   PauseStep
 } from './step-bag';
 import { KeyboardKey } from './keyboard';
+import { Has, HasMany } from './has';
 
 export interface Ego {
-  see(that: boolean): Step;
   see<S>(target: Select<S>): Step;
-  see<S, E>(target: Select<S>, expected: E): Step;
-  see<V>(actual: V, expected: V): Step;
+  see<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
+  see<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
 
-  dontSee(that: boolean): Step;
   dontSee<S>(target: Select<S>): Step;
-  dontSee<S, E>(target: Select<S>, expected: E): Step;
+  dontSee<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
+  dontSee<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
 
   do(action: () => Do): Step;
   do<A>(action: (arg: A) => Do, arg: A): Step;
@@ -49,18 +49,18 @@ export interface Ego {
 }
 
 class MyEgo implements Ego {
-  see(that: boolean): Step;
   see<S>(target: Select<S>): Step;
-  see<S, E>(target: Select<S>, expected: E): Step;
-  see(target: any, expected?: any): Step {
-    return new SeeStep(target, expected);
+  see<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
+  see<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
+  see(targets: any, has?: any, value?: any): Step {
+    throw new Error('Method not implemented.');
   }
 
-  dontSee(that: boolean): Step;
   dontSee<S>(target: Select<S>): Step;
-  dontSee<S, E>(target: Select<S>, expected: E): Step;
-  dontSee(target: any, expected?: any): Step {
-    return new DontSeeStep(target, expected);
+  dontSee<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
+  dontSee<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
+  dontSee(targets: any, has?: any, value?: any):  Step {
+    throw new Error('Method not implemented.');
   }
 
   do(action: () => Do): Step;
