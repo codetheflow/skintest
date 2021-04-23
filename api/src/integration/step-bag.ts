@@ -1,3 +1,5 @@
+import { error } from '../utils/error';
+import { isFalsy, isUndefined } from '../utils/check';
 import { KeyboardKey } from './keyboard';
 import { Select } from './selector';
 import { Step, StepContext } from './step';
@@ -34,7 +36,7 @@ export class PressStep implements Step {
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
-    
+
     report('press', this.key);
     return engine.press(this.key);
   }
@@ -103,7 +105,25 @@ export class SeeStep implements Step {
   ) { }
 
   execute(context: StepContext): Promise<void> {
-    throw new Error('Method not implemented.');
+    const { engine, report } = context;
+
+    // TODO: implement
+
+    if (!isUndefined(this.target) && !isUndefined(this.expected)) {
+      if (this.target !== this.expected) {
+        throw error('see', `assertion failed "${this.target}" !== "${this.expected}"`);
+      }
+
+      report('see', `${this.target} === ${this.expected}`)
+    } else {
+      if (isFalsy(this.target)) {
+        throw error('see', 'assertion failed');
+      }
+
+      report('see', '' + this.target);
+    }
+
+    return Promise.resolve();
   }
 }
 

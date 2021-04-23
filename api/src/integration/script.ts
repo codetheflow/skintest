@@ -1,7 +1,7 @@
 import { Feature, Scenario } from './feature';
 import { Step } from './step';
 
-export class Fixture implements Feature, Scenario {
+export class Script implements Feature, Scenario {
   beforeFeature: Step[] = [];
   afterFeature: Step[] = []
 
@@ -27,7 +27,7 @@ export class Fixture implements Feature, Scenario {
         this.beforeStep.push(...steps);
         break;
       default:
-        throw new Error(`Invalid argument what ${what}`);
+        throw new Error(`invalid argument what ${what}`);
     }
 
     return this;
@@ -45,7 +45,7 @@ export class Fixture implements Feature, Scenario {
         this.afterStep.push(...steps);
         break;
       default:
-        throw new Error(`Invalid argument what ${what}`);
+        throw new Error(`invalid argument what ${what}`);
     }
 
     return this;

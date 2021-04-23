@@ -1,4 +1,4 @@
-import { Fixture } from './fixture';
+import { Script } from './script';
 import { getSuite } from '../platform/suite';
 import { Step } from './step';
 import { Guard } from '../utils/guard';
@@ -10,9 +10,9 @@ export function feature(name: string): Feature {
     `suite is not defined, make sure that you are running tests by using skintest's platform() function`
   );
 
-  const fixture = new Fixture(name);
-  suite.addFixture(fixture);
-  return fixture;
+  const script = new Script(name);
+  suite.addScript(script);
+  return script;
 };
 
 export interface Feature {

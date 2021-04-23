@@ -1,23 +1,23 @@
-import { Fixture } from '../integration/fixture';
+import { Script } from '../integration/script';
 
 export interface Suite {
   readonly name: string;
-  addFixture(fixture: Fixture): void;
-  getFixtures(): Fixture[];
+  addScript(script: Script): void;
+  getScripts(): Script[];
 }
 
 class ProjectSuite implements Suite {
-  private features: Fixture[] = [];
+  private scripts: Script[] = [];
 
   constructor(public readonly name: string) {
   }
 
-  addFixture(fixture: Fixture): void {
-    this.features.push(fixture);
+  addScript(script: Script): void {
+    this.scripts.push(script);
   }
 
-  getFixtures(): Fixture[] {
-    return Array.from(this.features);
+  getScripts(): Script[] {
+    return Array.from(this.scripts);
   }
 }
 

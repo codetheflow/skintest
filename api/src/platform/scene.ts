@@ -1,29 +1,29 @@
-import { Fixture } from '../integration/fixture';
+import { Script } from '../integration/script';
 import { StepContext } from '../integration/step';
 
 export class Scene {
   constructor(private context: StepContext) {
   }
 
-  async play(fixture: Fixture): Promise<void> {
+  async play(script: Script): Promise<void> {
     // TODO: refactor
     try {
       try {
-        await this.beforeFeautre(fixture);
+        await this.beforeFeautre(script);
       } catch (ex) {
         console.error(ex);
       }
 
-      for (let [name, steps] of fixture.scenarios) {
+      for (let [name, steps] of script.scenarios) {
         try {
-          await this.beforeScenario(fixture);
+          await this.beforeScenario(script);
         } catch (ex) {
           console.error(ex);
         }
 
         for (let step of steps) {
           try {
-            await this.beforeStep(fixture);
+            await this.beforeStep(script);
           } catch (ex) {
             console.error(ex);
           }
@@ -35,7 +35,7 @@ export class Scene {
           }
 
           try {
-            await this.afterStep(fixture);
+            await this.afterStep(script);
           } catch (ex) {
             console.error(ex);
           }
@@ -43,7 +43,7 @@ export class Scene {
         }
 
         try {
-          await this.afterScenario(fixture);
+          await this.afterScenario(script);
         } catch (ex) {
           console.error(ex);
         }
@@ -51,34 +51,34 @@ export class Scene {
 
     } finally {
       try {
-        await this.afterFeautre(fixture);
+        await this.afterFeautre(script);
       } catch (ex) {
         console.error(ex);
       }
     }
   }
 
-  private beforeFeautre(fixture: Fixture): Promise<void[]> {
-    return Promise.all(fixture.beforeFeature.map(step => step.execute(this.context)));
+  private beforeFeautre(script: Script): Promise<void[]> {
+    return Promise.all(script.beforeFeature.map(step => step.execute(this.context)));
   }
 
-  private afterFeautre(fixture: Fixture): Promise<void[]> {
-    return Promise.all(fixture.afterFeature.map(step => step.execute(this.context)));
+  private afterFeautre(script: Script): Promise<void[]> {
+    return Promise.all(script.afterFeature.map(step => step.execute(this.context)));
   }
 
-  private beforeScenario(fixture: Fixture): Promise<void[]> {
-    return Promise.all(fixture.beforeScenario.map(step => step.execute(this.context)));
+  private beforeScenario(script: Script): Promise<void[]> {
+    return Promise.all(script.beforeScenario.map(step => step.execute(this.context)));
   }
 
-  private afterScenario(fixture: Fixture): Promise<void[]> {
-    return Promise.all(fixture.afterScenario.map(step => step.execute(this.context)));
+  private afterScenario(script: Script): Promise<void[]> {
+    return Promise.all(script.afterScenario.map(step => step.execute(this.context)));
   }
 
-  private beforeStep(fixture: Fixture): Promise<void[]> {
-    return Promise.all(fixture.beforeStep.map(step => step.execute(this.context)));
+  private beforeStep(script: Script): Promise<void[]> {
+    return Promise.all(script.beforeStep.map(step => step.execute(this.context)));
   }
 
-  private afterStep(fixture: Fixture): Promise<void[]> {
-    return Promise.all(fixture.afterStep.map(step => step.execute(this.context)));
+  private afterStep(script: Script): Promise<void[]> {
+    return Promise.all(script.afterStep.map(step => step.execute(this.context)));
   }
 }

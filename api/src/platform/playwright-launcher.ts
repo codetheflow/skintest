@@ -5,13 +5,13 @@ import { Suite } from './suite';
 import * as playwright from 'playwright';
 
 export async function launch(suite: Suite) {
-  for (let fixture of suite.getFixtures()) {
+  for (let script of suite.getScripts()) {
     const browser = await playwright['chromium'].launch({ headless: false });
     const context = await browser.newContext();
 
     const page = await context.newPage();
     const engine = new PlaywrightEngine(page);
-    const report = createReport(fixture.name);
+    const report = createReport(script.name);
     
     const scene = new Scene({
       engine,
@@ -19,7 +19,7 @@ export async function launch(suite: Suite) {
     });
 
     try {
-      await scene.play(fixture);
+      await scene.play(script);
     } finally {
       await browser.close();
     }
