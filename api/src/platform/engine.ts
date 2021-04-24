@@ -1,5 +1,5 @@
 import { KeyboardKey } from '../integration/keyboard';
-
+import { DOMElement } from './dom';
 
 export interface Engine {
   goto(url: string): Promise<void>;
@@ -15,8 +15,8 @@ export interface Engine {
   // TODO: define file type
   attachFile(from: string, file: any): Promise<void>;
 
-  select<T>(query: string): T | null;
-  selectAll<T>(query: string): T[];
+  select<T extends DOMElement>(query: string): T | null;
+  selectAll<T extends DOMElement>(query: string): T[];
 
   pause(): Promise<void>;
 }

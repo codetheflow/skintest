@@ -20,7 +20,12 @@ feature('todo list')
     , I.press('Enter')
     , I.fill(todos.what, 'be cool')
     , I.press('Enter')
+
     , I.see(todos.list, has.length, 2)
+    , I.see(todos.list, has.length.above, 0)
+    , I.see(todos.list, has.length.below, 3)
+    , I.see(todos.item_at(0), has.text, 'learn testing')
+    , I.see(todos.item_at(1), has.text.match, /cool/i)
   )
 
   // .scenario('check if input is empty when an item is added'

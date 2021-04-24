@@ -1,8 +1,11 @@
 import { error } from '../utils/error';
 import { isFalsy, isUndefined } from '../utils/check';
 import { KeyboardKey } from './keyboard';
-import { Select } from './selector';
+import { Select, SelectAll } from './selector';
 import { Step, StepContext } from './step';
+import { Assert, AssertAll, AssertHost } from './assert';
+import { Stage } from './stage';
+import { Guard } from 'src/utils/guard';
 
 export class PauseStep implements Step {
   constructor() { }
@@ -15,11 +18,12 @@ export class PauseStep implements Step {
   }
 }
 
-
 export class ClickStep implements Step {
   constructor(
     private selector: Select<any>
-  ) { }
+  ) {
+    Guard.notNull(selector, 'selector');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -32,7 +36,9 @@ export class ClickStep implements Step {
 export class PressStep implements Step {
   constructor(
     private key: KeyboardKey
-  ) { }
+  ) {
+    Guard.notNullOrEmpty(key, 'key');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -46,7 +52,9 @@ export class FillStep implements Step {
   constructor(
     private selector: Select<any>,
     private value: string,
-  ) { }
+  ) {
+    Guard.notNull(selector, 'selector');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -59,7 +67,9 @@ export class FillStep implements Step {
 export class FocusStep implements Step {
   constructor(
     private selector: Select<any>,
-  ) { }
+  ) {
+    Guard.notNull(selector, 'selector');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -74,7 +84,9 @@ export class DragStep implements Step {
     private selector: Select<any>,
     private x: number,
     private y: number
-  ) { }
+  ) {
+    Guard.notNull(selector, 'selector');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -88,7 +100,9 @@ export class AttachFileStep implements Step {
   constructor(
     private selector: Select<any>,
     private file: any,
-  ) { }
+  ) {
+    Guard.notNull(selector, 'selector');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -100,27 +114,58 @@ export class AttachFileStep implements Step {
 
 export class SeeStep implements Step {
   constructor(
-    private target: any,
-    private expected: any,
-  ) { }
+    private selector: Select<any> | SelectAll<any>,
+    private assert: Assert<any> | AssertAll<any>,
+    private value: any
+  ) {
+    Guard.notNull(selector, 'selector');
+  }
 
-  execute(context: StepContext): Promise<void> {
+  async execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
+    if (isUndefined(this.assert)) {
+      switch (this.selector.type) {
+        case 'select': {
+          const element = await engine.select(this.selector.query);
+          if (!element) {
+            throw error('see', `can't find "${this.selector.query}" element`);
+          }
 
-    // TODO: implement
+          break;
+        }
+        case 'selectAll': {
+          const elements = await engine.selectAll(this.selector.query);
+          if (!elements.length) {
+            throw error('see', `can't find "${this.selector.query}" elements`);
+          }
 
-    if (!isUndefined(this.target) && !isUndefined(this.expected)) {
-      if (this.target !== this.expected) {
-        throw error('see', `assertion failed "${this.target}" !== "${this.expected}"`);
+          break;
+        }
+        // default: {
+        //   throw error('see', `invalid argument ${this.targets.type}`);
+        // }
       }
 
-      report('see', `${this.target} === ${this.expected}`)
+      report('see', this.selector.query);
     } else {
-      if (isFalsy(this.target)) {
-        throw error('see', 'assertion failed');
+      const stage = new Stage(engine);
+      const { what, how } = this.assert as AssertHost<any>;
+
+      switch (this.selector.type) {
+        case 'select': {
+          await stage.test(this.selector, what, how, this.value);
+          break;
+        }
+        case 'selectAll': {
+          await stage.testAll(this.selector, what, how, this.value);
+          break;
+        }
+        // default: {
+        //   throw error('see', `invalid argument ${this.targets.type}`);
+        // }
       }
 
-      report('see', '' + this.target);
+      report('see', `that ${this.selector.query} has ${what} ${how} ${this.value}`);
     }
 
     return Promise.resolve();
@@ -129,12 +174,25 @@ export class SeeStep implements Step {
 
 export class DontSeeStep implements Step {
   constructor(
-    private target: any,
-    private expected: any,
-  ) { }
+    private selector: Select<any> | SelectAll<any>,
+    private assert: Assert<any> | AssertAll<any>,
+    private value: any
+  ) {
+    Guard.notNull(selector, 'selector');
+  }
 
-  execute(context: StepContext): Promise<void> {
-    throw new Error('Method not implemented.');
+  async execute(context: StepContext): Promise<void> {
+    // TODO: improve
+
+    const seeStep = new SeeStep(this.selector, this.assert, this.value);
+    try {
+      await seeStep.execute(context);
+    } catch (ex) {
+      return Promise.resolve();
+    }
+
+
+    throw error('dontsee', `${this.selector.query}`);
   }
 }
 
@@ -142,7 +200,9 @@ export class DoStep implements Step {
   constructor(
     private action: (...args: any) => Promise<void>,
     private args: any[]
-  ) { }
+  ) {
+    Guard.notNull(action, 'action');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -155,7 +215,9 @@ export class DoStep implements Step {
 export class AmOnPageStep implements Step {
   constructor(
     private url: string
-  ) { }
+  ) {
+    Guard.notNullOrEmpty(url, 'url');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;
@@ -168,7 +230,9 @@ export class AmOnPageStep implements Step {
 export class WaitUrlStep implements Step {
   constructor(
     private url: string
-  ) { }
+  ) {
+    Guard.notNull(url, 'url');
+  }
 
   execute(context: StepContext): Promise<void> {
     const { engine, report } = context;

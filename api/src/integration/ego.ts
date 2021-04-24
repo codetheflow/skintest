@@ -17,16 +17,17 @@ import {
   PauseStep
 } from './step-bag';
 import { KeyboardKey } from './keyboard';
-import { Has, HasMany } from './has';
+import { Assert, AssertAll } from './assert';
+import { DOMElement } from '../platform/dom';
 
 export interface Ego {
-  see<S>(target: Select<S>): Step;
-  see<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
-  see<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
+  see<S extends DOMElement>(target: Select<S>): Step;
+  see<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
+  see<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
 
-  dontSee<S>(target: Select<S>): Step;
-  dontSee<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
-  dontSee<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
+  dontSee<S extends DOMElement>(target: Select<S>): Step;
+  dontSee<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
+  dontSee<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
 
   do(action: () => Do): Step;
   do<A>(action: (arg: A) => Do, arg: A): Step;
@@ -36,10 +37,10 @@ export interface Ego {
 
   amOnPage(url: string): Step;
   attachFile(from: Select<HTMLFormElement>, file: any): Step;
-  click<S>(target: Select<S>): Step;
-  drag<S>(target: Select<S>, x: number, y: number): Step;
-  fill<S, V>(target: Select<S>, value: V): Step;
-  focus<S>(target: Select<S>): Step;
+  click<S extends DOMElement>(target: Select<S>): Step;
+  drag<S extends DOMElement>(target: Select<S>, x: number, y: number): Step;
+  fill<S extends DOMElement, V>(target: Select<S>, value: V): Step;
+  focus<S extends DOMElement>(target: Select<S>): Step;
   say(message: string): Step;
 
   press(key: KeyboardKey): Step;
@@ -49,18 +50,18 @@ export interface Ego {
 }
 
 class MyEgo implements Ego {
-  see<S>(target: Select<S>): Step;
-  see<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
-  see<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
-  see(targets: any, has?: any, value?: any): Step {
-    throw new Error('Method not implemented.');
+  see<S extends DOMElement>(target: Select<S>): Step;
+  see<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
+  see<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
+  see(targets: any, assert?: any, value?: any): Step {
+   return new SeeStep(targets, assert, value);
   }
 
-  dontSee<S>(target: Select<S>): Step;
-  dontSee<S, V>(target: Select<S>, has: Has<V>, value: V): Step;
-  dontSee<S, V>(targets: SelectAll<S>, has: HasMany<V>, value: V): Step;
-  dontSee(targets: any, has?: any, value?: any):  Step {
-    throw new Error('Method not implemented.');
+  dontSee<S extends DOMElement>(target: Select<S>): Step;
+  dontSee<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
+  dontSee<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
+  dontSee(targets: any, assert?: any, value?: any): Step {
+    return new DontSeeStep(targets, assert, value);
   }
 
   do(action: () => Do): Step;
@@ -84,7 +85,7 @@ class MyEgo implements Ego {
     return new PauseStep();
   }
 
-  click<S>(target: Select<S>): Step {
+  click<S extends DOMElement>(target: Select<S>): Step {
     return new ClickStep(target);
   }
 
@@ -92,15 +93,15 @@ class MyEgo implements Ego {
     return new PressStep(key);
   }
 
-  fill<S, V>(target: Select<S>, value: V): Step {
+  fill<S extends DOMElement, V>(target: Select<S>, value: V): Step {
     return new FillStep(target, '' + value);
   }
 
-  focus<S>(target: Select<S>): Step {
+  focus<S extends DOMElement>(target: Select<S>): Step {
     return new FocusStep(target);
   }
 
-  drag<S>(target: Select<S>, x: number, y: number): Step {
+  drag<S extends DOMElement>(target: Select<S>, x: number, y: number): Step {
     return new DragStep(target, x, y);
   }
 

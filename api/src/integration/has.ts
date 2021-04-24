@@ -1,19 +1,25 @@
+import {
+  AssertWhat,
+  NumberAssert,
+  StringAssert
+} from './assert';
+
 export interface Has<V> {
-  text: Has<string>;
+  text: StringAssert;
 }
 
-export interface HasMany<V> {
-  length: HasMany<number>;
+export interface HasAll<V> {
+  length: NumberAssert;
 }
 
-class Assert<V> implements Has<V>, HasMany<V> {
-  get text(): Has<string> {
-    throw Error('not implemented');
+class Assertion<V> implements Has<V>, HasAll<V> {
+  get text(): StringAssert {
+    return new StringAssert(AssertWhat.innerText);
   }
 
-  get length(): HasMany<number> {
-    throw Error('not implemented');
+  get length(): NumberAssert {
+    return new NumberAssert(AssertWhat.length);
   }
 }
 
-export const has: Has<any> & HasMany<any> = new Assert<any>();
+export const has: Has<any> & HasAll<any> = new Assertion();

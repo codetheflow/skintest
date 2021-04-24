@@ -1,5 +1,5 @@
 import { Suite } from './suite';
-import { launch } from './playwright-launcher';
+import { playwrightLauncher } from './playwright-launcher';
 import * as glob from 'glob';
 import * as path from 'path';
 
@@ -27,6 +27,6 @@ export class LocalProject implements Project {
   }
 
   run(): Promise<void> {
-    return launch(this.suite);
+    return playwrightLauncher(this.suite);
   }
 }

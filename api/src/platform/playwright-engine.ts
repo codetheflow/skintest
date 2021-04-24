@@ -1,6 +1,7 @@
 import * as playwright from 'playwright';
 import { Engine } from './engine';
 import { KeyboardKey } from '../integration/keyboard';
+import { DOMElement } from './dom';
 
 export class PlaywrightEngine implements Engine {
   constructor(private page: playwright.Page) {
@@ -10,11 +11,11 @@ export class PlaywrightEngine implements Engine {
     return this.page.pause();
   }
 
-  select<T>(query: string): T | null {
+  select<T extends DOMElement>(query: string): T | null {
     return this.page.$(query) as any;
   }
 
-  selectAll<T>(query: string): T[] {
+  selectAll<T extends DOMElement>(query: string): T[] {
     return this.page.$$(query) as any;
   }
 

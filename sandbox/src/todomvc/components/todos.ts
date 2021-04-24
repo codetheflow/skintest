@@ -1,5 +1,5 @@
 import { $, $$ } from '@skintest/api';
-import { env, data } from '../project';
+import { env } from '../project';
 
 export const todos = {
   url: env.url
