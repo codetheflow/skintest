@@ -1,7 +1,8 @@
-import { createReport } from './report';
+import { ConsoleReport } from './console-report';
 import { PlaywrightEngine } from './playwright-engine';
 import { Scene } from './scene';
 import { Suite } from '../integration/suite';
+import { playwrightAttempt } from './playwright-attempt';
 import * as playwright from 'playwright';
 
 export async function playwrightLauncher(suite: Suite) {
@@ -11,12 +12,11 @@ export async function playwrightLauncher(suite: Suite) {
 
     const page = await context.newPage();
     const engine = new PlaywrightEngine(page);
-    const report = createReport(script.name);
-    
-    const scene = new Scene({
-      engine,
-      report
-    });
+
+    const report = new ConsoleReport();
+    const attempt = playwrightAttempt(1, report.attempt());
+
+    const scene = new Scene(engine, report, attempt);
 
     try {
       await scene.play(script);

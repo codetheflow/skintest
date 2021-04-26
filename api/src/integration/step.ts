@@ -1,10 +1,13 @@
+import { Attempt } from './attempt';
 import { Engine } from './engine';
+import { TestExecutionResult } from './test-result';
 
 export interface StepContext {
+  attempt: Attempt;
   engine: Engine;
-  report(action: string, message?: string): void;
 }
 
 export interface Step {
-  execute(context: StepContext): Promise<void>;
+  execute(context: StepContext): TestExecutionResult;
+  toString(): string;
 }

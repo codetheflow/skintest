@@ -1,22 +1,10 @@
-import * as playwright from 'playwright';
+import { DOMElement } from '../integration/dom';
 import { Engine } from '../integration/engine';
 import { KeyboardKey } from '../integration/keyboard';
-import { DOMElement } from '../integration/dom';
+import * as playwright from 'playwright';
 
 export class PlaywrightEngine implements Engine {
   constructor(private page: playwright.Page) {
-  }
-
-  pause(): Promise<void> {
-    return this.page.pause();
-  }
-
-  select<T extends DOMElement>(query: string): T | null {
-    return this.page.$(query) as any;
-  }
-
-  selectAll<T extends DOMElement>(query: string): T[] {
-    return this.page.$$(query) as any;
   }
 
   goto(url: string): Promise<void> {
@@ -49,5 +37,17 @@ export class PlaywrightEngine implements Engine {
 
   attachFile(target: string, file: any): Promise<void> {
     throw new Error('Method not implemented.');
+  }
+
+  pause(): Promise<void> {
+    return this.page.pause();
+  }
+
+  select<T extends DOMElement>(query: string): T | null {
+    return this.page.$(query) as any;
+  }
+
+  selectAll<T extends DOMElement>(query: string): T[] {
+    return this.page.$$(query) as any;
   }
 }

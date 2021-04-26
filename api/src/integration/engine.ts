@@ -15,8 +15,8 @@ export interface Engine {
   // TODO: define file type
   attachFile(from: string, file: any): Promise<void>;
 
+  pause(): Promise<void>;
+
   select<T extends DOMElement>(query: string): T | null;
   selectAll<T extends DOMElement>(query: string): T[];
-
-  pause(): Promise<void>;
 }

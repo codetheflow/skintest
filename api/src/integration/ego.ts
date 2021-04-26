@@ -1,24 +1,23 @@
+import { Assert, AssertAll } from './assert';
 import { Do } from './recipe';
+import { DOMElement } from './dom';
+import { KeyboardKey } from './keyboard';
 import { Select, SelectAll } from './selector';
 import { Step } from './step';
-import {
-  AmOnPageStep,
-  AttachFileStep,
-  ClickStep,
-  DoStep,
-  DontSeeStep,
-  DragStep,
-  FillStep,
-  FocusStep,
-  PressStep,
-  SayStep,
-  SeeStep,
-  WaitUrlStep,
-  PauseStep
-} from './step-bag';
-import { KeyboardKey } from './keyboard';
-import { Assert, AssertAll } from './assert';
-import { DOMElement } from './dom';
+
+import { AmOnPageStep } from './steps/am-on-page';
+import { AttachFileStep } from './steps/attach-file';
+import { ClickStep } from './steps/click';
+import { DontSeeStep } from './steps/dont-see';
+import { DoStep } from './steps/do';
+import { DragStep } from './steps/drag';
+import { FillStep } from './steps/fill';
+import { FocusStep } from './steps/focus';
+import { PauseStep } from './steps/pause';
+import { PressStep } from './steps/press';
+import { SayStep } from './steps/say';
+import { SeeStep } from './steps/see';
+import { WaitUrlStep } from './steps/wait-url';
 
 export interface Ego {
   see<S extends DOMElement>(target: Select<S>): Step;
@@ -54,7 +53,7 @@ class MyEgo implements Ego {
   see<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
   see<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
   see(targets: any, assert?: any, value?: any): Step {
-   return new SeeStep(targets, assert, value);
+    return new SeeStep(targets, assert, value);
   }
 
   dontSee<S extends DOMElement>(target: Select<S>): Step;

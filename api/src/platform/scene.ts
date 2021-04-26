@@ -1,84 +1,78 @@
+import { Attempt } from '../integration/attempt';
+import { Engine } from '../integration/engine';
+import { Report, StatusReport } from '../integration/report';
 import { Script } from '../integration/script';
-import { StepContext } from '../integration/step';
+import { Step, StepContext } from '../integration/step';
 
 export class Scene {
-  constructor(private context: StepContext) {
+  constructor(
+    private engine: Engine,
+    private report: Report,
+    private attempt: Attempt
+  ) {
   }
 
   async play(script: Script): Promise<void> {
-    // TODO: refactor
-    try {
-      try {
-        await this.beforeFeautre(script);
-      } catch (ex) {
-        console.error(ex);
+    const { report } = this;
+
+    await this.run(
+      script.beforeFeature,
+      report.beforeFeature(script.name)
+    );
+
+    for (let [scenarioText, steps] of script.scenarios) {
+      await this.run(
+        script.beforeScenario,
+        report.beforeScenario(scenarioText)
+      );
+
+      for (let step of steps) {
+        const stepText = step.toString();
+
+        await this.run(
+          script.beforeStep,
+          report.beforeStep(stepText)
+        );
+
+        await this.run([step], report.step(stepText));
+
+        await this.run(
+          script.afterStep,
+          report.afterStep(stepText)
+        );
       }
 
-      for (let [name, steps] of script.scenarios) {
-        try {
-          await this.beforeScenario(script);
-        } catch (ex) {
-          console.error(ex);
-        }
-
-        for (let step of steps) {
-          try {
-            await this.beforeStep(script);
-          } catch (ex) {
-            console.error(ex);
-          }
-
-          try {
-            await step.execute(this.context);
-          } catch (ex) {
-            console.error(ex);
-          }
-
-          try {
-            await this.afterStep(script);
-          } catch (ex) {
-            console.error(ex);
-          }
-
-        }
-
-        try {
-          await this.afterScenario(script);
-        } catch (ex) {
-          console.error(ex);
-        }
-      }
-
-    } finally {
-      try {
-        await this.afterFeautre(script);
-      } catch (ex) {
-        console.error(ex);
-      }
+      await this.run(
+        script.afterScenario,
+        report.afterScenario(scenarioText)
+      );
     }
+
+    await this.run(
+      script.afterFeature,
+      report.afterFeature(script.name)
+    );
   }
 
-  private beforeFeautre(script: Script): Promise<void[]> {
-    return Promise.all(script.beforeFeature.map(step => step.execute(this.context)));
-  }
+  private async run(steps: Step[], status: StatusReport): Promise<void> {
+    const { engine, attempt } = this;
+    const context: StepContext = {
+      attempt,
+      engine,
+    };
 
-  private afterFeautre(script: Script): Promise<void[]> {
-    return Promise.all(script.afterFeature.map(step => step.execute(this.context)));
-  }
+    try {
+      for (let step of steps) {
+        const failReason = await step.execute(context);
+        if (failReason) {
+          status.fail(failReason);
+          break;
+        }
+      }
 
-  private beforeScenario(script: Script): Promise<void[]> {
-    return Promise.all(script.beforeScenario.map(step => step.execute(this.context)));
-  }
-
-  private afterScenario(script: Script): Promise<void[]> {
-    return Promise.all(script.afterScenario.map(step => step.execute(this.context)));
-  }
-
-  private beforeStep(script: Script): Promise<void[]> {
-    return Promise.all(script.beforeStep.map(step => step.execute(this.context)));
-  }
-
-  private afterStep(script: Script): Promise<void[]> {
-    return Promise.all(script.afterStep.map(step => step.execute(this.context)));
+      status.pass();
+    } catch (ex) {
+      status.error(ex);
+    }
   }
 }
