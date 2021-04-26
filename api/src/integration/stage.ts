@@ -1,8 +1,8 @@
 import { AssertHow, AssertWhat } from './assert';
 import { Select, SelectAll } from './selector';
-import { Engine } from '../platform/engine';
+import { Engine } from './engine';
 import { error } from '../utils/error';
-import { DOMElement } from '../platform/dom';
+import { DOMElement } from './dom';
 
 export class Stage {
   constructor(private engine: Engine) {

@@ -1,7 +1,7 @@
 import * as playwright from 'playwright';
-import { Engine } from './engine';
+import { Engine } from '../integration/engine';
 import { KeyboardKey } from '../integration/keyboard';
-import { DOMElement } from './dom';
+import { DOMElement } from '../integration/dom';
 
 export class PlaywrightEngine implements Engine {
   constructor(private page: playwright.Page) {

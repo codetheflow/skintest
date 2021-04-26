@@ -1,5 +1,5 @@
 import { Script } from './script';
-import { getSuite } from '../platform/suite';
+import { getSuite } from './suite';
 import { Step } from './step';
 import { Guard } from '../utils/guard';
 

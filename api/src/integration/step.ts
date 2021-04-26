@@ -1,4 +1,4 @@
-import { Engine } from '../platform/engine';
+import { Engine } from './engine';
 
 export interface StepContext {
   engine: Engine;

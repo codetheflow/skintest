@@ -1,4 +1,4 @@
-import { DOMElement } from '../platform/dom';
+import { DOMElement } from './dom';
 
 export interface Select<E extends DOMElement> {
   type: 'select';

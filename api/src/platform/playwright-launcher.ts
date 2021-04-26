@@ -1,7 +1,7 @@
 import { createReport } from './report';
 import { PlaywrightEngine } from './playwright-engine';
 import { Scene } from './scene';
-import { Suite } from './suite';
+import { Suite } from '../integration/suite';
 import * as playwright from 'playwright';
 
 export async function playwrightLauncher(suite: Suite) {

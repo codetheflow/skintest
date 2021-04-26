@@ -7,4 +7,4 @@ export { platform, Platform } from './platform/platform';
 export { Project } from './platform/project';
 export { recipe, Do } from './integration/recipe';
 export { Step } from './integration/step';
-export { DOMElement } from './platform/dom';
+export { DOMElement } from './integration/dom';

@@ -18,7 +18,7 @@ import {
 } from './step-bag';
 import { KeyboardKey } from './keyboard';
 import { Assert, AssertAll } from './assert';
-import { DOMElement } from '../platform/dom';
+import { DOMElement } from './dom';
 
 export interface Ego {
   see<S extends DOMElement>(target: Select<S>): Step;

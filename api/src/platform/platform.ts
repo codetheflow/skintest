@@ -1,6 +1,5 @@
-import { newSuite } from './suite';
+import { newSuite } from '../integration/suite';
 import { Project, LocalProject } from './project';
-
 
 export function platform(): Platform {
   return new LocalPlatform();
