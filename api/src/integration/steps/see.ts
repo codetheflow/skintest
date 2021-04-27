@@ -6,6 +6,7 @@ import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 import { invalidArgumentError } from '../../common/errors';
+import { notFoundElementFail } from '../fails';
 
 export class SeeStep implements Step {
   constructor(
@@ -23,11 +24,7 @@ export class SeeStep implements Step {
         case 'select': {
           const element = await engine.select(this.selector.query);
           if (!element) {
-            return {
-              code: 'NOT_FOUND_ELEMENT_ERROR',
-              description: `element ${this.selector.query} is not found`,
-              solution: ''
-            };
+            return notFoundElementFail(this.selector.query);
           }
 
           break;
@@ -35,11 +32,7 @@ export class SeeStep implements Step {
         case 'selectAll': {
           const elements = await engine.selectAll(this.selector.query);
           if (!elements.length) {
-            return {
-              code: 'NOT_FOUND_ELEMENTS_ERROR',
-              description: `elements ${this.selector.query} are not found`,
-              solution: ''
-            };
+            return notFoundElementFail(this.selector.query);
           }
 
           break;

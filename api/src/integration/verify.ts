@@ -1,9 +1,10 @@
 import { AssertHow, AssertWhat } from './assert';
-import { Select, SelectAll } from './selector';
-import { Engine } from './engine';
 import { DOMElement } from './dom';
-import { TestExecutionResult, TestFail } from './test-result';
+import { Engine } from './engine';
 import { invalidArgumentError } from '../common/errors';
+import { notEqualsFail, notFoundElementFail } from './fails';
+import { Select, SelectAll } from './selector';
+import { TestExecutionResult, TestFail } from './test-result';
 
 export class Verify {
   constructor(private engine: Engine) {
@@ -16,6 +17,10 @@ export class Verify {
     expected: V
   ): TestExecutionResult {
     const element = await this.engine.select<S>(selector.query) as any as HTMLElement;
+    if (!element) {
+      return notFoundElementFail(selector.query);
+    }
+
     switch (what) {
       case AssertWhat.innerText: {
         const expectedText = expected as any as string;
@@ -59,11 +64,7 @@ export class Verify {
           return null;
         }
 
-        return {
-          code: 'NOT_EQUALS_ERROR',
-          description: '',
-          solution: ''
-        };
+        return notEqualsFail(etalon, actual);
       }
       case AssertHow.regexp: {
 

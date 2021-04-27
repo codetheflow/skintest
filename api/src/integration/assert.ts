@@ -1,14 +1,14 @@
 
 export enum AssertHow {
-  equals,
-  above,
-  below,
-  regexp,
+  equals = 'equals',
+  above = 'above',
+  below = 'below',
+  regexp = 'match',
 }
 
 export enum AssertWhat {
-  length,
-  innerText
+  length = 'length',
+  innerText = 'text',
 }
 
 export interface Assert<V> {

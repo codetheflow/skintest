@@ -5,6 +5,7 @@ import { SeeStep } from './see';
 import { Select, SelectAll } from '../selector';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
+import { dontSeeFail } from '../fails';
 
 export class DontSeeStep implements Step {
   constructor(
@@ -19,11 +20,7 @@ export class DontSeeStep implements Step {
     const seeStep = new SeeStep(this.selector, this.assert, this.value);
     const failReason = await seeStep.execute(context);
     if (!failReason) {
-      return {
-        code: '',
-        description: '',
-        solution: ''
-      };
+      return dontSeeFail();
     }
 
     return null;
