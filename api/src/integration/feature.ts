@@ -1,7 +1,7 @@
 import { Script } from './script';
 import { getSuite } from './suite';
 import { Step } from './step';
-import { Guard } from '../utils/guard';
+import { Guard } from '../common/guard';
 
 export function feature(name: string): Feature {
   const suite = getSuite();

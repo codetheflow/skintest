@@ -1,4 +1,4 @@
-import { Guard } from '../../utils/guard';
+import { Guard } from '../../common/guard';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
 
@@ -6,7 +6,7 @@ export class AmOnPageStep implements Step {
   constructor(
     private url: string
   ) {
-    Guard.notNullOrEmpty(url, 'url');
+    Guard.notEmpty(url, 'url');
   }
 
   execute(context: StepContext): TestExecutionResult {

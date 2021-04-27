@@ -1,4 +1,4 @@
-import { Guard } from '../../utils/guard';
+import { Guard } from '../../common/guard';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
 

@@ -1,11 +1,11 @@
 import { Assert, AssertAll, AssertHost } from '../assert';
-import { error } from 'src/utils/error';
-import { Guard } from '../../utils/guard';
-import { isUndefined } from '../../utils/check';
+import { Guard } from '../../common/guard';
+import { isUndefined } from '../../common/check';
 import { Select, SelectAll } from '../selector';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
+import { invalidArgumentError } from '../../common/errors';
 
 export class SeeStep implements Step {
   constructor(
@@ -45,7 +45,7 @@ export class SeeStep implements Step {
           break;
         }
         default: {
-          throw error('see', `invalid argument ${(this.selector as any).type}`);
+          throw invalidArgumentError('selector', (this.selector as any).type);
         }
       }
     } else {
@@ -60,7 +60,7 @@ export class SeeStep implements Step {
           return await verify.elements(this.selector, what, how, this.value);
         }
         default: {
-          throw error('see', `invalid argument ${(this.selector as any).type}`);
+          throw invalidArgumentError('selector', (this.selector as any).type);
         }
       }
     }

@@ -1,9 +1,9 @@
 import { AssertHow, AssertWhat } from './assert';
 import { Select, SelectAll } from './selector';
 import { Engine } from './engine';
-import { error } from '../utils/error';
 import { DOMElement } from './dom';
 import { TestExecutionResult, TestFail } from './test-result';
+import { invalidArgumentError } from '../common/errors';
 
 export class Verify {
   constructor(private engine: Engine) {
@@ -22,7 +22,7 @@ export class Verify {
         return this.assert(how, element.innerText, expectedText);
       }
       default: {
-        throw error('test', `invalid argument ${what}`);
+        throw invalidArgumentError('what', what);
       }
     }
   }
@@ -40,7 +40,7 @@ export class Verify {
         return this.assert(how, elements.length, expectedLength);
       }
       default: {
-        throw error('test', `invalid argument ${what}`);
+        throw invalidArgumentError('what', what);
       }
     }
 
@@ -55,7 +55,7 @@ export class Verify {
 
       }
       case AssertHow.equals: {
-        if(actual === etalon) {
+        if (actual === etalon) {
           return null;
         }
 
@@ -69,7 +69,7 @@ export class Verify {
 
       }
       default: {
-        throw error('test', `invalid argument ${how}`);
+        throw invalidArgumentError('how', how);
       }
     }
   }

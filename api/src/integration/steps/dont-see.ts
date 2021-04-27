@@ -1,6 +1,6 @@
 import { Assert, AssertAll, AssertHost } from '../assert';
-import { Guard } from '../../utils/guard';
-import { isUndefined } from '../../utils/check';
+import { Guard } from '../../common/guard';
+import { isUndefined } from '../../common/check';
 import { SeeStep } from './see';
 import { Select, SelectAll } from '../selector';
 import { Step, StepContext } from '../step';

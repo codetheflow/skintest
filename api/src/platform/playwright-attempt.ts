@@ -1,6 +1,7 @@
 import { Attempt } from '../integration/attempt';
 import { StatusReport } from '../integration/report';
 import { TestExecutionResult } from '../integration/test-result';
+import { unknownEngineError } from '../common/errors';
 import * as playwright from 'playwright';
 
 export function playwrightAttempt(count: number, report: StatusReport): Attempt {
@@ -18,7 +19,7 @@ export function playwrightAttempt(count: number, report: StatusReport): Attempt 
           };
         }
 
-        throw ex;
+        throw unknownEngineError(ex);
       }
     }
 
