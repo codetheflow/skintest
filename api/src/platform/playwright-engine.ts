@@ -1,5 +1,5 @@
 import { DOMElement } from '../integration/dom';
-import { Engine } from '../integration/engine';
+import { ElementRef, Engine } from '../integration/engine';
 import { KeyboardKey } from '../integration/keyboard';
 import * as playwright from 'playwright';
 
@@ -43,11 +43,11 @@ export class PlaywrightEngine implements Engine {
     return this.page.pause();
   }
 
-  select<T extends DOMElement>(query: string): T | null {
-    return this.page.$(query) as any;
+  select<T extends DOMElement>(query: string): Promise<ElementRef<T> | null> {
+    return this.page.$(query);
   }
 
-  selectAll<T extends DOMElement>(query: string): T[] {
-    return this.page.$$(query) as any;
+  selectAll<T extends DOMElement>(query: string): Promise<ElementRef<T>[]> {
+    return this.page.$$(query);
   }
 }

@@ -8,10 +8,6 @@ feature('todo list')
     , I.amOnPage(todos.url)
   )
 
-  .after('scenario'
-    , I.pause()
-  )
-
   .scenario('add 2 todos'
     , I.fill(todos.what, 'learn testing')
     , I.press('Enter')

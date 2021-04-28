@@ -13,7 +13,6 @@ import { DoStep } from './steps/do';
 import { DragStep } from './steps/drag';
 import { FillStep } from './steps/fill';
 import { FocusStep } from './steps/focus';
-import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
 import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
@@ -45,7 +44,6 @@ export interface Ego {
   press(key: KeyboardKey): Step;
 
   waitUrl(url: string): Step;
-  pause(): Step;
 }
 
 class MyEgo implements Ego {
@@ -78,10 +76,6 @@ class MyEgo implements Ego {
 
   waitUrl(url: string): Step {
     return new WaitUrlStep(url);
-  }
-
-  pause(): Step {
-    return new PauseStep();
   }
 
   click<S extends DOMElement>(target: Select<S>): Step {

@@ -1,3 +1,4 @@
+import { formatSelector } from '../formatting';
 import { Guard } from '../../common/guard';
 import { Select } from '../selector';
 import { Step, StepContext } from '../step';
@@ -14,10 +15,13 @@ export class DragStep implements Step {
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
-    return attempt(() => engine.drag(this.selector.query, this.x, this.y));
+
+    const query = this.selector.toString();
+    return attempt(() => engine.drag(query, this.x, this.y));
   }
 
   toString() {
-    return `drag x: ${this.x}, y: ${this.y}`
+    const query = this.selector.toString();
+    return `drag ${formatSelector(query)} x: ${this.x}, y: ${this.y}`
   }
 }

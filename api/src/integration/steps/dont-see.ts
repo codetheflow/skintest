@@ -28,11 +28,12 @@ export class DontSeeStep implements Step {
   }
 
   toString() {
+    const query = this.selector.toString();
     if (isUndefined(this.assert)) {
-      return `don't see ${formatSelector(this.selector.query)}`;
+      return `don't see ${formatSelector(query)}`;
     }
 
     const { what, how } = this.assert as AssertHost<any>;
-    return `dont't see that ${formatSelector(this.selector.query)} has ${what} ${how} ${this.value}`;
+    return `dont't see that ${formatSelector(query)} has ${what} ${how} ${this.value}`;
   }
 }

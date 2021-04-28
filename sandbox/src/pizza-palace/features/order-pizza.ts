@@ -1,4 +1,4 @@
-import { feature, I } from '@skintest/api';
+import { feature, I, __skinbreak } from '@skintest/api';
 import { order_form } from '../components';
 
 feature('order pizza')
@@ -7,17 +7,21 @@ feature('order pizza')
     , I.amOnPage(order_form.url)
   )
 
-  // .after('step'
-  //   , I.pause()
-  // )
-
   .scenario('successfully complete'
     , I.say('drag the pizza size slider')
     , I.drag(order_form.pie_size_handle, 100, 0)
 
+
     , I.say('select the toppings')
     , I.click(order_form.next_step(1))
     , I.click(order_form.pizza('pepperoni'))
+
+    , __skinbreak(async dbg => {
+      const ref = await dbg.$(order_form.pizza('pepperoni'));
+      const text = await ref?.innerText();
+      console.log(text);
+    })
+
     , I.click(order_form.next_step(2))
 
     , I.say('fill the address form')

@@ -16,15 +16,16 @@ export class Verify {
     how: AssertHow,
     expected: V
   ): TestExecutionResult {
-    const element = await this.engine.select<S>(selector.query) as any as HTMLElement;
-    if (!element) {
-      return notFoundElementFail(selector.query);
+    const elementRef = await this.engine.select<S>(selector.toString());
+    if (!elementRef) {
+      return notFoundElementFail(selector.toString());
     }
 
     switch (what) {
       case AssertWhat.innerText: {
-        const expectedText = expected as any as string;
-        return this.assert(how, element.innerText, expectedText);
+        const actualValue = await elementRef.innerText();
+        const expectedValue = expected as any as string;
+        return this.assert(how, actualValue, expectedValue);
       }
       default: {
         throw invalidArgumentError('what', what);
@@ -38,11 +39,11 @@ export class Verify {
     how: AssertHow,
     expected: V
   ): TestExecutionResult {
-    const elements = await this.engine.selectAll<S>(selector.query) as any[];
+    const elementRefs = await this.engine.selectAll<S>(selector.toString());
     switch (what) {
       case AssertWhat.length: {
         const expectedLength = expected as any as number;
-        return this.assert(how, elements.length, expectedLength);
+        return this.assert(how, elementRefs.length, expectedLength);
       }
       default: {
         throw invalidArgumentError('what', what);

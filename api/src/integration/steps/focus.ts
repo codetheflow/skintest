@@ -13,10 +13,13 @@ export class FocusStep implements Step {
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
-    return attempt(() => engine.focus(this.selector.query));
+
+    const query = this.selector.toString();
+    return attempt(() => engine.focus(query));
   }
 
   toString() {
-    return `focus ${formatSelector(this.selector.query)}`;
+    const query = this.selector.toString();
+    return `focus ${formatSelector(query)}`;
   }
 }

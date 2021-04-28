@@ -2,24 +2,28 @@ import { DOMElement } from './dom';
 
 export interface Select<E extends DOMElement> {
   type: 'select';
-  query: string;
+  toString(): string;
 }
 
 export interface SelectAll<E extends DOMElement> {
   type: 'selectAll'
-  query: string;
+  toString(): string;
 }
 
 export function $<E extends DOMElement>(query: string): Select<E> {
   return {
-    query,
-    type: 'select'
+    type: 'select',
+    toString() {
+      return query;
+    }
   };
 }
 
 export function $$<E extends DOMElement>(query: string): SelectAll<E> {
   return {
-    query,
-    type: 'selectAll'
+    type: 'selectAll',
+    toString() {
+      return query;
+    }
   };
 }

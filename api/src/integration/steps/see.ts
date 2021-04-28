@@ -21,19 +21,21 @@ export class SeeStep implements Step {
   async execute(context: StepContext): TestExecutionResult {
     const { engine } = context;
     if (isUndefined(this.assert)) {
+      const query = this.selector.toString();
+
       switch (this.selector.type) {
         case 'select': {
-          const element = await engine.select(this.selector.query);
+          const element = await engine.select(query);
           if (!element) {
-            return notFoundElementFail(this.selector.query);
+            return notFoundElementFail(query);
           }
 
           break;
         }
         case 'selectAll': {
-          const elements = await engine.selectAll(this.selector.query);
+          const elements = await engine.selectAll(query);
           if (!elements.length) {
-            return notFoundElementFail(this.selector.query);
+            return notFoundElementFail(query);
           }
 
           break;
@@ -63,11 +65,13 @@ export class SeeStep implements Step {
   }
 
   toString() {
+    const query = this.selector.toString();
+
     if (isUndefined(this.assert)) {
-      return `see ${formatSelector(this.selector.query)}`;
+      return `see ${formatSelector(query)}`;
     }
 
     const { what, how } = this.assert as AssertHost<any>;
-    return `see that ${formatSelector(this.selector.query)} has ${what} ${how} ${this.value}`;
+    return `see that ${formatSelector(query)} has ${what} ${how} ${this.value}`;
   }
 }

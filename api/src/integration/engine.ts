@@ -1,6 +1,10 @@
 import { KeyboardKey } from '../integration/keyboard';
 import { DOMElement } from './dom';
 
+export interface ElementRef<T extends DOMElement> {
+  innerText(): Promise<string>;
+}
+
 export interface Engine {
   goto(url: string): Promise<void>;
   waitForNavigation(url: string): Promise<void>;
@@ -17,6 +21,6 @@ export interface Engine {
 
   pause(): Promise<void>;
 
-  select<T extends DOMElement>(query: string): T | null;
-  selectAll<T extends DOMElement>(query: string): T[];
+  select<T extends DOMElement>(query: string): Promise<ElementRef<T> | null>;
+  selectAll<T extends DOMElement>(query: string): Promise<ElementRef<T>[]>;
 }

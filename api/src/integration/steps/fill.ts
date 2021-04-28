@@ -14,10 +14,13 @@ export class FillStep implements Step {
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
-    return attempt(() => engine.fill(this.selector.query, this.value));
+
+    const query = this.selector.toString();
+    return attempt(() => engine.fill(query, this.value));
   }
 
   toString() {
-    return `fill ${formatSelector(this.selector.query)} with "${this.value}"`;
+    const query = this.selector.toString();
+    return `fill ${formatSelector(query)} with "${this.value}"`;
   }
 }

@@ -14,10 +14,13 @@ export class AttachFileStep implements Step {
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
-    return attempt(() => engine.attachFile(this.selector.query, this.file));
+
+    const query = this.selector.toString();
+    return attempt(() => engine.attachFile(query, this.file));
   }
 
   toString() {
-    return `attach file "${this.file}" to ${formatSelector(this.selector.query)}`
+    const query = this.selector.toString();
+    return `attach file "${this.file}" to ${formatSelector(query)}`
   }
 }

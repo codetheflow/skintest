@@ -2,6 +2,10 @@ export function isUndefined<T>(value: T): boolean {
   return value === undefined;
 }
 
+export function isString<T>(value: T) {
+  return Object.prototype.toString.call(value) === '[object String]';
+}
+
 export function isFalsy<T extends any>(value: T): boolean {
   return isUndefined(value)
     || value === null

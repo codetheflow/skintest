@@ -13,10 +13,13 @@ export class ClickStep implements Step {
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
-    return attempt(() => engine.click(this.selector.query));
+
+    const query = this.selector.toString();
+    return attempt(() => engine.click(query));
   }
 
   toString() {
-    return `click ${formatSelector(this.selector.query)}`;
+    const query = this.selector.toString();
+    return `click ${formatSelector(query)}`;
   }
 }

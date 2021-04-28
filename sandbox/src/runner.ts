@@ -2,7 +2,7 @@ import { platform } from '@skintest/api';
 import * as path from 'path';
 
 const PROJECT_NAME = 'todomvc';
-const FEATURES_DIR = 'todomvc/features';
+const FEATURES_DIR = 'pizza-palace/features';
 
 platform()
   .newProject(PROJECT_NAME, async project => {
