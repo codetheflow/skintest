@@ -1,6 +1,10 @@
 import { Attempt } from '../integration/attempt';
+import { DebugStep } from '../integration/steps/debug';
+import { InspectStep } from '../integration/steps/inspect';
 import { Engine } from '../integration/engine';
+import { PauseStep } from '../integration/steps/pause';
 import { Report, StatusReport } from '../integration/report';
+import { SayStep } from '../integration/steps/say';
 import { Script } from '../integration/script';
 import { Step, StepContext } from '../integration/step';
 
@@ -34,7 +38,7 @@ export class Scene {
           report.beforeStep(stepText)
         );
 
-        const result = await this.run([step], report.step(stepText));
+        const result = await this.run([step], this.selectReport(step));
 
         await this.run(
           script.afterStep,
@@ -67,10 +71,15 @@ export class Scene {
 
     try {
       for (let step of steps) {
-        const failReason = await step.execute(context);
-        if (failReason) {
-          status.fail(failReason);
+        const result = await step.execute(context);
+        if (result.status === 'fail') {
+          status.fail(result);
           return false;
+        }
+
+        // show debug info
+        if (result.inspect) {
+          await this.report.inspect(result.inspect);
         }
       }
 
@@ -80,5 +89,22 @@ export class Scene {
       status.error(ex);
       return false;
     }
+  }
+
+  private selectReport(step: Step) {
+    const { report } = this;
+    const stepText = step.toString();
+
+    if (step instanceof SayStep) {
+      return this.report.say(stepText);
+    }
+
+    if (step instanceof DebugStep
+      || step instanceof InspectStep
+      || step instanceof PauseStep) {
+      return this.report.debug(stepText)
+    }
+
+    return report.step(stepText)
   }
 }

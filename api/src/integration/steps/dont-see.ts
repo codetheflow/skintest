@@ -4,8 +4,8 @@ import { isUndefined } from '../../common/check';
 import { SeeStep } from './see';
 import { Select, SelectAll } from '../selector';
 import { Step, StepContext } from '../step';
-import { TestExecutionResult } from '../test-result';
-import { dontSeeFail } from '../fails';
+import { pass, TestExecutionResult } from '../test-result';
+import { dontSeeFail } from '../test-result';
 import { formatSelector } from '../formatting';
 
 export class DontSeeStep implements Step {
@@ -24,7 +24,7 @@ export class DontSeeStep implements Step {
       return dontSeeFail();
     }
 
-    return null;
+    return pass();
   }
 
   toString() {

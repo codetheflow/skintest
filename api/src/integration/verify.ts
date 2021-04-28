@@ -2,7 +2,7 @@ import { AssertHow, AssertWhat } from './assert';
 import { DOMElement } from './dom';
 import { Engine } from './engine';
 import { invalidArgumentError } from '../common/errors';
-import { notEqualsFail, notFoundElementFail } from './fails';
+import { notEqualsFail, notFoundElementFail, pass, TestPass } from './test-result';
 import { Select, SelectAll } from './selector';
 import { TestExecutionResult, TestFail } from './test-result';
 
@@ -52,7 +52,7 @@ export class Verify {
 
   }
 
-  private assert<V>(how: AssertHow, actual: V, etalon: V): TestFail | null {
+  private assert<V>(how: AssertHow, actual: V, etalon: V): TestFail | TestPass {
     switch (how) {
       case AssertHow.above: {
 
@@ -62,7 +62,7 @@ export class Verify {
       }
       case AssertHow.equals: {
         if (actual === etalon) {
-          return null;
+          return pass();
         }
 
         return notEqualsFail(etalon, actual);

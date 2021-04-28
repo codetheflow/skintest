@@ -7,9 +7,7 @@ export { has, Has, HasAll } from './integration/has';
 export { recipe, Do } from './integration/recipe';
 export { Step } from './integration/step';
 
-export { __skinbreak } from './integration/__debug';
 export { Debugger, Breakpoint } from './integration/steps/debug';
 
-export { Platform } from './platform/platform';
-export { platform } from './platform/platform-factory';
+export { Platform, platform } from './platform/platform';
 export { Project } from './platform/project';

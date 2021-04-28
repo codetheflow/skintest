@@ -1,7 +1,7 @@
 import { Attempt } from '../integration/attempt';
 import { StatusReport } from '../integration/report';
-import { TestExecutionResult } from '../integration/test-result';
-import { timeoutFail } from '../integration/fails';
+import { pass, TestExecutionResult } from '../integration/test-result';
+import { timeoutFail } from '../integration/test-result';
 import { unknownEngineError } from '../common/errors';
 import * as playwright from 'playwright';
 
@@ -21,6 +21,6 @@ export function playwrightAttempt(count: number, report: StatusReport): Attempt 
     }
 
     report.pass();
-    return null;
+    return pass();
   };
 }

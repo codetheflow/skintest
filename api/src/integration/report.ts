@@ -1,4 +1,4 @@
-import { TestFail } from './test-result';
+import { TestFail, InspectInfo } from './test-result';
 
 export interface Report {
   beforeFeature(name: string): StatusReport;
@@ -12,6 +12,11 @@ export interface Report {
   afterStep(name: string): StatusReport;
 
   attempt(): StatusReport;
+
+  say(message: string): StatusReport;
+
+  debug(name: string): StatusReport;
+  inspect(info: InspectInfo): InspectReport
 }
 
 export interface StatusReport {
@@ -19,3 +24,5 @@ export interface StatusReport {
   fail(reason: TestFail): void;
   error(ex: Error): void;
 }
+
+export type InspectReport = Promise<void>;

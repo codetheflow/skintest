@@ -7,12 +7,15 @@ import { Step } from './step';
 
 import { AmOnPageStep } from './steps/am-on-page';
 import { AttachFileStep } from './steps/attach-file';
+import { Breakpoint, DebugStep } from './steps/debug';
 import { ClickStep } from './steps/click';
 import { DontSeeStep } from './steps/dont-see';
 import { DoStep } from './steps/do';
 import { DragStep } from './steps/drag';
 import { FillStep } from './steps/fill';
 import { FocusStep } from './steps/focus';
+import { InspectStep } from './steps/inspect';
+import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
 import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
@@ -44,6 +47,10 @@ export interface Ego {
   press(key: KeyboardKey): Step;
 
   waitUrl(url: string): Step;
+
+  debug(breakpoint: Breakpoint): Step;
+  inspect<T extends DOMElement>(selector: string | Select<T> | SelectAll<T>): Step;
+  pause(): Step;
 }
 
 class MyEgo implements Ego {
@@ -104,6 +111,18 @@ class MyEgo implements Ego {
 
   say(message: string): Step {
     return new SayStep(message);
+  }
+
+  debug(breakpoint: Breakpoint): Step {
+    return new DebugStep(breakpoint)
+  }
+
+  inspect<T extends DOMElement>(selector: string | Select<T> | SelectAll<T>) {
+    return new InspectStep(selector);
+  }
+
+  pause(): Step {
+    return new PauseStep();
   }
 }
 

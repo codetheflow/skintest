@@ -1,7 +1,7 @@
-export function formatSelector(selector: string) {
-  if (selector && selector.indexOf(' ') >= 0) {
-    return `\`${selector}\``;
+export function formatSelector(query: string): string {
+  if (query && query.indexOf(' ') >= 0) {
+    return `\`${query}\``;
   }
 
-  return selector;
+  return query;
 }

@@ -3,14 +3,14 @@ import { ElementRef, Engine } from '../engine';
 import { Guard } from '../../common/guard';
 import { Select, SelectAll } from '../selector';
 import { Step, StepContext } from '../step';
-import { TestExecutionResult } from '../test-result';
+import { TestExecutionResult, pass } from '../test-result';
 
 export interface Debugger {
   $<T extends DOMElement>(query: string | Select<T>): Promise<ElementRef<T> | null>;
   $$<T extends DOMElement>(query: string | SelectAll<T>): Promise<ElementRef<T>[]>;
 }
 
-export type Breakpoint = (dbg: Debugger) => void;
+export type Breakpoint = (dbg: Debugger) => Promise<void>;
 
 class EngineDebugger implements Debugger {
   constructor(private engine: Engine) { }
@@ -38,10 +38,10 @@ export class DebugStep implements Step {
 
     const dbg = new EngineDebugger(engine)
     await this.breakpoint(dbg);
-    return null;
+    return pass();
   }
 
   toString() {
-    return 'debug ';
+    return 'debug';
   }
 }

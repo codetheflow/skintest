@@ -21,6 +21,6 @@ export class AttachFileStep implements Step {
 
   toString() {
     const query = this.selector.toString();
-    return `attach file "${this.file}" to ${formatSelector(query)}`
+    return `attach file \`${this.file}\` to ${formatSelector(query)}`
   }
 }

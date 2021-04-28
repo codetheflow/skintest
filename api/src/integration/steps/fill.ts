@@ -21,6 +21,6 @@ export class FillStep implements Step {
 
   toString() {
     const query = this.selector.toString();
-    return `fill ${formatSelector(query)} with "${this.value}"`;
+    return `fill ${formatSelector(query)} with \`${this.value}\``;
   }
 }

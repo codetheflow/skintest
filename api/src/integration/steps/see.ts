@@ -3,10 +3,10 @@ import { Guard } from '../../common/guard';
 import { isUndefined } from '../../common/check';
 import { Select, SelectAll } from '../selector';
 import { Step, StepContext } from '../step';
-import { TestExecutionResult } from '../test-result';
+import { pass, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 import { invalidArgumentError } from '../../common/errors';
-import { notFoundElementFail } from '../fails';
+import { notFoundElementFail } from '../test-result';
 import { formatSelector } from '../formatting';
 
 export class SeeStep implements Step {
@@ -61,7 +61,7 @@ export class SeeStep implements Step {
       }
     }
 
-    return Promise.resolve(null);
+    return pass();
   }
 
   toString() {
