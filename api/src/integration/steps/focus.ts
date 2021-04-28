@@ -1,4 +1,5 @@
 import { Guard } from '../../common/guard';
+import { formatSelector } from '../formatting';
 import { Select } from '../selector';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
@@ -16,6 +17,6 @@ export class FocusStep implements Step {
   }
 
   toString() {
-    return `focus ${this.selector.query}`;
+    return `focus ${formatSelector(this.selector.query)}`;
   }
 }

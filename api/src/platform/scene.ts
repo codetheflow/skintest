@@ -34,12 +34,16 @@ export class Scene {
           report.beforeStep(stepText)
         );
 
-        await this.run([step], report.step(stepText));
+        const result = await this.run([step], report.step(stepText));
 
         await this.run(
           script.afterStep,
           report.afterStep(stepText)
         );
+
+        if (!result) {
+          break;
+        }
       }
 
       await this.run(
@@ -54,7 +58,7 @@ export class Scene {
     );
   }
 
-  private async run(steps: Step[], status: StatusReport): Promise<void> {
+  private async run(steps: Step[], status: StatusReport): Promise<boolean> {
     const { engine, attempt } = this;
     const context: StepContext = {
       attempt,
@@ -66,13 +70,15 @@ export class Scene {
         const failReason = await step.execute(context);
         if (failReason) {
           status.fail(failReason);
-          break;
+          return false;
         }
       }
 
       status.pass();
+      return true;
     } catch (ex) {
       status.error(ex);
+      return false;
     }
   }
 }

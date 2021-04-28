@@ -18,6 +18,6 @@ export class DragStep implements Step {
   }
 
   toString() {
-    return `drag x:${this.x}, y:${this.y}`
+    return `drag x: ${this.x}, y: ${this.y}`
   }
 }

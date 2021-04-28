@@ -2,6 +2,7 @@ import { Guard } from '../../common/guard';
 import { Select } from '../selector';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
+import { formatSelector } from '../formatting';
 
 export class AttachFileStep implements Step {
   constructor(
@@ -17,6 +18,6 @@ export class AttachFileStep implements Step {
   }
 
   toString() {
-    return `attach file "${this.file}" to ${this.selector.query}`
+    return `attach file "${this.file}" to ${formatSelector(this.selector.query)}`
   }
 }

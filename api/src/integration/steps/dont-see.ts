@@ -6,6 +6,7 @@ import { Select, SelectAll } from '../selector';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
 import { dontSeeFail } from '../fails';
+import { formatSelector } from '../formatting';
 
 export class DontSeeStep implements Step {
   constructor(
@@ -28,10 +29,10 @@ export class DontSeeStep implements Step {
 
   toString() {
     if (isUndefined(this.assert)) {
-      return `don't see ${this.selector.query}`;
+      return `don't see ${formatSelector(this.selector.query)}`;
     }
 
     const { what, how } = this.assert as AssertHost<any>;
-    return `dont't see that ${this.selector.query} has ${what} ${how} ${this.value}`;
+    return `dont't see that ${formatSelector(this.selector.query)} has ${what} ${how} ${this.value}`;
   }
 }

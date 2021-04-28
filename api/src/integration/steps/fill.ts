@@ -1,4 +1,5 @@
 import { Guard } from '../../common/guard';
+import { formatSelector } from '../formatting';
 import { Select } from '../selector';
 import { Step, StepContext } from '../step';
 import { TestExecutionResult } from '../test-result';
@@ -17,6 +18,6 @@ export class FillStep implements Step {
   }
 
   toString() {
-    return `fill ${this.selector.query} with "${this.value}"`;
+    return `fill ${formatSelector(this.selector.query)} with "${this.value}"`;
   }
 }

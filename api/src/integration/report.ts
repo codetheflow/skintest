@@ -1,8 +1,6 @@
 import { TestFail } from './test-result';
 
 export interface Report {
-  feature(name: string): StatusReport;
-
   beforeFeature(name: string): StatusReport;
   beforeScenario(name: string): StatusReport;
   beforeStep(name: string): StatusReport;

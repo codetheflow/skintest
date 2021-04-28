@@ -7,6 +7,7 @@ import { TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 import { invalidArgumentError } from '../../common/errors';
 import { notFoundElementFail } from '../fails';
+import { formatSelector } from '../formatting';
 
 export class SeeStep implements Step {
   constructor(
@@ -63,10 +64,10 @@ export class SeeStep implements Step {
 
   toString() {
     if (isUndefined(this.assert)) {
-      return `see ${this.selector.query}`;
+      return `see ${formatSelector(this.selector.query)}`;
     }
 
     const { what, how } = this.assert as AssertHost<any>;
-    return `see that ${this.selector.query} has ${what} ${how} ${this.value}`;
+    return `see that ${formatSelector(this.selector.query)} has ${what} ${how} ${this.value}`;
   }
 }

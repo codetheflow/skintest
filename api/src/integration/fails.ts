@@ -3,7 +3,7 @@ import { TestFail } from './test-result';
 export function notEqualsFail<T>(etalon: T, actual: T): TestFail {
   return {
     code: 'NOT_EQUALS',
-    description: `${etalon} !== ${actual}`,
+    description: `expected "${etalon}", but was "${actual}"`,
     solution: 'make sure that values are correct'
   };
 }
