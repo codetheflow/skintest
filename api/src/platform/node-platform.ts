@@ -1,4 +1,4 @@
-import { newSuite } from '../integration/suite';
+import { newSuite } from '../sdk/suite';
 import { NodeProject } from './node-project';
 import { Platform } from './platform';
 import { Project } from './project';

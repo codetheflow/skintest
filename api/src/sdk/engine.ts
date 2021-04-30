@@ -1,4 +1,4 @@
-import { KeyboardKey } from '../integration/keyboard';
+import { KeyboardKey } from './keyboard';
 import { DOMElement } from './dom';
 
 export interface ElementRef<T extends DOMElement> {

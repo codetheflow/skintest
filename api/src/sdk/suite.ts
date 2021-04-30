@@ -1,4 +1,4 @@
-import { Script } from '../integration/script';
+import { Script } from './script';
 
 export interface Suite {
   readonly name: string;

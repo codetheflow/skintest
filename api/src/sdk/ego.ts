@@ -4,7 +4,6 @@ import { DOMElement } from './dom';
 import { KeyboardKey } from './keyboard';
 import { Select, SelectAll } from './selector';
 import { Step } from './step';
-
 import { AmOnPageStep } from './steps/am-on-page';
 import { AttachFileStep } from './steps/attach-file';
 import { Breakpoint, DebugStep } from './steps/debug';
@@ -48,9 +47,9 @@ export interface Ego {
 
   waitUrl(url: string): Step;
 
+  pause(): Step;
   debug(breakpoint: Breakpoint): Step;
   inspect<T extends DOMElement>(selector: string | Select<T> | SelectAll<T>): Step;
-  pause(): Step;
 }
 
 class MyEgo implements Ego {

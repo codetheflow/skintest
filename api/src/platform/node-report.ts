@@ -1,6 +1,6 @@
-import { formatSelector } from '../integration/formatting';
-import { InspectReport, Report, StatusReport } from '../integration/report';
-import { TestFail, InspectInfo } from '../integration/test-result';
+import { formatSelector } from '../sdk/formatting';
+import { InspectReport, Report, StatusReport } from '../sdk/report';
+import { TestFail, InspectInfo } from '../sdk/test-result';
 import * as chalk from 'chalk';
 
 const { stdout, stderr } = process;
@@ -127,7 +127,8 @@ class SayReport implements StatusReport {
   private readonly ident = '    ';
 
   constructor(message: string) {
-    stdout.write(this.ident + chalk.hidden(CHECK_MARK) + chalk.grey.italic(` I ${message}`));
+    stdout.write(this.ident);
+    stdout.write(chalk.hidden(CHECK_MARK) + chalk.italic(` I ${message}`));
   }
 
   pass(): void {
@@ -146,7 +147,8 @@ class SayReport implements StatusReport {
 class StepReport implements StatusReport {
   private readonly ident = '    ';
   constructor(private doSomething: string) {
-    stdout.write(this.ident + ` I ${doSomething}`);
+    stdout.write(this.ident);
+    stdout.write(chalk.grey(` I ${doSomething}`));
   }
 
   pass(): void {
@@ -155,7 +157,7 @@ class StepReport implements StatusReport {
 
     stdout.write(this.ident);
     stdout.write(chalk.green(CHECK_MARK));
-    stdout.write(` I ${this.doSomething}`);
+    stdout.write(chalk.grey(` I ${this.doSomething}`));
     stdout.write(NEW_LINE);
   }
 

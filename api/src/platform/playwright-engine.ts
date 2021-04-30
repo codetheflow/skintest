@@ -1,6 +1,6 @@
-import { DOMElement } from '../integration/dom';
-import { ElementRef, Engine } from '../integration/engine';
-import { KeyboardKey } from '../integration/keyboard';
+import { DOMElement } from '../sdk/dom';
+import { ElementRef, Engine } from '../sdk/engine';
+import { KeyboardKey } from '../sdk/keyboard';
 import * as playwright from 'playwright';
 
 export class PlaywrightEngine implements Engine {

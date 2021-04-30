@@ -1,5 +1,5 @@
-// import { DOMElement } from '../integration/dom';
-// import { ElementRef } from '../integration/engine';
+// import { DOMElement } from '../sdk/dom';
+// import { ElementRef } from '../sdk/engine';
 // import * as playwright from 'playwright';
 
 // export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {

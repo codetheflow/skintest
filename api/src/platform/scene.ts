@@ -1,12 +1,12 @@
-import { Attempt } from '../integration/attempt';
-import { DebugStep } from '../integration/steps/debug';
-import { InspectStep } from '../integration/steps/inspect';
-import { Engine } from '../integration/engine';
-import { PauseStep } from '../integration/steps/pause';
-import { Report, StatusReport } from '../integration/report';
-import { SayStep } from '../integration/steps/say';
-import { Script } from '../integration/script';
-import { Step, StepContext } from '../integration/step';
+import { Attempt } from '../sdk/attempt';
+import { DebugStep } from '../sdk/steps/debug';
+import { InspectStep } from '../sdk/steps/inspect';
+import { Engine } from '../sdk/engine';
+import { PauseStep } from '../sdk/steps/pause';
+import { Report, StatusReport } from '../sdk/report';
+import { SayStep } from '../sdk/steps/say';
+import { Script } from '../sdk/script';
+import { Step, StepContext } from '../sdk/step';
 
 export class Scene {
   constructor(

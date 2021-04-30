@@ -1,7 +1,7 @@
 import { NodeReport } from './node-report';
 import { PlaywrightEngine } from './playwright-engine';
 import { Scene } from './scene';
-import { Suite } from '../integration/suite';
+import { Suite } from '../sdk/suite';
 import { playwrightAttempt } from './playwright-attempt';
 import * as playwright from 'playwright';
 

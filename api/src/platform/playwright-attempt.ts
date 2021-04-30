@@ -1,7 +1,7 @@
-import { Attempt } from '../integration/attempt';
-import { StatusReport } from '../integration/report';
-import { pass, TestExecutionResult } from '../integration/test-result';
-import { timeoutFail } from '../integration/test-result';
+import { Attempt } from '../sdk/attempt';
+import { StatusReport } from '../sdk/report';
+import { pass, TestExecutionResult } from '../sdk/test-result';
+import { timeoutFail } from '../sdk/test-result';
 import { unknownEngineError } from '../common/errors';
 import * as playwright from 'playwright';
 

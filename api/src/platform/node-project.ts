@@ -1,6 +1,6 @@
 import { playwrightLauncher } from './playwright-launcher';
 import { Project } from './project';
-import { Suite } from '../integration/suite';
+import { Suite } from '../sdk/suite';
 import * as glob from 'glob';
 import * as path from 'path';
 
