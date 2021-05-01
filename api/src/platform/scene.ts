@@ -1,12 +1,9 @@
 import { Attempt } from '../sdk/attempt';
-import { DebugStep } from '../sdk/steps/debug';
-import { InspectStep } from '../sdk/steps/inspect';
 import { Engine } from '../sdk/engine';
-import { PauseStep } from '../sdk/steps/pause';
 import { Report, StatusReport } from '../sdk/report';
-import { SayStep } from '../sdk/steps/say';
 import { Script } from '../sdk/script';
-import { Step, StepContext } from '../sdk/step';
+import { Command, StepContext } from '../sdk/command';
+import { invalidArgumentError } from '../common/errors';
 
 export class Scene {
   constructor(
@@ -24,28 +21,28 @@ export class Scene {
       report.beforeFeature(script.name)
     );
 
-    for (let [scenarioText, steps] of script.scenarios) {
+    for (let [scenarioText, commands] of script.scenarios) {
       await this.run(
         script.beforeScenario,
         report.beforeScenario(scenarioText)
       );
 
-      for (let step of steps) {
-        const stepText = step.toString();
+      for (let command of commands) {
+        const commandText = command.toString();
 
         await this.run(
           script.beforeStep,
-          report.beforeStep(stepText)
+          report.beforeStep(commandText)
         );
 
-        const result = await this.run([step], this.selectReport(step));
+        const result = await this.run([command], this.selectReport(command));
 
         await this.run(
           script.afterStep,
-          report.afterStep(stepText)
+          report.afterStep(commandText)
         );
 
-        if (!result) {
+        if (!result && command.type !== 'assert') {
           break;
         }
       }
@@ -62,7 +59,7 @@ export class Scene {
     );
   }
 
-  private async run(steps: Step[], status: StatusReport): Promise<boolean> {
+  private async run(commands: Command[], status: StatusReport): Promise<boolean> {
     const { engine, attempt } = this;
     const context: StepContext = {
       attempt,
@@ -70,8 +67,8 @@ export class Scene {
     };
 
     try {
-      for (let step of steps) {
-        const result = await step.execute(context);
+      for (let command of commands) {
+        const result = await command.execute(context);
         if (result.status === 'fail') {
           status.fail(result);
           return false;
@@ -91,20 +88,18 @@ export class Scene {
     }
   }
 
-  private selectReport(step: Step) {
+  private selectReport(command: Command) {
     const { report } = this;
-    const stepText = step.toString();
+    const commandText = command.toString();
 
-    if (step instanceof SayStep) {
-      return this.report.say(stepText);
+    switch (command.type) {
+      case 'assert': return report.assert(commandText);
+      case 'check': return report.check(commandText);
+      case 'dev': return report.dev(commandText);
+      case 'ui': return report.ui(commandText);
+      case 'say': return report.say(commandText);
+      default:
+        throw invalidArgumentError('type', (command as any).type);
     }
-
-    if (step instanceof DebugStep
-      || step instanceof InspectStep
-      || step instanceof PauseStep) {
-      return this.report.debug(stepText)
-    }
-
-    return report.step(stepText)
   }
 }

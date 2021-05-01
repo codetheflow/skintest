@@ -3,10 +3,11 @@ import { Do } from './recipe';
 import { DOMElement } from './dom';
 import { KeyboardKey } from './keyboard';
 import { Select, SelectAll } from './selector';
-import { Step } from './step';
+import { AssertStep, CheckStep, DevStep, SayStep, UIStep } from './command';
 import { AmOnPageStep } from './steps/am-on-page';
 import { AttachFileStep } from './steps/attach-file';
 import { Breakpoint, DebugStep } from './steps/debug';
+import { CheckWhatStep } from './steps/check';
 import { ClickStep } from './steps/click';
 import { DontSeeStep } from './steps/dont-see';
 import { DoStep } from './steps/do';
@@ -16,111 +17,117 @@ import { FocusStep } from './steps/focus';
 import { InspectStep } from './steps/inspect';
 import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
-import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
+import { TalkStep } from './steps/say';
 import { WaitUrlStep } from './steps/wait-url';
 
 export interface Ego {
-  see<S extends DOMElement>(target: Select<S>): Step;
-  see<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
-  see<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
+  check(what: string): CheckStep;
 
-  dontSee<S extends DOMElement>(target: Select<S>): Step;
-  dontSee<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
-  dontSee<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
+  see<S extends DOMElement>(target: Select<S>): AssertStep;
+  see<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): AssertStep;
+  see<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): AssertStep;
 
-  do(action: () => Do): Step;
-  do<A>(action: (arg: A) => Do, arg: A): Step;
-  do<A1, A2>(action: (arg1: A1, arg2: A2) => Do, arg1: A1, arg2: A2): Step;
-  do<A1, A2, A3>(action: (arg1: A1, arg2: A2, arg3: A3) => Do, arg1: A1, arg2: A2, arg3: A3): Step;
-  do<A1, A2, A3, A4>(action: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Do, arg1: A1, arg2: A2, arg3: A3, arg4: A4): Step;
+  dontSee<S extends DOMElement>(target: Select<S>): AssertStep;
+  dontSee<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): AssertStep;
+  dontSee<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): AssertStep;
 
-  amOnPage(url: string): Step;
-  attachFile(from: Select<HTMLFormElement>, file: any): Step;
-  click<S extends DOMElement>(target: Select<S>): Step;
-  drag<S extends DOMElement>(target: Select<S>, x: number, y: number): Step;
-  fill<S extends DOMElement, V>(target: Select<S>, value: V): Step;
-  focus<S extends DOMElement>(target: Select<S>): Step;
-  say(message: string): Step;
+  do(action: () => Do): UIStep;
+  do<A>(action: (arg: A) => Do, arg: A): UIStep;
+  do<A1, A2>(action: (arg1: A1, arg2: A2) => Do, arg1: A1, arg2: A2): UIStep;
+  do<A1, A2, A3>(action: (arg1: A1, arg2: A2, arg3: A3) => Do, arg1: A1, arg2: A2, arg3: A3): UIStep;
+  do<A1, A2, A3, A4>(action: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Do, arg1: A1, arg2: A2, arg3: A3, arg4: A4): UIStep;
 
-  press(key: KeyboardKey): Step;
+  amOnPage(url: string): UIStep;
+  attachFile(from: Select<HTMLFormElement>, file: any): UIStep;
+  click<S extends DOMElement>(target: Select<S>): UIStep;
+  drag<S extends DOMElement>(target: Select<S>, x: number, y: number): UIStep;
+  fill<S extends DOMElement, V>(target: Select<S>, value: V): UIStep;
+  focus<S extends DOMElement>(target: Select<S>): UIStep;
+  say(message: string): SayStep;
 
-  waitUrl(url: string): Step;
+  press(key: KeyboardKey): UIStep;
 
-  pause(): Step;
-  debug(breakpoint: Breakpoint): Step;
-  inspect<T extends DOMElement>(selector: string | Select<T> | SelectAll<T>): Step;
+  waitUrl(url: string): UIStep;
+
+  pause(): DevStep;
+  debug(breakpoint: Breakpoint): DevStep;
+  inspect<T extends DOMElement>(selector: string | Select<T> | SelectAll<T>): DevStep;
 }
 
 class MyEgo implements Ego {
-  see<S extends DOMElement>(target: Select<S>): Step;
-  see<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
-  see<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
-  see(targets: any, assert?: any, value?: any): Step {
+  check(what: string): CheckStep {
+    return new CheckWhatStep(what);
+  }
+
+  see<S extends DOMElement>(target: Select<S>): AssertStep;
+  see<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): AssertStep;
+  see<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): AssertStep;
+  see(targets: any, assert?: any, value?: any): AssertStep {
     return new SeeStep(targets, assert, value);
   }
 
-  dontSee<S extends DOMElement>(target: Select<S>): Step;
-  dontSee<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): Step;
-  dontSee<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): Step;
-  dontSee(targets: any, assert?: any, value?: any): Step {
+  dontSee<S extends DOMElement>(target: Select<S>): AssertStep;
+  dontSee<S extends DOMElement, V>(target: Select<S>, assert: Assert<V>, value: V): AssertStep;
+  dontSee<S extends DOMElement, V>(targets: SelectAll<S>, assert: AssertAll<V>, value: V): AssertStep;
+  dontSee(targets: any, assert?: any, value?: any): AssertStep {
     return new DontSeeStep(targets, assert, value);
   }
 
-  do(action: () => Do): Step;
-  do<A>(action: (arg: A) => Do, arg: A): Step;
-  do<A1, A2>(action: (arg1: A1, arg2: A2) => Do, arg1: A1, arg2: A2): Step;
-  do<A1, A2, A3>(action: (arg1: A1, arg2: A2, arg3: A3) => Do, arg1: A1, arg2: A2, arg3: A3): Step;
-  do<A1, A2, A3, A4>(action: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Do, arg1: A1, arg2: A2, arg3: A3, arg4: A4): Step;
-  do(action: any, ...args: any[]): Step {
+  do(action: () => Do): UIStep;
+  do<A>(action: (arg: A) => Do, arg: A): UIStep;
+  do<A1, A2>(action: (arg1: A1, arg2: A2) => Do, arg1: A1, arg2: A2): UIStep;
+  do<A1, A2, A3>(action: (arg1: A1, arg2: A2, arg3: A3) => Do, arg1: A1, arg2: A2, arg3: A3): UIStep;
+  do<A1, A2, A3, A4>(action: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Do, arg1: A1, arg2: A2, arg3: A3, arg4: A4): UIStep;
+  do(action: any, ...args: any[]): UIStep {
     return new DoStep(action, args);
   }
 
-  amOnPage(url: string): Step {
+  amOnPage(url: string): UIStep {
     return new AmOnPageStep(url);
   }
 
-  waitUrl(url: string): Step {
+  waitUrl(url: string): UIStep {
     return new WaitUrlStep(url);
   }
 
-  click<S extends DOMElement>(target: Select<S>): Step {
+  click<S extends DOMElement>(target: Select<S>): UIStep {
     return new ClickStep(target);
   }
 
-  press(key: KeyboardKey): Step {
+  press(key: KeyboardKey): UIStep {
     return new PressStep(key);
   }
 
-  fill<S extends DOMElement, V>(target: Select<S>, value: V): Step {
+  fill<S extends DOMElement, V>(target: Select<S>, value: V): UIStep {
     return new FillStep(target, '' + value);
   }
 
-  focus<S extends DOMElement>(target: Select<S>): Step {
+  focus<S extends DOMElement>(target: Select<S>): UIStep {
     return new FocusStep(target);
   }
 
-  drag<S extends DOMElement>(target: Select<S>, x: number, y: number): Step {
+  drag<S extends DOMElement>(target: Select<S>, x: number, y: number): UIStep {
     return new DragStep(target, x, y);
   }
 
-  attachFile(from: Select<HTMLFormElement>, file: any): Step {
+  attachFile(from: Select<HTMLFormElement>, file: any): UIStep {
     return new AttachFileStep(from, file);
   }
 
-  say(message: string): Step {
-    return new SayStep(message);
+  say(message: string): SayStep {
+    return new TalkStep(message);
   }
 
-  debug(breakpoint: Breakpoint): Step {
+  debug(breakpoint: Breakpoint): DevStep {
     return new DebugStep(breakpoint)
   }
 
-  inspect<T extends DOMElement>(selector: string | Select<T> | SelectAll<T>) {
+  inspect<T extends DOMElement>(selector: string | Select<T> | SelectAll<T>): DevStep {
     return new InspectStep(selector);
   }
 
-  pause(): Step {
+  pause(): DevStep {
     return new PauseStep();
   }
 }

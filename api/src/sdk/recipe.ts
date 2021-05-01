@@ -1,7 +1,7 @@
-import { Step } from './step';
+import { UIStep } from './command';
 
-export type Do = Promise<Step[]>;
+export type Do = Promise<UIStep[]>;
 
-export function recipe(title: string, ...steps: Step[]): Do {
+export function recipe(title: string, ...steps: UIStep[]): Do {
   return Promise.resolve(steps);
 }

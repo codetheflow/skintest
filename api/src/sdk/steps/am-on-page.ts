@@ -1,8 +1,10 @@
 import { Guard } from '../../common/guard';
-import { Step, StepContext } from '../step';
+import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class AmOnPageStep implements Step {
+export class AmOnPageStep implements UIStep {
+  type: 'ui' = 'ui';
+  
   constructor(
     private url: string
   ) {

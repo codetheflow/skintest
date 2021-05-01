@@ -1,10 +1,12 @@
 import { Guard } from '../../common/guard';
 import { Select } from '../selector';
-import { Step, StepContext } from '../step';
+import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 import { formatSelector } from '../formatting';
 
-export class AttachFileStep implements Step {
+export class AttachFileStep implements UIStep {
+  type: 'ui' = 'ui';
+  
   constructor(
     private selector: Select<any>,
     private file: any,

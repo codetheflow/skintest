@@ -1,13 +1,13 @@
 import { Guard } from '../../common/guard';
 import { formatSelector } from '../formatting';
 import { Select } from '../selector';
-import { Step, StepContext } from '../step';
+import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class FocusStep implements Step {
-  constructor(
-    private selector: Select<any>,
-  ) {
+export class FocusStep implements UIStep {
+  type: 'ui' = 'ui';
+
+  constructor(private selector: Select<any>) {
     Guard.notNull(selector, 'selector');
   }
 

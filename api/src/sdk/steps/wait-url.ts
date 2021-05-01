@@ -1,11 +1,11 @@
 import { Guard } from '../../common/guard';
-import { Step, StepContext } from '../step';
+import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class WaitUrlStep implements Step {
-  constructor(
-    private url: string
-  ) {
+export class WaitUrlStep implements UIStep {
+  type: 'ui' = 'ui';
+
+  constructor(private url: string) {
     Guard.notNull(url, 'url');
   }
 

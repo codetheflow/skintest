@@ -1,15 +1,17 @@
 import { Assert, AssertAll, AssertHost } from '../assert';
 import { Guard } from '../../common/guard';
-import { isUndefined } from '../../common/check';
+import { isUndefined } from '../../common/utils';
 import { Select, SelectAll } from '../selector';
-import { Step, StepContext } from '../step';
+import { AssertStep, UIStep, StepContext } from '../command';
 import { pass, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 import { invalidArgumentError } from '../../common/errors';
 import { notFoundElementFail } from '../test-result';
 import { formatSelector } from '../formatting';
 
-export class SeeStep implements Step {
+export class SeeStep implements AssertStep {
+  type: 'assert' = 'assert';
+
   constructor(
     private selector: Select<any> | SelectAll<any>,
     private assert: Assert<any> | AssertAll<any>,
@@ -68,10 +70,10 @@ export class SeeStep implements Step {
     const query = this.selector.toString();
 
     if (isUndefined(this.assert)) {
-      return `see ${formatSelector(query)}`;
+      return `${formatSelector(query)}`;
     }
 
     const { what, how } = this.assert as AssertHost<any>;
-    return `see that ${formatSelector(query)} has ${what} ${how} ${this.value}`;
+    return `${formatSelector(query)} has ${what} ${how} ${this.value}`;
   }
 }

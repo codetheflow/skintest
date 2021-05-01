@@ -33,6 +33,15 @@ export function inspect(info: InspectInfo): TestPass {
   };
 }
 
+export function checkFail(): TestFail {
+  return {
+    status: 'fail',
+    code: 'CHECK_FAIL',
+    description: '',
+    solution: ''
+  };
+}
+
 export function notEqualsFail<T>(etalon: T, actual: T): TestFail {
   return {
     status: 'fail',

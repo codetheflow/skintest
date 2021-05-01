@@ -7,7 +7,8 @@ import * as playwright from 'playwright';
 
 export function playwrightAttempt(count: number, report: StatusReport): Attempt {
   return async (method: () => Promise<void>): TestExecutionResult => {
-    while (--count >= 0) {
+    let attempts = count;
+    while (--attempts >= 0) {
       try {
         await method();
       }

@@ -1,14 +1,14 @@
 import { Guard } from '../../common/guard';
 import { invalidArgumentError } from '../../common/errors';
 import { Select, SelectAll } from '../selector';
-import { Step, StepContext } from '../step';
+import { DevStep, StepContext } from '../command';
 import { inspect, TestExecutionResult } from '../test-result';
-import { isString } from '../../common/check';
+import { isString } from '../../common/utils';
 
-export class InspectStep implements Step {
-  constructor(
-    private selector: string | Select<any> | SelectAll<any>
-  ) {
+export class InspectStep implements DevStep {
+  type: 'dev' = 'dev';
+
+  constructor(private selector: string | Select<any> | SelectAll<any>) {
     Guard.notNull(selector, 'selector');
   }
 

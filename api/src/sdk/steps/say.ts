@@ -1,10 +1,10 @@
-import { Step, StepContext } from '../step';
+import { SayStep, StepContext } from '../command';
 import { pass, TestExecutionResult } from '../test-result';
 
-export class SayStep implements Step {
-  constructor(
-    private message: string
-  ) { }
+export class TalkStep implements SayStep {
+  type: 'say' = 'say';
+
+  constructor(private message: string) { }
 
   execute(context: StepContext): TestExecutionResult {
     return Promise.resolve(pass());

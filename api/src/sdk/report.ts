@@ -5,7 +5,9 @@ export interface Report {
   beforeScenario(name: string): StatusReport;
   beforeStep(name: string): StatusReport;
 
-  step(name: string): StatusReport;
+  ui(name: string): StatusReport;
+  assert(name: string): StatusReport;
+  check(what: string): StatusReport;
 
   afterFeature(name: string): StatusReport;
   afterScenario(name: string): StatusReport;
@@ -15,7 +17,7 @@ export interface Report {
 
   say(message: string): StatusReport;
 
-  debug(name: string): StatusReport;
+  dev(name: string): StatusReport;
   inspect(info: InspectInfo): InspectReport
 }
 

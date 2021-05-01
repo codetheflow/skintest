@@ -1,9 +1,10 @@
 import { Guard } from '../../common/guard';
-import { Select } from '../selector';
-import { Step, StepContext } from '../step';
+import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class DoStep implements Step {
+export class DoStep implements UIStep {
+  type: 'ui' = 'ui';
+
   constructor(
     private action: (...args: any) => TestExecutionResult,
     private args: any[]

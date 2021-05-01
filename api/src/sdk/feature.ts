@@ -1,7 +1,8 @@
-import { Script } from './script';
 import { getSuite } from './suite';
-import { Step } from './step';
 import { Guard } from '../common/guard';
+import { Script } from './script';
+import { SupportDebug, Walk } from './walk';
+import { UIStep } from './command';
 
 export function feature(name: string): Feature {
   const suite = getSuite();
@@ -16,12 +17,12 @@ export function feature(name: string): Feature {
 };
 
 export interface Feature {
-  before(what: 'feature' | 'scenario' | 'step', ...steps: Step[]): Feature;
-  after(what: 'feature' | 'scenario' | 'step', ...steps: Step[]): Feature;
+  before(what: 'feature' | 'scenario' | 'step', ...steps: SupportDebug<UIStep>[]): Feature;
+  after(what: 'feature' | 'scenario' | 'step', ...steps: SupportDebug<UIStep>[]): Feature;
 
-  scenario(name: string, ...steps: Step[]): Scenario;
+  scenario(name: string, ...steps: Walk): Scenario;
 }
 
 export interface Scenario {
-  scenario(name: string, ...steps: Step[]): Scenario;
+  scenario(name: string, ...steps: Walk): Scenario;
 }

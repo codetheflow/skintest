@@ -1,4 +1,3 @@
-import { formatSelector } from '../sdk/formatting';
 import { InspectReport, Report, StatusReport } from '../sdk/report';
 import { TestFail, InspectInfo } from '../sdk/test-result';
 import * as chalk from 'chalk';
@@ -9,11 +8,19 @@ const CHECK_MARK = '\u2713';
 const NEW_LINE = '\n';
 
 export class NodeReport implements Report {
+  assert(name: string): StatusReport {
+    return new AssertReport(name);
+  }
+
+  check(what: string): StatusReport {
+    return new CheckReport(what);
+  }
+
   say(message: string): StatusReport {
     return new SayReport(message);
   }
 
-  step(name: string): StatusReport {
+  ui(name: string): StatusReport {
     return new StepReport(name);
   }
 
@@ -45,7 +52,7 @@ export class NodeReport implements Report {
     return new ShowOnlyErrorReport('attempt');
   }
 
-  debug(name: string): StatusReport {
+  dev(name: string): StatusReport {
     return new DebugReport(name);
   }
 
@@ -123,6 +130,27 @@ class DebugReport implements StatusReport {
   }
 }
 
+class CheckReport implements StatusReport {
+  private readonly ident = '    ';
+
+  constructor(what: string) {
+    stdout.write(this.ident);
+    stdout.write(chalk.hidden(CHECK_MARK) + ` I ${what}`);
+    stdout.write(NEW_LINE);
+  }
+
+  pass(): void {
+  }
+
+  fail(reason: TestFail): void {
+    // TODO: make it red?
+  }
+
+  error(ex: Error): void {
+    console.error(ex);
+  }
+}
+
 class SayReport implements StatusReport {
   private readonly ident = '    ';
 
@@ -178,6 +206,39 @@ class StepReport implements StatusReport {
     console.error(ex);
   }
 }
+
+class AssertReport implements StatusReport {
+  private readonly ident = '        ';
+
+  constructor(private assert: string) {
+    stdout.write(this.ident);
+    stdout.write(chalk.grey(assert));
+  }
+
+  pass(): void {
+    stdout.clearLine(-1);
+    stdout.cursorTo(0);
+
+    stdout.write(this.ident);
+    stdout.write(chalk.green(CHECK_MARK));
+    stdout.write(chalk.grey(this.assert));
+    stdout.write(NEW_LINE);
+  }
+
+  fail(reason: TestFail): void {
+    stdout.clearLine(-1);
+    stdout.cursorTo(0);
+
+    stdout.write(this.ident);
+    stderr.write(chalk.white.red(this.assert) + ', ' + chalk.red(`${reason.description}`));
+    stderr.write(NEW_LINE);
+  }
+
+  error(ex: Error): void {
+    console.error(ex);
+  }
+}
+
 
 class ShowOnlyErrorReport implements StatusReport {
   constructor(name: string) {

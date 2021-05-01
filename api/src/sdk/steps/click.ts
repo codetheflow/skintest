@@ -1,10 +1,12 @@
 import { Guard } from '../../common/guard';
 import { formatSelector } from '../formatting';
 import { Select } from '../selector';
-import { Step, StepContext } from '../step';
+import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class ClickStep implements Step {
+export class ClickStep implements UIStep {
+  type: 'ui' = 'ui';
+  
   constructor(
     private selector: Select<any>
   ) {

@@ -2,7 +2,7 @@ import { DOMElement } from '../dom';
 import { ElementRef, Engine } from '../engine';
 import { Guard } from '../../common/guard';
 import { Select, SelectAll } from '../selector';
-import { Step, StepContext } from '../step';
+import { DevStep, UIStep, StepContext } from '../command';
 import { TestExecutionResult, pass } from '../test-result';
 
 export interface Debugger {
@@ -26,7 +26,9 @@ class EngineDebugger implements Debugger {
   }
 }
 
-export class DebugStep implements Step {
+export class DebugStep implements DevStep {
+  type: 'dev' = 'dev';
+
   constructor(
     private breakpoint: Breakpoint
   ) {

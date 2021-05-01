@@ -8,15 +8,18 @@ feature('todo list')
     , I.amOnPage(todos.url)
   )
 
-  .scenario('add 2 todos'
+  // .after('step'
+  //   , I.pause()
+  // )
+
+  .scenario('adding new todos'
     , I.fill(todos.what, 'learn testing')
     , I.press('Enter')
     , I.fill(todos.what, 'be cool')
     , I.press('Enter')
 
+    , I.check('todo list contains added items')
     , I.see(todos.list, has.length, 2)
-    , I.see(todos.list, has.length.above, 0)
-    , I.see(todos.list, has.length.below, 3)
     , I.see(todos.item_at(0), has.text, 'learn testing')
     , I.see(todos.item_at(1), has.text.match, /cool/i)
   )

@@ -1,4 +1,4 @@
-import { isUndefined } from './check';
+import { isUndefined } from './utils';
 import { notNullError, undefinedError, notEmptyError } from './errors';
 
 export class Guard {

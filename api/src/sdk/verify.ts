@@ -68,7 +68,8 @@ export class Verify {
         return notEqualsFail(etalon, actual);
       }
       case AssertHow.regexp: {
-
+        // TODO: implement
+        return pass();
       }
       default: {
         throw invalidArgumentError('how', how);
