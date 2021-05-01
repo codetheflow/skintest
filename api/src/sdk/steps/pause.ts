@@ -13,6 +13,6 @@ export class PauseStep implements DevStep {
   }
 
   toString() {
-    return 'pause';
+    return 'I pause';
   }
 }

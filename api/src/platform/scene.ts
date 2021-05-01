@@ -1,6 +1,6 @@
 import { Attempt } from '../sdk/attempt';
 import { Engine } from '../sdk/engine';
-import { Report, StatusReport } from '../sdk/report';
+import { Report, StatusReport, ReportStepContext } from '../sdk/report';
 import { Script } from '../sdk/script';
 import { Command, StepContext } from '../sdk/command';
 import { invalidArgumentError } from '../common/errors';
@@ -15,31 +15,37 @@ export class Scene {
 
   async play(script: Script): Promise<void> {
     const { report } = this;
+    const featureContext = { feature: script.name };
 
     await this.run(
       script.beforeFeature,
-      report.beforeFeature(script.name)
+      report.beforeFeature(featureContext)
     );
 
     for (let [scenarioText, commands] of script.scenarios) {
+      const scenarioContext = { ...featureContext, scenario: scenarioText };
+
       await this.run(
         script.beforeScenario,
-        report.beforeScenario(scenarioText)
+        report.beforeScenario(scenarioContext)
       );
 
       for (let command of commands) {
-        const commandText = command.toString();
+        const stepContext = { ...scenarioContext, step: command.toString() };
 
         await this.run(
           script.beforeStep,
-          report.beforeStep(commandText)
+          report.beforeStep(stepContext)
         );
 
-        const result = await this.run([command], this.selectReport(command));
+        const result = await this.run(
+          [command],
+          this.getReport(command.type, stepContext)
+        );
 
         await this.run(
           script.afterStep,
-          report.afterStep(commandText)
+          report.afterStep(stepContext)
         );
 
         if (!result && command.type !== 'assert') {
@@ -49,13 +55,13 @@ export class Scene {
 
       await this.run(
         script.afterScenario,
-        report.afterScenario(scenarioText)
+        report.afterScenario(scenarioContext)
       );
     }
 
     await this.run(
       script.afterFeature,
-      report.afterFeature(script.name)
+      report.afterFeature(featureContext)
     );
   }
 
@@ -88,18 +94,17 @@ export class Scene {
     }
   }
 
-  private selectReport(command: Command) {
+  private getReport(type: Command['type'], context: ReportStepContext) {
     const { report } = this;
-    const commandText = command.toString();
 
-    switch (command.type) {
-      case 'assert': return report.assert(commandText);
-      case 'check': return report.check(commandText);
-      case 'dev': return report.dev(commandText);
-      case 'ui': return report.ui(commandText);
-      case 'say': return report.say(commandText);
+    switch (type) {
+      case 'assert': return report.assert(context);
+      case 'check': return report.check(context);
+      case 'dev': return report.dev(context);
+      case 'ui': return report.ui(context);
+      case 'say': return report.say(context);
       default:
-        throw invalidArgumentError('type', (command as any).type);
+        throw invalidArgumentError('type', type);
     }
   }
 }

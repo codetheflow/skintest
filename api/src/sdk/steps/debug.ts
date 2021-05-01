@@ -44,6 +44,6 @@ export class DebugStep implements DevStep {
   }
 
   toString() {
-    return 'debug';
+    return 'I debug';
   }
 }

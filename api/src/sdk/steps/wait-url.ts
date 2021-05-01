@@ -16,6 +16,6 @@ export class WaitUrlStep implements UIStep {
   }
 
   toString() {
-    return `wait url ${this.url}`;
+    return `I wait url ${this.url}`;
   }
 }

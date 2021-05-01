@@ -1,7 +1,7 @@
 import { Attempt } from '../sdk/attempt';
 import { StatusReport } from '../sdk/report';
 import { pass, TestExecutionResult } from '../sdk/test-result';
-import { timeoutFail } from '../sdk/test-result';
+import { timeout } from '../sdk/test-result';
 import { unknownEngineError } from '../common/errors';
 import * as playwright from 'playwright';
 
@@ -14,7 +14,7 @@ export function playwrightAttempt(count: number, report: StatusReport): Attempt 
       }
       catch (ex) {
         if (ex instanceof playwright.errors.TimeoutError) {
-          return timeoutFail(ex);
+          return timeout(ex);
         }
 
         throw unknownEngineError(ex);

@@ -3,7 +3,7 @@ export enum AssertHow {
   equals = 'equals',
   above = 'above',
   below = 'below',
-  regexp = 'match',
+  regexp = 'matches',
 }
 
 export enum AssertWhat {

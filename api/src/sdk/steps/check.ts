@@ -12,6 +12,6 @@ export class CheckWhatStep implements CheckStep {
   }
 
   toString() {
-    return `check ${this.what}`;
+    return `I check ${this.what}`;
   }
 }

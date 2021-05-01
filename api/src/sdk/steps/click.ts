@@ -22,6 +22,6 @@ export class ClickStep implements UIStep {
 
   toString() {
     const query = this.selector.toString();
-    return `click ${formatSelector(query)}`;
+    return `I click ${formatSelector(query)}`;
   }
 }

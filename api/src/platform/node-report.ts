@@ -1,59 +1,61 @@
-import { InspectReport, Report, StatusReport } from '../sdk/report';
+import { InspectReport, Report, ReportFeatureContext, ReportScenarioContext, ReportStepContext, StatusReport } from '../sdk/report';
 import { TestFail, InspectInfo } from '../sdk/test-result';
 import * as chalk from 'chalk';
 
 const { stdout, stderr } = process;
 
 const CHECK_MARK = '\u2713';
+const CROSS_MARK = '\u2613';
 const NEW_LINE = '\n';
+const WS = ' ';
 
 export class NodeReport implements Report {
-  assert(name: string): StatusReport {
-    return new AssertReport(name);
+  assert(context: ReportStepContext): StatusReport {
+    return new AssertReport(context.step);
   }
 
-  check(what: string): StatusReport {
-    return new CheckReport(what);
+  check(context: ReportStepContext): StatusReport {
+    return new InfoReport(context.step);
   }
 
-  say(message: string): StatusReport {
-    return new SayReport(message);
+  say(context: ReportStepContext): StatusReport {
+    return new InfoReport(context.step);
   }
 
-  ui(name: string): StatusReport {
-    return new StepReport(name);
+  ui(context: ReportStepContext): StatusReport {
+    return new StepReport(context.step);
   }
 
-  beforeFeature(name: string): StatusReport {
-    return new BeforeFeatureReport(name);
+  beforeFeature(context: ReportFeatureContext): StatusReport {
+    return new ErrorReport();
   }
 
-  beforeScenario(name: string): StatusReport {
-    return new BeforeScenarioReport(name);
+  beforeScenario(context: ReportScenarioContext): StatusReport {
+    return new BeforeScenarioReport(context.feature, context.scenario);
   }
 
-  beforeStep(name: string): StatusReport {
-    return new ShowOnlyErrorReport(name);
+  beforeStep(context: ReportStepContext): StatusReport {
+    return new ErrorReport();
   }
 
-  afterFeature(name: string): StatusReport {
-    return new AfterFeatureReport(name);
+  afterFeature(context: ReportFeatureContext): StatusReport {
+    return new ErrorReport();
   }
 
-  afterScenario(name: string): StatusReport {
-    return new ShowOnlyErrorReport(name);
+  afterScenario(context: ReportScenarioContext): StatusReport {
+    return new ErrorReport();
   }
 
-  afterStep(name: string): StatusReport {
-    return new ShowOnlyErrorReport(name);
+  afterStep(context: ReportStepContext): StatusReport {
+    return new ErrorReport();
   }
 
   attempt(): StatusReport {
-    return new ShowOnlyErrorReport('attempt');
+    return new ErrorReport();
   }
 
-  dev(name: string): StatusReport {
-    return new DebugReport(name);
+  dev(context: ReportStepContext): StatusReport {
+    return new DebugReport(context.step);
   }
 
   async inspect(info: InspectInfo): InspectReport {
@@ -110,6 +112,20 @@ export class NodeReport implements Report {
   }
 }
 
+class ErrorReport implements StatusReport {
+  pass(): void {
+  }
+
+  fail(reason: TestFail): void {
+    console.error(reason.description);
+  }
+
+  error(ex: Error): void {
+    console.error(ex);
+  }
+}
+
+
 class DebugReport implements StatusReport {
   constructor(name: string) {
     stdout.write(NEW_LINE);
@@ -130,62 +146,34 @@ class DebugReport implements StatusReport {
   }
 }
 
-class CheckReport implements StatusReport {
-  private readonly ident = '    ';
+class InfoReport extends ErrorReport {
+  constructor(step: string) {
+    super();
 
-  constructor(what: string) {
-    stdout.write(this.ident);
-    stdout.write(chalk.hidden(CHECK_MARK) + ` I ${what}`);
-    stdout.write(NEW_LINE);
-  }
-
-  pass(): void {
-  }
-
-  fail(reason: TestFail): void {
-    // TODO: make it red?
-  }
-
-  error(ex: Error): void {
-    console.error(ex);
-  }
-}
-
-class SayReport implements StatusReport {
-  private readonly ident = '    ';
-
-  constructor(message: string) {
-    stdout.write(this.ident);
-    stdout.write(chalk.hidden(CHECK_MARK) + chalk.italic(` I ${message}`));
+    stdout.write(chalk.hidden(CHECK_MARK));
+    stdout.write(WS);
+    stdout.write(chalk.italic(step));
   }
 
   pass(): void {
     stdout.write(NEW_LINE);
-  }
-
-  fail(reason: TestFail): void {
-    stdout.write(NEW_LINE);
-  }
-
-  error(ex: Error): void {
-    console.error(ex);
   }
 }
 
 class StepReport implements StatusReport {
-  private readonly ident = '    ';
-  constructor(private doSomething: string) {
-    stdout.write(this.ident);
-    stdout.write(chalk.grey(` I ${doSomething}`));
+  constructor(private step: string) {
+    stdout.write(chalk.hidden(CHECK_MARK));
+    stdout.write(WS);
+    stdout.write(chalk.grey(step));
   }
 
   pass(): void {
     stdout.clearLine(-1);
     stdout.cursorTo(0);
 
-    stdout.write(this.ident);
     stdout.write(chalk.green(CHECK_MARK));
-    stdout.write(chalk.grey(` I ${this.doSomething}`));
+    stdout.write(WS);
+    stdout.write(chalk.grey(this.step));
     stdout.write(NEW_LINE);
   }
 
@@ -193,11 +181,11 @@ class StepReport implements StatusReport {
     stdout.clearLine(-1);
     stdout.cursorTo(0);
 
-    stdout.write(this.ident);
-    stdout.write(chalk.white.bgRed(`I ${this.doSomething}`));
+    stdout.write(chalk.red(CROSS_MARK));
+    stdout.write(WS);
+    stdout.write(chalk.white.bgRed(this.step));
     stdout.write(NEW_LINE);
 
-    stderr.write(this.ident + ' ');
     stderr.write(chalk.yellow(`${reason.description}. ${reason.solution}`));
     stderr.write(NEW_LINE);
   }
@@ -207,11 +195,10 @@ class StepReport implements StatusReport {
   }
 }
 
-class AssertReport implements StatusReport {
-  private readonly ident = '        ';
-
+class AssertReport extends ErrorReport {
   constructor(private assert: string) {
-    stdout.write(this.ident);
+    super();
+
     stdout.write(chalk.grey(assert));
   }
 
@@ -219,68 +206,34 @@ class AssertReport implements StatusReport {
     stdout.clearLine(-1);
     stdout.cursorTo(0);
 
-    stdout.write(this.ident);
     stdout.write(chalk.green(CHECK_MARK));
+    stdout.write(WS);
     stdout.write(chalk.grey(this.assert));
     stdout.write(NEW_LINE);
   }
 
   fail(reason: TestFail): void {
-    stdout.clearLine(-1);
-    stdout.cursorTo(0);
+    stderr.clearLine(-1);
+    stderr.cursorTo(0);
 
-    stdout.write(this.ident);
-    stderr.write(chalk.white.red(this.assert) + ', ' + chalk.red(`${reason.description}`));
+    stderr.write(chalk.red(CROSS_MARK));
+    stderr.write(WS)
+    stderr.write(chalk.red(this.assert));
     stderr.write(NEW_LINE);
-  }
 
-  error(ex: Error): void {
-    console.error(ex);
-  }
-}
-
-
-class ShowOnlyErrorReport implements StatusReport {
-  constructor(name: string) {
-  }
-
-  pass(): void {
-  }
-
-  fail(reason: TestFail): void {
-  }
-
-  error(ex: Error): void {
-    console.error(ex);
+    // stderr.write(this.ident);
+    // stderr.write(chalk.hidden(CROSS_MARK) + ' ');
+    // stderr.write(chalk.yellow(reason.description));
+    // stderr.write(NEW_LINE);
   }
 }
 
-class BeforeFeatureReport extends ShowOnlyErrorReport {
-  constructor(name: string) {
-    super(name);
+class BeforeScenarioReport extends ErrorReport {
+  constructor(feature: string, scenario: string) {
+    super();
 
     stdout.write(NEW_LINE);
-    stdout.write(chalk.bold(`feature \`${name}\``))
-    stdout.write(NEW_LINE);
-  }
-}
-
-class AfterFeatureReport extends ShowOnlyErrorReport {
-  constructor(name: string) {
-    super(name);
-    stdout.write(NEW_LINE);
-  }
-}
-
-class BeforeScenarioReport extends ShowOnlyErrorReport {
-  private readonly ident = '  ';
-
-  constructor(name: string) {
-    super(name);
-
-    stdout.write(NEW_LINE);
-    stdout.write(this.ident);
-    stdout.write(chalk.whiteBright(`scenario \`${name}\``));
+    stdout.write(chalk.whiteBright.bold(`${feature}`) + '\\' + chalk.whiteBright(scenario));
     stdout.write(NEW_LINE);
   }
 }

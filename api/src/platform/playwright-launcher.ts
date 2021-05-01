@@ -7,7 +7,7 @@ import * as playwright from 'playwright';
 
 export async function playwrightLauncher(suite: Suite) {
   for (let script of suite.getScripts()) {
-    const browser = await playwright['chromium'].launch({ headless: false });
+    const browser = await playwright['chromium'].launch({ headless: true });
     const context = await browser.newContext();
 
     const page = await context.newPage();

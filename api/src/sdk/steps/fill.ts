@@ -23,6 +23,6 @@ export class FillStep implements UIStep {
 
   toString() {
     const query = this.selector.toString();
-    return `fill ${formatSelector(query)} with \`${this.value}\``;
+    return `I fill ${formatSelector(query)} with \`${this.value}\``;
   }
 }

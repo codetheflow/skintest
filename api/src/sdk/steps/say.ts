@@ -11,6 +11,6 @@ export class TalkStep implements SayStep {
   }
 
   toString() {
-    return `say ${this.message}`;
+    return `I say ${this.message}`;
   }
 }

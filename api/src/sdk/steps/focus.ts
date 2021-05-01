@@ -20,6 +20,6 @@ export class FocusStep implements UIStep {
 
   toString() {
     const query = this.selector.toString();
-    return `focus ${formatSelector(query)}`;
+    return `I focus ${formatSelector(query)}`;
   }
 }

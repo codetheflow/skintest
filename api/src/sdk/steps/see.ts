@@ -6,7 +6,7 @@ import { AssertStep, UIStep, StepContext } from '../command';
 import { pass, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 import { invalidArgumentError } from '../../common/errors';
-import { notFoundElementFail } from '../test-result';
+import { notFoundElement } from '../test-result';
 import { formatSelector } from '../formatting';
 
 export class SeeStep implements AssertStep {
@@ -29,7 +29,7 @@ export class SeeStep implements AssertStep {
         case 'select': {
           const element = await engine.select(query);
           if (!element) {
-            return notFoundElementFail(query);
+            return notFoundElement(query);
           }
 
           break;
@@ -37,7 +37,7 @@ export class SeeStep implements AssertStep {
         case 'selectAll': {
           const elements = await engine.selectAll(query);
           if (!elements.length) {
-            return notFoundElementFail(query);
+            return notFoundElement(query);
           }
 
           break;
@@ -70,10 +70,10 @@ export class SeeStep implements AssertStep {
     const query = this.selector.toString();
 
     if (isUndefined(this.assert)) {
-      return `${formatSelector(query)}`;
+      return formatSelector(query);
     }
 
     const { what, how } = this.assert as AssertHost<any>;
-    return `${formatSelector(query)} has ${what} ${how} ${this.value}`;
+    return `I see ${formatSelector(query)} has ${what} ${how} \`${this.value}\``;
   }
 }

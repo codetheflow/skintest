@@ -2,7 +2,7 @@ import { AssertHow, AssertWhat } from './assert';
 import { DOMElement } from './dom';
 import { Engine } from './engine';
 import { invalidArgumentError } from '../common/errors';
-import { notEqualsFail, notFoundElementFail, pass, TestPass } from './test-result';
+import { asertFail, notFoundElement, pass, TestPass } from './test-result';
 import { Select, SelectAll } from './selector';
 import { TestExecutionResult, TestFail } from './test-result';
 
@@ -18,14 +18,18 @@ export class Verify {
   ): TestExecutionResult {
     const elementRef = await this.engine.select<S>(selector.toString());
     if (!elementRef) {
-      return notFoundElementFail(selector.toString());
+      return notFoundElement(selector.toString());
     }
 
     switch (what) {
       case AssertWhat.innerText: {
-        const actualValue = await elementRef.innerText();
-        const expectedValue = expected as any as string;
-        return this.assert(how, actualValue, expectedValue);
+        const actual = await elementRef.innerText();
+        const etalon = expected as any as string;
+        if (this.test(how, actual, etalon) === true) {
+          return pass();
+        }
+
+        return asertFail(etalon, actual);
       }
       default: {
         throw invalidArgumentError('what', what);
@@ -42,8 +46,13 @@ export class Verify {
     const elementRefs = await this.engine.selectAll<S>(selector.toString());
     switch (what) {
       case AssertWhat.length: {
-        const expectedLength = expected as any as number;
-        return this.assert(how, elementRefs.length, expectedLength);
+        const etalon = expected as any as number;
+        const actual = elementRefs.length;
+        if (this.test(how, actual, etalon)) {
+          return pass();
+        }
+
+        return asertFail(etalon, actual);
       }
       default: {
         throw invalidArgumentError('what', what);
@@ -52,24 +61,22 @@ export class Verify {
 
   }
 
-  private assert<V>(how: AssertHow, actual: V, etalon: V): TestFail | TestPass {
+  private test<V>(how: AssertHow, actual: V, etalon: V): boolean {
     switch (how) {
       case AssertHow.above: {
-
+        return etalon > actual;
       }
       case AssertHow.below: {
+        return etalon < actual;
 
       }
       case AssertHow.equals: {
-        if (actual === etalon) {
-          return pass();
-        }
-
-        return notEqualsFail(etalon, actual);
+        return etalon === actual;
       }
       case AssertHow.regexp: {
-        // TODO: implement
-        return pass();
+        const actualText = '' + actual;
+        const regexp = etalon as any as RegExp;
+        return actualText.match(regexp) !== null;
       }
       default: {
         throw invalidArgumentError('how', how);

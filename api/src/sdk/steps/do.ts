@@ -17,6 +17,6 @@ export class DoStep implements UIStep {
   }
 
   toString() {
-    return `do`;
+    return `I do`;
   }
 }

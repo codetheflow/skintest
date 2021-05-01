@@ -1,4 +1,7 @@
+import { AssertHow, AssertWhat } from './assert';
 import { ElementRef } from './engine';
+import { formatSelector } from './formatting';
+import { Select } from './selector';
 
 export interface TestFail {
   status: 'fail',
@@ -42,30 +45,33 @@ export function checkFail(): TestFail {
   };
 }
 
-export function notEqualsFail<T>(etalon: T, actual: T): TestFail {
+export function asertFail<V>(
+  etalon: V,
+  actual: V
+): TestFail {
   return {
     status: 'fail',
     code: 'NOT_EQUALS',
-    description: `expected \`${etalon}\`, but was \`${actual}\``,
-    solution: 'make sure that values are correct'
+    description: `expected \`${etalon}\`, got \`${actual}\``,
+    solution: 'check assert condition'
   };
 }
 
-export function notFoundElementFail(name: string): TestFail {
+export function notFoundElement(query: string): TestFail {
   return {
     status: 'fail',
     code: 'NOT_FOUND_ELEMENT',
-    description: `element ${name} is not found`,
-    solution: 'try to change selector and make sure that element is available '
+    description: `element ${formatSelector(query)} is not found`,
+    solution: 'check selector and element availability'
   };
 }
 
-export function timeoutFail(ex: Error): TestFail {
+export function timeout(ex: Error): TestFail {
   return {
     status: 'fail',
     code: 'TIMEOUT',
     description: ex.message,
-    solution: 'try to change selector and make sure that element is available or increase timeout'
+    solution: 'check selector and element availability or increase a timeout'
   };
 }
 

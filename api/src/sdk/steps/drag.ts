@@ -24,6 +24,6 @@ export class DragStep implements UIStep {
 
   toString() {
     const query = this.selector.toString();
-    return `drag ${formatSelector(query)} x: ${this.x}, y: ${this.y}`
+    return `I drag ${formatSelector(query)} x: ${this.x}, y: ${this.y}`
   }
 }

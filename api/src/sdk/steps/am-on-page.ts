@@ -17,6 +17,6 @@ export class AmOnPageStep implements UIStep {
   }
 
   toString() {
-    return `am on page ${this.url}`;
+    return `I am on page ${this.url}`;
   }
 }

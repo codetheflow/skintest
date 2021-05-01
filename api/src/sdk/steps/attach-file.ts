@@ -23,6 +23,6 @@ export class AttachFileStep implements UIStep {
 
   toString() {
     const query = this.selector.toString();
-    return `attach file \`${this.file}\` to ${formatSelector(query)}`
+    return `I attach file \`${this.file}\` to ${formatSelector(query)}`
   }
 }

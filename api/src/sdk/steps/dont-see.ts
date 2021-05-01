@@ -32,10 +32,10 @@ export class DontSeeStep implements AssertStep {
   toString() {
     const query = this.selector.toString();
     if (isUndefined(this.assert)) {
-      return `${formatSelector(query)}`;
+      return formatSelector(query);
     }
 
     const { what, how } = this.assert as AssertHost<any>;
-    return `${formatSelector(query)} has ${what} ${how} ${this.value}`;
+    return `I don't see ${formatSelector(query)} has ${what} ${how} \`${this.value}\``;
   }
 }

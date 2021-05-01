@@ -17,6 +17,6 @@ export class PressStep implements UIStep {
   }
 
   toString() {
-    return `press ${this.key}`;
+    return `I press ${this.key}`;
   }
 }
