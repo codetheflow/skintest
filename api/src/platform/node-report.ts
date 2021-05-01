@@ -11,7 +11,7 @@ const WS = ' ';
 
 export class NodeReport implements Report {
   assert(context: ReportStepContext): StatusReport {
-    return new AssertReport(context.step);
+    return new StepReport(context.step);
   }
 
   check(context: ReportStepContext): StatusReport {
@@ -126,8 +126,10 @@ class ErrorReport implements StatusReport {
 }
 
 
-class DebugReport implements StatusReport {
+class DebugReport extends ErrorReport {
   constructor(name: string) {
+    super();
+
     stdout.write(NEW_LINE);
     stdout.write(chalk.yellow(name));
     stdout.write(NEW_LINE);
@@ -160,8 +162,10 @@ class InfoReport extends ErrorReport {
   }
 }
 
-class StepReport implements StatusReport {
+class StepReport extends ErrorReport {
   constructor(private step: string) {
+    super();
+
     stdout.write(chalk.hidden(CHECK_MARK));
     stdout.write(WS);
     stdout.write(chalk.grey(step));
@@ -178,53 +182,18 @@ class StepReport implements StatusReport {
   }
 
   fail(reason: TestFail): void {
-    stdout.clearLine(-1);
-    stdout.cursorTo(0);
-
-    stdout.write(chalk.red(CROSS_MARK));
-    stdout.write(WS);
-    stdout.write(chalk.white.bgRed(this.step));
-    stdout.write(NEW_LINE);
-
-    stderr.write(chalk.yellow(`${reason.description}. ${reason.solution}`));
-    stderr.write(NEW_LINE);
-  }
-
-  error(ex: Error): void {
-    console.error(ex);
-  }
-}
-
-class AssertReport extends ErrorReport {
-  constructor(private assert: string) {
-    super();
-
-    stdout.write(chalk.grey(assert));
-  }
-
-  pass(): void {
-    stdout.clearLine(-1);
-    stdout.cursorTo(0);
-
-    stdout.write(chalk.green(CHECK_MARK));
-    stdout.write(WS);
-    stdout.write(chalk.grey(this.assert));
-    stdout.write(NEW_LINE);
-  }
-
-  fail(reason: TestFail): void {
     stderr.clearLine(-1);
     stderr.cursorTo(0);
 
     stderr.write(chalk.red(CROSS_MARK));
     stderr.write(WS)
-    stderr.write(chalk.red(this.assert));
+    stderr.write(chalk.gray(this.step));
     stderr.write(NEW_LINE);
 
-    // stderr.write(this.ident);
-    // stderr.write(chalk.hidden(CROSS_MARK) + ' ');
-    // stderr.write(chalk.yellow(reason.description));
-    // stderr.write(NEW_LINE);
+    stderr.write(chalk.hidden(CROSS_MARK));
+    stderr.write(WS);
+    stderr.write(chalk.bgRedBright.white(reason.description));
+    stderr.write(NEW_LINE);
   }
 }
 

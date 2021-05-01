@@ -9,7 +9,7 @@ export const todos = {
 
   , list: $$<HTMLElement>('.todo-list > li')
   , item: (text: string) => $(`li.completed label[innerText=${text}]`)
-  , item_at: (index: number) => $(`.todo-list > li:nth-child(${index}) label`)
+  , item_at: (index: number) => $(`.todo-list > li:nth-child(${index + 1}) label`)
 
   , item_delete: (text: string) => $(`li.completed label[innerText=${text}] button.destroy`)
 };
