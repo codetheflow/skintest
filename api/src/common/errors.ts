@@ -2,9 +2,8 @@ function error(name: string, message: string) {
   return new Error(`${name}: ${message}`);
 }
 
-
 export function invalidArgumentError<T>(name: string, value: T) {
-  return error('invalid argument', `${name} ${value}`);
+  return error('invalid argument', `\`${name}\` with value \`${value}\``);
 }
 
 export function unknownEngineError(ex: Error) {

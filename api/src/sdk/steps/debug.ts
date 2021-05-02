@@ -1,13 +1,13 @@
 import { DOMElement } from '../dom';
-import { ElementRef, Engine } from '../engine';
+import { ElementRef, ElementRefList, Engine } from '../engine';
 import { Guard } from '../../common/guard';
-import { Select, SelectAll } from '../selector';
+import { Query, QueryList } from '../query';
 import { DevStep, UIStep, StepContext } from '../command';
 import { TestExecutionResult, pass } from '../test-result';
 
 export interface Debugger {
-  $<T extends DOMElement>(query: string | Select<T>): Promise<ElementRef<T> | null>;
-  $$<T extends DOMElement>(query: string | SelectAll<T>): Promise<ElementRef<T>[]>;
+  $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null>;
+  $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRef<T>[]>;
 }
 
 export type Breakpoint = (dbg: Debugger) => Promise<void>;
@@ -15,14 +15,14 @@ export type Breakpoint = (dbg: Debugger) => Promise<void>;
 class EngineDebugger implements Debugger {
   constructor(private engine: Engine) { }
 
-  $<T extends DOMElement>(selector: string | Select<T>): Promise<ElementRef<T> | null> {
-    const query = selector.toString();
-    return this.engine.select<T>(query);
+  $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null> {
+    const selector = query.toString();
+    return this.engine.select<T>(selector);
   }
 
-  $$<T extends DOMElement>(selector: string | SelectAll<T>): Promise<ElementRef<T>[]> {
-    const query = selector.toString();
-    return this.engine.selectAll<T>(query);
+  $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRefList<T>> {
+    const selector = query.toString();
+    return this.engine.selectAll<T>(selector);
   }
 }
 

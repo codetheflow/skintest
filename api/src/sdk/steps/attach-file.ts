@@ -1,28 +1,28 @@
 import { Guard } from '../../common/guard';
-import { Select } from '../selector';
+import { Query } from '../query';
 import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
-import { formatSelector } from '../formatting';
+import { formatSelector } from '../format';
 
 export class AttachFileStep implements UIStep {
   type: 'ui' = 'ui';
   
   constructor(
-    private selector: Select<any>,
+    private query: Query<any>,
     private file: any,
   ) {
-    Guard.notNull(selector, 'selector');
+    Guard.notNull(query, 'query');
   }
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
 
-    const query = this.selector.toString();
-    return attempt(() => engine.attachFile(query, this.file));
+    const selector = this.query.toString();
+    return attempt(() => engine.attachFile(selector, this.file));
   }
 
   toString() {
-    const query = this.selector.toString();
-    return `I attach file \`${this.file}\` to ${formatSelector(query)}`
+    const selector = this.query.toString();
+    return `I attach file \`${this.file}\` to ${formatSelector(selector)}`
   }
 }

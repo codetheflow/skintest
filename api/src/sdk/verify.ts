@@ -2,34 +2,42 @@ import { AssertHow, AssertWhat } from './assert';
 import { DOMElement } from './dom';
 import { Engine } from './engine';
 import { invalidArgumentError } from '../common/errors';
-import { asertFail, notFoundElement, pass, TestPass } from './test-result';
-import { Select, SelectAll } from './selector';
-import { TestExecutionResult, TestFail } from './test-result';
+import { binaryAssertFail, notFoundElement, pass, unaryAssertFail } from './test-result';
+import { Query, QueryList } from './query';
+import { TestExecutionResult } from './test-result';
 
 export class Verify {
   constructor(private engine: Engine) {
   }
 
   async element<S extends DOMElement, V>(
-    selector: Select<S>,
+    query: Query<S>,
     what: AssertWhat,
     how: AssertHow,
     expected: V
   ): TestExecutionResult {
-    const elementRef = await this.engine.select<S>(selector.toString());
+    const elementRef = await this.engine.select<S>(query.toString());
     if (!elementRef) {
-      return notFoundElement(selector.toString());
+      return notFoundElement(query.toString());
     }
 
     switch (what) {
       case AssertWhat.innerText: {
         const actual = await elementRef.innerText();
         const etalon = expected as any as string;
-        if (this.test(how, actual, etalon) === true) {
+        if (this.binaryTest(how, actual, etalon) === true) {
           return pass();
         }
 
-        return asertFail(etalon, actual);
+        return binaryAssertFail(etalon, actual);
+      }
+      case AssertWhat.focus: {
+        const hasFocus = await elementRef.hasFocus();
+        if (hasFocus) {
+          return pass();
+        }
+
+        return unaryAssertFail('not focused');
       }
       default: {
         throw invalidArgumentError('what', what);
@@ -37,31 +45,30 @@ export class Verify {
     }
   }
 
-  async elements<S extends DOMElement, V>(
-    selector: SelectAll<S>,
+  async elementList<S extends DOMElement, V>(
+    selector: QueryList<S>,
     what: AssertWhat,
     how: AssertHow,
     expected: V
   ): TestExecutionResult {
-    const elementRefs = await this.engine.selectAll<S>(selector.toString());
+    const elementRefList = await this.engine.selectAll<S>(selector.toString());
     switch (what) {
       case AssertWhat.length: {
+        const actual = await elementRefList.length;
         const etalon = expected as any as number;
-        const actual = elementRefs.length;
-        if (this.test(how, actual, etalon)) {
+        if (this.binaryTest(how, actual, etalon)) {
           return pass();
         }
 
-        return asertFail(etalon, actual);
+        return binaryAssertFail(etalon, actual);
       }
       default: {
         throw invalidArgumentError('what', what);
       }
     }
-
   }
 
-  private test<V>(how: AssertHow, actual: V, etalon: V): boolean {
+  private binaryTest<V>(how: AssertHow, actual: V, etalon: V): boolean {
     switch (how) {
       case AssertHow.above: {
         return etalon > actual;

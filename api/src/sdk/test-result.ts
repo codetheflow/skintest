@@ -1,7 +1,5 @@
-import { AssertHow, AssertWhat } from './assert';
 import { ElementRef } from './engine';
-import { formatSelector } from './formatting';
-import { Select } from './selector';
+import { formatSelector } from './format';
 
 export interface TestFail {
   status: 'fail',
@@ -16,7 +14,7 @@ export interface TestPass {
 }
 
 export interface InspectInfo {
-  query: string;
+  selector: string;
   target: ElementRef<any> | ElementRef<any>[] | null;
 }
 
@@ -45,13 +43,22 @@ export function checkFail(): TestFail {
   };
 }
 
-export function asertFail<V>(
+export function unaryAssertFail(message: string): TestFail {
+  return {
+    status: 'fail',
+    code: 'UNARY_ASSERT_FAIL',
+    description: message,
+    solution: 'check assert condition'
+  };
+}
+
+export function binaryAssertFail<V>(
   etalon: V,
   actual: V
 ): TestFail {
   return {
     status: 'fail',
-    code: 'NOT_EQUALS',
+    code: 'BINARY_ASSERT_FAIL',
     description: `expected \`${etalon}\`, got \`${actual}\``,
     solution: 'check assert condition'
   };

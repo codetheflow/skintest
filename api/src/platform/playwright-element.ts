@@ -1,15 +1,22 @@
-// import { DOMElement } from '../sdk/dom';
-// import { ElementRef } from '../sdk/engine';
-// import * as playwright from 'playwright';
+import { DOMElement } from '../sdk/dom';
+import { ElementRef, ElementRefList } from '../sdk/engine';
+import * as playwright from 'playwright';
 
-// export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
-//   constructor(private handlePromise: Promise<playwright.ElementHandle<T> | null>) {
-//   }
+export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
+  constructor(
+    private handle: playwright.ElementHandle<DOMElement>,
+    private page: playwright.Page,
+    private selector: string,
+  ) {
+  }
 
-//   async innerText(): Promise<string> {
-//     const handle = await this.handlePromise;
-//     const value = await handle?.innerText();
-//     return value?.trim() || '';
-//   }
+  async hasFocus(): Promise<boolean> {
+    const hasFocus = await this.page.$eval(this.selector, (el) => el === document.activeElement)
+    return hasFocus;
+  }
 
-// }
+  async innerText(): Promise<string> {
+    const value = await this.handle?.innerText();
+    return value || '';
+  }
+}

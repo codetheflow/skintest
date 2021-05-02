@@ -1,6 +1,6 @@
-import { formatSelector } from '../formatting';
+import { formatSelector } from '../format';
 import { Guard } from '../../common/guard';
-import { Select } from '../selector';
+import { Query } from '../query';
 import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
@@ -8,22 +8,22 @@ export class DragStep implements UIStep {
   type: 'ui' = 'ui';
   
   constructor(
-    private selector: Select<any>,
+    private query: Query<any>,
     private x: number,
     private y: number
   ) {
-    Guard.notNull(selector, 'selector');
+    Guard.notNull(query, 'query');
   }
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
 
-    const query = this.selector.toString();
-    return attempt(() => engine.drag(query, this.x, this.y));
+    const selector = this.query.toString();
+    return attempt(() => engine.drag(selector, this.x, this.y));
   }
 
   toString() {
-    const query = this.selector.toString();
-    return `I drag ${formatSelector(query)} x: ${this.x}, y: ${this.y}`
+    const selector = this.query.toString();
+    return `I drag ${formatSelector(selector)} x: ${this.x}, y: ${this.y}`
   }
 }

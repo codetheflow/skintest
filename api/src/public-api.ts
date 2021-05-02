@@ -1,5 +1,5 @@
-export { $, $$, Select, SelectAll } from './sdk/selector';
-export { Assert, AssertAll } from './sdk/assert'
+export { $, $$, Query, QueryList } from './sdk/query';
+export { UnaryAssert, BinaryAssert, ListAssert } from './sdk/assert'
 export { AssertStep, DevStep, CommandBody, UIStep, SayStep, StepContext } from './sdk/command';
 export { Debugger, Breakpoint } from './sdk/steps/debug';
 export { DOMElement } from './sdk/dom';

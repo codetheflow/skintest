@@ -81,7 +81,7 @@ class ErrorReport implements StatusReport {
   }
 
   async inspect(info: InspectInfo): Promise<void> {
-    let { query, target } = info;
+    let { selector: query, target } = info;
 
 
     const textForTable = (text: string): string => {

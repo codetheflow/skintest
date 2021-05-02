@@ -1,6 +1,6 @@
 import { Guard } from '../../common/guard';
 import { invalidArgumentError } from '../../common/errors';
-import { Select, SelectAll } from '../selector';
+import { Query, QueryList } from '../query';
 import { DevStep, StepContext } from '../command';
 import { inspect, TestExecutionResult } from '../test-result';
 import { isString } from '../../common/utils';
@@ -8,24 +8,24 @@ import { isString } from '../../common/utils';
 export class InspectStep implements DevStep {
   type: 'dev' = 'dev';
 
-  constructor(private selector: string | Select<any> | SelectAll<any>) {
-    Guard.notNull(selector, 'selector');
+  constructor(private query: string | Query<any> | QueryList<any>) {
+    Guard.notNull(query, 'query');
   }
 
   async execute(context: StepContext): TestExecutionResult {
     const { engine } = context;
 
-    const query = this.selector.toString();
-    const type = isString(this.selector) ? 'selectAll' : (this.selector as any).type
+    const query = this.query.toString();
+    const type = isString(this.query) ? 'selectAll' : (this.query as any).type
     switch (type) {
       case 'select': {
         const target = await engine.select(query);
-        return inspect({ query, target });
+        return inspect({ selector: query, target });
       }
 
       case 'selectAll': {
         const target = await engine.selectAll(query);
-        return inspect({ query, target });
+        return inspect({ selector: query, target });
       }
 
       default: {

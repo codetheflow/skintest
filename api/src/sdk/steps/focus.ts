@@ -1,25 +1,27 @@
 import { Guard } from '../../common/guard';
-import { formatSelector } from '../formatting';
-import { Select } from '../selector';
+import { formatSelector } from '../format';
+import { Query } from '../query';
 import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
 export class FocusStep implements UIStep {
   type: 'ui' = 'ui';
 
-  constructor(private selector: Select<any>) {
-    Guard.notNull(selector, 'selector');
+  constructor(
+    private query: Query<any>
+  ) {
+    Guard.notNull(query, 'query');
   }
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
 
-    const query = this.selector.toString();
-    return attempt(() => engine.focus(query));
+    const selector = this.query.toString();
+    return attempt(() => engine.focus(selector));
   }
 
   toString() {
-    const query = this.selector.toString();
-    return `I focus ${formatSelector(query)}`;
+    const selector = this.query.toString();
+    return `I focus ${formatSelector(selector)}`;
   }
 }

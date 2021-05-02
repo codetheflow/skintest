@@ -1,11 +1,14 @@
 import {
   AssertWhat,
   NumberAssert,
-  StringAssert
+  StringAssert,
+  UnaryAssert,
+  BooleanAssert
 } from './assert';
 
 export interface Has<V> {
   text: StringAssert;
+  focus: UnaryAssert;
 }
 
 export interface HasAll<V> {
@@ -19,6 +22,10 @@ class Assertion<V> implements Has<V>, HasAll<V> {
 
   get length(): NumberAssert {
     return new NumberAssert(AssertWhat.length);
+  }
+
+  get focus(): UnaryAssert {
+    return new BooleanAssert(AssertWhat.focus);
   }
 }
 

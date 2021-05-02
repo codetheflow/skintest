@@ -1,6 +1,7 @@
 import { DOMElement } from '../sdk/dom';
-import { ElementRef, Engine } from '../sdk/engine';
+import { ElementRef, ElementRefList, Engine } from '../sdk/engine';
 import { KeyboardKey } from '../sdk/keyboard';
+import { PlaywrightElement } from './playwright-element';
 import * as playwright from 'playwright';
 
 export class PlaywrightEngine implements Engine {
@@ -15,20 +16,20 @@ export class PlaywrightEngine implements Engine {
     return this.page.waitForNavigation({ url }) as Promise<any>;
   }
 
-  click(query: string): Promise<void> {
-    return this.page.click(query) as Promise<any>;
+  click(selector: string): Promise<void> {
+    return this.page.click(selector) as Promise<any>;
   }
 
   press(key: KeyboardKey): Promise<void> {
     return this.page.keyboard.press(key);
   }
 
-  fill(query: string, value: string): Promise<void> {
-    return this.page.fill(query, value);
+  fill(selector: string, value: string): Promise<void> {
+    return this.page.fill(selector, value);
   }
 
-  focus(query: string): Promise<void> {
-    return this.page.focus(query);
+  focus(selector: string): Promise<void> {
+    return this.page.focus(selector);
   }
 
   drag(target: string, x: number, y: number): Promise<void> {
@@ -43,11 +44,17 @@ export class PlaywrightEngine implements Engine {
     return this.page.pause();
   }
 
-  select<T extends DOMElement>(query: string): Promise<ElementRef<T> | null> {
-    return this.page.$(query);
+  async select<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
+    const handle = await this.page.$(selector);
+    if (handle) {
+      return new PlaywrightElement<T>(handle, this.page, selector);
+    }
+
+    return null;
   }
 
-  selectAll<T extends DOMElement>(query: string): Promise<ElementRef<T>[]> {
-    return this.page.$$(query);
+  async selectAll<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
+    return (await this.page.$$(selector))
+      .map(handle => new PlaywrightElement(handle, this.page, selector));
   }
 }

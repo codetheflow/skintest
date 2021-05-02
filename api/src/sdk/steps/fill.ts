@@ -1,6 +1,6 @@
 import { Guard } from '../../common/guard';
-import { formatSelector } from '../formatting';
-import { Select } from '../selector';
+import { formatSelector } from '../format';
+import { Query } from '../query';
 import { UIStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
@@ -8,21 +8,21 @@ export class FillStep implements UIStep {
   type: 'ui' = 'ui';
 
   constructor(
-    private selector: Select<any>,
+    private query: Query<any>,
     private value: string,
   ) {
-    Guard.notNull(selector, 'selector');
+    Guard.notNull(query, 'query');
   }
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
     
-    const query = this.selector.toString();
-    return attempt(() => engine.fill(query, this.value));
+    const selector = this.query.toString();
+    return attempt(() => engine.fill(selector, this.value));
   }
 
   toString() {
-    const query = this.selector.toString();
-    return `I fill ${formatSelector(query)} with \`${this.value}\``;
+    const selector = this.query.toString();
+    return `I fill ${formatSelector(selector)} with \`${this.value}\``;
   }
 }
