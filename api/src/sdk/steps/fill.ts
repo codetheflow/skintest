@@ -16,7 +16,7 @@ export class FillStep implements UIStep {
 
   execute(context: StepContext): TestExecutionResult {
     const { attempt, engine } = context;
-
+    
     const query = this.selector.toString();
     return attempt(() => engine.fill(query, this.value));
   }

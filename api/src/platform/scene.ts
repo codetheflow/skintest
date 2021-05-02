@@ -17,26 +17,38 @@ export class Scene {
     const { report } = this;
     const featureContext = { feature: script.name };
 
-    await this.run(
+    const beforeFeatureResult = await this.run(
       script.beforeFeature,
       report.beforeFeature(featureContext)
     );
 
+    if (!beforeFeatureResult) {
+      return;
+    }
+
     for (let [scenarioText, commands] of script.scenarios) {
       const scenarioContext = { ...featureContext, scenario: scenarioText };
 
-      await this.run(
+      const beforeScenarioResult = await this.run(
         script.beforeScenario,
         report.beforeScenario(scenarioContext)
       );
 
+      if (!beforeScenarioResult) {
+        continue;
+      }
+
       for (let command of commands) {
         const stepContext = { ...scenarioContext, step: command.toString() };
 
-        await this.run(
+        const beforeStepResult = await this.run(
           script.beforeStep,
           report.beforeStep(stepContext)
         );
+
+        if (!beforeStepResult) {
+          break;
+        }
 
         const result = await this.run(
           [command],
@@ -48,8 +60,10 @@ export class Scene {
           report.afterStep(stepContext)
         );
 
-        if (!result && command.type !== 'assert') {
-          break;
+        if (!result) {
+          if (command.type !== 'assert') {
+            break;
+          }
         }
       }
 

@@ -70,7 +70,7 @@ export function timeout(ex: Error): TestFail {
   return {
     status: 'fail',
     code: 'TIMEOUT',
-    description: ex.message,
+    description: 'timeout exceed',
     solution: 'check selector and element availability or increase a timeout'
   };
 }

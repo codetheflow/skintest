@@ -27,7 +27,7 @@ export class NodeReport implements Report {
   }
 
   beforeFeature(context: ReportFeatureContext): StatusReport {
-    return new ErrorReport();
+    return new NewLineReport()
   }
 
   beforeScenario(context: ReportScenarioContext): StatusReport {
@@ -43,7 +43,7 @@ export class NodeReport implements Report {
   }
 
   afterScenario(context: ReportScenarioContext): StatusReport {
-    return new ErrorReport();
+    return new NewLineReport();
   }
 
   afterStep(context: ReportStepContext): StatusReport {
@@ -51,7 +51,7 @@ export class NodeReport implements Report {
   }
 
   attempt(): StatusReport {
-    return new ErrorReport();
+    return new EmptyReport();
   }
 
   dev(context: ReportStepContext): StatusReport {
@@ -117,14 +117,22 @@ class ErrorReport implements StatusReport {
   }
 
   fail(reason: TestFail): void {
-    console.error(reason.description);
+    stderr.write(chalk.hidden(CROSS_MARK));
+    stderr.write(WS);
+    stderr.write(chalk.bgRedBright.white(reason.description));
+    stderr.write(NEW_LINE);
   }
 
   error(ex: Error): void {
-    console.error(ex);
+    if (ex.stack) {
+      stderr.write(chalk.red(ex.stack));
+    } else {
+      stderr.write(chalk.bgRed(`${ex.name}: ${ex.message}`));
+    }
+
+    stderr.write(NEW_LINE);
   }
 }
-
 
 class DebugReport extends ErrorReport {
   constructor(name: string) {
@@ -132,19 +140,6 @@ class DebugReport extends ErrorReport {
 
     stdout.write(NEW_LINE);
     stdout.write(chalk.yellow(name));
-    stdout.write(NEW_LINE);
-  }
-
-  pass(): void {
-    stdout.write(chalk.yellow(NEW_LINE));
-  }
-
-  fail(reason: TestFail): void {
-    stdout.write(chalk.yellow(NEW_LINE));
-  }
-
-  error(ex: Error): void {
-    throw ex;
   }
 }
 
@@ -155,10 +150,6 @@ class InfoReport extends ErrorReport {
     stdout.write(chalk.hidden(CHECK_MARK));
     stdout.write(WS);
     stdout.write(chalk.italic(step));
-  }
-
-  pass(): void {
-    stdout.write(NEW_LINE);
   }
 }
 
@@ -190,10 +181,19 @@ class StepReport extends ErrorReport {
     stderr.write(chalk.gray(this.step));
     stderr.write(NEW_LINE);
 
-    stderr.write(chalk.hidden(CROSS_MARK));
-    stderr.write(WS);
-    stderr.write(chalk.bgRedBright.white(reason.description));
+    super.fail(reason);
+  }
+
+  error(ex: Error): void {
+    stderr.clearLine(-1);
+    stderr.cursorTo(0);
+
+    stderr.write(chalk.red(CROSS_MARK));
+    stderr.write(WS)
+    stderr.write(chalk.gray(this.step));
     stderr.write(NEW_LINE);
+
+    super.error(ex);
   }
 }
 
@@ -201,8 +201,27 @@ class BeforeScenarioReport extends ErrorReport {
   constructor(feature: string, scenario: string) {
     super();
 
-    stdout.write(NEW_LINE);
     stdout.write(chalk.whiteBright.bold(`${feature}`) + '\\' + chalk.whiteBright(scenario));
     stdout.write(NEW_LINE);
+  }
+}
+
+class NewLineReport extends ErrorReport {
+  constructor() {
+    super();
+
+    stdout.write(NEW_LINE);
+  }
+}
+
+
+class EmptyReport implements StatusReport {
+  pass(): void {
+  }
+
+  fail(reason: TestFail): void {
+  }
+
+  error(ex: Error): void {
   }
 }

@@ -8,17 +8,25 @@ import * as playwright from 'playwright';
 export function playwrightAttempt(count: number, report: StatusReport): Attempt {
   return async (method: () => Promise<void>): TestExecutionResult => {
     let attempts = count;
+    let fail = null;
     while (--attempts >= 0) {
       try {
         await method();
       }
       catch (ex) {
+        report.error(ex);
         if (ex instanceof playwright.errors.TimeoutError) {
-          return timeout(ex);
+          fail = timeout(ex);
+          continue;
         }
 
         throw unknownEngineError(ex);
       }
+    }
+
+    if (fail) {
+      report.fail(fail);
+      return fail;
     }
 
     report.pass();
