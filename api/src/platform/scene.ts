@@ -90,20 +90,20 @@ export class Scene {
       for (let command of commands) {
         const result = await command.execute(context);
         if (result.status === 'fail') {
-          status.fail(result);
+          await status.fail(result);
           return false;
         }
 
         // show debug info
         if (result.inspect) {
-          await this.report.inspect(result.inspect);
+          await status.inspect(result.inspect);
         }
       }
 
-      status.pass();
+      await status.pass();
       return true;
     } catch (ex) {
-      status.error(ex);
+      await status.error(ex);
       return false;
     }
   }

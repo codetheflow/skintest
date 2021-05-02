@@ -1,12 +1,11 @@
 import { TestFail, InspectInfo } from './test-result';
 
 export interface StatusReport {
-  pass(): void;
-  fail(reason: TestFail): void;
-  error(ex: Error): void;
+  pass(): Promise<void>;
+  fail(reason: TestFail): Promise<void>;
+  error(ex: Error): Promise<void>;
+  inspect(info: InspectInfo): Promise<void>
 }
-
-export type InspectReport = Promise<void>;
 
 export type ReportFeatureContext = { feature: string; };
 export type ReportScenarioContext = ReportFeatureContext & { scenario: string };
@@ -26,9 +25,6 @@ export interface Report {
   afterStep(context: ReportStepContext): StatusReport;
 
   attempt(): StatusReport;
-
   say(context: ReportStepContext): StatusReport;
-
   dev(context: ReportStepContext): StatusReport;
-  inspect(info: InspectInfo): InspectReport
 }

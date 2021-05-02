@@ -1,4 +1,4 @@
-import { InspectReport, Report, ReportFeatureContext, ReportScenarioContext, ReportStepContext, StatusReport } from '../sdk/report';
+import { Report, ReportFeatureContext, ReportScenarioContext, ReportStepContext, StatusReport } from '../sdk/report';
 import { TestFail, InspectInfo } from '../sdk/test-result';
 import * as chalk from 'chalk';
 
@@ -57,11 +57,32 @@ export class NodeReport implements Report {
   dev(context: ReportStepContext): StatusReport {
     return new DebugReport(context.step);
   }
+}
 
-  async inspect(info: InspectInfo): InspectReport {
+class ErrorReport implements StatusReport {
+  async pass(): Promise<void> {
+  }
+
+  async fail(reason: TestFail): Promise<void> {
+    stderr.write(chalk.hidden(CROSS_MARK));
+    stderr.write(WS);
+    stderr.write(chalk.bgRedBright.white(reason.description));
+    stderr.write(NEW_LINE);
+  }
+
+  async error(ex: Error): Promise<void> {
+    if (ex.stack) {
+      stderr.write(chalk.red(ex.stack));
+    } else {
+      stderr.write(chalk.bgRed(`${ex.name}: ${ex.message}`));
+    }
+
+    stderr.write(NEW_LINE);
+  }
+
+  async inspect(info: InspectInfo): Promise<void> {
     let { query, target } = info;
 
-    stdout.write(NEW_LINE);
 
     const textForTable = (text: string): string => {
       if (!text) {
@@ -112,34 +133,12 @@ export class NodeReport implements Report {
   }
 }
 
-class ErrorReport implements StatusReport {
-  pass(): void {
-  }
-
-  fail(reason: TestFail): void {
-    stderr.write(chalk.hidden(CROSS_MARK));
-    stderr.write(WS);
-    stderr.write(chalk.bgRedBright.white(reason.description));
-    stderr.write(NEW_LINE);
-  }
-
-  error(ex: Error): void {
-    if (ex.stack) {
-      stderr.write(chalk.red(ex.stack));
-    } else {
-      stderr.write(chalk.bgRed(`${ex.name}: ${ex.message}`));
-    }
-
-    stderr.write(NEW_LINE);
-  }
-}
-
 class DebugReport extends ErrorReport {
   constructor(name: string) {
     super();
 
-    stdout.write(NEW_LINE);
     stdout.write(chalk.yellow(name));
+    stdout.write(NEW_LINE);
   }
 }
 
@@ -162,7 +161,7 @@ class StepReport extends ErrorReport {
     stdout.write(chalk.grey(step));
   }
 
-  pass(): void {
+  async pass(): Promise<void> {
     stdout.clearLine(-1);
     stdout.cursorTo(0);
 
@@ -172,7 +171,7 @@ class StepReport extends ErrorReport {
     stdout.write(NEW_LINE);
   }
 
-  fail(reason: TestFail): void {
+  async fail(reason: TestFail): Promise<void> {
     stderr.clearLine(-1);
     stderr.cursorTo(0);
 
@@ -181,10 +180,10 @@ class StepReport extends ErrorReport {
     stderr.write(chalk.gray(this.step));
     stderr.write(NEW_LINE);
 
-    super.fail(reason);
+    return super.fail(reason);
   }
 
-  error(ex: Error): void {
+  async error(ex: Error): Promise<void> {
     stderr.clearLine(-1);
     stderr.cursorTo(0);
 
@@ -193,7 +192,7 @@ class StepReport extends ErrorReport {
     stderr.write(chalk.gray(this.step));
     stderr.write(NEW_LINE);
 
-    super.error(ex);
+    return super.error(ex);
   }
 }
 
@@ -216,12 +215,16 @@ class NewLineReport extends ErrorReport {
 
 
 class EmptyReport implements StatusReport {
-  pass(): void {
+  async pass(): Promise<void> {
   }
 
-  fail(reason: TestFail): void {
+  async fail(reason: TestFail): Promise<void> {
   }
 
-  error(ex: Error): void {
+  async error(ex: Error): Promise<void> {
+  }
+
+  async inspect(info: InspectInfo): Promise<void> {
+
   }
 }

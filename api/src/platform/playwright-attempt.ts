@@ -14,7 +14,7 @@ export function playwrightAttempt(count: number, report: StatusReport): Attempt 
         await method();
       }
       catch (ex) {
-        report.error(ex);
+        await report.error(ex);
         if (ex instanceof playwright.errors.TimeoutError) {
           fail = timeout(ex);
           continue;
@@ -25,11 +25,11 @@ export function playwrightAttempt(count: number, report: StatusReport): Attempt 
     }
 
     if (fail) {
-      report.fail(fail);
+      await report.fail(fail);
       return fail;
     }
 
-    report.pass();
+    await report.pass();
     return pass();
   };
 }

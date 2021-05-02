@@ -7,11 +7,8 @@ feature('todo list')
     , I.amOnPage(todos.url)
   )
 
-  // .after('step'
-  //   , I.pause()
-  // )
-
   .scenario('adding new todos'
+
     , I.fill(todos.what, 'learn testing')
     , I.press('Enter')
     , I.fill(todos.what, 'be cool')
@@ -21,4 +18,5 @@ feature('todo list')
     , I.see(todos.list, has.length, 2)
     , I.see(todos.item_at(0), has.text, 'learn testing')
     , I.see(todos.item_at(1), has.text.match, /cool/i)
+
   )
