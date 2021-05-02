@@ -149,6 +149,7 @@ class InfoReport extends ErrorReport {
     stdout.write(chalk.hidden(CHECK_MARK));
     stdout.write(WS);
     stdout.write(chalk.italic(step));
+    stdout.write(NEW_LINE);
   }
 }
 

@@ -10,6 +10,11 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
   ) {
   }
 
+  async value(): Promise<string> {
+    const value = await this.page.$eval<any, HTMLInputElement>(this.selector, (el) => el.value)
+    return value;;
+  }
+
   async hasFocus(): Promise<boolean> {
     const hasFocus = await this.page.$eval(this.selector, (el) => el === document.activeElement)
     return hasFocus;

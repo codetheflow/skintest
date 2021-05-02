@@ -3,6 +3,7 @@ import { DOMElement } from './dom';
 
 export interface ElementRef<T extends DOMElement> {
   innerText(): Promise<string>;
+  value(): Promise<string>;
   hasFocus(): Promise<boolean>;
 }
 

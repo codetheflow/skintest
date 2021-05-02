@@ -7,6 +7,11 @@ feature('todo list')
     , I.amOnPage(todos.url)
   )
 
+  .scenario('when page is initially opened'
+    , I.check('focus on the todo input field')
+    , I.see(todos.what, has.focus)
+  )
+
   .scenario('adding new todos'
     , I.fill(todos.what, 'learn testing')
     , I.press('Enter')
@@ -18,9 +23,13 @@ feature('todo list')
     , I.see(todos.item_at(1), has.text, 'be cool')
   )
 
-  .scenario('when page is initially opened'
-    , I.check('focus on the todo input field')
-    , I.see(todos.what, has.focus)
+  .scenario('adding new todos'
+    , I.fill(todos.what, 'learn testing')
+    , I.check('input filed should have entered text')
+    , I.see(todos.what, has.value, 'learn testing')
   )
 
-
+  .scenario('adding new todos'
+    , I.check('input filed should be empty when an item is added')
+    , I.see(todos.what, has.value, '')
+  )

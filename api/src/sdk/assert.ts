@@ -10,6 +10,7 @@ export enum AssertWhat {
   length = 'length',
   innerText = 'text',
   focus = 'focus',
+  value = 'value',
 }
 
 export interface UnaryAssert { 

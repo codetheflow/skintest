@@ -31,6 +31,15 @@ export class Verify {
 
         return binaryAssertFail(etalon, actual);
       }
+      case AssertWhat.value: {
+        const actual = await elementRef.value();
+        const etalon = expected as any as string;
+        if (this.binaryTest(how, actual, etalon) === true) {
+          return pass();
+        }
+
+        return binaryAssertFail(etalon, actual);
+      }
       case AssertWhat.focus: {
         const hasFocus = await elementRef.hasFocus();
         if (hasFocus) {

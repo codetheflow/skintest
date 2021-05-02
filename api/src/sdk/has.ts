@@ -8,6 +8,7 @@ import {
 
 export interface Has<V> {
   text: StringAssert;
+  value: StringAssert;
   focus: UnaryAssert;
 }
 
@@ -18,6 +19,10 @@ export interface HasAll<V> {
 class Assertion<V> implements Has<V>, HasAll<V> {
   get text(): StringAssert {
     return new StringAssert(AssertWhat.innerText);
+  }
+
+  get value(): StringAssert {
+    return new StringAssert(AssertWhat.value);
   }
 
   get length(): NumberAssert {
