@@ -1,63 +1,62 @@
-import { BinaryAssert, ListAssert, UnaryAssert } from './assert';
-import { Do } from './recipe';
-import { DOMElement } from './dom';
-import { KeyboardKey } from './keyboard';
-import { Query, QueryList } from './query';
-import { AssertStep, CheckStep, DevStep, SayStep, UIStep } from './command';
+import { ActionStep } from './steps/action';
 import { AmOnPageStep } from './steps/am-on-page';
+import { AssertStep, CheckStep, DevStep, SayStep, DoStep, ClientStep } from './command';
 import { AttachFileStep } from './steps/attach-file';
+import { BinaryAssert, ListAssert, UnaryAssert } from './assert';
 import { Breakpoint, DebugStep } from './steps/debug';
 import { CheckWhatStep } from './steps/check';
 import { ClickStep } from './steps/click';
+import { ClientDo, ClientRecipe, ServerDo, ServerRecipe } from './function-support';
+import { DOMElement } from './dom';
 import { DontSeeStep } from './steps/dont-see';
-import { DoStep } from './steps/do';
 import { DragStep } from './steps/drag';
 import { FillStep } from './steps/fill';
 import { FocusStep } from './steps/focus';
 import { InspectStep } from './steps/inspect';
+import { KeyboardKey } from './keyboard';
 import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
+import { Query, QueryList } from './query';
 import { SeeStep } from './steps/see';
 import { TalkStep } from './steps/say';
 import { WaitUrlStep } from './steps/wait-url';
 
 export interface Ego {
-  check(what: string): CheckStep;
+  pause(): DevStep;
+  debug(breakpoint: Breakpoint): DevStep;
+  inspect<T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep;
 
+  check(what: string): CheckStep;
   see<S extends DOMElement>(target: Query<S>): AssertStep;
   see<S extends DOMElement>(target: Query<S>, assert: UnaryAssert): AssertStep;
   see<S extends DOMElement, V>(target: Query<S>, assert: BinaryAssert<V>, value: V): AssertStep;
   see<S extends DOMElement, V>(targets: QueryList<S>, assert: ListAssert<V>, value: V): AssertStep;
-
   // dontSee<S extends DOMElement>(target: Query<S>): AssertStep;
   // dontSee<S extends DOMElement>(target: Query<S>, assert: UnaryAssert): AssertStep;
   // dontSee<S extends DOMElement, V>(target: Query<S>, assert: BinaryAssert<V>, value: V): AssertStep;
   // dontSee<S extends DOMElement, V>(targets: QueryList<S>, assert: ListAssert<V>, value: V): AssertStep;
 
-  do(action: () => Do): UIStep;
-  do<A>(action: (arg: A) => Do, arg: A): UIStep;
-  do<A1, A2>(action: (arg1: A1, arg2: A2) => Do, arg1: A1, arg2: A2): UIStep;
-  do<A1, A2, A3>(action: (arg1: A1, arg2: A2, arg3: A3) => Do, arg1: A1, arg2: A2, arg3: A3): UIStep;
-  do<A1, A2, A3, A4>(action: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Do, arg1: A1, arg2: A2, arg3: A3, arg4: A4): UIStep;
+  do<T extends ((...args: any) => ClientDo)>(recipe: ClientRecipe<T>, ...args: Parameters<T>): DoStep
+  do<T extends ((...args: any) => ServerDo)>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep
 
-  amOnPage(url: string): UIStep;
-  attachFile(from: Query<HTMLFormElement>, file: any): UIStep;
-  click<S extends DOMElement>(target: Query<S>): UIStep;
-  drag<S extends DOMElement>(target: Query<S>, x: number, y: number): UIStep;
-  fill<S extends DOMElement, V>(target: Query<S>, value: V): UIStep;
-  focus<S extends DOMElement>(target: Query<S>): UIStep;
+  amOnPage(url: string): ClientStep;
+  attachFile(from: Query<HTMLFormElement>, file: any): ClientStep;
+  click<S extends DOMElement>(target: Query<S>): ClientStep;
+  drag<S extends DOMElement>(target: Query<S>, x: number, y: number): ClientStep;
+  fill<S extends DOMElement, V>(target: Query<S>, value: V): ClientStep;
+  focus<S extends DOMElement>(target: Query<S>): ClientStep;
   say(message: string): SayStep;
-
-  press(key: KeyboardKey): UIStep;
-
-  waitUrl(url: string): UIStep;
-
-  pause(): DevStep;
-  debug(breakpoint: Breakpoint): DevStep;
-  inspect<T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep;
+  press(key: KeyboardKey): ClientStep;
+  waitUrl(url: string): ClientStep;
 }
 
 class MyEgo implements Ego {
+  do<T extends (...args: any) => ClientDo>(recipe: ClientRecipe<T>, ...args: Parameters<T>): DoStep;
+  do<T extends (...args: any) => ServerDo>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep;
+  do(recipe: any, args?: any[]) {
+    return new ActionStep(recipe, args || []);
+  }
+
   check(what: string): CheckStep {
     return new CheckWhatStep(what);
   }
@@ -78,44 +77,35 @@ class MyEgo implements Ego {
     return new DontSeeStep(targets, assert, value);
   }
 
-  do(action: () => Do): UIStep;
-  do<A>(action: (arg: A) => Do, arg: A): UIStep;
-  do<A1, A2>(action: (arg1: A1, arg2: A2) => Do, arg1: A1, arg2: A2): UIStep;
-  do<A1, A2, A3>(action: (arg1: A1, arg2: A2, arg3: A3) => Do, arg1: A1, arg2: A2, arg3: A3): UIStep;
-  do<A1, A2, A3, A4>(action: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Do, arg1: A1, arg2: A2, arg3: A3, arg4: A4): UIStep;
-  do(action: any, ...args: any[]): UIStep {
-    return new DoStep(action, args);
-  }
-
-  amOnPage(url: string): UIStep {
+  amOnPage(url: string): ClientStep {
     return new AmOnPageStep(url);
   }
 
-  waitUrl(url: string): UIStep {
+  waitUrl(url: string): ClientStep {
     return new WaitUrlStep(url);
   }
 
-  click<S extends DOMElement>(target: Query<S>): UIStep {
+  click<S extends DOMElement>(target: Query<S>): ClientStep {
     return new ClickStep(target);
   }
 
-  press(key: KeyboardKey): UIStep {
+  press(key: KeyboardKey): ClientStep {
     return new PressStep(key);
   }
 
-  fill<S extends DOMElement, V>(target: Query<S>, value: V): UIStep {
+  fill<S extends DOMElement, V>(target: Query<S>, value: V): ClientStep {
     return new FillStep(target, '' + value);
   }
 
-  focus<S extends DOMElement>(target: Query<S>): UIStep {
+  focus<S extends DOMElement>(target: Query<S>): ClientStep {
     return new FocusStep(target);
   }
 
-  drag<S extends DOMElement>(target: Query<S>, x: number, y: number): UIStep {
+  drag<S extends DOMElement>(target: Query<S>, x: number, y: number): ClientStep {
     return new DragStep(target, x, y);
   }
 
-  attachFile(from: Query<HTMLFormElement>, file: any): UIStep {
+  attachFile(from: Query<HTMLFormElement>, file: any): ClientStep {
     return new AttachFileStep(from, file);
   }
 

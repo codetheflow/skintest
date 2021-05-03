@@ -1,5 +1,6 @@
 import { Attempt } from './attempt';
 import { Engine } from './engine';
+import { ClientRecipe, ServerRecipe } from './function-support';
 import { TestExecutionResult } from './test-result';
 
 export interface StepContext {
@@ -7,15 +8,21 @@ export interface StepContext {
   engine: Engine;
 }
 
-export type Command = UIStep | CheckStep | AssertStep | DevStep | SayStep;
+export type Command =
+  ClientStep
+  | CheckStep
+  | AssertStep
+  | DevStep
+  | SayStep
+  | DoStep;
 
 export interface CommandBody {
   execute(context: StepContext): TestExecutionResult;
   toString(): string;
 }
 
-export interface UIStep extends CommandBody {
-  type: 'ui';
+export interface ClientStep extends CommandBody {
+  type: 'client';
 }
 
 export interface CheckStep extends CommandBody {
@@ -32,4 +39,10 @@ export interface DevStep extends CommandBody {
 
 export interface SayStep extends CommandBody {
   type: 'say';
+}
+
+export interface DoStep extends CommandBody {
+  type: 'do';
+  recipe: ClientRecipe<any> | ServerRecipe<any>;
+  args: any[];
 }

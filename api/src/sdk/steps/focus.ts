@@ -1,11 +1,11 @@
 import { Guard } from '../../common/guard';
 import { formatSelector } from '../format';
 import { Query } from '../query';
-import { UIStep, StepContext } from '../command';
+import { ClientStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class FocusStep implements UIStep {
-  type: 'ui' = 'ui';
+export class FocusStep implements ClientStep {
+  type: 'client' = 'client';
 
   constructor(
     private query: Query<any>

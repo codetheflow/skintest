@@ -2,7 +2,7 @@ import { DOMElement } from '../dom';
 import { ElementRef, ElementRefList, Engine } from '../engine';
 import { Guard } from '../../common/guard';
 import { Query, QueryList } from '../query';
-import { DevStep, UIStep, StepContext } from '../command';
+import { DevStep, ClientStep, StepContext } from '../command';
 import { TestExecutionResult, pass } from '../test-result';
 
 export interface Debugger {

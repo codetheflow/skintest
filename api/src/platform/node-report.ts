@@ -1,4 +1,4 @@
-import { Report, ReportFeatureContext, ReportScenarioContext, ReportStepContext, StatusReport } from '../sdk/report';
+import { Reporting, ReportFeatureContext, ReportScenarioContext, ReportSink, ReportStepContext, StatusReport } from '../sdk/report-sink';
 import { TestFail, InspectInfo } from '../sdk/test-result';
 import * as chalk from 'chalk';
 
@@ -9,7 +9,17 @@ const CROSS_MARK = '\u2613';
 const NEW_LINE = '\n';
 const WS = ' ';
 
-export class NodeReport implements Report {
+export class NodeReportSink implements ReportSink {
+  start(): Promise<Reporting> {
+    return Promise.resolve(new NodeReport);
+  }
+
+  end(report: Reporting): Promise<void> {
+    return Promise.resolve();
+  }
+}
+
+class NodeReport implements Reporting {
   assert(context: ReportStepContext): StatusReport {
     return new StepReport(context.step);
   }
@@ -22,7 +32,7 @@ export class NodeReport implements Report {
     return new InfoReport(context.step);
   }
 
-  ui(context: ReportStepContext): StatusReport {
+  client(context: ReportStepContext): StatusReport {
     return new StepReport(context.step);
   }
 
@@ -56,6 +66,10 @@ export class NodeReport implements Report {
 
   dev(context: ReportStepContext): StatusReport {
     return new DebugReport(context.step);
+  }
+
+  do(context: ReportStepContext): StatusReport {
+    return new EmptyReport();
   }
 }
 

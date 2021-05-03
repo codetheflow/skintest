@@ -1,10 +1,10 @@
 import { Guard } from '../../common/guard';
 import { KeyboardKey } from '../keyboard';
-import { UIStep, StepContext } from '../command';
+import { ClientStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class PressStep implements UIStep {
-  type: 'ui' = 'ui';
+export class PressStep implements ClientStep {
+  type: 'client' = 'client';
 
   constructor(private key: KeyboardKey) {
     Guard.notEmpty(key, 'key');

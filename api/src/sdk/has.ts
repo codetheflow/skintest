@@ -1,9 +1,11 @@
 import {
   AssertWhat,
   NumberAssert,
+  NumberAssertCore,
   StringAssert,
+  StringAssertCore,
   UnaryAssert,
-  BooleanAssert
+  UnaryAssertCore,
 } from './assert';
 
 export interface Has<V> {
@@ -18,19 +20,19 @@ export interface HasAll<V> {
 
 class Assertion<V> implements Has<V>, HasAll<V> {
   get text(): StringAssert {
-    return new StringAssert(AssertWhat.innerText);
+    return new StringAssertCore(AssertWhat.innerText);
   }
 
   get value(): StringAssert {
-    return new StringAssert(AssertWhat.value);
+    return new StringAssertCore(AssertWhat.value);
   }
 
   get length(): NumberAssert {
-    return new NumberAssert(AssertWhat.length);
+    return new NumberAssertCore(AssertWhat.length);
   }
 
   get focus(): UnaryAssert {
-    return new BooleanAssert(AssertWhat.focus);
+    return new UnaryAssertCore(AssertWhat.focus);
   }
 }
 

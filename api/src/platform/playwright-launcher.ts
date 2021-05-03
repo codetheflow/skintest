@@ -1,4 +1,4 @@
-import { NodeReport } from './node-report';
+import { NodeReportSink } from './node-report';
 import { PlaywrightEngine } from './playwright-engine';
 import { Scene } from './scene';
 import { Suite } from '../sdk/suite';
@@ -23,14 +23,20 @@ export async function playwrightLauncher(suite: Suite) {
     page.setDefaultTimeout(PAGE_TIMEOUT);
 
     const engine = new PlaywrightEngine(page);
-    const report = new NodeReport();
-    const attempt = playwrightAttempt(ATTEMPTS, report.attempt());
-    const scene = new Scene(engine, report, attempt);
+    const reportSink = new NodeReportSink();
+    const reporting = await reportSink.start();
+
+    const attempt = playwrightAttempt(ATTEMPTS, reporting.attempt());
+    const scene = new Scene(engine, reporting, attempt);
 
     try {
       await scene.play(script);
     } finally {
-      await browser.close();
+      try {
+        await reportSink.end(reporting);
+      } finally {
+        await browser.close();
+      }
     }
   }
 }

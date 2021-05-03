@@ -1,5 +1,5 @@
 import { Attempt } from '../sdk/attempt';
-import { StatusReport } from '../sdk/report';
+import { StatusReport } from '../sdk/report-sink';
 import { pass, TestExecutionResult } from '../sdk/test-result';
 import { timeout } from '../sdk/test-result';
 import { unknownEngineError } from '../common/errors';

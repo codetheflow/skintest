@@ -2,7 +2,7 @@ import { BinaryAssert, ListAssert, AssertHost } from '../assert';
 import { Guard } from '../../common/guard';
 import { isUndefined } from '../../common/utils';
 import { Query, QueryList } from '../query';
-import { AssertStep, UIStep, StepContext } from '../command';
+import { AssertStep, ClientStep, StepContext } from '../command';
 import { pass, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 import { invalidArgumentError } from '../../common/errors';

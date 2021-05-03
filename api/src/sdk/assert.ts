@@ -1,9 +1,9 @@
 
 export enum AssertHow {
-  equals = 'equals',
+  equals = 'equals to',
   above = 'above',
   below = 'below',
-  regexp = 'matches',
+  regexp = 'matches to',
 }
 
 export enum AssertWhat {
@@ -13,13 +13,22 @@ export enum AssertWhat {
   value = 'value',
 }
 
-export interface UnaryAssert { 
+export interface UnaryAssert {
 }
 
 export interface BinaryAssert<V> {
 }
 
 export interface ListAssert<V> {
+}
+
+export interface StringAssert {
+  match: BinaryAssert<RegExp>;
+}
+
+export interface NumberAssert {
+  above: BinaryAssert<number>;
+  below: BinaryAssert<number>;
 }
 
 export class AssertHost<V> implements UnaryAssert, BinaryAssert<V>, ListAssert<V> {
@@ -29,7 +38,7 @@ export class AssertHost<V> implements UnaryAssert, BinaryAssert<V>, ListAssert<V
   ) { }
 }
 
-export class StringAssert extends AssertHost<string> {
+export class StringAssertCore extends AssertHost<string> implements StringAssert {
   constructor(what: AssertWhat) {
     super(what, AssertHow.equals);
   }
@@ -39,7 +48,7 @@ export class StringAssert extends AssertHost<string> {
   }
 }
 
-export class NumberAssert extends AssertHost<number> {
+export class NumberAssertCore extends AssertHost<number> implements NumberAssert {
   constructor(what: AssertWhat) {
     super(what, AssertHow.equals);
   }
@@ -53,7 +62,7 @@ export class NumberAssert extends AssertHost<number> {
   }
 }
 
-export class BooleanAssert extends AssertHost<void> {
+export class UnaryAssertCore extends AssertHost<void> implements UnaryAssert {
   constructor(what: AssertWhat) {
     super(what, AssertHow.equals);
   }

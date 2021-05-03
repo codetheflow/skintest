@@ -1,6 +1,6 @@
-import { SupportDebug, Walk } from './walk';
+import { Path, UIStep } from './path';
 import { invalidArgumentError } from '../common/errors';
-import { Command, UIStep } from './command';
+import { Command } from './command';
 import { Feature, Scenario } from './feature';
 
 export class Script implements Feature, Scenario {
@@ -18,7 +18,7 @@ export class Script implements Feature, Scenario {
   constructor(public readonly name: string) {
   }
 
-  before(what: 'feature' | 'scenario' | 'step', ...steps: SupportDebug<UIStep>[]): Feature {
+  before(what: 'feature' | 'scenario' | 'step', ...steps: UIStep[]): Feature {
     switch (what) {
       case 'feature':
         this.beforeFeature.push(...steps);
@@ -36,7 +36,7 @@ export class Script implements Feature, Scenario {
     return this;
   }
 
-  after(what: 'feature' | 'scenario' | 'step', ...steps: SupportDebug<UIStep>[]): Feature {
+  after(what: 'feature' | 'scenario' | 'step', ...steps: UIStep[]): Feature {
     switch (what) {
       case 'feature':
         this.afterFeature.push(...steps);
@@ -54,9 +54,8 @@ export class Script implements Feature, Scenario {
     return this;
   }
 
-  scenario(name: string, ...steps: Walk): Scenario {
+  scenario(name: string, ...steps: Path): Scenario {
     this.scenarios.push([name, steps]);
     return this;
   }
-
 }
