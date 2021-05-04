@@ -1,24 +1,25 @@
 import { ActionStep } from './steps/action';
 import { AmOnPageStep } from './steps/am-on-page';
-import { AssertStep, CheckStep, DevStep, SayStep, DoStep, ClientStep } from './command';
+import { AssertStep, CheckStep, DevStep, InfoStep, DoStep, ClientStep } from './command';
 import { AttachFileStep } from './steps/attach-file';
 import { BinaryAssert, ListAssert, UnaryAssert } from './assert';
 import { Breakpoint, DebugStep } from './steps/debug';
 import { CheckWhatStep } from './steps/check';
 import { ClickStep } from './steps/click';
-import { ClientDo, ClientRecipe, ServerDo, ServerRecipe } from './function-support';
+import { ClientDo, ClientFunction, ClientRecipe, ServerDo, ServerFunction, ServerRecipe } from './recipe';
 import { DOMElement } from './dom';
 import { DontSeeStep } from './steps/dont-see';
 import { DragStep } from './steps/drag';
 import { FillStep } from './steps/fill';
 import { FocusStep } from './steps/focus';
+import { HoverStep } from './steps/hover';
 import { InspectStep } from './steps/inspect';
 import { KeyboardKey } from './keyboard';
 import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
 import { Query, QueryList } from './query';
+import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
-import { TalkStep } from './steps/say';
 import { WaitUrlStep } from './steps/wait-url';
 
 export interface Ego {
@@ -36,16 +37,17 @@ export interface Ego {
   // dontSee<S extends DOMElement, V>(target: Query<S>, assert: BinaryAssert<V>, value: V): AssertStep;
   // dontSee<S extends DOMElement, V>(targets: QueryList<S>, assert: ListAssert<V>, value: V): AssertStep;
 
-  do<T extends ((...args: any) => ClientDo)>(recipe: ClientRecipe<T>, ...args: Parameters<T>): DoStep
-  do<T extends ((...args: any) => ServerDo)>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep
+  do<T extends ClientFunction>(recipe: ClientRecipe<T>, ...args: Parameters<T>): DoStep
+  do<T extends ServerFunction>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep
 
   amOnPage(url: string): ClientStep;
   attachFile(from: Query<HTMLFormElement>, file: any): ClientStep;
-  click<S extends DOMElement>(target: Query<S>): ClientStep;
   drag<S extends DOMElement>(target: Query<S>, x: number, y: number): ClientStep;
+  click<S extends DOMElement>(target: Query<S>): ClientStep;
+  hover<S extends DOMElement>(target: Query<S>): ClientStep;
   fill<S extends DOMElement, V>(target: Query<S>, value: V): ClientStep;
   focus<S extends DOMElement>(target: Query<S>): ClientStep;
-  say(message: string): SayStep;
+  say(message: string): InfoStep;
   press(key: KeyboardKey): ClientStep;
   waitUrl(url: string): ClientStep;
 }
@@ -69,13 +71,13 @@ class MyEgo implements Ego {
     return new SeeStep(targets, assert, value);
   }
 
-  dontSee<S extends DOMElement>(target: Query<S>): AssertStep;
-  dontSee<S extends DOMElement>(target: Query<S>, assert: UnaryAssert): AssertStep;
-  dontSee<S extends DOMElement, V>(target: Query<S>, assert: BinaryAssert<V>, value: V): AssertStep;
-  dontSee<S extends DOMElement, V>(targets: QueryList<S>, assert: ListAssert<V>, value: V): AssertStep;
-  dontSee(targets: any, assert?: any, value?: any): AssertStep {
-    return new DontSeeStep(targets, assert, value);
-  }
+  // dontSee<S extends DOMElement>(target: Query<S>): AssertStep;
+  // dontSee<S extends DOMElement>(target: Query<S>, assert: UnaryAssert): AssertStep;
+  // dontSee<S extends DOMElement, V>(target: Query<S>, assert: BinaryAssert<V>, value: V): AssertStep;
+  // dontSee<S extends DOMElement, V>(targets: QueryList<S>, assert: ListAssert<V>, value: V): AssertStep;
+  // dontSee(targets: any, assert?: any, value?: any): AssertStep {
+  //   return new DontSeeStep(targets, assert, value);
+  // }
 
   amOnPage(url: string): ClientStep {
     return new AmOnPageStep(url);
@@ -87,6 +89,10 @@ class MyEgo implements Ego {
 
   click<S extends DOMElement>(target: Query<S>): ClientStep {
     return new ClickStep(target);
+  }
+
+  hover<S extends DOMElement>(target: Query<S>): ClientStep {
+    return new HoverStep(target);
   }
 
   press(key: KeyboardKey): ClientStep {
@@ -109,8 +115,8 @@ class MyEgo implements Ego {
     return new AttachFileStep(from, file);
   }
 
-  say(message: string): SayStep {
-    return new TalkStep(message);
+  say(message: string): InfoStep {
+    return new SayStep(message);
   }
 
   debug(breakpoint: Breakpoint): DevStep {

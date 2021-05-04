@@ -1,7 +1,7 @@
-import { AssertStep, CheckStep, DevStep, DoStep, SayStep, ClientStep } from './command';
+import { AssertStep, CheckStep, DevStep, DoStep, InfoStep, ClientStep } from './command';
 
-export type UIStep = ClientStep | DoStep | DevStep | SayStep;
-export type VerifyStep = AssertStep | DevStep | SayStep;
+export type UIStep = ClientStep | DoStep | DevStep | InfoStep;
+export type VerifyStep = AssertStep | DevStep | InfoStep;
 
 export type Path =
   [...Array<UIStep>, CheckStep, VerifyStep]

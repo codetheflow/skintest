@@ -4,6 +4,7 @@ export interface StatusReport {
   pass(): Promise<void>;
   fail(reason: TestFail): Promise<void>;
   error(ex: Error): Promise<void>;
+  progress(message: string): Promise<void>;
   inspect(info: InspectInfo): Promise<void>
 }
 
@@ -23,15 +24,14 @@ export interface Reporting {
 
   assert(context: ReportStepContext): StatusReport;
   check(context: ReportStepContext): StatusReport;
-  do(context: ReportStepContext): StatusReport;
 
-  afterFeature(name: ReportFeatureContext): StatusReport;
-  afterScenario(name: ReportScenarioContext): StatusReport;
+  afterFeature(context: ReportFeatureContext): StatusReport;
+  afterScenario(context: ReportScenarioContext): StatusReport;
   afterStep(context: ReportStepContext): StatusReport;
 
   attempt(): StatusReport;
 
-  say(context: ReportStepContext): StatusReport;
+  info(context: ReportStepContext): StatusReport;
   dev(context: ReportStepContext): StatusReport;
   do(context: ReportStepContext): StatusReport;
   client(context: ReportStepContext): StatusReport;

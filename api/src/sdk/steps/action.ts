@@ -1,6 +1,6 @@
 import { Guard } from '../../common/guard';
 import { pass, TestExecutionResult } from '../test-result';
-import { ClientRecipe, ServerRecipe } from '../function-support';
+import { ClientRecipe, ServerRecipe } from '../recipe';
 import { StepContext, DoStep } from '../command';
 
 export class ActionStep implements DoStep {
@@ -19,6 +19,6 @@ export class ActionStep implements DoStep {
   }
 
   toString() {
-    return `I do`;
+    return `I'm doing...`;
   }
 }

@@ -1,6 +1,6 @@
 import { Attempt } from './attempt';
 import { Engine } from './engine';
-import { ClientRecipe, ServerRecipe } from './function-support';
+import { ClientRecipe, ServerRecipe } from './recipe';
 import { TestExecutionResult } from './test-result';
 
 export interface StepContext {
@@ -13,7 +13,7 @@ export type Command =
   | CheckStep
   | AssertStep
   | DevStep
-  | SayStep
+  | InfoStep
   | DoStep;
 
 export interface CommandBody {
@@ -37,8 +37,8 @@ export interface DevStep extends CommandBody {
   type: 'dev';
 }
 
-export interface SayStep extends CommandBody {
-  type: 'say';
+export interface InfoStep extends CommandBody {
+  type: 'info';
 }
 
 export interface DoStep extends CommandBody {

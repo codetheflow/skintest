@@ -4,7 +4,7 @@ import { Query } from '../query';
 import { ClientStep, StepContext } from '../command';
 import { TestExecutionResult } from '../test-result';
 
-export class ClickStep implements ClientStep {
+export class HoverStep implements ClientStep {
   type: 'client' = 'client';
   
   constructor(
@@ -17,12 +17,11 @@ export class ClickStep implements ClientStep {
     const { attempt, engine } = context;
 
     const selector = this.query.toString();
-    // todo: move attempt to the scene level
-    return attempt(() => engine.click(selector));
+    return attempt(() => engine.hover(selector));
   }
 
   toString() {
     const selector = this.query.toString();
-    return `I click ${formatSelector(selector)}`;
+    return `I hover ${formatSelector(selector)}`;
   }
 }

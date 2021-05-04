@@ -15,21 +15,23 @@ export class InspectStep implements DevStep {
   async execute(context: StepContext): TestExecutionResult {
     const { engine } = context;
 
-    const query = this.query.toString();
-    const type = isString(this.query) ? 'selectAll' : (this.query as any).type
+    const selector = this.query.toString();
+
+    // todo: get rid of `any`
+    const type = isString(this.query) ? 'queryList' : (this.query as any).type
     switch (type) {
-      case 'select': {
-        const target = await engine.select(query);
-        return inspect({ selector: query, target });
+      case 'query': {
+        const target = await engine.select(selector);
+        return inspect({ selector, target });
       }
 
-      case 'selectAll': {
-        const target = await engine.selectAll(query);
-        return inspect({ selector: query, target });
+      case 'queryList': {
+        const target = await engine.selectAll(selector);
+        return inspect({ selector, target });
       }
 
       default: {
-        throw invalidArgumentError('selector', type);
+        throw invalidArgumentError('type', type);
       }
     }
   }

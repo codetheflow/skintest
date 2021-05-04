@@ -1,8 +1,8 @@
-import { SayStep, StepContext } from '../command';
+import { InfoStep, StepContext } from '../command';
 import { pass, TestExecutionResult } from '../test-result';
 
-export class TalkStep implements SayStep {
-  type: 'say' = 'say';
+export class SayStep implements InfoStep {
+  type: 'info' = 'info';
 
   constructor(private message: string) { }
 

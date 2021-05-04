@@ -11,7 +11,7 @@ const WS = ' ';
 
 export class NodeReportSink implements ReportSink {
   start(): Promise<Reporting> {
-    return Promise.resolve(new NodeReport);
+    return Promise.resolve(new NodeReporting);
   }
 
   end(report: Reporting): Promise<void> {
@@ -19,7 +19,7 @@ export class NodeReportSink implements ReportSink {
   }
 }
 
-class NodeReport implements Reporting {
+class NodeReporting implements Reporting {
   assert(context: ReportStepContext): StatusReport {
     return new StepReport(context.step);
   }
@@ -28,7 +28,7 @@ class NodeReport implements Reporting {
     return new InfoReport(context.step);
   }
 
-  say(context: ReportStepContext): StatusReport {
+  info(context: ReportStepContext): StatusReport {
     return new InfoReport(context.step);
   }
 
@@ -45,11 +45,11 @@ class NodeReport implements Reporting {
   }
 
   beforeStep(context: ReportStepContext): StatusReport {
-    return new ErrorReport();
+    return new CatchReport();
   }
 
   afterFeature(context: ReportFeatureContext): StatusReport {
-    return new ErrorReport();
+    return new CatchReport();
   }
 
   afterScenario(context: ReportScenarioContext): StatusReport {
@@ -57,24 +57,27 @@ class NodeReport implements Reporting {
   }
 
   afterStep(context: ReportStepContext): StatusReport {
-    return new ErrorReport();
+    return new CatchReport();
   }
 
   attempt(): StatusReport {
-    return new EmptyReport();
+    return new CatchReport();
   }
 
   dev(context: ReportStepContext): StatusReport {
-    return new DebugReport(context.step);
+    return new DevReport(context.step);
   }
 
   do(context: ReportStepContext): StatusReport {
-    return new EmptyReport();
+    return new DoReport(context.step);
   }
 }
 
-class ErrorReport implements StatusReport {
+class CatchReport implements StatusReport {
   async pass(): Promise<void> {
+  }
+
+  async progress(message: string): Promise<void> {
   }
 
   async fail(reason: TestFail): Promise<void> {
@@ -96,7 +99,6 @@ class ErrorReport implements StatusReport {
 
   async inspect(info: InspectInfo): Promise<void> {
     let { selector: query, target } = info;
-
 
     const textForTable = (text: string): string => {
       if (!text) {
@@ -145,9 +147,14 @@ class ErrorReport implements StatusReport {
     stdout.write(chalk.bgRed(`$(\`${query}\`) didn't find any elements`));
     stdout.write(NEW_LINE);
   }
+
+  protected clearLine() {
+    stdout.cursorTo(0);
+    stdout.clearLine(1);
+  }
 }
 
-class DebugReport extends ErrorReport {
+class DevReport extends CatchReport {
   constructor(name: string) {
     super();
 
@@ -156,62 +163,76 @@ class DebugReport extends ErrorReport {
   }
 }
 
-class InfoReport extends ErrorReport {
+class InfoReport extends CatchReport {
   constructor(step: string) {
     super();
 
     stdout.write(chalk.hidden(CHECK_MARK));
     stdout.write(WS);
-    stdout.write(chalk.italic(step));
+    stdout.write(chalk.grey(step));
     stdout.write(NEW_LINE);
   }
 }
 
-class StepReport extends ErrorReport {
-  constructor(private step: string) {
+class StepReport extends CatchReport {
+  constructor(protected message: string) {
     super();
 
+    //this.line(() => {
     stdout.write(chalk.hidden(CHECK_MARK));
     stdout.write(WS);
-    stdout.write(chalk.grey(step));
+    stdout.write(chalk.grey(message));
+    //});
   }
 
   async pass(): Promise<void> {
-    stdout.clearLine(-1);
-    stdout.cursorTo(0);
+    this.clearLine();
 
     stdout.write(chalk.green(CHECK_MARK));
     stdout.write(WS);
-    stdout.write(chalk.grey(this.step));
+    stdout.write(chalk.grey(this.message));
     stdout.write(NEW_LINE);
   }
 
   async fail(reason: TestFail): Promise<void> {
-    stderr.clearLine(-1);
-    stderr.cursorTo(0);
+    this.clearLine();
 
     stderr.write(chalk.red(CROSS_MARK));
     stderr.write(WS)
-    stderr.write(chalk.gray(this.step));
+    stderr.write(chalk.gray(this.message));
     stderr.write(NEW_LINE);
 
     return super.fail(reason);
   }
 
   async error(ex: Error): Promise<void> {
-    stderr.clearLine(-1);
-    stderr.cursorTo(0);
+    this.clearLine();
 
     stderr.write(chalk.red(CROSS_MARK));
     stderr.write(WS)
-    stderr.write(chalk.gray(this.step));
+    stderr.write(chalk.gray(this.message));
     stderr.write(NEW_LINE);
 
     return super.error(ex);
   }
 }
 
-class BeforeScenarioReport extends ErrorReport {
+class DoReport extends StepReport {
+  constructor(message: string) {
+    super(message);
+  }
+
+  async progress(message: string): Promise<void> {
+    this.message = message;
+    
+    this.clearLine();
+    stdout.write(chalk.grey(CHECK_MARK));
+    stdout.write(WS);
+    stdout.write(chalk.grey(message));
+  }
+}
+
+class BeforeScenarioReport extends CatchReport {
   constructor(feature: string, scenario: string) {
     super();
 
@@ -220,26 +241,10 @@ class BeforeScenarioReport extends ErrorReport {
   }
 }
 
-class NewLineReport extends ErrorReport {
+class NewLineReport extends CatchReport {
   constructor() {
     super();
 
     stdout.write(NEW_LINE);
-  }
-}
-
-
-class EmptyReport implements StatusReport {
-  async pass(): Promise<void> {
-  }
-
-  async fail(reason: TestFail): Promise<void> {
-  }
-
-  async error(ex: Error): Promise<void> {
-  }
-
-  async inspect(info: InspectInfo): Promise<void> {
-
   }
 }

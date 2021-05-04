@@ -1,16 +1,24 @@
 import { feature, has, I } from '@skintest/api';
 import { todos } from '../components';
-import { add_todo, generate_todos } from '../functions';
+import { add_todo, clear_todos, generate_todos } from '../recipes';
 
 feature('todo list')
-
   .before('scenario'
     , I.amOnPage(todos.url)
+    , I.do(clear_todos)
+  )
+
+  .scenario('test the remove button'
+    , I.do(add_todo, 'item to remove')
+    , I.hover(todos.item_at(0))
+    , I.click(todos.remove_button_at(0))
+    , I.check('todos list is empty after remove button clicked')
+    , I.see(todos.list, has.length, 0)
   )
 
   .scenario('test the input field should be in focus on initial load'
     , I.check('focus in the input field')
-    , I.see(todos.what, has.focus) 
+    , I.see(todos.what, has.focus)
   )
 
   .scenario('test the list has all added items'
@@ -42,24 +50,8 @@ feature('todo list')
     , I.see(todos.item_at(0), has.text, 'prepare presentation')
   )
 
-  .scenario('test the list supports big ammount of todos'
-  , I.do(generate_todos, 10)
-  , I.check('list contains all the items')
-  , I.see(todos.list, has.length, 10)
-)
-
-  // it('should trim text input', function () {
-  //   // this is an example of another custom command
-  //   // since we repeat the todo creation over and over
-  //   // again. It's up to you to decide when to abstract
-  //   // repetitive behavior and roll that up into a custom
-  //   // command vs explicitly writing the code.
-  //   cy.createTodo(`    ${TODO_ITEM_ONE}    `)
-
-  //   // we use as explicit assertion here about the text instead of
-  //   // using 'contain' so we can specify the exact text of the element
-  //   // does not have any whitespace around it
-  //   cy.get('.todo-list li')
-  //     .eq(0)
-  //     .should('have.text', TODO_ITEM_ONE)
-  // })
+  .scenario('test the list supports many todos'
+    , I.do(generate_todos, 10)
+    , I.check('list contains all the items')
+    , I.see(todos.list, has.length, 10)
+  )

@@ -17,7 +17,11 @@ export class PlaywrightEngine implements Engine {
   }
 
   click(selector: string): Promise<void> {
-    return this.page.click(selector) as Promise<any>;
+    return this.page.click(selector);
+  }
+
+  hover(selector: string): Promise<void> {
+    return this.page.hover(selector);
   }
 
   press(key: KeyboardKey): Promise<void> {
@@ -32,6 +36,7 @@ export class PlaywrightEngine implements Engine {
     return this.page.focus(selector);
   }
 
+  // todo: implement
   drag(target: string, x: number, y: number): Promise<void> {
     throw new Error('Method not implemented.');
   }

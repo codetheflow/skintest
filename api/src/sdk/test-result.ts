@@ -1,6 +1,7 @@
 import { ElementRef } from './engine';
 import { formatSelector } from './format';
 
+// TODO: better fails status codes, make enum, solution as hyperlink?
 export interface TestFail {
   status: 'fail',
   code: string;
@@ -37,7 +38,7 @@ export function inspect(info: InspectInfo): TestPass {
 export function checkFail(): TestFail {
   return {
     status: 'fail',
-    code: 'CHECK_FAIL',
+    code: '',
     description: '',
     solution: ''
   };
@@ -46,7 +47,7 @@ export function checkFail(): TestFail {
 export function unaryAssertFail(message: string): TestFail {
   return {
     status: 'fail',
-    code: 'UNARY_ASSERT_FAIL',
+    code: '',
     description: message,
     solution: 'check assert condition'
   };
@@ -58,7 +59,7 @@ export function binaryAssertFail<V>(
 ): TestFail {
   return {
     status: 'fail',
-    code: 'BINARY_ASSERT_FAIL',
+    code: '',
     description: `expected \`${etalon}\`, got \`${actual}\``,
     solution: 'check assert condition'
   };
@@ -67,7 +68,7 @@ export function binaryAssertFail<V>(
 export function notFoundElement(query: string): TestFail {
   return {
     status: 'fail',
-    code: 'NOT_FOUND_ELEMENT',
+    code: '',
     description: `element ${formatSelector(query)} is not found`,
     solution: 'check selector and element availability'
   };
@@ -76,7 +77,7 @@ export function notFoundElement(query: string): TestFail {
 export function timeout(ex: Error): TestFail {
   return {
     status: 'fail',
-    code: 'TIMEOUT',
+    code: '',
     description: 'timeout exceed',
     solution: 'check selector and element availability or increase a timeout'
   };
@@ -86,7 +87,7 @@ export function dontSeeFail(): TestFail {
   // TODO: get rid
   return {
     status: 'fail',
-    code: 'DONT_SEE',
+    code: '',
     description: 'dont see',
     solution: ''
   };

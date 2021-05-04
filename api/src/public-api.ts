@@ -1,6 +1,6 @@
 export { $, $$, Query, QueryList } from './sdk/query';
-export { AssertStep, DevStep, CommandBody, ClientStep, SayStep, DoStep, StepContext } from './sdk/command';
-export { client, ClientDo, server, ServerDo, ClientRecipe, ServerRecipe } from './sdk/function-support';
+export { AssertStep, DevStep, CommandBody, ClientStep, InfoStep, DoStep, StepContext } from './sdk/command';
+export { ClientFunction, Client, ClientDo, ClientRecipe, ClientElement, ClientElementList, ServerFunction, ServerDo, ServerRecipe, Server, recipe } from './sdk/recipe';
 export { Debugger, Breakpoint } from './sdk/steps/debug';
 export { DOMElement } from './sdk/dom';
 export { Ego, I } from './sdk/ego';

@@ -1,4 +1,4 @@
-import { NodeReportSink } from './node-report';
+import { NodeReportSink } from './node-reporting';
 import { PlaywrightEngine } from './playwright-engine';
 import { Scene } from './scene';
 import { Suite } from '../sdk/suite';
@@ -6,12 +6,12 @@ import { playwrightAttempt } from './playwright-attempt';
 import * as playwright from 'playwright';
 
 export async function playwrightLauncher(suite: Suite) {
-  const BROWSER_START_TIMEOUT = 5000;
+  const BROWSER_START_TIMEOUT = 30000;
   const PAGE_TIMEOUT = 5000;
   const ATTEMPTS = 1;
 
   const browserOptions: playwright.LaunchOptions = {
-    headless: true,
+    headless: false,
     timeout: BROWSER_START_TIMEOUT,
   };
 
