@@ -15,10 +15,10 @@ export class AttachFileStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
     const selector = this.query.toString();
-    return attempt(() => engine.attachFile(selector, this.file));
+    return attempt(() => driver.attachFile(selector, this.file));
   }
 
   toString() {

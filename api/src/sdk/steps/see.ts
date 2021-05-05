@@ -21,13 +21,13 @@ export class SeeStep implements AssertStep {
   }
 
   async execute(context: StepContext): TestExecutionResult {
-    const { engine } = context;
+    const { driver: driver } = context;
     if (isUndefined(this.assert)) {
       const selector = this.query.toString();
 
       switch (this.query.type) {
         case 'query': {
-          const element = await engine.select(selector);
+          const element = await driver.select(selector);
           if (!element) {
             return notFoundElement(selector);
           }
@@ -35,7 +35,7 @@ export class SeeStep implements AssertStep {
           break;
         }
         case 'queryList': {
-          const elements = await engine.selectAll(selector);
+          const elements = await driver.selectAll(selector);
           if (!elements.length) {
             return notFoundElement(selector);
           }
@@ -47,7 +47,7 @@ export class SeeStep implements AssertStep {
         }
       }
     } else {
-      const verify = new Verify(engine);
+      const verify = new Verify(driver);
       const { what, how } = this.assert as AssertHost<any>;
 
       switch (this.query.type) {

@@ -1,7 +1,7 @@
 import { invalidArgumentError } from '../common/errors';
 import { Guard } from '../common/guard';
 import { DOMElement } from './dom';
-import { Engine } from './engine';
+import { Driver } from './driver';
 import { UIStep } from './path';
 import { Query, QueryList } from './query';
 
@@ -29,8 +29,8 @@ export interface Client {
   query<T extends DOMElement>(query: QueryList<T>): Promise<ClientElementList<T>>;
 }
 
-export class EngineClient implements Client {
-  constructor(private engine: Engine) {
+export class DriverClient implements Client {
+  constructor(private driver: Driver) {
   }
 
   do(message: string, ...steps: UIStep[]): ClientDo {
@@ -47,8 +47,8 @@ export class EngineClient implements Client {
 
     const selector = query.toString();
     switch (query.type) {
-      case 'query': return this.engine.select(selector);
-      case 'queryList': return this.engine.selectAll(selector);
+      case 'query': return this.driver.select(selector);
+      case 'queryList': return this.driver.selectAll(selector);
       default: throw invalidArgumentError('type', (query as any).type);
     }
   }

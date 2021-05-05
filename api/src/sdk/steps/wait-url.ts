@@ -10,9 +10,9 @@ export class WaitUrlStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
-    return attempt(() => engine.waitForNavigation(this.url));
+    return attempt(() => driver.waitForNavigation(this.url));
   }
 
   toString() {

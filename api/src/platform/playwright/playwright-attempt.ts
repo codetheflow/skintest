@@ -2,7 +2,7 @@ import { Attempt } from '../../sdk/attempt';
 import { StatusReport } from '../../sdk/report-sink';
 import { pass, TestExecutionResult } from '../../sdk/test-result';
 import { timeout } from '../../sdk/test-result';
-import { unknownEngineError } from '../../common/errors';
+import { unknownDriverError } from '../../common/errors';
 import * as playwright from 'playwright';
 
 export function playwrightAttempt(retries: number, status: StatusReport): Attempt {
@@ -20,7 +20,7 @@ export function playwrightAttempt(retries: number, status: StatusReport): Attemp
           continue;
         }
 
-        throw unknownEngineError(ex);
+        throw unknownDriverError(ex);
       }
     }
 

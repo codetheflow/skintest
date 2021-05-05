@@ -1,10 +1,10 @@
 import { DOMElement } from '../../sdk/dom';
-import { ElementRef, ElementRefList, Engine } from '../../sdk/engine';
+import { ElementRef, ElementRefList, Driver } from '../../sdk/driver';
 import { KeyboardKey } from '../../sdk/keyboard';
 import { PlaywrightElement } from './playwright-element';
 import * as playwright from 'playwright';
 
-export class PlaywrightEngine implements Engine {
+export class PlaywrightDriver implements Driver {
   constructor(private page: playwright.Page) {
   }
 

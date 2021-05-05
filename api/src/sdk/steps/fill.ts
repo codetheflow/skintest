@@ -15,10 +15,10 @@ export class FillStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const {  attempt, engine } = context;
+    const {  attempt, driver } = context;
     
     const selector = this.query.toString();
-    return attempt(() => engine.fill(selector, this.value));
+    return attempt(() => driver.fill(selector, this.value));
   }
 
   toString() {

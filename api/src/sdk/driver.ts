@@ -10,7 +10,7 @@ export interface ElementRef<E extends DOMElement> extends ClientElement<E> {
 
 export type ElementRefList<E extends DOMElement> = ElementRef<E>[];
 
-export interface Engine {
+export interface Driver {
   goto(url: string): Promise<void>;
   waitForNavigation(url: string): Promise<void>;
 

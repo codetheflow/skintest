@@ -13,7 +13,7 @@ export class InspectStep implements DevStep {
   }
 
   async execute(context: StepContext): TestExecutionResult {
-    const { engine } = context;
+    const { driver } = context;
 
     const selector = this.query.toString();
 
@@ -21,12 +21,12 @@ export class InspectStep implements DevStep {
     const type = isString(this.query) ? 'queryList' : (this.query as any).type
     switch (type) {
       case 'query': {
-        const target = await engine.select(selector);
+        const target = await driver.select(selector);
         return inspect({ selector, target });
       }
 
       case 'queryList': {
-        const target = await engine.selectAll(selector);
+        const target = await driver.selectAll(selector);
         return inspect({ selector, target });
       }
 

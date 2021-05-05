@@ -14,11 +14,11 @@ export class ClickStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
     const selector = this.query.toString();
     // todo: move attempt to the scene level
-    return attempt(() => engine.click(selector));
+    return attempt(() => driver.click(selector));
   }
 
   toString() {

@@ -11,9 +11,9 @@ export class PressStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
-    return attempt(() => engine.press(this.key));
+    return attempt(() => driver.press(this.key));
   }
 
   toString() {

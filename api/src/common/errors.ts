@@ -6,7 +6,7 @@ export function invalidArgumentError<T>(name: string, value: T) {
   return error('invalid argument', `\`${name}\` with value \`${value}\``);
 }
 
-export function unknownEngineError(ex: Error) {
+export function unknownDriverError(ex: Error) {
   // todo: wrap with skintest error
   return ex;
 }

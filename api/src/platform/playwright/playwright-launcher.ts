@@ -1,7 +1,7 @@
 import { EMPTY } from '../../common/utils';
 import { NodeReportSink } from '../node-reporting';
 import { playwrightAttempt } from './playwright-attempt';
-import { PlaywrightEngine } from './playwright-engine';
+import { PlaywrightDriver } from './playwright-driver';
 import { Plugin, stage } from '../plugin';
 import { Scene } from '../scene';
 import { Suite } from '../../sdk/suite';
@@ -13,7 +13,7 @@ export async function playwrightLauncher(suite: Suite, plugins: Plugin[]) {
   const ATTEMPTS = 1;
 
   const browserOptions: playwright.LaunchOptions = {
-    headless: true,
+    headless: false,
     timeout: BROWSER_START_TIMEOUT,
   };
 
@@ -28,11 +28,11 @@ export async function playwrightLauncher(suite: Suite, plugins: Plugin[]) {
       const page = await context.newPage();
       page.setDefaultTimeout(PAGE_TIMEOUT);
 
-      const engine = new PlaywrightEngine(page);
+      const driver = new PlaywrightDriver(page);
       const attempt = playwrightAttempt(ATTEMPTS, await reporting.attempt());
 
       const effect = stage(plugins, {
-        engine,
+        driver,
         reporting,
         attempt,
       });

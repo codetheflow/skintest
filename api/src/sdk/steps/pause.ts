@@ -7,9 +7,9 @@ export class PauseStep implements DevStep {
   constructor() { }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
-    return attempt(() => engine.pause());
+    return attempt(() => driver.pause());
   }
 
   toString() {

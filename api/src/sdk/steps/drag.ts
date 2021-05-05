@@ -16,10 +16,10 @@ export class DragStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
     const selector = this.query.toString();
-    return attempt(() => engine.drag(selector, this.x, this.y));
+    return attempt(() => driver.drag(selector, this.x, this.y));
   }
 
   toString() {

@@ -1,11 +1,11 @@
 import { Attempt } from './attempt';
-import { Engine } from './engine';
+import { Driver } from './driver';
 import { ClientRecipe, ServerRecipe } from './recipe';
 import { TestExecutionResult } from './test-result';
 
 export interface StepContext {
   attempt: Attempt;
-  engine: Engine;
+  driver: Driver;
 }
 
 export type Command =

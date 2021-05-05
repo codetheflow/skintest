@@ -2,7 +2,7 @@ import { Script } from '../sdk/script';
 import { Reporting } from '../sdk/report-sink';
 import { Command } from '../sdk/command';
 import { Attempt } from '../sdk/attempt';
-import { Engine } from '../sdk/engine';
+import { Driver } from '../sdk/driver';
 
 export type StageZone =
   'init'
@@ -76,7 +76,7 @@ export function stage(plugins: Plugin[], pluginContext: Omit<PluginContext, 'sta
 
 export interface PluginContext {
   attempt: Attempt;
-  engine: Engine;
+  driver: Driver;
   reporting: Reporting;
   script: Script;
   stage: OnStage;

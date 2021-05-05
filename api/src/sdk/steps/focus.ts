@@ -14,10 +14,10 @@ export class FocusStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
     const selector = this.query.toString();
-    return attempt(() => engine.focus(selector));
+    return attempt(() => driver.focus(selector));
   }
 
   toString() {

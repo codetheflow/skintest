@@ -12,8 +12,8 @@ export class AmOnPageStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
-    return attempt(() => engine.goto(this.url));
+    const { attempt, driver } = context;
+    return attempt(() => driver.goto(this.url));
   }
 
   toString() {

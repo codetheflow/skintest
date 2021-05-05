@@ -14,10 +14,10 @@ export class HoverStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, engine } = context;
+    const { attempt, driver } = context;
 
     const selector = this.query.toString();
-    return attempt(() => engine.hover(selector));
+    return attempt(() => driver.hover(selector));
   }
 
   toString() {
