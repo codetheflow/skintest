@@ -1,10 +1,10 @@
-import { EMPTY } from '../common/utils';
-import { NodeReportSink } from './node-reporting';
+import { EMPTY } from '../../common/utils';
+import { NodeReportSink } from '../node-reporting';
 import { playwrightAttempt } from './playwright-attempt';
 import { PlaywrightEngine } from './playwright-engine';
-import { Plugin, stage } from './plugin';
-import { Scene } from './scene';
-import { Suite } from '../sdk/suite';
+import { Plugin, stage } from '../plugin';
+import { Scene } from '../scene';
+import { Suite } from '../../sdk/suite';
 import * as playwright from 'playwright';
 
 export async function playwrightLauncher(suite: Suite, plugins: Plugin[]) {

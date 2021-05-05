@@ -1,4 +1,4 @@
-import { PlaywrightPlatform } from './playwright-platform';
+import { PlaywrightPlatform } from './playwright/playwright-platform';
 import { Project } from './project';
 
 export interface Platform {
