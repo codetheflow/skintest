@@ -13,7 +13,7 @@ export async function playwrightLauncher(suite: Suite, plugins: Plugin[]) {
   const ATTEMPTS = 1;
 
   const browserOptions: playwright.LaunchOptions = {
-    headless: false,
+    headless: true,
     timeout: BROWSER_START_TIMEOUT,
   };
 

@@ -8,7 +8,7 @@ feature('todo list')
     , I.do(clear_todos)
   )
 
-  .scenario('#dev test the input field should be in focus on initial load'
+  .scenario('test the input field should be in focus on initial load'
     , I.check('focus in the input field')
     , I.see(todos.what, has.focus)
     , I.see(todos.what, has.focus)
@@ -31,7 +31,7 @@ feature('todo list')
     , I.see(todos.what, has.value, 'congratulate grandma')
   )
 
-  .scenario('test the input file should be empty after item was added'
+  .scenario('#dev test the input file should be empty after item was added'
     , I.do(add_todo, 'call dad')
     , I.check('input field is empty')
     , I.see(todos.what, has.value, '')

@@ -2,9 +2,9 @@ import { invalidArgumentError } from '../common/errors';
 import { Plugin, PluginContext } from '../platform/plugin';
 import { Command } from '../sdk/command';
 import { ReportStepMessage } from '../sdk/report-sink';
-import { RunCommands } from './run-steps';
+import { Execute } from './execute';
 
-export function step(runCommands: RunCommands): Plugin {
+export function step(execute: Execute): Plugin {
   return async (context: PluginContext) => {
     const { script, stage, reporting } = context;
 
@@ -29,8 +29,8 @@ export function step(runCommands: RunCommands): Plugin {
         };
 
         const status = await getReport(command.type, message);
-        const doSteps = runCommands([command], status);
-        return doSteps(context);
+        const steps = execute([command], status);
+        return steps(context);
       }
     });
   };

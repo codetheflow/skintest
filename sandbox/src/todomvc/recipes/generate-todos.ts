@@ -1,4 +1,4 @@
-import { recipe, I, UIStep } from '@skintest/api';
+import { recipe, I } from '@skintest/api';
 import { add_todo } from './add-todo';
 
 export const generate_todos = recipe.client(
@@ -10,13 +10,7 @@ export const generate_todos = recipe.client(
    */
   function (count: number) {
     const client = this;
-
-    const path: UIStep[] = [];
-    let last = count;
-    while (last-- > 0) {
-      path.push(I.do(add_todo, `geneated todo #${last}`));
-    }
-
+    const path = [...Array(count)].map((x, i) => I.do(add_todo, `geneated todo #${i}`))
     return client.do(`generate ${count} todos`, ...path);
   }
 );

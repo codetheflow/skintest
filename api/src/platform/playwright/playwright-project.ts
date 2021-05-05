@@ -3,7 +3,7 @@ import { Plugin } from '../plugin';
 import { Project } from '../project';
 import { Suite } from '../../sdk/suite';
 import { afterFeature } from '../../plugins/after-feature';
-import { runCommands } from '../../plugins/run-steps';
+import { execute } from '../../plugins/execute';
 import { afterScenario } from '../../plugins/after-scenario';
 import { afterStep } from '../../plugins/after-step';
 import { beforeFeature } from '../../plugins/before-feature';
@@ -18,13 +18,13 @@ export class PlaywrightProject implements Project {
   run(...plugins: Plugin[]): Promise<void> {
     return playwrightLauncher(this.suite, [
       ...plugins,
-      afterFeature(runCommands),
-      afterScenario(runCommands),
-      afterStep(runCommands),
-      beforeFeature(runCommands),
-      beforeScenario(runCommands),
-      beforeStep(runCommands),
-      step(runCommands),
+      afterFeature(execute),
+      afterScenario(execute),
+      afterStep(execute),
+      beforeFeature(execute),
+      beforeScenario(execute),
+      beforeStep(execute),
+      step(execute),
     ]);
   }
 }

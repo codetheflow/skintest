@@ -1,7 +1,7 @@
 import { Plugin, PluginContext } from '../platform/plugin';
-import { RunCommands } from './run-steps';
+import { Execute } from './execute';
 
-export function beforeStep(runCommands: RunCommands): Plugin {
+export function beforeStep(execute: Execute): Plugin {
   return async (context: PluginContext) => {
     const { script, stage, reporting } = context;
     return stage({
@@ -12,8 +12,8 @@ export function beforeStep(runCommands: RunCommands): Plugin {
           step: command.toString(),
         };
 
-        const doSteps = runCommands(script.beforeStep, await reporting.beforeStep(message));
-        return doSteps(context);
+        const steps = execute(script.beforeStep, await reporting.beforeStep(message));
+        return steps(context);
       }
     });
   }

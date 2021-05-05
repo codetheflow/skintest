@@ -3,11 +3,11 @@ import { Command, DoStep } from '../sdk/command';
 import { ClientFunction, DriverClient, Process, ServerFunction } from '../sdk/recipe';
 import { StatusReport } from '../sdk/report-sink';
 
-export type RunCommands = typeof runCommands;
+export type Execute = typeof execute;
 
-export function runCommands(commands: Command[], status: StatusReport): Plugin {
+export function execute(commands: Command[], status: StatusReport): Plugin {
 
-  async function runSteps(context: PluginContext): Promise<PluginExecutionResult> {
+  async function execSteps(context: PluginContext): Promise<PluginExecutionResult> {
     try {
       for (let command of commands) {
         const result = await command.execute(context);
@@ -17,7 +17,7 @@ export function runCommands(commands: Command[], status: StatusReport): Plugin {
         }
 
         if (command.type === 'do') {
-          const funcResult = await runStepFunction(command, status, context);
+          const funcResult = await execRecipe(command, status, context);
           if (funcResult.effect === 'break') {
             return funcResult;
           }
@@ -30,14 +30,14 @@ export function runCommands(commands: Command[], status: StatusReport): Plugin {
       }
 
       await status.pass();
-      return pluginContinue('run-steps');
+      return pluginContinue('execute');
     } catch (ex) {
       await status.error(ex);
-      return pluginBreak('run-steps');
+      return pluginBreak('execute');
     }
   }
 
-  async function runStepFunction(command: DoStep, status: StatusReport, context: PluginContext): Promise<PluginExecutionResult> {
+  async function execRecipe(command: DoStep, status: StatusReport, context: PluginContext): Promise<PluginExecutionResult> {
     try {
       const { reporting, driver } = context;
       if (command.recipe.type === 'server') {
@@ -52,18 +52,19 @@ export function runCommands(commands: Command[], status: StatusReport): Plugin {
       const action = command.recipe.action as ClientFunction;
       const { message, steps } = await action.call(client, command.args);
       await status.progress('I ' + message);
-      const recipeResult = await runCommands(steps, await reporting.attempt());
-      if (!recipeResult) {
-        return pluginBreak('run-function');
+      const recipe = execute(steps, await reporting.attempt());
+      const result = await recipe(context);
+      if (result.effect === 'break') {
+        return result;
       }
 
-      return pluginContinue('run-function');
+      return pluginContinue('recipe');
     } catch (ex) {
       await status.error(ex);
-      return pluginBreak('run-function');
+      return pluginBreak('recipe');
     }
 
   }
 
-  return runSteps;
+  return execSteps;
 }
