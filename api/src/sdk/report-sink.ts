@@ -8,9 +8,9 @@ export interface StatusReport {
   inspect(info: InspectInfo): Promise<void>
 }
 
-export type ReportFeatureContext = { feature: string; };
-export type ReportScenarioContext = ReportFeatureContext & { scenario: string };
-export type ReportStepContext = ReportScenarioContext & { step: string };
+export type ReportFeatureMessage = { feature: string; };
+export type ReportScenarioMessage = ReportFeatureMessage & { scenario: string };
+export type ReportStepMessage = ReportScenarioMessage & { step: string };
 
 export interface ReportSink {
   start(): Promise<Reporting>;
@@ -18,21 +18,21 @@ export interface ReportSink {
 }
 
 export interface Reporting {
-  beforeFeature(context: ReportFeatureContext): Promise<StatusReport>;
-  beforeScenario(context: ReportScenarioContext): Promise<StatusReport>;
-  beforeStep(context: ReportStepContext): Promise<StatusReport>;
+  beforeFeature(message: ReportFeatureMessage): Promise<StatusReport>;
+  beforeScenario(message: ReportScenarioMessage): Promise<StatusReport>;
+  beforeStep(message: ReportStepMessage): Promise<StatusReport>;
 
-  assert(context: ReportStepContext): Promise<StatusReport>;
-  check(context: ReportStepContext): Promise<StatusReport>;
+  assert(message: ReportStepMessage): Promise<StatusReport>;
+  check(message: ReportStepMessage): Promise<StatusReport>;
 
-  afterFeature(context: ReportFeatureContext): Promise<StatusReport>;
-  afterScenario(context: ReportScenarioContext): Promise<StatusReport>;
-  afterStep(context: ReportStepContext): Promise<StatusReport>;
+  afterFeature(message: ReportFeatureMessage): Promise<StatusReport>;
+  afterScenario(message: ReportScenarioMessage): Promise<StatusReport>;
+  afterStep(message: ReportStepMessage): Promise<StatusReport>;
 
   attempt(): Promise<StatusReport>;
 
-  info(context: ReportStepContext): Promise<StatusReport>;
-  dev(context: ReportStepContext): Promise<StatusReport>;
-  do(context: ReportStepContext): Promise<StatusReport>;
-  client(context: ReportStepContext): Promise<StatusReport>;
+  info(message: ReportStepMessage): Promise<StatusReport>;
+  dev(message: ReportStepMessage): Promise<StatusReport>;
+  do(message: ReportStepMessage): Promise<StatusReport>;
+  client(message: ReportStepMessage): Promise<StatusReport>;
 }

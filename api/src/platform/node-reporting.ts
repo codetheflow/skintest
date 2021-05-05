@@ -1,4 +1,4 @@
-import { Reporting, ReportFeatureContext, ReportScenarioContext, ReportSink, ReportStepContext, StatusReport } from '../sdk/report-sink';
+import { Reporting, ReportFeatureMessage, ReportScenarioMessage, ReportSink, ReportStepMessage, StatusReport } from '../sdk/report-sink';
 import { TestFail, InspectInfo } from '../sdk/test-result';
 import { getCursorPosition } from './terminal';
 import * as chalk from 'chalk';
@@ -33,43 +33,43 @@ export class NodeReportSink implements ReportSink {
 }
 
 class NodeReporting implements Reporting {
-  assert(context: ReportStepContext): Promise<StatusReport> {
+  assert(context: ReportStepMessage): Promise<StatusReport> {
     return stepReport(context.step);
   }
 
-  check(context: ReportStepContext): Promise<StatusReport> {
+  check(context: ReportStepMessage): Promise<StatusReport> {
     return infoReport(context.step);
   }
 
-  info(context: ReportStepContext): Promise<StatusReport> {
+  info(context: ReportStepMessage): Promise<StatusReport> {
     return infoReport(context.step);
   }
 
-  client(context: ReportStepContext): Promise<StatusReport> {
+  client(context: ReportStepMessage): Promise<StatusReport> {
     return stepReport(context.step);
   }
 
-  beforeFeature(context: ReportFeatureContext): Promise<StatusReport> {
+  beforeFeature(context: ReportFeatureMessage): Promise<StatusReport> {
     return catchReport()
   }
 
-  beforeScenario(context: ReportScenarioContext): Promise<StatusReport> {
+  beforeScenario(context: ReportScenarioMessage): Promise<StatusReport> {
     return beforeScenarioReport(context.feature, context.scenario);
   }
 
-  beforeStep(context: ReportStepContext): Promise<StatusReport> {
+  beforeStep(context: ReportStepMessage): Promise<StatusReport> {
     return catchReport();
   }
 
-  afterFeature(context: ReportFeatureContext): Promise<StatusReport> {
+  afterFeature(context: ReportFeatureMessage): Promise<StatusReport> {
     return catchReport();
   }
 
-  afterScenario(context: ReportScenarioContext): Promise<StatusReport> {
+  afterScenario(context: ReportScenarioMessage): Promise<StatusReport> {
     return catchReport();
   }
 
-  afterStep(context: ReportStepContext): Promise<StatusReport> {
+  afterStep(context: ReportStepMessage): Promise<StatusReport> {
     return catchReport();
   }
 
@@ -77,11 +77,11 @@ class NodeReporting implements Reporting {
     return emptyReport();
   }
 
-  dev(context: ReportStepContext): Promise<StatusReport> {
+  dev(context: ReportStepMessage): Promise<StatusReport> {
     return devReport(context.step);
   }
 
-  do(context: ReportStepContext): Promise<StatusReport> {
+  do(context: ReportStepMessage): Promise<StatusReport> {
     return doReport(context.step);
   }
 }
