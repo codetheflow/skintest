@@ -6,13 +6,13 @@ export function afterStep(runCommands: RunCommands): Plugin {
     const { script, stage, reporting } = context;
     return stage({
       'after.step': async ({ scenario, command }) => {
-        const status = {
+        const message = {
           feature: script.name,
           scenario,
           step: command.toString(),
         };
 
-        const doSteps = runCommands(script.afterStep, await reporting.afterStep(status));
+        const doSteps = runCommands(script.afterStep, await reporting.afterStep(message));
         return doSteps(context);
       }
     });

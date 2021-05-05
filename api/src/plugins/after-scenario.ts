@@ -6,12 +6,12 @@ export function afterScenario(runCommands: RunCommands): Plugin {
     const { script, stage, reporting } = context;
     return stage({
       'after.scenario': async ({ scenario }) => {
-        const status = {
+        const message = {
           feature: script.name,
           scenario,
         };
 
-        const doSteps = runCommands(script.afterScenario, await reporting.afterScenario(status));
+        const doSteps = runCommands(script.afterScenario, await reporting.afterScenario(message));
         return doSteps(context);
       }
     });

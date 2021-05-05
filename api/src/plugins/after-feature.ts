@@ -6,11 +6,11 @@ export function afterFeature(runCommands: RunCommands): Plugin {
     const { script, stage, reporting } = context;
     return stage({
       'after.feature': async () => {
-        const status = {
+        const message = {
           feature: script.name,
         };
 
-        const doSteps = runCommands(script.afterFeature, await reporting.afterFeature(status));
+        const doSteps = runCommands(script.afterFeature, await reporting.afterFeature(message));
         return doSteps(context);
       }
     });

@@ -6,12 +6,12 @@ export function beforeScenario(runCommands: RunCommands): Plugin {
     const { script, stage, reporting } = context;
     return stage({
       'before.scenario': async ({ scenario }) => {
-        const status = {
+        const message = {
           feature: script.name,
           scenario: scenario,
         };
 
-        const doSteps = runCommands(script.beforeScenario, await reporting.beforeScenario(status));
+        const doSteps = runCommands(script.beforeScenario, await reporting.beforeScenario(message));
         return doSteps(context);
       }
     });
