@@ -6,7 +6,7 @@
     "build": "npm run build:pre && tsc",
     "build:watch": "npm run build:pre && tsc --watch",
     "build:pre": "rimraf dist && cpx package.json dist",
-    "start": "npm run build && node ./dist/runner.js",
+    "start": "npm run build && node ./dist/skintest.js",
     "lint": "eslint . --ext .ts"
   },
   "repository": {

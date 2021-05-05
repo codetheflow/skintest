@@ -1,5 +1,6 @@
 import { Reporting, ReportFeatureContext, ReportScenarioContext, ReportSink, ReportStepContext, StatusReport } from '../sdk/report-sink';
 import { TestFail, InspectInfo } from '../sdk/test-result';
+import { getCursorPosition } from './terminal';
 import * as chalk from 'chalk';
 
 const { stdout, stderr } = process;
@@ -8,6 +9,18 @@ const CHECK_MARK = '\u2713';
 const CROSS_MARK = '\u2613';
 const NEW_LINE = '\n';
 const WS = ' ';
+
+async function createLine() {
+  // const [x, y] = await getCursorPosition();
+  // todo: use getCursorPosition
+  return (...text: string[]) => {
+    stdout.cursorTo(0);
+    stdout.clearScreenDown();
+    for (let part of text) {
+      stdout.write(part);
+    }
+  }
+}
 
 export class NodeReportSink implements ReportSink {
   start(): Promise<Reporting> {
@@ -20,231 +33,213 @@ export class NodeReportSink implements ReportSink {
 }
 
 class NodeReporting implements Reporting {
-  assert(context: ReportStepContext): StatusReport {
-    return new StepReport(context.step);
+  assert(context: ReportStepContext): Promise<StatusReport> {
+    return stepReport(context.step);
   }
 
-  check(context: ReportStepContext): StatusReport {
-    return new InfoReport(context.step);
+  check(context: ReportStepContext): Promise<StatusReport> {
+    return infoReport(context.step);
   }
 
-  info(context: ReportStepContext): StatusReport {
-    return new InfoReport(context.step);
+  info(context: ReportStepContext): Promise<StatusReport> {
+    return infoReport(context.step);
   }
 
-  client(context: ReportStepContext): StatusReport {
-    return new StepReport(context.step);
+  client(context: ReportStepContext): Promise<StatusReport> {
+    return stepReport(context.step);
   }
 
-  beforeFeature(context: ReportFeatureContext): StatusReport {
-    return new NewLineReport()
+  beforeFeature(context: ReportFeatureContext): Promise<StatusReport> {
+    return catchReport()
   }
 
-  beforeScenario(context: ReportScenarioContext): StatusReport {
-    return new BeforeScenarioReport(context.feature, context.scenario);
+  beforeScenario(context: ReportScenarioContext): Promise<StatusReport> {
+    return beforeScenarioReport(context.feature, context.scenario);
   }
 
-  beforeStep(context: ReportStepContext): StatusReport {
-    return new CatchReport();
+  beforeStep(context: ReportStepContext): Promise<StatusReport> {
+    return catchReport();
   }
 
-  afterFeature(context: ReportFeatureContext): StatusReport {
-    return new CatchReport();
+  afterFeature(context: ReportFeatureContext): Promise<StatusReport> {
+    return catchReport();
   }
 
-  afterScenario(context: ReportScenarioContext): StatusReport {
-    return new NewLineReport();
+  afterScenario(context: ReportScenarioContext): Promise<StatusReport> {
+    return catchReport();
   }
 
-  afterStep(context: ReportStepContext): StatusReport {
-    return new CatchReport();
+  afterStep(context: ReportStepContext): Promise<StatusReport> {
+    return catchReport();
   }
 
-  attempt(): StatusReport {
-    return new CatchReport();
+  attempt(): Promise<StatusReport> {
+    return emptyReport();
   }
 
-  dev(context: ReportStepContext): StatusReport {
-    return new DevReport(context.step);
+  dev(context: ReportStepContext): Promise<StatusReport> {
+    return devReport(context.step);
   }
 
-  do(context: ReportStepContext): StatusReport {
-    return new DoReport(context.step);
+  do(context: ReportStepContext): Promise<StatusReport> {
+    return doReport(context.step);
   }
 }
 
-class CatchReport implements StatusReport {
-  async pass(): Promise<void> {
-  }
+export async function catchReport(): Promise<StatusReport> {
+  return {
+    async pass(): Promise<void> {
+    },
 
-  async progress(message: string): Promise<void> {
-  }
+    async progress(message: string): Promise<void> {
+    },
 
-  async fail(reason: TestFail): Promise<void> {
-    stderr.write(chalk.hidden(CROSS_MARK));
-    stderr.write(WS);
-    stderr.write(chalk.bgRedBright.white(reason.description));
-    stderr.write(NEW_LINE);
-  }
+    async fail(reason: TestFail): Promise<void> {
+      stderr.write(chalk.hidden(CROSS_MARK));
+      stderr.write(WS);
+      stderr.write(chalk.bgRedBright.white(reason.description));
+      stderr.write(NEW_LINE);
+    },
 
-  async error(ex: Error): Promise<void> {
-    if (ex.stack) {
-      stderr.write(chalk.red(ex.stack));
-    } else {
-      stderr.write(chalk.bgRed(`${ex.name}: ${ex.message}`));
-    }
-
-    stderr.write(NEW_LINE);
-  }
-
-  async inspect(info: InspectInfo): Promise<void> {
-    let { selector: query, target } = info;
-
-    const textForTable = (text: string): string => {
-      if (!text) {
-        return text;
+    async error(ex: Error): Promise<void> {
+      if (ex.stack) {
+        stderr.write(chalk.red(ex.stack));
+      } else {
+        stderr.write(chalk.bgRed(`${ex.name}: ${ex.message}`));
       }
 
-      const MAX_LENGTH = 40;
-      if (text.length < MAX_LENGTH) {
-        return text;
-      }
+      stderr.write(NEW_LINE);
+    },
 
-      return text.substring(0, MAX_LENGTH) + '...';
-    };
+    async inspect(info: InspectInfo): Promise<void> {
+      let { selector: query, target } = info;
 
-    if (Array.isArray(target)) {
-      if (target.length > 1) {
-        stdout.write(`$(\`${query}\`) found ${target.length} elements`);
-        stdout.write(NEW_LINE);
-
-        const list: any[] = [];
-        for (const element of target) {
-          const text = textForTable(await element.innerText());
-          list.push({
-            innerText: text
-          });
+      const textForTable = (text: string): string => {
+        if (!text) {
+          return text;
         }
 
-        console.table(list);
+        const MAX_LENGTH = 40;
+        if (text.length < MAX_LENGTH) {
+          return text;
+        }
+
+        return text.substring(0, MAX_LENGTH) + '...';
+      };
+
+      if (Array.isArray(target)) {
+        if (target.length > 1) {
+          stdout.write(`$(\`${query}\`) found ${target.length} elements`);
+          stdout.write(NEW_LINE);
+
+          const list: any[] = [];
+          for (const element of target) {
+            const text = textForTable(await element.innerText());
+            list.push({
+              innerText: text
+            });
+          }
+
+          console.table(list);
+          return;
+        }
+
+        target = target[0];
+      }
+
+      if (target) {
+        stdout.write(`$(\`${query}\`) found 1 element`);
+        stdout.write(NEW_LINE);
+
+        console.table({
+          innerText: textForTable(await target.innerText())
+        });
+
         return;
       }
 
-      target = target[0];
-    }
-
-    if (target) {
-      stdout.write(`$(\`${query}\`) found 1 element`);
+      stdout.write(chalk.bgRed(`$(\`${query}\`) didn't find any elements`));
       stdout.write(NEW_LINE);
+    },
+  };
+}
 
-      console.table({
-        innerText: textForTable(await target.innerText())
-      });
+function devReport(message: string): Promise<StatusReport> {
+  stdout.write(chalk.yellow(message));
+  stdout.write(NEW_LINE);
+  return catchReport();
+}
 
-      return;
+function infoReport(message: string): Promise<StatusReport> {
+  stdout.write(chalk.hidden(CHECK_MARK));
+  stdout.write(WS);
+  stdout.write(chalk.grey(message));
+  stdout.write(NEW_LINE);
+  return catchReport();
+}
+
+async function stepReport(message: string): Promise<StatusReport> {
+  const firstLine = await createLine();
+  const statusReport = await catchReport();
+  firstLine(chalk.hidden(CHECK_MARK), WS, chalk.grey(message))
+
+  return {
+    ...statusReport,
+
+    async pass(): Promise<void> {
+      firstLine(chalk.green(CHECK_MARK), WS, chalk.grey(message), NEW_LINE);
+    },
+
+    async fail(reason: TestFail): Promise<void> {
+      firstLine(chalk.red(CROSS_MARK), WS, chalk.gray(message), NEW_LINE);
+      return statusReport.fail(reason);
+    },
+
+    async error(ex: Error): Promise<void> {
+      firstLine(chalk.red(CROSS_MARK), WS, chalk.gray(message), NEW_LINE);
+      return statusReport.error(ex);
+    },
+  };
+}
+
+async function doReport(message: string): Promise<StatusReport> {
+  const firstLine = await createLine();
+  const statusReport = await catchReport();
+
+  return {
+    ...statusReport,
+
+    async progress(message: string): Promise<void> {
+      message = message;
+
+      firstLine(chalk.grey(CHECK_MARK), WS, chalk.grey(message));
     }
-
-    stdout.write(chalk.bgRed(`$(\`${query}\`) didn't find any elements`));
-    stdout.write(NEW_LINE);
-  }
-
-  protected clearLine() {
-    stdout.cursorTo(0);
-    stdout.clearLine(1);
-  }
+  };
 }
 
-class DevReport extends CatchReport {
-  constructor(name: string) {
-    super();
-
-    stdout.write(chalk.yellow(name));
-    stdout.write(NEW_LINE);
-  }
+function beforeScenarioReport(feature: string, scenario: string): Promise<StatusReport> {
+  stdout.write(chalk.whiteBright.bold(`${feature}`) + '\\' + chalk.whiteBright(scenario));
+  stdout.write(NEW_LINE);
+  return catchReport();
 }
 
-class InfoReport extends CatchReport {
-  constructor(step: string) {
-    super();
+async function emptyReport(): Promise<StatusReport> {
+  return {
+    async pass(): Promise<void> {
 
-    stdout.write(chalk.hidden(CHECK_MARK));
-    stdout.write(WS);
-    stdout.write(chalk.grey(step));
-    stdout.write(NEW_LINE);
-  }
-}
+    },
 
-class StepReport extends CatchReport {
-  constructor(protected message: string) {
-    super();
+    async fail(reason: TestFail): Promise<void> {
+    },
 
-    //this.line(() => {
-    stdout.write(chalk.hidden(CHECK_MARK));
-    stdout.write(WS);
-    stdout.write(chalk.grey(message));
-    //});
-  }
+    async error(ex: Error): Promise<void> {
+    },
 
-  async pass(): Promise<void> {
-    this.clearLine();
+    async progress(message: string): Promise<void> {
+    },
 
-    stdout.write(chalk.green(CHECK_MARK));
-    stdout.write(WS);
-    stdout.write(chalk.grey(this.message));
-    stdout.write(NEW_LINE);
-  }
+    async inspect(info: InspectInfo): Promise<void> {
+    },
+  };
 
-  async fail(reason: TestFail): Promise<void> {
-    this.clearLine();
-
-    stderr.write(chalk.red(CROSS_MARK));
-    stderr.write(WS)
-    stderr.write(chalk.gray(this.message));
-    stderr.write(NEW_LINE);
-
-    return super.fail(reason);
-  }
-
-  async error(ex: Error): Promise<void> {
-    this.clearLine();
-
-    stderr.write(chalk.red(CROSS_MARK));
-    stderr.write(WS)
-    stderr.write(chalk.gray(this.message));
-    stderr.write(NEW_LINE);
-
-    return super.error(ex);
-  }
-}
-
-class DoReport extends StepReport {
-  constructor(message: string) {
-    super(message);
-  }
-
-  async progress(message: string): Promise<void> {
-    this.message = message;
-    
-    this.clearLine();
-    stdout.write(chalk.grey(CHECK_MARK));
-    stdout.write(WS);
-    stdout.write(chalk.grey(message));
-  }
-}
-
-class BeforeScenarioReport extends CatchReport {
-  constructor(feature: string, scenario: string) {
-    super();
-
-    stdout.write(chalk.whiteBright.bold(`${feature}`) + '\\' + chalk.whiteBright(scenario));
-    stdout.write(NEW_LINE);
-  }
-}
-
-class NewLineReport extends CatchReport {
-  constructor() {
-    super();
-
-    stdout.write(NEW_LINE);
-  }
 }

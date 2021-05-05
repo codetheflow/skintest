@@ -1,4 +1,4 @@
-import { NodePlatform } from './node-platform';
+import { PlaywrightPlatform } from './playwright-platform';
 import { Project } from './project';
 
 export interface Platform {
@@ -6,5 +6,5 @@ export interface Platform {
 }
 
 export function platform(): Platform {
-  return new NodePlatform();
+  return new PlaywrightPlatform();
 }

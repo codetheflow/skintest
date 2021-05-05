@@ -12,3 +12,6 @@ export { UnaryAssert, BinaryAssert, ListAssert } from './sdk/assert'
 
 export { Platform, platform } from './platform/platform';
 export { Project } from './platform/project';
+
+export { exploreFeatures } from './plugins/explore-features';
+export { tagFilter } from './plugins/tag-filter';

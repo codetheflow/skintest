@@ -18,21 +18,21 @@ export interface ReportSink {
 }
 
 export interface Reporting {
-  beforeFeature(context: ReportFeatureContext): StatusReport;
-  beforeScenario(context: ReportScenarioContext): StatusReport;
-  beforeStep(context: ReportStepContext): StatusReport;
+  beforeFeature(context: ReportFeatureContext): Promise<StatusReport>;
+  beforeScenario(context: ReportScenarioContext): Promise<StatusReport>;
+  beforeStep(context: ReportStepContext): Promise<StatusReport>;
 
-  assert(context: ReportStepContext): StatusReport;
-  check(context: ReportStepContext): StatusReport;
+  assert(context: ReportStepContext): Promise<StatusReport>;
+  check(context: ReportStepContext): Promise<StatusReport>;
 
-  afterFeature(context: ReportFeatureContext): StatusReport;
-  afterScenario(context: ReportScenarioContext): StatusReport;
-  afterStep(context: ReportStepContext): StatusReport;
+  afterFeature(context: ReportFeatureContext): Promise<StatusReport>;
+  afterScenario(context: ReportScenarioContext): Promise<StatusReport>;
+  afterStep(context: ReportStepContext): Promise<StatusReport>;
 
-  attempt(): StatusReport;
+  attempt(): Promise<StatusReport>;
 
-  info(context: ReportStepContext): StatusReport;
-  dev(context: ReportStepContext): StatusReport;
-  do(context: ReportStepContext): StatusReport;
-  client(context: ReportStepContext): StatusReport;
+  info(context: ReportStepContext): Promise<StatusReport>;
+  dev(context: ReportStepContext): Promise<StatusReport>;
+  do(context: ReportStepContext): Promise<StatusReport>;
+  client(context: ReportStepContext): Promise<StatusReport>;
 }

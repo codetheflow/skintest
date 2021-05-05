@@ -19,3 +19,5 @@ export function isFalsy<T extends any>(value: T): boolean {
     || (value instanceof Buffer && (value as Buffer).length === 0)
     || (typeof value === 'object' && Object.keys(value as Object).length === 0);
 }
+
+export const EMPTY: {} = {};

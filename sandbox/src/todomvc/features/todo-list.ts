@@ -8,16 +8,9 @@ feature('todo list')
     , I.do(clear_todos)
   )
 
-  .scenario('test the remove button'
-    , I.do(add_todo, 'item to remove')
-    , I.hover(todos.item_at(0))
-    , I.click(todos.remove_button_at(0))
-    , I.check('todos list is empty after remove button clicked')
-    , I.see(todos.list, has.length, 0)
-  )
-
-  .scenario('test the input field should be in focus on initial load'
+  .scenario('#dev test the input field should be in focus on initial load'
     , I.check('focus in the input field')
+    , I.see(todos.what, has.focus)
     , I.see(todos.what, has.focus)
   )
 
@@ -54,4 +47,12 @@ feature('todo list')
     , I.do(generate_todos, 10)
     , I.check('list contains all the items')
     , I.see(todos.list, has.length, 10)
+  )
+
+  .scenario('test the remove button'
+    , I.do(add_todo, 'item to remove')
+    , I.hover(todos.item_at(0))
+    , I.click(todos.remove_button_at(0))
+    , I.check('todos list is empty after remove button clicked')
+    , I.see(todos.list, has.length, 0)
   )

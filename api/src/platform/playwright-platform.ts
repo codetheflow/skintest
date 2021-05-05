@@ -1,17 +1,17 @@
 import { newSuite } from '../sdk/suite';
-import { NodeProject } from './node-project';
+import { PlaywrightProject } from './playwright-project';
 import { Platform } from './platform';
 import { Project } from './project';
 
-export class NodePlatform implements Platform {
+export class PlaywrightPlatform implements Platform {
   newProject(name: string, build: (project: Project) => void): Platform {
     const suite = newSuite(name);
-    const project = new NodeProject(suite);
+    const project = new PlaywrightProject(suite);
     build(project);
     return this;
   }
 }
 
 export function platform(): Platform {
-  return new NodePlatform();
+  return new PlaywrightPlatform();
 }

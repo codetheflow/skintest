@@ -5,9 +5,9 @@ import { timeout } from '../sdk/test-result';
 import { unknownEngineError } from '../common/errors';
 import * as playwright from 'playwright';
 
-export function playwrightAttempt(count: number, report: StatusReport): Attempt {
+export function playwrightAttempt(retries: number, report: StatusReport): Attempt {
   return async (method: () => Promise<void>): TestExecutionResult => {
-    let attempts = count;
+    let attempts = retries;
     let fail = null;
     while (--attempts >= 0) {
       try {
