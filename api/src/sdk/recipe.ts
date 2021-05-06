@@ -48,7 +48,7 @@ export class PageDriverClient implements Client {
     const selector = query.toString();
     switch (query.type) {
       case 'query': return this.page.query(selector);
-      case 'queryList': return this.page.queryAll(selector);
+      case 'queryList': return this.page.queryList(selector);
       default: throw invalidArgumentError('type', (query as any).type);
     }
   }

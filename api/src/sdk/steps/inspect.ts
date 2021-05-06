@@ -26,7 +26,7 @@ export class InspectStep implements DevStep {
       }
 
       case 'queryList': {
-        const target = await page.queryAll(selector);
+        const target = await page.queryList(selector);
         return inspect({ selector, target });
       }
 

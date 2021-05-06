@@ -82,15 +82,25 @@ export class PlaywrightPageDriver implements PageDriver {
   }
 
   async query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
-    const handle = await this.page.$(selector);
-    if (handle) {
-      return new PlaywrightElement<T>(handle, this.page, selector);
-    }
+    try {
+      const handle = await this.page.waitForSelector(selector);
+      if (handle) {
+        return new PlaywrightElement<T>(handle, this.page, selector);
+      }
 
-    return null;
+      return null
+    } catch (ex) {
+      if (ex instanceof playwright.errors.TimeoutError) {
+        // todo: add logging
+        return null;
+      }
+
+      throw ex;
+    }
   }
 
-  async queryAll<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
+  async queryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
+    // todo: how to wait for $$?
     return (await this.page.$$(selector))
       .map(handle => new PlaywrightElement(handle, this.page, selector));
   }

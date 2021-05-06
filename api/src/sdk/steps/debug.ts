@@ -22,7 +22,7 @@ class PageDriverDebugger implements Debugger {
 
   $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRefList<T>> {
     const selector = query.toString();
-    return this.page.queryAll<T>(selector);
+    return this.page.queryList<T>(selector);
   }
 }
 

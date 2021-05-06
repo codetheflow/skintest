@@ -60,7 +60,7 @@ export class Verify {
     how: AssertHow,
     expected: V
   ): TestExecutionResult {
-    const elementRefList = await this.page.queryAll<S>(selector.toString());
+    const elementRefList = await this.page.queryList<S>(selector.toString());
     switch (what) {
       case AssertWhat.length: {
         const actual = await elementRefList.length;

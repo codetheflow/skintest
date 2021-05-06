@@ -35,5 +35,5 @@ export interface PageDriver {
   pause(): Promise<void>;
 
   query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null>;
-  queryAll<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
+  queryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
 }

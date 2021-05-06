@@ -35,7 +35,7 @@ export class SeeStep implements AssertStep {
           break;
         }
         case 'queryList': {
-          const elements = await page.queryAll(selector);
+          const elements = await page.queryList(selector);
           if (!elements.length) {
             return notFoundElement(selector);
           }
