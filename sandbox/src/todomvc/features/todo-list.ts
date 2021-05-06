@@ -1,6 +1,8 @@
 import { feature, has, I } from '@skintest/api';
-import { todos } from '../components';
-import { add_todo, clear_todos, generate_todos } from '../recipes';
+import { todos } from '../components/todos';
+import { add_todo } from '../recipes/add-todo';
+import { clear_todos } from '../recipes/clear_todos';
+import { generate_todos } from '../recipes/generate-todos';
 
 feature('todo list')
   .before('scenario'

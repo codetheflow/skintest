@@ -1,5 +1,5 @@
 import { recipe, I, UIStep } from '@skintest/api';
-import { todos } from '../components';
+import { todos } from '../components/todos';
 
 export const clear_todos = recipe.client(
   /**
