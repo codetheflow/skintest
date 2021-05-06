@@ -1,4 +1,4 @@
-import { Reporting, ReportFeatureMessage, ReportScenarioMessage, ReportSink, ReportStepMessage, StatusReport } from '../sdk/report-sink';
+import { Reporting, ReportFeatureMessage, ReportScenarioMessage, ReportSink, ReportStepMessage, StatusReport } from './report-sink';
 import { TestFail, InspectInfo } from '../sdk/test-result';
 import { getCursorPosition } from './terminal';
 import * as chalk from 'chalk';

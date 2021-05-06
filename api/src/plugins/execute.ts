@@ -1,7 +1,7 @@
 import { Plugin, pluginBreak, PluginContext, pluginContinue, PluginExecutionResult } from '../platform/plugin';
 import { Command, DoStep } from '../sdk/command';
 import { ClientFunction, DriverClient, Process, ServerFunction } from '../sdk/recipe';
-import { StatusReport } from '../sdk/report-sink';
+import { StatusReport } from '../platform/report-sink';
 
 export type Execute = typeof execute;
 

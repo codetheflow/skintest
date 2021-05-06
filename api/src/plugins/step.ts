@@ -1,7 +1,7 @@
 import { invalidArgumentError } from '../common/errors';
 import { Plugin, PluginContext } from '../platform/plugin';
 import { Command } from '../sdk/command';
-import { ReportStepMessage } from '../sdk/report-sink';
+import { ReportStepMessage } from '../platform/report-sink';
 import { Execute } from './execute';
 
 export function step(execute: Execute): Plugin {

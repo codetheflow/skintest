@@ -1,4 +1,4 @@
-import { TestFail, InspectInfo } from './test-result';
+import { TestFail, InspectInfo } from '../sdk/test-result';
 
 export interface StatusReport {
   pass(): Promise<void>;

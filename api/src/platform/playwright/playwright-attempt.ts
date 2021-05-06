@@ -1,5 +1,5 @@
 import { Attempt } from '../../sdk/attempt';
-import { StatusReport } from '../../sdk/report-sink';
+import { StatusReport } from '../report-sink';
 import { pass, TestExecutionResult } from '../../sdk/test-result';
 import { timeout } from '../../sdk/test-result';
 import { unknownDriverError } from '../../common/errors';

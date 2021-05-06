@@ -1,5 +1,5 @@
 import { Script } from '../sdk/script';
-import { Reporting } from '../sdk/report-sink';
+import { Reporting } from '../platform/report-sink';
 import { Command } from '../sdk/command';
 import { Attempt } from '../sdk/attempt';
 import { Driver } from '../sdk/driver';
