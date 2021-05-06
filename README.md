@@ -1,7 +1,7 @@
 skintest
 
 # skintest
-complete e2e testing tool
+ui automatization framework
 
 ### how to run
 
@@ -16,75 +16,52 @@ second terminal:
 cd sandbox
 npm run start
 ```
+### todo 
+
+* skintest.io
+* cli tool
+* setup eslint for project and core
+* time travel
+* fill supporting of asserts
+* https://www.chaijs.com/plugins/chai-webdriver/
+* https://www.chaijs.com/plugins/chai-dom/
+* has.state 'visible|checked|disabled|editable|enabled|hidden'
+* better exception managment
+* stubs support
+* keyboard keys to lowercase and type checking
+* multiple selector strategy, data-test-id, search by the text
+* deal with translations?
+* timeout, headless setting from the user
+* file upload/download
+* playwright typical functions like 'type'
+* drag and drop
+* recipe library (oauth etc)
+* use value from the selector like `I.fill(todos.what, todos.user)`
+* and inspect to dbg in .debug
 
 ### questions
 
-* reuse scenarios - is it good? how to implement?
-* scenarios are sequantial or standalone?
 * how to store secrets?
-* sync feature name and file name
-* how to wait when angular/react/view etc. is loaded?
-* think about cli
-* eslint is very important
-* time travel?
-* better asserts
+* do we need special waiters for angular/react/view etc.
+* introduce roles for writing features/recipes
+* __prefix for the dev steps
+* do we really need check step
+* schema concept? strict, not strict versions? 
+* recipe type `assert`
 
-### names
 
-* skintest
-* quaken/quakken
-* testik
-* testmaster
-* testbar
-* teststory/teststoriya
-* testpage
-* testsprint
-* testscene/testskin
-* skintest
-
-### code thoughts
-
-* rename select to `$`, selectAll to `$$`
 
 ### code style
 
-* project page_objects
-* project function_names
+* project page_objects, and field_names there
+* project recipe_names
 
 * api ClassNames and InterfaceNames
 * api CONSTANT_NAMES and SYMBOL_NAMES
-* api functionNames 
-
-### functions
-function rename to reciept
-
-### misc
-get rid of index.ts in functions and components
-think about try/catch in scene.play
-roles (scenarios/components | functions/project)
-
-introduce fixture(mocks) -> mock envirnoment, api calls etc (rename current fixture to something)
-in typescript
-
-rename spec to integration?
-
-Key should be type checked
-
-think about assertion lib
-hasClass
-
-assertion
-first argument is always selector?
-what about file download?
-new function type assert?
-https://www.chaijs.com/plugins/chai-webdriver/
-https://www.chaijs.com/plugins/chai-dom/
-is and has?
-array vs single element
-data-test-id
-has.state 'visible|checked|disabled|editable|enabled|hidden'
+* api functionNames and instanceNamess
 
 
-https://www.youtube.com/watch?v=9vq6ZUQ4lok&ab_channel=AlfaDigital
 
-how to use in scenario?
+
+
+
