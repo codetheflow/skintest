@@ -1,6 +1,6 @@
 import { Guard } from '../../common/guard';
 import { ClientStep, StepContext } from '../command';
-import { TestExecutionResult } from '../test-result';
+import { asTest, TestExecutionResult } from '../test-result';
 
 export class AmOnPageStep implements ClientStep {
   type: 'client' = 'client';
@@ -12,8 +12,8 @@ export class AmOnPageStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, driver } = context;
-    return attempt(() => driver.goto(this.url));
+    const { page } = context;
+    return asTest(page.goto(this.url));
   }
 
   toString() {

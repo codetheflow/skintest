@@ -1,16 +1,14 @@
-import { Attempt } from './attempt';
-import { Driver } from './driver';
+import { PageDriver } from './page-driver';
 import { ClientRecipe, ServerRecipe } from './recipe';
 import { TestExecutionResult } from './test-result';
 
 export interface StepContext {
-  attempt: Attempt;
-  driver: Driver;
+  page: PageDriver;
 }
 
 export type Command =
   ClientStep
-  | CheckStep
+  | TestStep
   | AssertStep
   | DevStep
   | InfoStep
@@ -25,8 +23,8 @@ export interface ClientStep extends CommandBody {
   type: 'client';
 }
 
-export interface CheckStep extends CommandBody {
-  type: 'check';
+export interface TestStep extends CommandBody {
+  type: 'test';
 }
 
 export interface AssertStep extends CommandBody {

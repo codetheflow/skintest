@@ -1,4 +1,4 @@
-import { Path, UIStep } from './path';
+import { StorySchema, ScenarioSchema, StoryStep } from './schema';
 import { invalidArgumentError } from '../common/errors';
 import { Command } from './command';
 import { Feature, Scenario } from './feature';
@@ -18,16 +18,16 @@ export class Script implements Feature, Scenario {
   constructor(public readonly name: string) {
   }
 
-  before(what: 'feature' | 'scenario' | 'step', ...steps: UIStep[]): Feature {
+  before(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema): Feature {
     switch (what) {
       case 'feature':
-        this.beforeFeature.push(...steps);
+        this.beforeFeature.push(...schema);
         break;
       case 'scenario':
-        this.beforeScenario.push(...steps);
+        this.beforeScenario.push(...schema);
         break;
       case 'step':
-        this.beforeStep.push(...steps);
+        this.beforeStep.push(...schema);
         break;
       default:
         throw invalidArgumentError('what', what);
@@ -36,16 +36,16 @@ export class Script implements Feature, Scenario {
     return this;
   }
 
-  after(what: 'feature' | 'scenario' | 'step', ...steps: UIStep[]): Feature {
+  after(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema): Feature {
     switch (what) {
       case 'feature':
-        this.afterFeature.push(...steps);
+        this.afterFeature.push(...schema);
         break;
       case 'scenario':
-        this.afterScenario.push(...steps);
+        this.afterScenario.push(...schema);
         break;
       case 'step':
-        this.afterStep.push(...steps);
+        this.afterStep.push(...schema);
         break;
       default:
         throw invalidArgumentError('what', what);
@@ -54,8 +54,8 @@ export class Script implements Feature, Scenario {
     return this;
   }
 
-  scenario(name: string, ...steps: Path): Scenario {
-    this.scenarios.push([name, steps]);
+  scenario(name: string, ...schema: ScenarioSchema): Scenario {
+    this.scenarios.push([name, schema]);
     return this;
   }
 }

@@ -1,7 +1,7 @@
 import { getSuite } from './suite';
 import { Guard } from '../common/guard';
 import { Script } from './script';
-import { Path, UIStep } from './path';
+import { StorySchema, ScenarioSchema } from './schema';
 
 export function feature(name: string): Feature {
   const suite = getSuite();
@@ -16,12 +16,12 @@ export function feature(name: string): Feature {
 };
 
 export interface Feature {
-  before(what: 'feature' | 'scenario' | 'step', ...steps: UIStep[]): Feature;
-  after(what: 'feature' | 'scenario' | 'step', ...steps: UIStep[]): Feature;
+  before(what: 'feature' | 'scenario' | 'step', ...plan: StorySchema): Feature;
+  after(what: 'feature' | 'scenario' | 'step', ...plan: StorySchema): Feature;
 
-  scenario(name: string, ...steps: Path): Scenario;
+  scenario(name: string, ...plan: ScenarioSchema): Scenario;
 }
 
 export interface Scenario {
-  scenario(name: string, ...steps: Path): Scenario;
+  scenario(name: string, ...plan: ScenarioSchema): Scenario;
 }

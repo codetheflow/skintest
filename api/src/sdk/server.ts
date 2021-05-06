@@ -1,12 +1,12 @@
-import { ClientStep } from './command';
+import { StorySchema } from './schema';
 
 export const client = {
-  recipe(message: string, ...steps: ClientStep[]): ClientDo {
+  recipe(message: string, ...plan: StorySchema): ClientDo {
     return {
       type: 'client',
       body: Promise.resolve({
         message,
-        steps
+        plan
       })
     };
   }
@@ -16,7 +16,7 @@ export type ClientDo = {
   type: 'client',
   body: Promise<{
     message: string,
-    steps: ClientStep[]
+    plan: StorySchema
   }>
 };
 

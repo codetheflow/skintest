@@ -2,13 +2,14 @@ import { Plugin, pluginBreak, PluginContext, pluginContinue } from '../platform/
 
 export function tagFilter(...tags: string[]): Plugin {
   return async (context: PluginContext) => {
-    const { stage, reporting } = context;
+    const { stage } = context;
     return stage({
-      'before.scenario': async ({ scenario }) => {
+      'before.scenario': async ({ script, scenario }) => {
         // todo: add reporting
+        const featureHas = matchHashTag(script.name);
         const scenarioHas = matchHashTag(scenario);
         for (let tag of tags) {
-          if (scenarioHas(tag)) {
+          if (featureHas(tag) || scenarioHas(tag)) {
             return pluginContinue('tag-filter');
           }
         }

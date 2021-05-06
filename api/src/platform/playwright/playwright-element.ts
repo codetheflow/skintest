@@ -1,5 +1,5 @@
 import { DOMElement } from '../../sdk/dom';
-import { ElementRef } from '../../sdk/driver';
+import { ElementRef } from '../../sdk/page-driver';
 import * as playwright from 'playwright';
 
 export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {

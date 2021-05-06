@@ -1,8 +1,8 @@
-import { Attempt } from '../../sdk/attempt';
+import { Attempt } from '../attempt';
 import { StatusReport } from '../report-sink';
 import { pass, TestExecutionResult } from '../../sdk/test-result';
 import { timeout } from '../../sdk/test-result';
-import { unknownDriverError } from '../../common/errors';
+import { unknownPageDriverError } from '../../common/errors';
 import * as playwright from 'playwright';
 
 export function playwrightAttempt(retries: number, status: StatusReport): Attempt {
@@ -20,7 +20,7 @@ export function playwrightAttempt(retries: number, status: StatusReport): Attemp
           continue;
         }
 
-        throw unknownDriverError(ex);
+        throw unknownPageDriverError(ex);
       }
     }
 

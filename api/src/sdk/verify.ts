@@ -1,13 +1,13 @@
 import { AssertHow, AssertWhat } from './assert';
 import { DOMElement } from './dom';
-import { Driver } from './driver';
+import { PageDriver } from './page-driver';
 import { invalidArgumentError } from '../common/errors';
 import { binaryAssertFail, notFoundElement, pass, unaryAssertFail } from './test-result';
 import { Query, QueryList } from './query';
 import { TestExecutionResult } from './test-result';
 
 export class Verify {
-  constructor(private driver: Driver) {
+  constructor(private page: PageDriver) {
   }
 
   async element<S extends DOMElement, V>(
@@ -16,7 +16,7 @@ export class Verify {
     how: AssertHow,
     expected: V
   ): TestExecutionResult {
-    const elementRef = await this.driver.select<S>(query.toString());
+    const elementRef = await this.page.query<S>(query.toString());
     if (!elementRef) {
       return notFoundElement(query.toString());
     }
@@ -60,7 +60,7 @@ export class Verify {
     how: AssertHow,
     expected: V
   ): TestExecutionResult {
-    const elementRefList = await this.driver.selectAll<S>(selector.toString());
+    const elementRefList = await this.page.queryAll<S>(selector.toString());
     switch (what) {
       case AssertWhat.length: {
         const actual = await elementRefList.length;

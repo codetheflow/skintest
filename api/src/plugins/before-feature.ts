@@ -1,17 +1,17 @@
 import { Plugin, PluginContext } from '../platform/plugin';
-import { Execute } from './execute';
+import { Plan } from './plan';
 
-export function beforeFeature(execute: Execute): Plugin {
+export function beforeFeature(plan: Plan): Plugin {
   return async (context: PluginContext) => {
-    const { script, stage, reporting } = context;
+    const { stage, reporting, attempt } = context;
     return stage({
-      'before.feature': async () => {
+      'before.feature': async ({ page, script }) => {
         const message = {
           feature: script.name,
         };
 
-        const steps = execute(script.beforeFeature, await reporting.beforeFeature(message));
-        return steps(context);
+        const execute = plan(page, reporting, attempt);
+        return execute(script.beforeFeature, await reporting.beforeFeature(message));
       }
     });
   }

@@ -1,19 +1,19 @@
 import { Plugin, PluginContext } from '../platform/plugin';
-import { Execute } from './execute';
+import { Plan } from './plan';
 
-export function beforeStep(execute: Execute): Plugin {
+export function beforeStep(plan: Plan): Plugin {
   return async (context: PluginContext) => {
-    const { script, stage, reporting } = context;
+    const { stage, reporting, attempt } = context;
     return stage({
-      'before.step': async ({ scenario, command }) => {
+      'before.step': async ({ page, script, scenario, step }) => {
         const message = {
           feature: script.name,
           scenario: scenario,
-          step: command.toString(),
+          step: step.toString(),
         };
 
-        const steps = execute(script.beforeStep, await reporting.beforeStep(message));
-        return steps(context);
+        const execute = plan(page, reporting, attempt);
+        return execute(script.beforeStep, await reporting.beforeStep(message));
       }
     });
   }

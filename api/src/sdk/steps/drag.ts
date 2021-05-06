@@ -2,7 +2,7 @@ import { formatSelector } from '../format';
 import { Guard } from '../../common/guard';
 import { Query } from '../query';
 import { ClientStep, StepContext } from '../command';
-import { TestExecutionResult } from '../test-result';
+import { asTest, TestExecutionResult } from '../test-result';
 
 export class DragStep implements ClientStep {
   type: 'client' = 'client';
@@ -16,10 +16,10 @@ export class DragStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, driver } = context;
+    const { page } = context;
 
     const selector = this.query.toString();
-    return attempt(() => driver.drag(selector, this.x, this.y));
+    return asTest(page.drag(selector, this.x, this.y));
   }
 
   toString() {

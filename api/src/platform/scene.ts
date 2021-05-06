@@ -1,45 +1,48 @@
-
-import { EMPTY } from '../common/utils';
+import { PageDriver } from '../sdk/page-driver';
 import { Script } from '../sdk/script';
-import { Staging } from './plugin';
+import { FeatureScope, ScenarioScope, Staging, StepScope } from './plugin';
 
 export class Scene {
   constructor(
-    private effect: Staging
+    private effect: Staging,
+    private page: PageDriver,
   ) {
   }
 
   async play(script: Script): Promise<void> {
-    const beforeFeature = this.effect('before.feature', script);
-    const afterFeature = this.effect('after.feature', script);
-    const beforeScenario = this.effect('before.scenario', script);
-    const afterScenario = this.effect('after.scenario', script);
-    const beforeStep = this.effect('before.step', script);
-    const afterStep = this.effect('after.step', script);
-    const step = this.effect('step', script);
+    const beforeFeature = this.effect('before.feature');
+    const afterFeature = this.effect('after.feature');
+    const beforeScenario = this.effect('before.scenario');
+    const afterScenario = this.effect('after.scenario');
+    const beforeStep = this.effect('before.step');
+    const afterStep = this.effect('after.step');
+    const onStep = this.effect('step');
 
-    // TODO: improve readability
-    if ((await beforeFeature(EMPTY)).effect !== 'break') {
-      for (let [scenario, commands] of script.scenarios) {
-        if ((await beforeScenario({ scenario })).effect !== 'break') {
-          for (let command of commands) {
+    // todo: improve readability
+    const featureScope: FeatureScope = { script, page: this.page };
+    if ((await beforeFeature(featureScope)).effect !== 'break') {
+      for (let [scenario, steps] of script.scenarios) {
+        const scenarioScope: ScenarioScope = { ...featureScope, scenario };
+        if ((await beforeScenario(scenarioScope)).effect !== 'break') {
+          for (let step of steps) {
+            const stepScope: StepScope = { ...scenarioScope, step };
 
             let result = false;
-            if ((await beforeStep({ scenario, command })).effect !== 'break') {
-              result = (await step({ scenario, command })).effect !== 'break';
+            if ((await beforeStep(stepScope)).effect !== 'break') {
+              result = (await onStep(stepScope)).effect !== 'break';
             }
-            result = (await afterStep({ scenario, command })).effect !== 'break' && result;
+            result = (await afterStep(stepScope)).effect !== 'break' && result;
 
-            if (!result && command.type !== 'assert') {
+            if (!result && step.type !== 'assert') {
               break;
             }
           }
         }
 
-        await afterScenario({ scenario });
+        await afterScenario(scenarioScope);
       }
     }
 
-    await afterFeature(EMPTY);
+    await afterFeature(featureScope);
   }
 }

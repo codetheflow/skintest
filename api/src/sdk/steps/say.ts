@@ -1,5 +1,5 @@
 import { InfoStep, StepContext } from '../command';
-import { pass, TestExecutionResult } from '../test-result';
+import { asTest, TestExecutionResult } from '../test-result';
 
 export class SayStep implements InfoStep {
   type: 'info' = 'info';
@@ -7,7 +7,7 @@ export class SayStep implements InfoStep {
   constructor(private message: string) { }
 
   execute(context: StepContext): TestExecutionResult {
-    return Promise.resolve(pass());
+    return asTest(Promise.resolve());
   }
 
   toString() {

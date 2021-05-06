@@ -9,6 +9,6 @@ platform()
     const dir = path.join(__dirname, FEATURES_DIR);
     await project.run(
       await exploreFeatures(dir)
-     //, tagFilter('#dev')
+     , tagFilter('#dev')
     );
   });

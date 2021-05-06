@@ -2,8 +2,8 @@ import { BinaryAssert, ListAssert, AssertHost } from '../assert';
 import { Guard } from '../../common/guard';
 import { isUndefined } from '../../common/utils';
 import { Query, QueryList } from '../query';
-import { AssertStep, ClientStep, StepContext } from '../command';
-import { pass, TestExecutionResult } from '../test-result';
+import { AssertStep, StepContext } from '../command';
+import { TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 import { invalidArgumentError } from '../../common/errors';
 import { notFoundElement } from '../test-result';
@@ -21,13 +21,13 @@ export class SeeStep implements AssertStep {
   }
 
   async execute(context: StepContext): TestExecutionResult {
-    const { driver: driver } = context;
+    const { page } = context;
     if (isUndefined(this.assert)) {
       const selector = this.query.toString();
 
       switch (this.query.type) {
         case 'query': {
-          const element = await driver.select(selector);
+          const element = await page.query(selector);
           if (!element) {
             return notFoundElement(selector);
           }
@@ -35,7 +35,7 @@ export class SeeStep implements AssertStep {
           break;
         }
         case 'queryList': {
-          const elements = await driver.selectAll(selector);
+          const elements = await page.queryAll(selector);
           if (!elements.length) {
             return notFoundElement(selector);
           }
@@ -46,24 +46,22 @@ export class SeeStep implements AssertStep {
           throw invalidArgumentError('selector', (this.query as any).type);
         }
       }
-    } else {
-      const verify = new Verify(driver);
-      const { what, how } = this.assert as AssertHost<any>;
-
-      switch (this.query.type) {
-        case 'query': {
-          return await verify.element(this.query, what, how, this.value);
-        }
-        case 'queryList': {
-          return await verify.elementList(this.query, what, how, this.value);
-        }
-        default: {
-          throw invalidArgumentError('selector', (this.query as any).type);
-        }
-      }
     }
 
-    return pass();
+    const verify = new Verify(page);
+    const { what, how } = this.assert as AssertHost<any>;
+
+    switch (this.query.type) {
+      case 'query': {
+        return await verify.element(this.query, what, how, this.value);
+      }
+      case 'queryList': {
+        return await verify.elementList(this.query, what, how, this.value);
+      }
+      default: {
+        throw invalidArgumentError('selector', (this.query as any).type);
+      }
+    }
   }
 
   toString() {

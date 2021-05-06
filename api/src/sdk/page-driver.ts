@@ -10,23 +10,30 @@ export interface ElementRef<E extends DOMElement> extends ClientElement<E> {
 
 export type ElementRefList<E extends DOMElement> = ElementRef<E>[];
 
-export interface Driver {
+export interface PageDriver {
   goto(url: string): Promise<void>;
+  goBack(): Promise<void>;
+  goForward(): Promise<void>;
   waitForNavigation(url: string): Promise<void>;
+  reload(): Promise<void>;
 
   click(selector: string): Promise<void>;
+  dblclick(selector: string): Promise<void>;
   hover(selector: string): Promise<void>;
   fill(selector: string, value: string): Promise<void>;
+  type(selector: string, value: string): Promise<void>;
   focus(selector: string): Promise<void>;
-  drag(selector: string, x: number, y: number): Promise<void>
+  keyPress(key: KeyboardKey): Promise<void>;
+  check(selector: string): Promise<void>;
+  uncheck(selector: string): Promise<void>;
+  selectOption(selector: string, label: string): Promise<void>;
 
-  press(key: KeyboardKey): Promise<void>;
-
-  // TODO: define file type
+  // todo: define file type, implement
   attachFile(from: string, file: any): Promise<void>;
+  drag(selector: string, x: number, y: number): Promise<void>
 
   pause(): Promise<void>;
 
-  select<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null>;
-  selectAll<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
+  query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null>;
+  queryAll<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
 }

@@ -1,14 +1,14 @@
 import { invalidArgumentError } from '../common/errors';
 import { Guard } from '../common/guard';
 import { DOMElement } from './dom';
-import { Driver } from './driver';
-import { UIStep } from './path';
+import { PageDriver } from './page-driver';
+import { StorySchema } from './schema';
 import { Query, QueryList } from './query';
 
 export type ClientDo =
   Promise<{
     message: string,
-    steps: UIStep[]
+    plan: StorySchema
   }>;
 
 export type ClientFunction = (this: Client, ...args: any[]) => ClientDo;
@@ -24,19 +24,19 @@ export interface ClientElement<T extends DOMElement> {
 export type ClientElementList<T extends DOMElement> = ClientElement<T>[];
 
 export interface Client {
-  do(message: string, ...steps: UIStep[]): ClientDo;
+  do(message: string, ...plan: StorySchema): ClientDo;
   query<T extends DOMElement>(query: Query<T>): Promise<ClientElement<T>>;
   query<T extends DOMElement>(query: QueryList<T>): Promise<ClientElementList<T>>;
 }
 
-export class DriverClient implements Client {
-  constructor(private driver: Driver) {
+export class PageDriverClient implements Client {
+  constructor(private page: PageDriver) {
   }
 
-  do(message: string, ...steps: UIStep[]): ClientDo {
+  do(message: string, ...plan: StorySchema): ClientDo {
     return Promise.resolve({
       message,
-      steps
+      plan
     });
   }
 
@@ -47,8 +47,8 @@ export class DriverClient implements Client {
 
     const selector = query.toString();
     switch (query.type) {
-      case 'query': return this.driver.select(selector);
-      case 'queryList': return this.driver.selectAll(selector);
+      case 'query': return this.page.query(selector);
+      case 'queryList': return this.page.queryAll(selector);
       default: throw invalidArgumentError('type', (query as any).type);
     }
   }

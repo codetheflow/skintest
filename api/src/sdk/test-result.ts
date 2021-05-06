@@ -1,7 +1,7 @@
-import { ElementRef } from './driver';
+import { ElementRef } from './page-driver';
 import { formatSelector } from './format';
 
-// TODO: better fails status codes, make enum, solution as hyperlink?
+// todo: better fails status codes, make enum, solution as hyperlink?
 export interface TestFail {
   status: 'fail',
   code: string;
@@ -35,7 +35,7 @@ export function inspect(info: InspectInfo): TestPass {
   };
 }
 
-export function checkFail(): TestFail {
+export function testFail(): TestFail {
   return {
     status: 'fail',
     code: '',
@@ -84,11 +84,18 @@ export function timeout(ex: Error): TestFail {
 }
 
 export function dontSeeFail(): TestFail {
-  // TODO: get rid
+  // todo: get rid
   return {
     status: 'fail',
     code: '',
     description: 'dont see',
     solution: ''
   };
+}
+
+export async function asTest(promise: Promise<void>): TestExecutionResult {
+  await promise;
+
+  // if there were no exception return `ok`
+  return pass();
 }

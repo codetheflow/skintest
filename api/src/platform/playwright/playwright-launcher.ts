@@ -1,7 +1,7 @@
 import { EMPTY } from '../../common/utils';
 import { NodeReportSink } from '../node-reporting';
 import { playwrightAttempt } from './playwright-attempt';
-import { PlaywrightDriver } from './playwright-driver';
+import { PlaywrightPageDriver } from './playwright-page-driver';
 import { Plugin, stage } from '../plugin';
 import { Scene } from '../scene';
 import { Suite } from '../../sdk/suite';
@@ -17,43 +17,41 @@ export async function playwrightLauncher(suite: Suite, plugins: Plugin[]) {
     timeout: BROWSER_START_TIMEOUT,
   };
 
-  for (let script of suite.getScripts()) {
-    const reportSink = new NodeReportSink();
-    const reporting = await reportSink.start();
+  const reportSink = new NodeReportSink();
+  const reporting = await reportSink.start();
+  const attempt = playwrightAttempt(ATTEMPTS, await reporting.attempt());
+  const effect = stage(plugins, {
+    reporting,
+    attempt,
+  });
 
-    const browser = await playwright['chromium'].launch(browserOptions);
+  const init = effect('init');
+  const destroy = effect('destroy');
 
-    try {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      page.setDefaultTimeout(PAGE_TIMEOUT);
-
-      const driver = new PlaywrightDriver(page);
-      const attempt = playwrightAttempt(ATTEMPTS, await reporting.attempt());
-
-      const effect = stage(plugins, {
-        driver,
-        reporting,
-        attempt,
-      });
-
-      const init = effect('init', script);
-      const destroy = effect('destroy', script)
+  try {
+    init(EMPTY);
+    for (let script of suite.getScripts()) {
+      const browser = await playwright['chromium'].launch(browserOptions);
 
       try {
-        init(EMPTY);
-        const scene = new Scene(effect);
+        const context = await browser.newContext();
+        const page = await context.newPage();
+        page.setDefaultTimeout(PAGE_TIMEOUT);
+
+        const pageDriver = new PlaywrightPageDriver(page);
+        const scene = new Scene(effect, pageDriver);
         await scene.play(script);
       } finally {
-        destroy(EMPTY);
-      }
-    } finally {
-      // todo: add reporting handling ex
-      try {
+        // todo: add reporting handling ex
         await browser.close();
-      } finally {
-        await reportSink.end(reporting);
       }
+    }
+  } finally {
+    // todo: add reporting handling ex
+    try {
+      destroy(EMPTY);
+    } finally {
+      await reportSink.end(reporting);
     }
   }
 }

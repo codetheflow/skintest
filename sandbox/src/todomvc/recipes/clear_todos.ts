@@ -1,4 +1,4 @@
-import { recipe, I, UIStep } from '@skintest/api';
+import { recipe, I, StorySchema } from '@skintest/api';
 import { todos } from '../components/todos';
 
 export const clear_todos = recipe.client(
@@ -17,12 +17,12 @@ export const clear_todos = recipe.client(
 
     const list = await client.query(todos.list);
     let last = list.length - 1;
-    const steps: UIStep[] = [];
+    const plan: StorySchema = [];
     while (last >= 0) {
-      steps.push(...remove(last));
+      plan.push(...remove(last));
       last--;
     }
 
-    return client.do(`clear todos`, ...steps);
+    return client.do(`clear todos`, ...plan);
   }
 );

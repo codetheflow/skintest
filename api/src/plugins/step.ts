@@ -2,16 +2,16 @@ import { invalidArgumentError } from '../common/errors';
 import { Plugin, PluginContext } from '../platform/plugin';
 import { Command } from '../sdk/command';
 import { ReportStepMessage } from '../platform/report-sink';
-import { Execute } from './execute';
+import { Plan } from './plan';
 
-export function step(execute: Execute): Plugin {
+export function step(plan: Plan): Plugin {
   return async (context: PluginContext) => {
-    const { script, stage, reporting } = context;
+    const { stage, reporting, attempt } = context;
 
     async function getReport(type: Command['type'], message: ReportStepMessage) {
       switch (type) {
         case 'assert': return await reporting.assert(message);
-        case 'check': return await reporting.check(message);
+        case 'test': return await reporting.test(message);
         case 'dev': return await reporting.dev(message);
         case 'client': return await reporting.client(message);
         case 'info': return await reporting.info(message);
@@ -21,16 +21,16 @@ export function step(execute: Execute): Plugin {
     }
 
     return stage({
-      'step': async ({ scenario, command }) => {
+      'step': async ({ page, scenario, step, script }) => {
         const message = {
           feature: script.name,
           scenario,
-          step: command.toString(),
+          step: step.toString(),
         };
 
-        const status = await getReport(command.type, message);
-        const steps = execute([command], status);
-        return steps(context);
+        const status = await getReport(step.type, message);
+        const execute = plan(page, reporting, attempt);
+        return execute([step], status);
       }
     });
   };

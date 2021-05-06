@@ -23,7 +23,7 @@ export interface Reporting {
   beforeStep(message: ReportStepMessage): Promise<StatusReport>;
 
   assert(message: ReportStepMessage): Promise<StatusReport>;
-  check(message: ReportStepMessage): Promise<StatusReport>;
+  test(message: ReportStepMessage): Promise<StatusReport>;
 
   afterFeature(message: ReportFeatureMessage): Promise<StatusReport>;
   afterScenario(message: ReportScenarioMessage): Promise<StatusReport>;

@@ -1,18 +1,18 @@
 import { Plugin, PluginContext } from '../platform/plugin';
-import { Execute } from './execute';
+import { Plan } from './plan';
 
-export function afterScenario(execute: Execute): Plugin {
+export function afterScenario(plan: Plan): Plugin {
   return async (context: PluginContext) => {
-    const { script, stage, reporting } = context;
+    const { stage, reporting, attempt } = context;
     return stage({
-      'after.scenario': async ({ scenario }) => {
+      'after.scenario': async ({ page, script, scenario }) => {
         const message = {
           feature: script.name,
           scenario,
         };
 
-        const steps = execute(script.afterScenario, await reporting.afterScenario(message));
-        return steps(context);
+        const execute = plan(page, reporting, attempt);
+        return execute(script.afterScenario, await reporting.afterScenario(message));
       }
     });
   }

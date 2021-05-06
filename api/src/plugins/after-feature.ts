@@ -1,17 +1,17 @@
-import { Plugin, PluginContext, pluginContinue } from '../platform/plugin';
-import { Execute } from './execute';
+import { Plugin, PluginContext } from '../platform/plugin';
+import { Plan } from './plan';
 
-export function afterFeature(execute: Execute): Plugin {
+export function afterFeature(plan: Plan): Plugin {
   return async (context: PluginContext) => {
-    const { script, stage, reporting } = context;
+    const { stage, reporting, attempt } = context;
     return stage({
-      'after.feature': async () => {
+      'after.feature': async ({ page, script }) => {
         const message = {
           feature: script.name,
         };
 
-        const steps = execute(script.afterFeature, await reporting.afterFeature(message));
-        return steps(context);
+        const execute = plan(page, reporting, attempt);
+        return execute(script.afterFeature, await reporting.afterFeature(message));
       }
     });
   }

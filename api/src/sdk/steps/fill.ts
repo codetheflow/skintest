@@ -2,7 +2,7 @@ import { Guard } from '../../common/guard';
 import { formatSelector } from '../format';
 import { Query } from '../query';
 import { ClientStep, StepContext } from '../command';
-import { TestExecutionResult } from '../test-result';
+import { asTest, TestExecutionResult } from '../test-result';
 
 export class FillStep implements ClientStep {
   type: 'client' = 'client';
@@ -15,10 +15,10 @@ export class FillStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const {  attempt, driver } = context;
-    
+    const { page } = context;
+
     const selector = this.query.toString();
-    return attempt(() => driver.fill(selector, this.value));
+    return asTest(page.fill(selector, this.value));
   }
 
   toString() {

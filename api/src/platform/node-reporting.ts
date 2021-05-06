@@ -1,6 +1,5 @@
 import { Reporting, ReportFeatureMessage, ReportScenarioMessage, ReportSink, ReportStepMessage, StatusReport } from './report-sink';
 import { TestFail, InspectInfo } from '../sdk/test-result';
-import { getCursorPosition } from './terminal';
 import * as chalk from 'chalk';
 
 const { stdout, stderr } = process;
@@ -16,8 +15,12 @@ async function createLine() {
   return (...text: string[]) => {
     stdout.cursorTo(0);
     stdout.clearScreenDown();
-    for (let part of text) {
-      stdout.write(part);
+
+    const line = text.join('');
+    if (line.length > stdout.columns) {
+
+    } else {
+      stdout.write(line);
     }
   }
 }
@@ -37,7 +40,7 @@ class NodeReporting implements Reporting {
     return stepReport(message.step);
   }
 
-  check(message: ReportStepMessage): Promise<StatusReport> {
+  test(message: ReportStepMessage): Promise<StatusReport> {
     return infoReport(message.step);
   }
 
@@ -204,21 +207,34 @@ async function stepReport(message: string): Promise<StatusReport> {
 
 async function doReport(message: string): Promise<StatusReport> {
   const firstLine = await createLine();
-  const statusReport = await catchReport();
+  const status = await catchReport();
+  let pMessage = message;
 
   return {
-    ...statusReport,
+    ...status,
+    async pass(): Promise<void> {
+      firstLine(chalk.green(CHECK_MARK), WS, chalk.grey(pMessage), NEW_LINE);
+    },
+
+    async fail(reason: TestFail): Promise<void> {
+      firstLine(chalk.red(CROSS_MARK), WS, chalk.gray(pMessage), NEW_LINE);
+      return status.fail(reason);
+    },
+
+    async error(ex: Error): Promise<void> {
+      firstLine(chalk.red(CROSS_MARK), WS, chalk.gray(pMessage), NEW_LINE);
+      return status.error(ex);
+    },
 
     async progress(message: string): Promise<void> {
-      message = message;
-
-      firstLine(chalk.grey(CHECK_MARK), WS, chalk.grey(message));
-    }
+      pMessage = message;
+      firstLine(chalk.grey(CHECK_MARK), WS, chalk.grey(pMessage));
+    },
   };
 }
 
 function beforeScenarioReport(feature: string, scenario: string): Promise<StatusReport> {
-  stdout.write(chalk.whiteBright.bold(`${feature}`) + '\\' + chalk.whiteBright(scenario));
+  stdout.write(chalk.whiteBright.bold(feature) + '\\' + chalk.whiteBright(scenario));
   stdout.write(NEW_LINE);
   return catchReport();
 }

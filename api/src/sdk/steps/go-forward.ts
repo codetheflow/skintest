@@ -1,21 +1,19 @@
-import { Guard } from '../../common/guard';
 import { ClientStep, StepContext } from '../command';
 import { asTest, TestExecutionResult } from '../test-result';
 
-export class WaitUrlStep implements ClientStep {
+export class GoForwardStep implements ClientStep {
   type: 'client' = 'client';
 
-  constructor(private url: string) {
-    Guard.notNull(url, 'url');
+  constructor() {
   }
 
   execute(context: StepContext): TestExecutionResult {
     const { page } = context;
 
-    return asTest(page.waitForNavigation(this.url));
+    return asTest(page.goForward());
   }
 
   toString() {
-    return `I wait url ${this.url}`;
+    return `I go forward`;
   }
 }

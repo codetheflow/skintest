@@ -2,7 +2,7 @@ import { Guard } from '../../common/guard';
 import { formatSelector } from '../format';
 import { Query } from '../query';
 import { ClientStep, StepContext } from '../command';
-import { TestExecutionResult } from '../test-result';
+import { asTest, TestExecutionResult } from '../test-result';
 
 export class FocusStep implements ClientStep {
   type: 'client' = 'client';
@@ -14,10 +14,10 @@ export class FocusStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, driver } = context;
+    const { page } = context;
 
     const selector = this.query.toString();
-    return attempt(() => driver.focus(selector));
+    return asTest(page.focus(selector));
   }
 
   toString() {

@@ -1,15 +1,14 @@
 import { Guard } from '../../common/guard';
+import { formatSelector } from '../format';
 import { Query } from '../query';
 import { ClientStep, StepContext } from '../command';
 import { asTest, TestExecutionResult } from '../test-result';
-import { formatSelector } from '../format';
 
-export class AttachFileStep implements ClientStep {
+export class UncheckStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    private query: Query<any>,
-    private file: any,
+    private query: Query<any>
   ) {
     Guard.notNull(query, 'query');
   }
@@ -18,11 +17,12 @@ export class AttachFileStep implements ClientStep {
     const { page } = context;
 
     const selector = this.query.toString();
-    return asTest(page.attachFile(selector, this.file));
+    // todo: move attempt to the scene level
+    return asTest(page.uncheck(selector));
   }
 
   toString() {
     const selector = this.query.toString();
-    return `I attach file \`${this.file}\` to ${formatSelector(selector)}`
+    return `I uncheck ${formatSelector(selector)}`;
   }
 }

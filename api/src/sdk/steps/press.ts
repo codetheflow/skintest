@@ -1,7 +1,7 @@
 import { Guard } from '../../common/guard';
 import { KeyboardKey } from '../keyboard';
 import { ClientStep, StepContext } from '../command';
-import { TestExecutionResult } from '../test-result';
+import { asTest, TestExecutionResult } from '../test-result';
 
 export class PressStep implements ClientStep {
   type: 'client' = 'client';
@@ -11,9 +11,9 @@ export class PressStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { attempt, driver } = context;
+    const { page } = context;
 
-    return attempt(() => driver.press(this.key));
+    return asTest(page.keyPress(this.key));
   }
 
   toString() {
