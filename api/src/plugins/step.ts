@@ -1,7 +1,7 @@
 import { invalidArgumentError } from '../common/errors';
 import { Plugin, PluginContext } from '../platform/plugin';
-import { Command } from '../sdk/command';
 import { ReportStepMessage } from '../platform/report-sink';
+import { Command } from '../sdk/command';
 import { Plan } from './plan';
 
 export function step(plan: Plan): Plugin {
@@ -21,7 +21,7 @@ export function step(plan: Plan): Plugin {
     }
 
     return stage({
-      'step': async ({ page, scenario, step, script }) => {
+      'step': async ({ browser, scenario, step, script }) => {
         const message = {
           feature: script.name,
           scenario,
@@ -29,7 +29,7 @@ export function step(plan: Plan): Plugin {
         };
 
         const status = await getReport(step.type, message);
-        const execute = plan(page, reporting, attempt);
+        const execute = plan(browser, reporting, attempt);
         return execute([step], status);
       }
     });

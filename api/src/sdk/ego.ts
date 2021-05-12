@@ -1,15 +1,10 @@
-import { ActionStep } from './steps/action';
-import { AmOnPageStep } from './steps/am-on-page';
-import { AssertStep, TestStep, DevStep, InfoStep, DoStep, ClientStep } from './command';
-import { AttachFileStep } from './steps/attach-file';
 import { BinaryAssert, ListAssert, UnaryAssert } from './assert';
-import { Breakpoint, DebugStep } from './steps/debug';
-import { StartTestStep } from './steps/test';
-import { ClickStep } from './steps/click';
-import { ClientFunction, ClientRecipe, ServerFunction, ServerRecipe } from './recipe';
+import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
 import { DOMElement } from './dom';
 import { KeyboardKey } from './keyboard';
 import { Query, QueryList } from './query';
+import { ClientFunction, ClientRecipe, ServerFunction, ServerRecipe } from './recipe';
+import { Breakpoint } from './steps/debug';
 
 
 export interface Ego {
@@ -17,8 +12,9 @@ export interface Ego {
   __debug(breakpoint: Breakpoint): DevStep;
   __inspect<T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep;
 
-  visit(url: string): ClientStep;
-  go(direction: 'back' | 'forward'): ClientStep;
+  open(name: string): ClientStep;
+  goto(url: string): ClientStep;
+  navigate(direction: 'back' | 'forward'): ClientStep;
   reload(): ClientStep;
   wait(url: string): ClientStep;
 

@@ -1,9 +1,9 @@
-import { DOMElement } from '../dom';
-import { ElementRef, ElementRefList, PageDriver } from '../page-driver';
 import { Guard } from '../../common/guard';
-import { Query, QueryList } from '../query';
 import { DevStep, StepContext } from '../command';
-import { TestExecutionResult, pass } from '../test-result';
+import { DOMElement } from '../dom';
+import { ElementRef, ElementRefList, Page } from '../page';
+import { Query, QueryList } from '../query';
+import { pass, TestExecutionResult } from '../test-result';
 
 export interface Debugger {
   $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null>;
@@ -12,8 +12,8 @@ export interface Debugger {
 
 export type Breakpoint = (dbg: Debugger) => Promise<void>;
 
-class PageDriverDebugger implements Debugger {
-  constructor(private page: PageDriver) { }
+class PageDebugger implements Debugger {
+  constructor(private page: Page) { }
 
   $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null> {
     const selector = query.toString();
@@ -36,9 +36,10 @@ export class DebugStep implements DevStep {
   }
 
   async execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
-    const dbg = new PageDriverDebugger(page)
+    const page = browser.getCurrentPage();
+    const dbg = new PageDebugger(page)
     await this.breakpoint(dbg);
     return pass();
   }

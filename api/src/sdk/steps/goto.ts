@@ -2,19 +2,21 @@ import { Guard } from '../../common/guard';
 import { ClientStep, StepContext } from '../command';
 import { asTest, TestExecutionResult } from '../test-result';
 
-export class GoBackStep implements ClientStep {
+export class GotoStep implements ClientStep {
   type: 'client' = 'client';
 
-  constructor() {
+  constructor(private url: string) {
+    Guard.notEmpty(url, 'url');
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
-    return asTest(page.goBack());
+    const page = browser.getCurrentPage();
+    return asTest(page.goto(this.url));
   }
 
   toString() {
-    return `I go back`;
+    return `I go to ${this.url}`;
   }
 }

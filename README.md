@@ -27,19 +27,18 @@ npm run start
 * https://www.chaijs.com/plugins/chai-webdriver/
 * https://www.chaijs.com/plugins/chai-dom/
 * has.state 'visible|checked|disabled|editable|enabled|hidden'
-* better exception managment
+* better exception management
 * stubs/network intersection support
 * keyboard keys to lowercase and type checking
 * multiple selector strategy, data-test-id, search by the text
 * deal with translations?
-* timeout, headless setting from the user
+* timeout, headless setting from the user (as a plugin)
 * file upload/download, how to assert results?
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
 * playwright typical functions like 'type'
 * drag and drop
 * recipe library (oauth etc)
-* use value from the selector like `I.fill(todos.what, todos.user)`
 * and inspect to dbg in .debug
 * better reporting, playwright logs, verbose reporting, file logs, integrations
 * https://playwright.dev/docs/api/class-logger
@@ -85,6 +84,7 @@ npm run start
 * own browser instance for each feature/scenario/before.scenario?
 * https://playwright.dev/docs/test-runners
 * browser and node runners?
+* use value from the selector like `I.fill(todos.what, todos.user)`
 
 ### code style
 

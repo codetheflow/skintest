@@ -1,11 +1,11 @@
-import { PageDriver } from '../sdk/page-driver';
+import { Browser } from '../sdk/browser';
 import { Script } from '../sdk/script';
 import { FeatureScope, ScenarioScope, Staging, StepScope } from './plugin';
 
 export class Scene {
   constructor(
     private effect: Staging,
-    private page: PageDriver,
+    private browser: Browser,
   ) {
   }
 
@@ -19,7 +19,7 @@ export class Scene {
     const onStep = this.effect('step');
 
     // todo: improve readability
-    const featureScope: FeatureScope = { script, page: this.page };
+    const featureScope: FeatureScope = { script, browser: this.browser };
     if ((await beforeFeature(featureScope)).effect !== 'break') {
       for (let [scenario, steps] of script.scenarios) {
         const scenarioScope: ScenarioScope = { ...featureScope, scenario };

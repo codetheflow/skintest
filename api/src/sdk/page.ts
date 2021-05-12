@@ -1,5 +1,5 @@
-import { KeyboardKey } from './keyboard';
 import { DOMElement } from './dom';
+import { KeyboardKey } from './keyboard';
 import { ClientElement } from './recipe';
 
 export interface ElementRef<E extends DOMElement> extends ClientElement<E> {
@@ -10,7 +10,7 @@ export interface ElementRef<E extends DOMElement> extends ClientElement<E> {
 
 export type ElementRefList<E extends DOMElement> = ElementRef<E>[];
 
-export interface PageDriver {
+export interface Page {
   goto(url: string): Promise<void>;
   goBack(): Promise<void>;
   goForward(): Promise<void>;

@@ -1,7 +1,7 @@
 import { Guard } from '../../common/guard';
+import { ClientStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query } from '../query';
-import { ClientStep, StepContext } from '../command';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class DblClickStep implements ClientStep {
@@ -14,10 +14,10 @@ export class DblClickStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     const selector = this.query.toString();
-    // todo: move attempt to the scene level
     return asTest(page.dblclick(selector));
   }
 

@@ -1,23 +1,25 @@
-import { ActionStep } from './steps/action';
-import { AmOnPageStep } from './steps/am-on-page';
-import { AssertStep, TestStep, DevStep, InfoStep, DoStep, ClientStep } from './command';
 import { BinaryAssert, ListAssert, UnaryAssert } from './assert';
-import { Breakpoint, DebugStep } from './steps/debug';
-import { CheckStep } from './steps/check';
-import { ClickStep } from './steps/click';
-import { ClientDo, ClientRecipe, ServerDo, ServerRecipe } from './recipe';
+import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
 import { DOMElement } from './dom';
 import { Ego } from './ego';
+import { KeyboardKey } from './keyboard';
+import { Query, QueryList } from './query';
+import { ClientDo, ClientRecipe, ServerDo, ServerRecipe } from './recipe';
+import { ActionStep } from './steps/action';
+import { CheckStep } from './steps/check';
+import { ClickStep } from './steps/click';
+import { DblClickStep } from './steps/dblclick';
+import { Breakpoint, DebugStep } from './steps/debug';
 import { FillStep } from './steps/fill';
 import { FocusStep } from './steps/focus';
-import { GoBackStep } from './steps/go-back';
-import { GoForwardStep } from './steps/go-forward';
+import { GotoStep } from './steps/goto';
 import { HoverStep } from './steps/hover';
 import { InspectStep } from './steps/inspect';
-import { KeyboardKey } from './keyboard';
+import { NavigationBackStep } from './steps/navigation-back';
+import { NavigationForwardStep } from './steps/navigation-forward';
+import { OpenStep } from './steps/open';
 import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
-import { Query, QueryList } from './query';
 import { ReloadStep } from './steps/reload';
 import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
@@ -25,9 +27,12 @@ import { StartTestStep } from './steps/test';
 import { TypeStep } from './steps/type';
 import { UncheckStep } from './steps/uncheck';
 import { WaitUrlStep } from './steps/wait-url';
-import { DblClickStep } from './steps/dblclick';
 
 class Me implements Ego {
+  open(name: string): ClientStep {
+    return new OpenStep(name);
+  }
+
   check<E extends DOMElement>(query: Query<E>): ClientStep {
     return new CheckStep(query);
   }
@@ -44,10 +49,10 @@ class Me implements Ego {
     return new UncheckStep(query);
   }
 
-  go(direction: 'forward' | 'back'): ClientStep {
+  navigate(direction: 'forward' | 'back'): ClientStep {
     switch (direction) {
-      case 'forward': return new GoForwardStep();
-      case 'back': return new GoBackStep();
+      case 'forward': return new NavigationForwardStep();
+      case 'back': return new NavigationBackStep();
     }
   }
 
@@ -81,8 +86,8 @@ class Me implements Ego {
   //   return new DontSeeStep(query, assert, value);
   // }
 
-  visit(url: string): ClientStep {
-    return new AmOnPageStep(url);
+  goto(url: string): ClientStep {
+    return new GotoStep(url);
   }
 
   wait(url: string): ClientStep {

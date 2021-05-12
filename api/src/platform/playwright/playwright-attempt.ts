@@ -1,9 +1,8 @@
+import * as playwright from 'playwright';
+import { unknownPageError } from '../../common/errors';
+import { pass, TestExecutionResult, timeout } from '../../sdk/test-result';
 import { Attempt } from '../attempt';
 import { StatusReport } from '../report-sink';
-import { pass, TestExecutionResult } from '../../sdk/test-result';
-import { timeout } from '../../sdk/test-result';
-import { unknownPageDriverError } from '../../common/errors';
-import * as playwright from 'playwright';
 
 export function playwrightAttempt(retries: number, status: StatusReport): Attempt {
   return async (method: () => Promise<void>): TestExecutionResult => {
@@ -20,7 +19,7 @@ export function playwrightAttempt(retries: number, status: StatusReport): Attemp
           continue;
         }
 
-        throw unknownPageDriverError(ex);
+        throw unknownPageError(ex);
       }
     }
 

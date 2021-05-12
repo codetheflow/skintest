@@ -1,18 +1,18 @@
-import { pluginBreak, pluginContinue, PluginExecutionResult } from '../platform/plugin';
 import { Attempt } from '../platform/attempt';
-import { ClientFunction, PageDriverClient, Process, ServerFunction } from '../sdk/recipe';
-import { Command, DoStep } from '../sdk/command';
-import { PageDriver } from '../sdk/page-driver';
+import { pluginBreak, pluginContinue, PluginExecutionResult } from '../platform/plugin';
 import { Reporting, StatusReport } from '../platform/report-sink';
+import { Browser } from '../sdk/browser';
+import { Command, DoStep } from '../sdk/command';
+import { ClientFunction, PageClient, Process, ServerFunction } from '../sdk/recipe';
 import { testFail } from '../sdk/test-result';
 
 export type Plan = typeof plan;
 
-export function plan(page: PageDriver, reporting: Reporting, attempt: Attempt) {
+export function plan(browser: Browser, reporting: Reporting, attempt: Attempt) {
   return runSteps;
 
   async function runSteps(steps: Command[], status: StatusReport): Promise<PluginExecutionResult> {
-    const context = { page };
+    const context = { browser };
     try {
       for (let step of steps) {
         const result = await step.execute(context);
@@ -52,7 +52,8 @@ export function plan(page: PageDriver, reporting: Reporting, attempt: Attempt) {
         return pluginContinue('run-function');
       }
 
-      const client = new PageDriverClient(page);
+      const page = browser.getCurrentPage();
+      const client = new PageClient(page);
       const action = step.recipe.action as ClientFunction;
       const { message, plan } = await action.call(client, step.args);
       await status.progress('I ' + message); 

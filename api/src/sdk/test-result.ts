@@ -1,5 +1,5 @@
-import { ElementRef } from './page-driver';
 import { formatSelector } from './format';
+import { ElementRef } from './page';
 
 // todo: better fails status codes, make enum, solution as hyperlink?
 export interface TestFail {

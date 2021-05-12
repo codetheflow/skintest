@@ -2,21 +2,20 @@ import { Guard } from '../../common/guard';
 import { ClientStep, StepContext } from '../command';
 import { asTest, TestExecutionResult } from '../test-result';
 
-export class AmOnPageStep implements ClientStep {
+export class OpenStep implements ClientStep {
   type: 'client' = 'client';
-  
-  constructor(
-    private url: string
-  ) {
-    Guard.notEmpty(url, 'url');
+
+  constructor(private id: string) {
+    Guard.notEmpty(id, 'id');
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
-    return asTest(page.goto(this.url));
+    const { browser } = context;
+
+    return asTest(browser.openPage(this.id));
   }
 
   toString() {
-    return `I am on page ${this.url}`;
+    return `I open ${this.id}`;
   }
 }

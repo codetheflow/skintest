@@ -1,15 +1,15 @@
-import { Script } from '../sdk/script';
 import { Reporting } from '../platform/report-sink';
+import { Browser } from '../sdk/browser';
 import { Command } from '../sdk/command';
+import { Script } from '../sdk/script';
 import { Attempt } from './attempt';
-import { PageDriver } from '../sdk/page-driver';
 import { Zone } from './zone';
 
 export type Stage<Z extends Zone, S> = (scope: S) => Promise<PluginExecutionResult>;
 
 export type InitScope = {};
 export type DestroyScope = InitScope;
-export type FeatureScope = { script: Script; page: PageDriver };
+export type FeatureScope = { script: Script; browser: Browser };
 export type ScenarioScope = FeatureScope & { scenario: string };
 export type StepScope = ScenarioScope & { step: Command };
 

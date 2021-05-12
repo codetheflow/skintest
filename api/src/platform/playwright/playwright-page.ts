@@ -1,10 +1,10 @@
-import { DOMElement } from '../../sdk/dom';
-import { ElementRef, ElementRefList, PageDriver } from '../../sdk/page-driver';
-import { KeyboardKey } from '../../sdk/keyboard';
-import { PlaywrightElement } from './playwright-element';
 import * as playwright from 'playwright';
+import { DOMElement } from '../../sdk/dom';
+import { KeyboardKey } from '../../sdk/keyboard';
+import { ElementRef, ElementRefList, Page } from '../../sdk/page';
+import { PlaywrightElement } from './playwright-element';
 
-export class PlaywrightPageDriver implements PageDriver {
+export class PlaywrightPage implements Page {
   constructor(private page: playwright.Page) {
   }
 
@@ -17,7 +17,7 @@ export class PlaywrightPageDriver implements PageDriver {
   }
 
   reload(): Promise<void> {
-    throw new Error('Method not implemented.');
+   return this.page.reload() as Promise<any>;
   }
 
   dblclick(selector: string): Promise<void> {

@@ -1,9 +1,9 @@
-import { Guard } from '../../common/guard';
 import { invalidArgumentError } from '../../common/errors';
-import { Query, QueryList } from '../query';
-import { DevStep, StepContext } from '../command';
-import { inspect, TestExecutionResult } from '../test-result';
+import { Guard } from '../../common/guard';
 import { isString } from '../../common/utils';
+import { DevStep, StepContext } from '../command';
+import { Query, QueryList } from '../query';
+import { inspect, TestExecutionResult } from '../test-result';
 
 export class InspectStep implements DevStep {
   type: 'dev' = 'dev';
@@ -13,8 +13,9 @@ export class InspectStep implements DevStep {
   }
 
   async execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     const selector = this.query.toString();
 
     // todo: get rid of `any`

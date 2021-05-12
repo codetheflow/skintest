@@ -7,8 +7,9 @@ export class PauseStep implements DevStep {
   constructor() { }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     return asTest(page.pause());
   }
 

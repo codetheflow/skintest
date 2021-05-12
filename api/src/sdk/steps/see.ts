@@ -1,13 +1,12 @@
-import { BinaryAssert, ListAssert, AssertHost } from '../assert';
+import { invalidArgumentError } from '../../common/errors';
 import { Guard } from '../../common/guard';
 import { isUndefined } from '../../common/utils';
-import { Query, QueryList } from '../query';
+import { AssertHost, BinaryAssert, ListAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
-import { TestExecutionResult } from '../test-result';
-import { Verify } from '../verify';
-import { invalidArgumentError } from '../../common/errors';
-import { notFoundElement } from '../test-result';
 import { formatSelector } from '../format';
+import { Query, QueryList } from '../query';
+import { notFoundElement, TestExecutionResult } from '../test-result';
+import { Verify } from '../verify';
 
 export class SeeStep implements AssertStep {
   type: 'assert' = 'assert';
@@ -21,7 +20,9 @@ export class SeeStep implements AssertStep {
   }
 
   async execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
+
+    const page = browser.getCurrentPage();
     if (isUndefined(this.assert)) {
       const selector = this.query.toString();
 

@@ -1,9 +1,9 @@
-import { PageDriver } from './page-driver';
+import { Browser } from './browser';
 import { ClientRecipe, ServerRecipe } from './recipe';
 import { TestExecutionResult } from './test-result';
 
 export interface StepContext {
-  page: PageDriver;
+  browser: Browser;
 }
 
 export type Command =

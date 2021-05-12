@@ -1,11 +1,11 @@
+import * as playwright from 'playwright';
 import { EMPTY } from '../../common/utils';
+import { Suite } from '../../sdk/suite';
 import { NodeReportSink } from '../node-reporting';
-import { playwrightAttempt } from './playwright-attempt';
-import { PlaywrightPageDriver } from './playwright-page-driver';
 import { Plugin, stage } from '../plugin';
 import { Scene } from '../scene';
-import { Suite } from '../../sdk/suite';
-import * as playwright from 'playwright';
+import { playwrightAttempt } from './playwright-attempt';
+import { PlaywrightBrowser } from './playwright-browser';
 
 export async function playwrightLauncher(suite: Suite, plugins: Plugin[]) {
   const BROWSER_START_TIMEOUT = 30000;
@@ -30,16 +30,13 @@ export async function playwrightLauncher(suite: Suite, plugins: Plugin[]) {
 
   try {
     init(EMPTY);
+
     for (let script of suite.getScripts()) {
       const browser = await playwright['chromium'].launch(browserOptions);
 
       try {
         const context = await browser.newContext();
-        const page = await context.newPage();
-        page.setDefaultTimeout(PAGE_TIMEOUT);
-
-        const pageDriver = new PlaywrightPageDriver(page);
-        const scene = new Scene(effect, pageDriver);
+        const scene = new Scene(effect, new PlaywrightBrowser(context, PAGE_TIMEOUT));
         await scene.play(script);
       } finally {
         // todo: add reporting handling ex

@@ -1,6 +1,6 @@
 import { Guard } from '../../common/guard';
-import { KeyboardKey } from '../keyboard';
 import { ClientStep, StepContext } from '../command';
+import { KeyboardKey } from '../keyboard';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class PressStep implements ClientStep {
@@ -11,8 +11,9 @@ export class PressStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     return asTest(page.keyPress(this.key));
   }
 

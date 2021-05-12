@@ -1,13 +1,12 @@
+import { invalidArgumentError } from '../common/errors';
 import { AssertHow, AssertWhat } from './assert';
 import { DOMElement } from './dom';
-import { PageDriver } from './page-driver';
-import { invalidArgumentError } from '../common/errors';
-import { binaryAssertFail, notFoundElement, pass, unaryAssertFail } from './test-result';
+import { Page } from './page';
 import { Query, QueryList } from './query';
-import { TestExecutionResult } from './test-result';
+import { binaryAssertFail, notFoundElement, pass, TestExecutionResult, unaryAssertFail } from './test-result';
 
 export class Verify {
-  constructor(private page: PageDriver) {
+  constructor(private page: Page) {
   }
 
   async element<S extends DOMElement, V>(

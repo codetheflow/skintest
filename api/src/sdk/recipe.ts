@@ -1,9 +1,9 @@
 import { invalidArgumentError } from '../common/errors';
 import { Guard } from '../common/guard';
 import { DOMElement } from './dom';
-import { PageDriver } from './page-driver';
-import { StorySchema } from './schema';
+import { Page } from './page';
 import { Query, QueryList } from './query';
+import { StorySchema } from './schema';
 
 export type ClientDo =
   Promise<{
@@ -29,8 +29,8 @@ export interface Client {
   query<T extends DOMElement>(query: QueryList<T>): Promise<ClientElementList<T>>;
 }
 
-export class PageDriverClient implements Client {
-  constructor(private page: PageDriver) {
+export class PageClient implements Client {
+  constructor(private page: Page) {
   }
 
   do(message: string, ...plan: StorySchema): ClientDo {

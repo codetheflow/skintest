@@ -1,8 +1,11 @@
 {
-    "typescript.tsdk": "./node_modules/typescript/lib",
-    "typescript.preferences.quoteStyle": "single",
-    "javascript.preferences.quoteStyle": "single",
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.detectIndentation": false
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "typescript.preferences.quoteStyle": "single",
+  "javascript.preferences.quoteStyle": "single",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
 }

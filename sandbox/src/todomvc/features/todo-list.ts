@@ -4,9 +4,10 @@ import { add_todo } from '../recipes/add-todo';
 import { clear_todos } from '../recipes/clear_todos';
 import { generate_todos } from '../recipes/generate-todos';
 
-feature('#dev todo list')
+feature('todo list')
   .before('scenario'
-    , I.visit(todos.url)
+    , I.open('new page')
+    , I.goto(todos.url)
     , I.do(clear_todos)
   )
 
@@ -57,4 +58,20 @@ feature('#dev todo list')
     , I.click(todos.remove_button_at(0))
     , I.test('todos list is empty after remove button clicked')
     , I.see(todos.list, has.length, 0)
+  )
+
+  .scenario('#dev check that second todo page has updated list after reload'
+    , I.open('page one')
+    , I.goto(todos.url)
+
+    , I.open('page two')
+    , I.goto(todos.url)
+    , I.do(add_todo, 'learn math')
+
+    , I.open('page one')
+    , I.reload()
+
+    , I.test('page one has the same items as page two')
+    , I.see(todos.list, has.length, 1)
+    , I.see(todos.item_at(0), has.text, 'learn math')
   )

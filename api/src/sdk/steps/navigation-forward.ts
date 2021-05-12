@@ -1,15 +1,16 @@
 import { ClientStep, StepContext } from '../command';
 import { asTest, TestExecutionResult } from '../test-result';
 
-export class GoForwardStep implements ClientStep {
+export class NavigationForwardStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor() {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     return asTest(page.goForward());
   }
 

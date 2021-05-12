@@ -8,8 +8,9 @@ export class ReloadStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     return asTest(page.reload());
   }
 

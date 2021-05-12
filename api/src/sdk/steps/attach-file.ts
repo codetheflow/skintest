@@ -1,8 +1,8 @@
 import { Guard } from '../../common/guard';
-import { Query } from '../query';
 import { ClientStep, StepContext } from '../command';
-import { asTest, TestExecutionResult } from '../test-result';
 import { formatSelector } from '../format';
+import { Query } from '../query';
+import { asTest, TestExecutionResult } from '../test-result';
 
 export class AttachFileStep implements ClientStep {
   type: 'client' = 'client';
@@ -15,8 +15,9 @@ export class AttachFileStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     const selector = this.query.toString();
     return asTest(page.attachFile(selector, this.file));
   }

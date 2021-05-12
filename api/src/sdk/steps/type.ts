@@ -1,5 +1,5 @@
-import { ClientStep, StepContext } from '../command';
 import { Guard } from '../../common/guard';
+import { ClientStep, StepContext } from '../command';
 import { Query } from '../query';
 import { asTest, TestExecutionResult } from '../test-result';
 
@@ -13,7 +13,9 @@ export class TypeStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
+
+    const page = browser.getCurrentPage();
     const selector = this.query.toString();
     return asTest(page.type(selector, this.text));
   }

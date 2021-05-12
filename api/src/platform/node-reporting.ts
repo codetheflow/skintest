@@ -1,6 +1,6 @@
-import { Reporting, ReportFeatureMessage, ReportScenarioMessage, ReportSink, ReportStepMessage, StatusReport } from './report-sink';
-import { TestFail, InspectInfo } from '../sdk/test-result';
 import * as chalk from 'chalk';
+import { InspectInfo, TestFail } from '../sdk/test-result';
+import { ReportFeatureMessage, Reporting, ReportScenarioMessage, ReportSink, ReportStepMessage, StatusReport } from './report-sink';
 
 const { stdout, stderr } = process;
 
@@ -18,7 +18,12 @@ async function createLine() {
 
     const line = text.join('');
     if (line.length > stdout.columns) {
-
+      // todo: make it better
+      if (line[line.length - 1] === NEW_LINE) {
+        stdout.write(line.substring(0, stdout.columns - 4) + '...' + NEW_LINE);
+      } else {
+        stdout.write(line.substring(0, stdout.columns - 3) + '...');
+      }
     } else {
       stdout.write(line);
     }
@@ -191,6 +196,7 @@ async function stepReport(message: string): Promise<StatusReport> {
 
     async pass(): Promise<void> {
       firstLine(chalk.green(CHECK_MARK), WS, chalk.grey(message), NEW_LINE);
+      return status.pass();
     },
 
     async fail(reason: TestFail): Promise<void> {

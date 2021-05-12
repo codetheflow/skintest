@@ -1,7 +1,7 @@
-import { formatSelector } from '../format';
 import { Guard } from '../../common/guard';
-import { Query } from '../query';
 import { ClientStep, StepContext } from '../command';
+import { formatSelector } from '../format';
+import { Query } from '../query';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class DragStep implements ClientStep {
@@ -16,8 +16,9 @@ export class DragStep implements ClientStep {
   }
 
   execute(context: StepContext): TestExecutionResult {
-    const { page } = context;
+    const { browser } = context;
 
+    const page = browser.getCurrentPage();
     const selector = this.query.toString();
     return asTest(page.drag(selector, this.x, this.y));
   }
