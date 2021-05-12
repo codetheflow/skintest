@@ -20,7 +20,7 @@ async function createLine() {
     if (line.length > stdout.columns) {
       // todo: make it better
       if (line[line.length - 1] === NEW_LINE) {
-        stdout.write(line.substring(0, stdout.columns - 4) + '...' + NEW_LINE);
+        stdout.write(line.substring(0, stdout.columns - 4) + '...' + chalk.white(NEW_LINE));
       } else {
         stdout.write(line.substring(0, stdout.columns - 3) + '...');
       }
