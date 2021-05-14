@@ -8,6 +8,7 @@ import { pass, TestExecutionResult } from '../test-result';
 export interface Debugger {
   $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null>;
   $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRef<T>[]>;
+  // todo: add inspect, pause etc.
 }
 
 export type Breakpoint = (dbg: Debugger) => Promise<void>;
@@ -17,12 +18,12 @@ class PageDebugger implements Debugger {
 
   $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null> {
     const selector = query.toString();
-    return this.page.query<T>(selector);
+    return this.page.dbgQuery<T>(selector);
   }
 
   $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRefList<T>> {
     const selector = query.toString();
-    return this.page.queryList<T>(selector);
+    return this.page.dbgQueryList<T>(selector);
   }
 }
 

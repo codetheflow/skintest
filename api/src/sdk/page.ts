@@ -16,6 +16,7 @@ export interface Page {
   goForward(): Promise<void>;
   waitForNavigation(url: string): Promise<void>;
   reload(): Promise<void>;
+  close(): Promise<void>;
 
   click(selector: string): Promise<void>;
   dblclick(selector: string): Promise<void>;
@@ -27,6 +28,7 @@ export interface Page {
   check(selector: string): Promise<void>;
   uncheck(selector: string): Promise<void>;
   selectOption(selector: string, label: string): Promise<void>;
+  selectText(selector: string): Promise<void>;
 
   // todo: define file type, implement
   attachFile(from: string, file: any): Promise<void>;
@@ -34,6 +36,9 @@ export interface Page {
 
   pause(): Promise<void>;
 
-  query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null>;
+  query<T extends DOMElement>(selector: string): Promise<ElementRef<T>>;
   queryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
+
+  dbgQuery<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null>;
+  dbgQueryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
 }

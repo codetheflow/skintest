@@ -24,9 +24,13 @@ export function notEmptyError(name: string) {
 }
 
 export function pageNotFoundError(id: string) {
-  return error('pageNotFound', `page id ${id} is not found`);
+  return error('pageNotFound', `page \`${id}\` is not found`);
 }
 
 export function noCurrentPage() {
-  return error('noCurrentPage', `no current page, please make sure that \`I.open\` was called`);
+  return error('noCurrentPage', `no page opened, please make sure that \`I.open()\` was called before`);
+}
+
+export function elementNotFoundError(selector: string) {
+  return error('elementNotFound', `element \`${selector}\` is not found`);
 }

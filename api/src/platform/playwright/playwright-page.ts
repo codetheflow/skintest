@@ -1,4 +1,5 @@
 import * as playwright from 'playwright';
+import { elementNotFoundError } from '../../common/errors';
 import { DOMElement } from '../../sdk/dom';
 import { KeyboardKey } from '../../sdk/keyboard';
 import { ElementRef, ElementRefList, Page } from '../../sdk/page';
@@ -6,6 +7,10 @@ import { PlaywrightElement } from './playwright-element';
 
 export class PlaywrightPage implements Page {
   constructor(private page: playwright.Page) {
+  }
+
+  close(): Promise<void> {
+    return this.page.close();
   }
 
   goBack(): Promise<void> {
@@ -17,7 +22,7 @@ export class PlaywrightPage implements Page {
   }
 
   reload(): Promise<void> {
-   return this.page.reload() as Promise<any>;
+    return this.page.reload() as Promise<any>;
   }
 
   dblclick(selector: string): Promise<void> {
@@ -38,6 +43,12 @@ export class PlaywrightPage implements Page {
 
   selectOption(selector: string, label: string): Promise<void> {
     return this.page.selectOption(selector, { label }) as Promise<any>;
+  }
+
+  async selectText(selector: string): Promise<void> {
+    const element = await this.page.waitForSelector(selector);
+    // todo: add timeout option
+    return element.selectText();
   }
 
   goto(url: string): Promise<void> {
@@ -64,7 +75,7 @@ export class PlaywrightPage implements Page {
     return this.page.fill(selector, value);
   }
 
-  focus(selector: string): Promise<void> {
+  async focus(selector: string): Promise<void> {
     return this.page.focus(selector);
   }
 
@@ -81,7 +92,22 @@ export class PlaywrightPage implements Page {
     return this.page.pause();
   }
 
-  async query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
+  async query<T extends DOMElement>(selector: string): Promise<ElementRef<T>> {
+    const handle = await this.page.waitForSelector(selector);
+    if (handle) {
+      return new PlaywrightElement<T>(handle, this.page, selector);
+    }
+
+    throw elementNotFoundError(selector);
+  }
+
+  async queryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
+    // todo: how to wait for $$?
+    return (await this.page.$$(selector))
+      .map(handle => new PlaywrightElement(handle, this.page, selector));
+  }
+
+  async dbgQuery<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
     try {
       const handle = await this.page.waitForSelector(selector);
       if (handle) {
@@ -99,8 +125,7 @@ export class PlaywrightPage implements Page {
     }
   }
 
-  async queryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
-    // todo: how to wait for $$?
+  async dbgQueryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
     return (await this.page.$$(selector))
       .map(handle => new PlaywrightElement(handle, this.page, selector));
   }

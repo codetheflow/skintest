@@ -85,6 +85,11 @@ npm run start
 * https://playwright.dev/docs/test-runners
 * browser and node runners?
 * use value from the selector like `I.fill(todos.what, todos.user)`
+* https://gist.github.com/vzaidman/ef6e4b772b311ffb98368da5f7a9582a#file-codecept-example-js
+* has.value\has.text the same?
+* press vs hit? press target?
+* handle `ctrl+a` shortcuts?
+* has.text and has.value are very similar, for inputs maybe make only value available or stay only with has.text
 
 ### code style
 
@@ -94,4 +99,15 @@ npm run start
 
 * api ClassNames and InterfaceNames
 * api CONSTANT_NAMES and SYMBOL_NAMES
-* api functionNames and instanceNamess
+* api functionNames and instanceNames
+
+### ideas
+
+```typescript
+  .scenario('#dev check getting value'
+    , I.do(add_todo, 'send a letter')
+    , I.fill(todos.what, from.text, todos.item_at(0)) // from.text
+    , I.test('input contains text from the first todo')
+    , I.see(todos.what, has.value, 'send a letter')
+  )
+```

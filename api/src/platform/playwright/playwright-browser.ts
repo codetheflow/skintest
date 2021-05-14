@@ -1,5 +1,5 @@
 import * as playwright from 'playwright';
-import { noCurrentPage } from '../../common/errors';
+import { noCurrentPage, pageNotFoundError } from '../../common/errors';
 import { Browser } from '../../sdk/browser';
 import { PlaywrightPage } from './playwright-page';
 
@@ -20,12 +20,21 @@ export class PlaywrightBrowser implements Browser {
       return;
     }
 
-    const newPag = await this.context.newPage();
-    newPag.setDefaultTimeout(this.timeout);
-    newPag.setDefaultNavigationTimeout(this.timeout);
+    const newPage = await this.context.newPage();
+    newPage.setDefaultTimeout(this.timeout);
+    newPage.setDefaultNavigationTimeout(this.timeout);
 
-    this.currentPage = new PlaywrightPage(newPag);
+    this.currentPage = new PlaywrightPage(newPage);
     this.pages.set(id, this.currentPage);
+  }
+
+  async closePage(id: string): Promise<void> {
+    const existingPage = this.pages.get(id);
+    if (!existingPage) {
+      throw pageNotFoundError(id);
+    }
+
+    return existingPage.close();
   }
 
   getCurrentPage() {

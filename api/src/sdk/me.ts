@@ -23,12 +23,17 @@ import { PressStep } from './steps/press';
 import { ReloadStep } from './steps/reload';
 import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
+import { SelectTextStep } from './steps/select-text';
 import { StartTestStep } from './steps/test';
 import { TypeStep } from './steps/type';
 import { UncheckStep } from './steps/uncheck';
 import { WaitUrlStep } from './steps/wait-url';
 
 class Me implements Ego {
+  select<E extends DOMElement>(target: Query<E>): ClientStep {
+    return new SelectTextStep(target);
+  }
+
   open(name: string): ClientStep {
     return new OpenStep(name);
   }

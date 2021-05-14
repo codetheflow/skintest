@@ -42,6 +42,7 @@ export interface Ego {
   say(message: string): InfoStep;
   type<E extends DOMElement>(target: Query<E>, value: string): ClientStep;
   uncheck<E extends DOMElement>(target: Query<E>): ClientStep;
+  select<E extends DOMElement>(target: Query<E>): ClientStep;
 
   // select<E extends DOMElement>(target: Query<E>, option: string): ClientStep;
   // attachFile(from: Query<HTMLFormElement>, file: any): ClientStep;
