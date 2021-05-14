@@ -1,4 +1,4 @@
-import { platform, exploreFeatures, tagFilter } from '@skintest/api';
+import { exploreFeatures, platform, tagFilter } from '@skintest/api';
 import * as path from 'path';
 
 const PROJECT_NAME = 'todomvc';
@@ -8,7 +8,7 @@ platform()
   .newProject(PROJECT_NAME, async project => {
     const dir = path.join(__dirname, FEATURES_DIR);
     await project.run(
-      await exploreFeatures(dir)
-     , tagFilter('#dev')
+      exploreFeatures(dir)
+      , tagFilter('#dev')
     );
   });

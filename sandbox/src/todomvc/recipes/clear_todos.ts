@@ -1,9 +1,9 @@
-import { recipe, I, StorySchema } from '@skintest/api';
+import { I, recipe, StorySchema } from '@skintest/api';
 import { todos } from '../components/todos';
 
 export const clear_todos = recipe.client(
   /**
-   * clear toodos list
+   * clear todos list
    * 
    * @returns clear todos client recipe
    */
@@ -12,7 +12,7 @@ export const clear_todos = recipe.client(
 
     const remove = (index: number) => [
       I.hover(todos.item_at(index)),
-      I.click(todos.remove_button_at(index))
+      I.click(todos.button_remove_at(index))
     ];
 
     const list = await client.query(todos.list);

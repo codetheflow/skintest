@@ -20,6 +20,7 @@ export function tagFilter(...tags: string[]): Plugin {
   };
 }
 
+// todo: add include and exclude maybe arrays?
 export function matchHashTag(text: string) {
   text = ('' + text).toLowerCase();
   return (tag: string) => {
