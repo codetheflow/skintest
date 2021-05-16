@@ -1,6 +1,7 @@
 import { Attempt } from '../platform/attempt';
-import { pluginBreak, pluginContinue, PluginExecutionResult } from '../platform/plugin';
+import { pluginBreak, pluginContinue } from '../platform/plugin';
 import { Reporting, StatusReport } from '../platform/report-sink';
+import { StageExecutionResult } from '../platform/stage';
 import { Browser } from '../sdk/browser';
 import { Command, DoStep } from '../sdk/command';
 import { ClientFunction, PageClient, Process, ServerFunction } from '../sdk/recipe';
@@ -11,7 +12,7 @@ export type Plan = typeof plan;
 export function plan(browser: Browser, reporting: Reporting, attempt: Attempt) {
   return runSteps;
 
-  async function runSteps(steps: Command[], status: StatusReport): Promise<PluginExecutionResult> {
+  async function runSteps(steps: Command[], status: StatusReport): Promise<StageExecutionResult> {
     const context = { browser };
     try {
       for (let step of steps) {

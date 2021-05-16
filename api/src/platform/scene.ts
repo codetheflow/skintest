@@ -1,7 +1,7 @@
 import { Browser } from '../sdk/browser';
 import { Command } from '../sdk/command';
 import { Script } from '../sdk/script';
-import { FeatureScope, PluginExecutionResult, ScenarioScope, Staging, StepScope } from './plugin';
+import { FeatureScope, ScenarioScope, StageExecutionResult, Staging, StepScope } from './stage';
 
 export class Scene {
   constructor(
@@ -50,7 +50,7 @@ export class Scene {
     const beforeStep = this.effect('before.step');
     const afterStep = this.effect('after.step');
     const step = this.effect('step');
-    const isOkay = (result: PluginExecutionResult) => result.effect === 'continue';
+    const isOkay = (result: StageExecutionResult) => result.effect === 'continue';
 
     let ok = isOkay(await beforeStep(scope));
     if (ok) {
