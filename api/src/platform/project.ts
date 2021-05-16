@@ -1,7 +1,6 @@
+import { BrowserFactory } from './browser-factory';
 import { Plugin } from './plugin';
 
 export interface Project {
-  run(
-    ...plugins: Plugin[]
-  ): Promise<void>;
+  run(createBrowser: BrowserFactory, ...plugins: Plugin[]): Promise<void>;
 }

@@ -4,7 +4,7 @@ import { Reporting, StatusReport } from '../platform/report-sink';
 import { Browser } from '../sdk/browser';
 import { Command, DoStep } from '../sdk/command';
 import { ClientFunction, PageClient, Process, ServerFunction } from '../sdk/recipe';
-import { testFail } from '../sdk/test-result';
+import { fail, pass, TestExecutionResult, unknownFail } from '../sdk/test-result';
 
 export type Plan = typeof plan;
 
@@ -15,16 +15,17 @@ export function plan(browser: Browser, reporting: Reporting, attempt: Attempt) {
     const context = { browser };
     try {
       for (let step of steps) {
-        const result = await step.execute(context);
+        const result = await attempt(() => step.execute(context));
         if (result.status === 'fail') {
           await status.fail(result);
-          return pluginBreak('run-plan');
+          return pluginBreak('plan');
         }
 
         if (step.type === 'do') {
-          const funcResult = await runRecipe(step, status);
-          if (funcResult.effect === 'break') {
-            return funcResult;
+          const doStep = step;
+          const funcResult = await attempt(() => runRecipe(doStep, status));
+          if (funcResult.status === 'fail') {
+            return pluginBreak('plan');
           }
         }
 
@@ -35,39 +36,38 @@ export function plan(browser: Browser, reporting: Reporting, attempt: Attempt) {
       }
 
       await status.pass();
-      return pluginContinue('execute-plan');
+      return pluginContinue('plan');
     } catch (ex) {
       await status.error(ex);
-      return pluginBreak('execute-plan');
+      return pluginBreak('plan');
     }
   }
 
-  async function runRecipe(step: DoStep, status: StatusReport): Promise<PluginExecutionResult> {
+  async function runRecipe(step: DoStep, status: StatusReport): TestExecutionResult {
     try {
       if (step.recipe.type === 'server') {
         const server = new Process();
         const action = step.recipe.action as ServerFunction;
         const { message } = await action.apply(server, step.args);
         await status.progress(message);
-        return pluginContinue('run-function');
+        return pass();
       }
 
       const page = browser.getCurrentPage();
       const client = new PageClient(page);
       const action = step.recipe.action as ClientFunction;
       const { message, plan } = await action.call(client, step.args);
-      await status.progress('I ' + message); 
+      await status.progress('I ' + message);
       const result = await runSteps(plan, await reporting.attempt());
       if (result.effect === 'break') {
-        await status.fail(testFail());
-        return result;
+        await status.fail(fail());
+        return fail();
       }
 
-    //  await status.pass();
-      return pluginContinue('recipe');
+      return pass();
     } catch (ex) {
       await status.error(ex);
-      return pluginBreak('recipe');
+      return unknownFail(ex);
     }
   }
 }

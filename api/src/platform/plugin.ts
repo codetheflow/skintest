@@ -7,7 +7,7 @@ import { Zone } from './zone';
 
 export type Stage<Z extends Zone, S> = (scope: S) => Promise<PluginExecutionResult>;
 
-export type InitScope = {};
+export type InitScope = void;
 export type DestroyScope = InitScope;
 export type FeatureScope = { script: Script; browser: Browser };
 export type ScenarioScope = FeatureScope & { scenario: string };

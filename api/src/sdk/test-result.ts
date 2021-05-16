@@ -35,11 +35,21 @@ export function inspect(info: InspectInfo): TestPass {
   };
 }
 
-export function testFail(): TestFail {
+// do it better
+export function fail(): TestFail {
   return {
     status: 'fail',
     code: '',
     description: '',
+    solution: ''
+  };
+}
+
+export function unknownFail(ex: Error): TestFail {
+  return {
+    status: 'fail',
+    code: '',
+    description: ex.message,
     solution: ''
   };
 }

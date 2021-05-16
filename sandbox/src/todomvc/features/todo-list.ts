@@ -5,7 +5,7 @@ import { add_todo } from '../recipes/add-todo';
 import { clear_todos } from '../recipes/clear_todos';
 import { generate_todos } from '../recipes/generate-todos';
 
-feature('todo list')
+feature('#dev todo list')
   .before('scenario'
     , I.open(page.start)
     , I.goto(todos.url)
@@ -73,10 +73,10 @@ feature('todo list')
 
     , I.test('page one has the same items as page two')
     , I.see(todos.list, has.length, 1)
-    , I.see(todos.item_at(0), has.text, 'learn math')
+    , I.see(todos.item_at(0), has.text, 'walk the dog')
   )
 
-  .scenario('#dev check that todo item can be copy pasted by using clipboard'
+  .scenario('check that todo item can be copy pasted by using clipboard'
     , I.do(add_todo, 'feed dragon')
     , I.select(todos.item_at(0))
     , I.press('Control+C')
