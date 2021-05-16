@@ -9,7 +9,7 @@ export class GotoStep implements ClientStep {
     Guard.notEmpty(url, 'url');
   }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

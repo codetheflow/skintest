@@ -14,7 +14,7 @@ export class Verify {
     what: AssertWhat,
     how: AssertHow,
     expected: V
-  ): TestExecutionResult {
+  ): Promise<TestExecutionResult> {
     const elementRef = await this.page.query<S>(query.toString());
     if (!elementRef) {
       return notFoundElement(query.toString());
@@ -58,7 +58,7 @@ export class Verify {
     what: AssertWhat,
     how: AssertHow,
     expected: V
-  ): TestExecutionResult {
+  ): Promise<TestExecutionResult> {
     const elementRefList = await this.page.queryList<S>(selector.toString());
     switch (what) {
       case AssertWhat.length: {

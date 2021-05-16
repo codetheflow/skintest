@@ -7,7 +7,7 @@ export class ReloadStep implements ClientStep {
   constructor() {
   }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

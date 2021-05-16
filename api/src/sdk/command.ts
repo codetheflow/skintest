@@ -15,7 +15,7 @@ export type Command =
   | DoStep;
 
 export interface CommandBody {
-  execute(context: StepContext): TestExecutionResult;
+  execute(context: StepContext): Promise<TestExecutionResult>;
   toString(): string;
 }
 

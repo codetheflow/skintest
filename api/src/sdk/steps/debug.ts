@@ -36,7 +36,7 @@ export class DebugStep implements DevStep {
     Guard.notNull(breakpoint, 'breakpoint');
   }
 
-  async execute(context: StepContext): TestExecutionResult {
+  async execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

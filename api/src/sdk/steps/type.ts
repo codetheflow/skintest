@@ -12,7 +12,7 @@ export class TypeStep implements ClientStep {
     Guard.notNull(text, 'text');
   }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

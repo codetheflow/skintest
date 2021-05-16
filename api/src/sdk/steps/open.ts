@@ -9,7 +9,7 @@ export class OpenStep implements ClientStep {
     Guard.notEmpty(id, 'id');
   }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     return asTest(browser.openPage(this.id));

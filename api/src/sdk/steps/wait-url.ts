@@ -9,7 +9,7 @@ export class WaitUrlStep implements ClientStep {
     Guard.notNull(url, 'url');
   }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

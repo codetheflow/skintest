@@ -13,7 +13,7 @@ export class SelectTextStep implements ClientStep {
     Guard.notNull(query, 'query');
   }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

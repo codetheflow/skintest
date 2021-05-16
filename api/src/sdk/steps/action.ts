@@ -1,7 +1,7 @@
 import { Guard } from '../../common/guard';
-import { pass, TestExecutionResult } from '../test-result';
+import { DoStep, StepContext } from '../command';
 import { ClientRecipe, ServerRecipe } from '../recipe';
-import { StepContext, DoStep } from '../command';
+import { pass, TestExecutionResult } from '../test-result';
 
 export class ActionStep implements DoStep {
   type: 'do' = 'do';
@@ -14,7 +14,7 @@ export class ActionStep implements DoStep {
     Guard.notNull(args, 'args');
   }
 
-  async execute(context: StepContext): TestExecutionResult {
+  async execute(context: StepContext): Promise<TestExecutionResult> {
     return pass();
   }
 

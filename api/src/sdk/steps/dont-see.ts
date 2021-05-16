@@ -1,12 +1,11 @@
-import { BinaryAssert, ListAssert, AssertHost } from '../assert';
 import { Guard } from '../../common/guard';
 import { isUndefined } from '../../common/utils';
-import { SeeStep } from './see';
-import { Query, QueryList } from '../query';
+import { AssertHost, BinaryAssert, ListAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
-import { pass, TestExecutionResult } from '../test-result';
-import { dontSeeFail } from '../test-result';
 import { formatSelector } from '../format';
+import { Query, QueryList } from '../query';
+import { dontSeeFail, pass, TestExecutionResult } from '../test-result';
+import { SeeStep } from './see';
 
 export class DontSeeStep implements AssertStep {
   type: 'assert' = 'assert';
@@ -19,7 +18,7 @@ export class DontSeeStep implements AssertStep {
     Guard.notNull(query, 'query');
   }
 
-  async execute(context: StepContext): TestExecutionResult {
+  async execute(context: StepContext): Promise<TestExecutionResult> {
     const seeStep = new SeeStep(this.query, this.assert, this.value);
     const failReason = await seeStep.execute(context);
     if (!failReason) {

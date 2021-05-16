@@ -6,7 +6,7 @@ export class SayStep implements InfoStep {
 
   constructor(private message: string) { }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     return asTest(Promise.resolve());
   }
 

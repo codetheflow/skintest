@@ -19,7 +19,7 @@ export interface InspectInfo {
   target: ElementRef<any> | ElementRef<any>[] | null;
 }
 
-export type TestExecutionResult = Promise<TestFail | TestPass>;
+export type TestExecutionResult = TestFail | TestPass;
 
 export function pass(): TestPass {
   return {
@@ -98,12 +98,12 @@ export function dontSeeFail(): TestFail {
   return {
     status: 'fail',
     code: '',
-    description: 'dont see',
+    description: 'don\'t see',
     solution: ''
   };
 }
 
-export async function asTest(promise: Promise<void>): TestExecutionResult {
+export async function asTest(promise: Promise<void>): Promise<TestExecutionResult> {
   await promise;
 
   // if there were no exception return `ok`

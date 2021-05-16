@@ -1,12 +1,12 @@
-import { pass, TestExecutionResult, TestFail, TestPass, unknownFail } from '../sdk/test-result';
+import { pass, TestExecutionResult, unknownFail } from '../sdk/test-result';
 import { Attempt } from './attempt';
 import { StatusReport } from './report-sink';
 
 export function attemptFactory(retries: number, status: StatusReport): Attempt {
-  return async (method: () => TestExecutionResult): TestExecutionResult => {
+  return async (method: () => Promise<TestExecutionResult>): Promise<TestExecutionResult> => {
     let attempts = retries;
 
-    let result: TestFail | TestPass = pass();
+    let result: TestExecutionResult = pass();
     let error = null;
     while (--attempts >= 0) {
       try {

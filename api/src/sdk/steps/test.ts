@@ -1,4 +1,4 @@
-import { TestStep, StepContext } from '../command';
+import { StepContext, TestStep } from '../command';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class StartTestStep implements TestStep {
@@ -7,7 +7,7 @@ export class StartTestStep implements TestStep {
   constructor(private what: string) {
   }
 
-  execute(context: StepContext): TestExecutionResult {
+  execute(context: StepContext): Promise<TestExecutionResult> {
     return asTest(Promise.resolve());
   }
 

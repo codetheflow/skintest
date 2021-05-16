@@ -43,7 +43,7 @@ export function plan(browser: Browser, reporting: Reporting, attempt: Attempt) {
     }
   }
 
-  async function runRecipe(step: DoStep, status: StatusReport): TestExecutionResult {
+  async function runRecipe(step: DoStep, status: StatusReport): Promise<TestExecutionResult> {
     try {
       if (step.recipe.type === 'server') {
         const server = new Process();
