@@ -1,6 +1,7 @@
 import { Browser } from '../sdk/browser';
+import { Command } from '../sdk/command';
 import { Script } from '../sdk/script';
-import { FeatureScope, ScenarioScope, Staging, StepScope } from './plugin';
+import { FeatureScope, PluginExecutionResult, ScenarioScope, Staging, StepScope } from './plugin';
 
 export class Scene {
   constructor(
@@ -9,40 +10,54 @@ export class Scene {
   ) {
   }
 
-  async play(script: Script): Promise<void> {
+  play(script: Script): Promise<void> {
+    const { browser } = this;
+    return this.feature({ script, browser });
+  }
+
+  private async feature(scope: FeatureScope): Promise<void> {
     const beforeFeature = this.effect('before.feature');
     const afterFeature = this.effect('after.feature');
-    const beforeScenario = this.effect('before.scenario');
-    const afterScenario = this.effect('after.scenario');
-    const beforeStep = this.effect('before.step');
-    const afterStep = this.effect('after.step');
-    const onStep = this.effect('step');
 
-    // todo: improve readability
-    const featureScope: FeatureScope = { script, browser: this.browser };
-    if ((await beforeFeature(featureScope)).effect !== 'break') {
-      for (let [scenario, steps] of script.scenarios) {
-        const scenarioScope: ScenarioScope = { ...featureScope, scenario };
-        if ((await beforeScenario(scenarioScope)).effect !== 'break') {
-          for (let step of steps) {
-            const stepScope: StepScope = { ...scenarioScope, step };
-
-            let result = false;
-            if ((await beforeStep(stepScope)).effect !== 'break') {
-              result = (await onStep(stepScope)).effect !== 'break';
-            }
-            result = (await afterStep(stepScope)).effect !== 'break' && result;
-
-            if (!result && step.type !== 'assert') {
-              break;
-            }
-          }
-        }
-
-        await afterScenario(scenarioScope);
+    const result = await beforeFeature(scope);
+    if (result.effect === 'continue') {
+      for (let [scenario, steps] of scope.script.scenarios) {
+        await this.scenario({ ...scope, scenario }, steps);
       }
     }
 
-    await afterFeature(featureScope);
+    await afterFeature(scope);
+  }
+
+  private async scenario(scope: ScenarioScope, steps: Command[]): Promise<void> {
+    const beforeScenario = this.effect('before.scenario');
+    const afterScenario = this.effect('after.scenario');
+
+    const result = await beforeScenario(scope);
+    if (result.effect === 'continue') {
+      for (let step of steps) {
+        const ok = await this.step({ ...scope, step });
+        if (!ok) {
+          break;
+        }
+      }
+    }
+
+    await afterScenario(scope);
+  }
+
+  private async step(scope: StepScope): Promise<boolean> {
+    const beforeStep = this.effect('before.step');
+    const afterStep = this.effect('after.step');
+    const step = this.effect('step');
+    const isOkay = (result: PluginExecutionResult) => result.effect === 'continue';
+
+    let ok = isOkay(await beforeStep(scope));
+    if (ok) {
+      ok = isOkay(await step(scope));
+    }
+
+    ok = isOkay(await afterStep(scope)) && ok;
+    return ok;
   }
 }

@@ -42,6 +42,7 @@ export function stage(plugins: Plugin[], pluginContext: Omit<PluginContext, 'sta
               if (result.effect === 'break') {
                 return pluginBreak(result.host)
               }
+              
 
               hosts.push(result.host);
             }
@@ -78,6 +79,7 @@ export type Plugin = (context: PluginContext) => Promise<PluginExecutionResult>;
 
 export interface PluginExecutionResult {
   host: string;
+  // todo: think about `exit` effect
   effect: 'break' | 'continue';
 };
 
