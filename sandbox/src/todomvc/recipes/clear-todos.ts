@@ -12,7 +12,7 @@ export const clear_todos = recipe.client(
 
     const remove = (index: number) => [
       I.hover(todos.item_at(index)),
-      I.click(todos.button_remove_at(index))
+      I.click(todos.remove_at(index))
     ];
 
     const list = await client.query(todos.list);
@@ -23,6 +23,6 @@ export const clear_todos = recipe.client(
       last--;
     }
 
-    return client.do(`clear todos`, ...plan);
+    return client.do(`I clear todos`, ...plan);
   }
 );

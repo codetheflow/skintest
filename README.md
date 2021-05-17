@@ -90,6 +90,7 @@ npm run start
 * press vs hit? press target?
 * handle `ctrl+a` shortcuts?
 * has.text and has.value are very similar, for inputs maybe make only value available or stay only with has.text
+* tagFilter - add option to execute all if tags were not found in the project
 
 ### code style
 

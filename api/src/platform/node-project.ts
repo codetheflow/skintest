@@ -1,61 +1,33 @@
-import { afterFeature } from '../plugins/after-feature';
-import { afterScenario } from '../plugins/after-scenario';
-import { afterStep } from '../plugins/after-step';
-import { beforeFeature } from '../plugins/before-feature';
-import { beforeScenario } from '../plugins/before-scenario';
-import { beforeStep } from '../plugins/before-step';
-import { plan } from '../plugins/plan';
-import { step } from '../plugins/step';
 import { Suite } from '../sdk/suite';
 import { attemptFactory } from './attempt-factory';
 import { BrowserFactory } from './browser-factory';
-import { NodeReportSink } from './node-reporting';
-import { Plugin, stage } from './plugin';
+import { orchestrate, Plugin } from './plugin';
 import { Project } from './project';
 import { Scene } from './scene';
 
 export class NodeProject implements Project {
-  private readonly corePlugins = [
-    afterFeature(plan),
-    afterScenario(plan),
-    afterStep(plan),
-    beforeFeature(plan),
-    beforeScenario(plan),
-    beforeStep(plan),
-    step(plan),
-  ];
-
   constructor(private suite: Suite) { }
 
-  async run(
-    createBrowser: BrowserFactory,
-    ...plugins: Plugin[]
-  ): Promise<void> {
-
+  async run(createBrowser: BrowserFactory, ...plugins: Plugin[]): Promise<void> {
+    // todo: add config
     const RETRIES = 1;
+    const attempt = attemptFactory(RETRIES);
 
-    const reportSink = new NodeReportSink();
-    const reporting = await reportSink.start();
-    const attempt = attemptFactory(RETRIES, await reporting.attempt());
+    const effect = orchestrate(Array.from(plugins));
 
-    const orchestration = [
-      ...plugins,
-      afterFeature(plan),
-      afterScenario(plan),
-      afterStep(plan),
-      beforeFeature(plan),
-      beforeScenario(plan),
-      beforeStep(plan),
-      step(plan),
-    ];
-
-    const effect = stage(orchestration, { reporting, attempt, });
     const init = effect('init');
     const destroy = effect('destroy');
+    const fail = effect('fail');
+    const pass = effect('pass');
 
     try {
       init();
+      await pass({ site: 'init' });
+    } catch (ex) {
+      await fail({ site: 'init', result: ex });
+    }
 
+    try {
       for (let script of this.suite.getScripts()) {
         const browser = await createBrowser();
         try {
@@ -66,13 +38,16 @@ export class NodeProject implements Project {
         }
       }
 
-    } finally {
-      // todo: add reporting handling ex
-      try {
-        destroy();
-      } finally {
-        await reportSink.end(reporting);
-      }
+      await pass({ site: 'runtime' });
+    } catch (ex) {
+      await fail({ site: 'runtime', result: ex });
+    }
+
+    try {
+      destroy();
+      pass({ site: 'destroy' });
+    } catch (ex) {
+      fail({ site: 'destroy', result: ex });
     }
   }
 }

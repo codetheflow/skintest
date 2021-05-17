@@ -1,15 +1,17 @@
-import { exploreFeatures, platform, playwrightLauncher, tagFilter } from '@skintest/api';
+import { exploreFeatures, platform, playwrightLauncher, stdReporting, tagFilter } from '@skintest/api';
 import * as path from 'path';
 
-const PROJECT_NAME = 'todomvc';
-const FEATURES_DIR = 'todomvc/features';
-
 platform()
-  .newProject(PROJECT_NAME, async project => {
-    const dir = path.join(__dirname, FEATURES_DIR);
+  .newProject('todomvc', async project => {
+    const dir = path.join(__dirname, 'todomvc/features');
+
     await project.run(
       playwrightLauncher()
-      , exploreFeatures(dir)
-      , tagFilter('#dev')
+      , exploreFeatures({ dir })
+      , tagFilter({
+        tags: ['#dev'],
+        include: 'all-when-no-matched',
+      })
+      , stdReporting()
     );
   });

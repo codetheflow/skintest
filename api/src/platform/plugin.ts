@@ -1,68 +1,28 @@
-import { Reporting } from '../platform/report-sink';
-import { Attempt } from './attempt';
-import { OnStage, StageExecutionResult, Stages, Staging } from './stage';
+import { OnStage, Stages, Staging } from './stage';
 import { Zone } from './zone';
 
-export function stage(plugins: Plugin[], pluginContext: Omit<PluginContext, 'stage'>): Staging {
+export type Plugin = (stage: OnStage) => Promise<void>;
+
+export function orchestrate(plugins: Plugin[]): Staging {
   return <Z extends Zone>(zone: Z) =>
-    async (...stageScope: Parameters<Stages[Z]>): Promise<StageExecutionResult> => {
-      const onStage: OnStage = async (stages: Partial<Stages>): Promise<StageExecutionResult> => {
-        const hosts: string[] = [];
+    async (...scope: Parameters<Stages[Z]>): Promise<void> => {
+
+      const onStage: OnStage = async stages => {
         for (let key in stages) {
           if (zone === key) {
-            const execute = stages[zone];
-            if (execute) {
+            const run = stages[zone];
+            if (run) {
               // todo: get rid of any
-              const result = await execute(stageScope[0] as any);
-              if (result.effect === 'break') {
-                return pluginBreak(result.host)
-              }
-
-
-              hosts.push(result.host);
+              // todo: better return result
+              await run(scope[0] as any);
             }
           }
         }
-
-        return pluginContinue(hosts.join(', '));
       };
 
-      const scope: PluginContext = {
-        ...pluginContext,
-        stage: onStage
-      };
-
-      const hosts: string[] = [];
       for (let plugin of plugins) {
-        const result = await plugin(scope);
-        if (result.effect === 'break') {
-          return pluginBreak(result.host);
-        }
+        await plugin(onStage);
       }
 
-      return pluginContinue(hosts.join(', ') || 'stage');
     };
-}
-
-export interface PluginContext {
-  attempt: Attempt;
-  reporting: Reporting;
-  stage: OnStage;
-}
-
-export type Plugin = (context: PluginContext) => Promise<StageExecutionResult>;
-
-
-export function pluginBreak(host: string): StageExecutionResult {
-  return {
-    host,
-    effect: 'break'
-  };
-}
-
-export function pluginContinue(host: string): StageExecutionResult {
-  return {
-    host,
-    effect: 'continue'
-  };
 }

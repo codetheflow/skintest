@@ -1,8 +1,7 @@
 import { pass, TestExecutionResult, unknownFail } from '../sdk/test-result';
 import { Attempt } from './attempt';
-import { StatusReport } from './report-sink';
 
-export function attemptFactory(retries: number, status: StatusReport): Attempt {
+export function attemptFactory(retries: number): Attempt {
   return async (method: () => Promise<TestExecutionResult>): Promise<TestExecutionResult> => {
     let attempts = retries;
 
@@ -13,13 +12,11 @@ export function attemptFactory(retries: number, status: StatusReport): Attempt {
         result = await method();
       }
       catch (ex) {
-        await status.error(ex);
         error = unknownFail(ex);
       }
     }
 
     if (error) {
-      await status.fail(error);
       return error;
     }
 

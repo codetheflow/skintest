@@ -11,7 +11,7 @@ export const add_todo = recipe.client(
   function (name: string) {
     const client = this;
 
-    return client.do(`add todo \`${name}\``
+    return client.do(`I add todo \`${name}\``
       , I.fill(todos.what, name)
       , I.press('Enter')
     );

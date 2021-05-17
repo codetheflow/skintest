@@ -1,4 +1,4 @@
-import { recipe, I } from '@skintest/api';
+import { I, recipe } from '@skintest/api';
 import { add_todo } from './add-todo';
 
 export const generate_todos = recipe.client(
@@ -6,11 +6,11 @@ export const generate_todos = recipe.client(
    * generate todo times and put them to the list of todos
    * 
    * @param count number of items to generate
-   * @returns genearte todos client recipe
+   * @returns generate todos client recipe
    */
   function (count: number) {
     const client = this;
-    const path = [...Array(count)].map((x, i) => I.do(add_todo, `geneated todo #${i}`))
-    return client.do(`generate ${count} todos`, ...path);
+    const path = [...Array(count)].map((x, i) => I.do(add_todo, `generated todo #${i}`))
+    return client.do(`I generate ${count} todos`, ...path);
   }
 );

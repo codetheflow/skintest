@@ -1,10 +1,17 @@
 export type Zone =
   'init'
   | 'destroy'
+  | 'pass'
+  | 'fail'
   | 'before.feature'
   | 'after.feature'
   | 'before.scenario'
   | 'after.scenario'
   | 'before.step'
   | 'after.step'
-  | 'step';
+  | 'step'
+  | 'step.pass'
+  | 'step.fail'
+  | 'recipe'
+  | 'recipe.pass'
+  | 'recipe.fail';

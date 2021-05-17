@@ -2,6 +2,7 @@ export { Platform, platform } from './platform/platform';
 export { playwrightLauncher } from './platform/playwright/playwright-launcher';
 export { Project } from './platform/project';
 export { exploreFeatures } from './plugins/explore-features';
+export { stdReporting } from './plugins/std-reporting';
 export { tagFilter } from './plugins/tag-filter';
 export { BinaryAssert, ListAssert, UnaryAssert } from './sdk/assert';
 export { AssertStep, ClientStep, CommandBody, DevStep, DoStep, InfoStep, StepContext } from './sdk/command';

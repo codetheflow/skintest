@@ -2,10 +2,10 @@ import { feature, has, I } from '@skintest/api';
 import { page } from '../components/page';
 import { todos } from '../components/todos';
 import { add_todo } from '../recipes/add-todo';
-import { clear_todos } from '../recipes/clear_todos';
+import { clear_todos } from '../recipes/clear-todos';
 import { generate_todos } from '../recipes/generate-todos';
 
-feature('#dev todo list')
+feature('todos add')
   .before('scenario'
     , I.open(page.start)
     , I.goto(todos.url)
@@ -46,18 +46,11 @@ feature('#dev todo list')
     , I.see(todos.item_at(0), has.text, 'pass the exams')
   )
 
-  .scenario('check the list supports many todos'
+  .scenario('#dev check the list supports many todos'
     , I.do(generate_todos, 10)
     , I.test('list contains all the items')
     , I.see(todos.list, has.length, 10)
-  )
-
-  .scenario('check the remove button deleted items'
-    , I.do(add_todo, 'item to remove')
-    , I.hover(todos.item_at(0))
-    , I.click(todos.button_remove_at(0))
-    , I.test('todos list is empty after remove button clicked')
-    , I.see(todos.list, has.length, 0)
+    , I.__inspect(todos.list)
   )
 
   .scenario('check that second todo page has updated list after reload'

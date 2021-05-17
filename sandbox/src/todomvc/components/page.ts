@@ -1,6 +1,6 @@
 export const page = {
-  start: 'start'
+  start: 'start page'
 
-  , one: 'one'
-  , two: 'two'
+  , one: 'page one'
+  , two: 'page two'
 };
