@@ -2,6 +2,8 @@ import { Browser } from '../sdk/browser';
 import { Command, DoStep } from '../sdk/command';
 import { ClientFunction, PageClient, Process, ServerFunction } from '../sdk/recipe';
 import { Script } from '../sdk/script';
+import { SuiteOperations } from '../sdk/suite';
+import { Attempt } from './attempt';
 import { CommandScope, Staging } from './stage';
 
 const NO_SCENARIO = '';
@@ -10,6 +12,8 @@ export class Scene {
   constructor(
     private effect: Staging,
     private browser: Browser,
+    private operations: SuiteOperations,
+    private attempt: Attempt,
   ) {
   }
 
@@ -35,7 +39,11 @@ export class Scene {
     );
 
     if (ok) {
-      for (let [scenario, steps] of script.scenarios) {
+      const scenarios = script
+        .scenarios
+        .filter(([name]) => this.operations.filterScenario(script.name, name));
+
+      for (let [scenario, steps] of scenarios) {
         await this.scenario(script, scenario, steps);
       }
     }
@@ -53,7 +61,7 @@ export class Scene {
   private async scenario(
     script: Script,
     scenario: string,
-    steps: Command[]
+    steps: ReadonlyArray<Command>,
   ): Promise<void> {
 
     const beforeScenarioEffect = this.effect('before.scenario');
@@ -131,7 +139,7 @@ export class Scene {
       'after.step',
       script,
       scenario,
-      [step]
+      script.afterStep
     ) && ok;
 
     return ok;
@@ -141,10 +149,10 @@ export class Scene {
     site: CommandScope['site'],
     script: Script,
     scenario: string,
-    steps: Command[]
+    steps: ReadonlyArray<Command>
   ): Promise<boolean> {
 
-    const { browser } = this;
+    const { browser, attempt } = this;
 
     const stepEffect = this.effect('step');
     const passEffect = this.effect('step.pass');
@@ -161,7 +169,7 @@ export class Scene {
       await stepEffect({ ...scope, step });
 
       try {
-        const test = await step.execute({ browser });
+        const test = await attempt.step(() => step.execute({ browser }));
         if (test.status === 'fail') {
           await failEffect({ ...scope, step, result: test });
           if (step.type !== 'assert') {
@@ -201,7 +209,7 @@ export class Scene {
     step: DoStep
   ): Promise<boolean> {
 
-    const { browser } = this;
+    const { browser, attempt } = this;
 
     const scope = {
       site,
@@ -220,7 +228,7 @@ export class Scene {
       const server = new Process();
       const action = step.recipe.action as ServerFunction;
       try {
-        const { message } = await action.apply(server, step.args);
+        const { message } = await attempt.action(() => action.apply(server, step.args));
         await recipePassEffect({
           ...scope,
           message
@@ -242,7 +250,7 @@ export class Scene {
     const action = step.recipe.action as ClientFunction;
 
     try {
-      const { message, plan } = await action.call(client, step.args);
+      const { message, plan } = await attempt.action(() => action.call(client, step.args));
       await recipePassEffect({
         ...scope,
         message

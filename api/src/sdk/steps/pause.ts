@@ -14,6 +14,6 @@ export class PauseStep implements DevStep {
   }
 
   toString() {
-    return 'I pause';
+    return '__pause';
   }
 }

@@ -1,8 +1,8 @@
 export type Zone =
-  'init'
-  | 'destroy'
-  | 'pass'
-  | 'fail'
+  'start'
+  | 'stop'
+  | 'init'
+  | 'error'
   | 'before.feature'
   | 'after.feature'
   | 'before.scenario'

@@ -8,7 +8,7 @@ import { pass, TestExecutionResult } from '../test-result';
 export interface Debugger {
   $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null>;
   $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRef<T>[]>;
-  // todo: add inspect, pause etc.
+  //inspect()
 }
 
 export type Breakpoint = (dbg: Debugger) => Promise<void>;
@@ -46,6 +46,6 @@ export class DebugStep implements DevStep {
   }
 
   toString() {
-    return 'I debug';
+    return '__debug';
   }
 }

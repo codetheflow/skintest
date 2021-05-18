@@ -1,13 +1,28 @@
+import { yes } from '../common/utils';
 import { Script } from './script';
 
 export interface Suite {
   readonly name: string;
+
   addScript(script: Script): void;
   getScripts(): Script[];
+
+  operations: SuiteOperations;
+}
+
+export interface SuiteOperations {
+  filterFeature: (feature: string) => boolean;
+  filterScenario: (feature: string, scenario: string) => boolean; 
 }
 
 class ProjectSuite implements Suite {
   private scripts: Script[] = [];
+
+  operations = {
+    filterScript: yes,
+    filterFeature: yes,
+    filterScenario: yes,
+  };
 
   constructor(public readonly name: string) {
   }

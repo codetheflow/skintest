@@ -46,19 +46,18 @@ feature('todos add')
     , I.see(todos.item_at(0), has.text, 'pass the exams')
   )
 
-  .scenario('#dev check the list supports many todos'
+  .scenario('check the list supports many todos'
     , I.do(generate_todos, 10)
     , I.test('list contains all the items')
     , I.see(todos.list, has.length, 10)
-    , I.__inspect(todos.list)
   )
 
-  .scenario('check that second todo page has updated list after reload'
+  .scenario('#dev check that second todo page has updated list after reload'
     , I.open(page.one)
     , I.goto(todos.url)
 
     , I.open(page.two)
-    , I.goto(todos.url)
+    , I.goto(todos.url + 'qwerw')
     , I.do(add_todo, 'walk the dog')
 
     , I.open(page.one)

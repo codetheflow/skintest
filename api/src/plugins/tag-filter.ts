@@ -1,27 +1,61 @@
+import { invalidArgumentError } from '../common/errors';
 import { Plugin } from '../platform/plugin';
 import { OnStage } from '../platform/stage';
+import { Suite } from '../sdk/suite';
 
 type TagFilter = {
   tags: string[],
   include: 'only-matched' | 'all-when-no-matched'
 };
 
+type Statistics = {
+  [key: string]: {
+    featureMatch: boolean,
+    scenarioMatches: Set<string>,
+  }
+};
+
 export function tagFilter(options: TagFilter): Plugin {
   const { tags, include } = options;
 
   return async (stage: OnStage) => stage({
-    // 'before.scenario': async ({ script, scenario }) => {
-    //   // todo: add reporting
-    //   const featureHas = matchHashTag(script.name);
-    //   const scenarioHas = matchHashTag(scenario);
-    //   for (let tag of tags) {
-    //     if (featureHas(tag) || scenarioHas(tag)) {
-    //       return stageContinue('tag-filter');
-    //     }
-    //   }
+    'init': async ({ suite }) => {
 
-    //   return stageBreak('tag-filter');
-    // }
+      const stat = getStat(suite, tags);
+      const onlyMatched = () => {
+        suite.operations.filterFeature = (feature: string) =>
+          stat[feature].featureMatch ||
+          stat[feature].scenarioMatches.size > 0;
+
+        suite.operations.filterScenario = (feature: string, scenario: string) =>
+          stat[feature].featureMatch ||
+          stat[feature].scenarioMatches.has(scenario)
+      };
+
+      switch (include) {
+        case 'only-matched': {
+          onlyMatched();
+          break;
+        }
+        case 'all-when-no-matched': {
+          const hasMatches = Object
+            .keys(stat)
+            .some(key =>
+              stat[key].featureMatch ||
+              stat[key].scenarioMatches.size > 0
+            );
+
+          if (hasMatches) {
+            onlyMatched();
+          }
+
+          break;
+        }
+        default: {
+          throw invalidArgumentError('include', include);
+        }
+      }
+    }
   });
 }
 
@@ -34,4 +68,21 @@ function matchHashTag(text: string) {
     // todo: make regular expression
     return text.indexOf(tag) >= 0;
   };
+}
+
+function getStat(suite: Suite, tags: string[]): Statistics {
+  const stat: Statistics = {};
+  for (const script of suite.getScripts()) {
+    stat[script.name] = {
+      featureMatch: tags.some(matchHashTag(script.name)),
+      scenarioMatches: new Set(
+        script
+          .scenarios
+          .map(([name]) => name)
+          .filter(name => tags.some(matchHashTag(name)))
+      )
+    }
+  }
+
+  return stat;
 }

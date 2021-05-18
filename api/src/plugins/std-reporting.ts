@@ -54,9 +54,9 @@ export function stdReporting(): Plugin {
   let currentLine = followLine();
 
   return async (stage: OnStage) => stage({
-    'fail': async ({ result }) => {
+    'error': async ({ reason }) => {
       // todo: better reporting error
-      console.error(result);
+      console.error(reason);
     },
     'before.scenario': async ({ script, scenario }) => {
       currentLine = await fixedLine();
@@ -64,12 +64,73 @@ export function stdReporting(): Plugin {
       currentLine = followLine();
     },
     'step': async ({ site, step }) => {
+      if (step.type === 'dev') {
+        currentLine(chalk.yellow(step.toString(), NEW_LINE));
+        currentLine = followLine();
+        return;
+      }
+
       if (site === 'step') {
         currentLine = await fixedLine();
         currentLine(chalk.hidden(CHECK_MARK), WS, chalk.grey(step.toString()));
       }
     },
-    'step.pass': async ({ site, step }) => {
+    'step.pass': async ({ site, step, result }) => {
+      if (step.type === 'dev') {
+        if (result.inspect) {
+          let { selector: query, target } = result.inspect;
+
+          const textForTable = (text: string): string => {
+            if (!text) {
+              return text;
+            }
+
+            const MAX_LENGTH = 40;
+            if (text.length < MAX_LENGTH) {
+              return text;
+            }
+
+            return text.substring(0, MAX_LENGTH) + '...';
+          };
+
+          if (Array.isArray(target)) {
+            if (target.length > 1) {
+              stdout.write(`$(\`${query}\`) found ${target.length} elements`);
+              stdout.write(NEW_LINE);
+
+              const list: any[] = [];
+              for (const element of target) {
+                const text = textForTable(await element.innerText());
+                list.push({
+                  innerText: text
+                });
+              }
+
+              console.table(list);
+              return;
+            }
+
+            target = target[0];
+          }
+
+          if (target) {
+            stdout.write(`$(\`${query}\`) found 1 element`);
+            stdout.write(NEW_LINE);
+
+            console.table({
+              innerText: textForTable(await target.innerText())
+            });
+
+            return;
+          }
+
+          stdout.write(chalk.bgRed(`$(\`${query}\`) didn't find any elements`));
+          stdout.write(NEW_LINE);
+        }
+
+        return;
+      }
+
       if (site === 'step' && step.type !== 'do') {
         currentLine(chalk.green(CHECK_MARK), WS, chalk.grey(step.toString()), NEW_LINE);
         currentLine = followLine();
@@ -101,6 +162,6 @@ export function stdReporting(): Plugin {
         currentLine(chalk.green(CHECK_MARK), WS, chalk.grey(message), NEW_LINE);
         currentLine = followLine();
       }
-    }
+    },
   });
 }

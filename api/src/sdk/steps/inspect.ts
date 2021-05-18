@@ -38,6 +38,6 @@ export class InspectStep implements DevStep {
   }
 
   toString() {
-    return 'I inspect';
+    return '__inspect';
   }
 }

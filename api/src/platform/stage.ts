@@ -1,5 +1,6 @@
 import { Command } from '../sdk/command';
 import { Script } from '../sdk/script';
+import { Suite } from '../sdk/suite';
 import { TestFail, TestPass } from '../sdk/test-result';
 import { Zone } from './zone';
 
@@ -8,10 +9,10 @@ export type StageExecutionResult = void;
 // todo: better type
 export type Stage<Z extends Zone, S> = (scope: S) => Promise<StageExecutionResult>;
 
-export type InitScope = void;
-export type DestroyScope = InitScope;
-export type PassScope = { site: 'init' | 'destroy' | 'runtime' };
-export type FailScope = PassScope & { result: Error };
+export type StartScope = void;
+export type StopScope = void;
+export type InitScope = { suite: Suite };
+export type ErrorScope = { reason: Error };
 
 export type FeatureScope = { script: Script };
 export type ScenarioScope = FeatureScope & { scenario: string };
@@ -26,10 +27,10 @@ export type RecipePassScope = RecipeScope & { message: string };
 export type RecipeFailScope = RecipeScope & { result: Error };
 
 export type Stages = {
+  'start': Stage<'start', StartScope>;
+  'stop': Stage<'stop', StopScope>;
   'init': Stage<'init', InitScope>;
-  'destroy': Stage<'destroy', DestroyScope>;
-  'pass': Stage<'pass', PassScope>,
-  'fail': Stage<'pass', FailScope>
+  'error': Stage<'error', ErrorScope>
 
   'before.feature': Stage<'before.feature', FeatureScope>;
   'after.feature': Stage<'after.feature', FeatureScope>;

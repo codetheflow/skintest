@@ -1,9 +1,24 @@
-import { StorySchema, ScenarioSchema, StoryStep } from './schema';
 import { invalidArgumentError } from '../common/errors';
 import { Command } from './command';
 import { Feature, Scenario } from './feature';
+import { ScenarioSchema, StorySchema } from './schema';
 
-export class Script implements Feature, Scenario {
+export interface Script {
+  readonly name: string;
+  
+  beforeFeature: ReadonlyArray<Command>;
+  afterFeature: ReadonlyArray<Command>
+
+  beforeScenario: ReadonlyArray<Command>;
+  afterScenario: ReadonlyArray<Command>;
+
+  beforeStep: ReadonlyArray<Command>;
+  afterStep: ReadonlyArray<Command>;
+
+  scenarios: ReadonlyArray<[string, ReadonlyArray<Command>]>;
+}
+
+export class RuntimeScript implements Script, Feature, Scenario {
   beforeFeature: Command[] = [];
   afterFeature: Command[] = []
 
@@ -15,7 +30,7 @@ export class Script implements Feature, Scenario {
 
   scenarios: Array<[string, Command[]]> = [];
 
-  constructor(public readonly name: string) {
+  constructor(public name: string) {
   }
 
   before(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema): Feature {

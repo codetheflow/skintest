@@ -1,16 +1,18 @@
-import { getSuite } from './suite';
 import { Guard } from '../common/guard';
-import { Script } from './script';
-import { StorySchema, ScenarioSchema } from './schema';
+import { ScenarioSchema, StorySchema } from './schema';
+import { RuntimeScript } from './script';
+import { getSuite } from './suite';
 
 export function feature(name: string): Feature {
   const suite = getSuite();
+
+  // todo: make error from errors
   Guard.notNull(
     suite,
     `suite is not defined, make sure that you are running tests by using skintest's platform() function`
   );
 
-  const script = new Script(name);
+  const script = new RuntimeScript(name);
   suite.addScript(script);
   return script;
 };
