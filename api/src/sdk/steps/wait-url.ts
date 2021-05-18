@@ -1,11 +1,16 @@
 import { Guard } from '../../common/guard';
 import { ClientStep, StepContext } from '../command';
+import { Meta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class WaitUrlStep implements ClientStep {
   type: 'client' = 'client';
 
-  constructor(private url: string) {
+  constructor(
+    public meta: Promise<Meta>,
+    private url: string
+  ) {
+    Guard.notNull(meta, 'meta');
     Guard.notNull(url, 'url');
   }
 

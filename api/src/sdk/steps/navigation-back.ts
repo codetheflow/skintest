@@ -1,10 +1,15 @@
+import { Guard } from '../../common/guard';
 import { ClientStep, StepContext } from '../command';
+import { Meta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class NavigationBackStep implements ClientStep {
   type: 'client' = 'client';
 
-  constructor() {
+  constructor(
+    public meta: Promise<Meta>
+    ) {
+      Guard.notNull(meta, 'meta');
   }
 
   execute(context: StepContext): Promise<TestExecutionResult> {

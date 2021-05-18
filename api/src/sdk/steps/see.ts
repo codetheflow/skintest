@@ -5,6 +5,7 @@ import { AssertHost, BinaryAssert, ListAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query, QueryList } from '../query';
+import { Meta } from '../reflect';
 import { notFoundElement, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 
@@ -12,10 +13,12 @@ export class SeeStep implements AssertStep {
   type: 'assert' = 'assert';
 
   constructor(
+    public meta: Promise<Meta>,
     private query: Query<any> | QueryList<any>,
     private assert: BinaryAssert<any> | ListAssert<any>,
     private value: any
   ) {
+    Guard.notNull(meta, 'meta');
     Guard.notNull(query, 'query');
   }
 

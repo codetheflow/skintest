@@ -34,3 +34,7 @@ export function noCurrentPage() {
 export function elementNotFoundError(selector: string) {
   return error('elementNotFound', `element \`${selector}\` is not found`);
 }
+
+export function callerNotFoundError(frame: string) {
+  return error('callerNotFoundError', `caller is not found in the ${frame}`);
+}

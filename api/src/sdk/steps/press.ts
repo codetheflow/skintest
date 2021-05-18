@@ -1,12 +1,17 @@
 import { Guard } from '../../common/guard';
 import { ClientStep, StepContext } from '../command';
 import { KeyboardKey } from '../keyboard';
+import { Meta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class PressStep implements ClientStep {
   type: 'client' = 'client';
 
-  constructor(private key: KeyboardKey) {
+  constructor(
+    public meta: Promise<Meta>,
+    private key: KeyboardKey
+  ) {
+    Guard.notNull(meta, 'meta');
     Guard.notEmpty(key, 'key');
   }
 

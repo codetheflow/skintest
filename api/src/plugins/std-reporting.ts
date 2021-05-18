@@ -1,6 +1,7 @@
 import * as chalk from 'chalk';
 import { Plugin } from '../platform/plugin';
 import { OnStage } from '../platform/stage';
+import { getMessage } from '../sdk/command';
 
 const { stdout, stderr, stdin } = process;
 
@@ -65,14 +66,16 @@ export function stdReporting(): Plugin {
     },
     'step': async ({ site, step }) => {
       if (step.type === 'dev') {
-        currentLine(chalk.yellow(step.toString(), NEW_LINE));
+        const message = await getMessage(step);
+        currentLine(chalk.yellow(message, NEW_LINE));
         currentLine = followLine();
         return;
       }
 
       if (site === 'step') {
         currentLine = await fixedLine();
-        currentLine(chalk.hidden(CHECK_MARK), WS, chalk.grey(step.toString()));
+        const message = await getMessage(step);
+        currentLine(chalk.hidden(CHECK_MARK), WS, chalk.grey(message));
       }
     },
     'step.pass': async ({ site, step, result }) => {
@@ -132,13 +135,15 @@ export function stdReporting(): Plugin {
       }
 
       if (site === 'step' && step.type !== 'do') {
-        currentLine(chalk.green(CHECK_MARK), WS, chalk.grey(step.toString()), NEW_LINE);
+        const message = await getMessage(step);
+        currentLine(chalk.green(CHECK_MARK), WS, chalk.grey(message), NEW_LINE);
         currentLine = followLine();
       }
     },
     'step.fail': async ({ site, result, step }) => {
       if (site === 'step') {
-        currentLine(chalk.red(CROSS_MARK), WS, chalk.gray(step.toString()), NEW_LINE);
+        const message = await getMessage(step);
+        currentLine(chalk.red(CROSS_MARK), WS, chalk.gray(message), NEW_LINE);
         currentLine = followLine();
 
         if ('status' in result) {

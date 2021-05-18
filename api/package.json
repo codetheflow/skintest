@@ -39,6 +39,7 @@
   "dependencies": {
     "chalk": "^4.1.1",
     "glob": "^7.1.6",
-    "playwright": "^1.10.0"
+    "playwright": "^1.10.0",
+    "source-map": "^0.7.3"
   }
 }

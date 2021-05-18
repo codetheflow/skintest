@@ -3,12 +3,17 @@ import { Guard } from '../../common/guard';
 import { isString } from '../../common/utils';
 import { DevStep, StepContext } from '../command';
 import { Query, QueryList } from '../query';
+import { Meta } from '../reflect';
 import { inspect, TestExecutionResult } from '../test-result';
 
 export class InspectStep implements DevStep {
   type: 'dev' = 'dev';
 
-  constructor(private query: string | Query<any> | QueryList<any>) {
+  constructor(
+    public meta: Promise<Meta>,
+    private query: string | Query<any> | QueryList<any>
+  ) {
+    Guard.notNull(meta, 'meta');
     Guard.notNull(query, 'query');
   }
 
