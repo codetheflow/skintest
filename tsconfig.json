@@ -1,0 +1,34 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2015",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    // "paths": {
+    //   "@skintest/common": [
+    //     "packages/common/src/public-api.ts"
+    //   ],
+    //   "@skintest/platform": [
+    //     "packages/platform/src/public-api.ts"
+    //   ],
+    //   "@skintest/sdk": [
+    //     "packages/sdk/src/public-api.ts"
+    //   ],
+    //   "@skintest/plugins": [
+    //     "packages/plugins/src/public-api.ts"
+    //   ]
+    // }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+  ]
+}

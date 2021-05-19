@@ -1,4 +1,4 @@
-import { I, recipe } from '@skintest/api';
+import { I, recipe } from '@skintest/sdk';
 import { add_todo } from './add-todo';
 
 export const generate_todos = recipe.client(

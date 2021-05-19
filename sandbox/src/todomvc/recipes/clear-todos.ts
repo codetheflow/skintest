@@ -1,4 +1,4 @@
-import { I, recipe, StorySchema } from '@skintest/api';
+import { I, recipe, StorySchema } from '@skintest/sdk';
 import { todos } from '../components/todos';
 
 export const clear_todos = recipe.client(

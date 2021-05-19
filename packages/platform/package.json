@@ -1,16 +1,15 @@
 {
-  "name": "@skintest/sandbox",
-  "version": "0.0.1",
-  "description": "skintest sandbox",
-  "main": "dist/skintest.js",
+  "name": "@skintest/platform",
+  "description": "skintest platform",
+  "main": "dist/public-api.js",
+  "types": "dist/public-api.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc --build",
     "build:watch": "yarn clean && tsc --watch",
-    "clean": "rimraf dist",
-    "start": "yarn build && node ./dist/skintest.js"
+    "clean": "rimraf dist"
   },
   "repository": {
     "type": "git",
@@ -18,12 +17,10 @@
   },
   "keywords": [
     "skintest",
-    "sandbox",
+    "platform",
     "e2e",
-    "end to end",
     "test",
-    "qa",
-    "quality"
+    "qa"
   ],
   "author": "codetheflow",
   "bugs": {
@@ -31,13 +28,16 @@
   },
   "homepage": "https://github.com/codetheflow/skintest#readme",
   "devDependencies": {
+    "@types/glob": "7.1.3",
     "@types/node": "15.0.1",
     "rimraf": "3.0.2",
     "typescript": "4.2.4"
   },
   "dependencies": {
-    "@skintest/platform": "*",
-    "@skintest/plugins": "*",
+    "playwright": "1.10.0"
+  },
+  "peerDependencies": {
+    "@skintest/common": "*",
     "@skintest/sdk": "*"
   }
 }

@@ -1,4 +1,4 @@
-import { feature, has, I } from '@skintest/api';
+import { feature, has, I } from '@skintest/sdk';
 import { page } from '../components/page';
 import { todos } from '../components/todos';
 import { add_todo } from '../recipes/add-todo';

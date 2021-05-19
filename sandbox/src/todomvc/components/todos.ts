@@ -1,4 +1,4 @@
-import { $, $$ } from '@skintest/api';
+import { $, $$ } from '@skintest/sdk';
 import { env } from '../project/env';
 
 export const todos = {
