@@ -17,5 +17,5 @@ export { Script } from './script';
 export { CommandFailScope, CommandPassScope, CommandScope, ErrorScope, FeatureScope, InitScope, OnStage, RecipeFailScope, RecipePassScope, RecipeScope, ScenarioScope, Stage, Stages, Staging, StartScope, StepScope, StopScope } from './stage';
 export { Breakpoint, Debugger } from './steps/debug';
 export { newSuite, Suite, SuiteOperations } from './suite';
-export { pass, TestExecutionResult, unknownFail } from './test-result';
+export { InspectInfo, pass, TestExecutionResult, TestFail, TestPass, unknownFail } from './test-result';
 

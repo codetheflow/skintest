@@ -1,8 +1,8 @@
 {
   "name": "@skintest/sdk",
   "description": "skintest sdk",
-  "main": "dist/public-api.js",
-  "types": "dist/public-api.d.ts",
+  "main": "dist/src/public-api.js",
+  "types": "dist/src/public-api.d.ts",
   "files": [
     "dist"
   ],

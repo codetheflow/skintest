@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "composite": true,
-    "rootDir": "src"
+    "rootDir": "."
   },
   "include": [
     "src/**/*.ts"
