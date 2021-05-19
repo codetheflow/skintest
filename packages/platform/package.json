@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "yarn clean && tsc --build",
-    "build:watch": "yarn clean && tsc --watch",
+    "build:watch": "yarn clean && tsc --build --watch",
     "clean": "rimraf dist"
   },
   "repository": {

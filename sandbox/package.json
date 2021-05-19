@@ -1,16 +1,14 @@
 {
   "name": "@skintest/sandbox",
-  "version": "0.0.1",
   "description": "skintest sandbox",
-  "main": "dist/skintest.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "yarn clean && tsc",
-    "build:watch": "yarn clean && tsc --watch",
+    "build": "yarn clean && tsc --build",
+    "build:watch": "yarn clean && tsc --build --watch",
     "clean": "rimraf dist",
-    "start": "yarn build && node ./dist/skintest.js"
+    "start": "node ./dist/src/skintest.js" 
   },
   "repository": {
     "type": "git",

@@ -2,8 +2,20 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": "."
   },
   "include": [
     "src/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../packages/sdk"
+    },
+    {
+      "path": "../packages/platform"
+    },
+    {
+      "path": "../packages/plugins"
+    }
   ]
 }

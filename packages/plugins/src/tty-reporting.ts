@@ -12,6 +12,10 @@ const CURSOR_CODE = '\x1b[6n'
 const CURSOR_PATTERN = /\[(\d+)\;(\d+)R$/;
 
 export function getCursor(): Promise<[number, number]> {
+  if (!('setRawMode' in stdin)) {
+    return Promise.resolve([0, 0]);
+  }
+
   return new Promise((resolve, reject) => {
     stdin.setRawMode(true);
 
@@ -49,7 +53,7 @@ function followLine() {
   return (...text: string[]): boolean => stdout.write(text.join(''));
 }
 
-export function stdReporting(): Plugin {
+export function ttyReporting(): Plugin {
   let currentLine = followLine();
 
   return async (stage: OnStage) => stage({
