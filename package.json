@@ -9,9 +9,9 @@
   },
   "scripts": {
     "lerna": "lerna",
-    "start": "lerna run --stream start",
     "build": "lerna run build",
-    "build:watch": "lerna run --parallel build:watch"
+    "build:watch": "lerna run --parallel build:watch",
+    "start": "node sandbox/dist/src/skintest.js"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "4.22.0",
