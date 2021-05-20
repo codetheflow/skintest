@@ -1,6 +1,7 @@
-import { orchestrate, Plugin, Suite } from '@skintest/sdk';
+import { Suite } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { BrowserFactory } from './browser-factory';
+import { orchestrate, Plugin } from './plugin';
 import { Project } from './project';
 import { Scene } from './scene';
 
@@ -29,7 +30,7 @@ export class NodeProject implements Project {
         .getScripts()
         .filter(x => suite.operations.filterFeature(x.name));
 
-      for (let script of scripts) {
+      for (const script of scripts) {
         const browser = await createBrowser();
         try {
           const scene = new Scene(

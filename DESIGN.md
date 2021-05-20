@@ -90,7 +90,7 @@ ui automatization framework
 ### ideas
 
 ```typescript
-  .scenario('#dev check getting value'
+  .scenario('#now check getting value'
     , I.do(add_todo, 'send a letter')
     , I.fill(todos.what, from.text, todos.item_at(0)) // from.text
     , I.test('input contains text from the first todo')

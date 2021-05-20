@@ -8,7 +8,7 @@ export function orchestrate(plugins: Plugin[]): Staging {
     async (...scope: Parameters<Stages[Z]>): Promise<void> => {
 
       const onStage: OnStage = async stages => {
-        for (let key in stages) {
+        for (const key in stages) {
           if (zone === key) {
             const run = stages[zone];
             if (run) {
@@ -20,7 +20,7 @@ export function orchestrate(plugins: Plugin[]): Staging {
         }
       };
 
-      for (let plugin of plugins) {
+      for (const plugin of plugins) {
         await plugin(onStage);
       }
 

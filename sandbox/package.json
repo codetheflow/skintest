@@ -1,5 +1,7 @@
 {
   "name": "@skintest/sandbox",
+  "version": "0.0.0",
+  "private": true,
   "description": "skintest sandbox",
   "files": [
     "dist"

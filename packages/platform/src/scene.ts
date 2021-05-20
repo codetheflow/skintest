@@ -1,5 +1,6 @@
-import { Browser, ClientFunction, Command, CommandScope, DoStep, PageClient, Process, Script, ServerFunction, Staging, SuiteOperations } from '@skintest/sdk';
+import { Browser, ClientFunction, Command, DoStep, PageClient, Process, Script, ServerFunction, SuiteOperations } from '@skintest/sdk';
 import { Attempt } from './attempt';
+import { CommandScope, Staging } from './stage';
 
 const NO_SCENARIO = '';
 
@@ -38,7 +39,7 @@ export class Scene {
         .scenarios
         .filter(([name]) => this.operations.filterScenario(script.name, name));
 
-      for (let [scenario, steps] of scenarios) {
+      for (const [scenario, steps] of scenarios) {
         await this.scenario(script, scenario, steps);
       }
     }
@@ -77,7 +78,7 @@ export class Scene {
     );
 
     if (ok) {
-      for (let step of steps) {
+      for (const step of steps) {
         const result = await this.step(script, scenario, step);
         if (!result) {
           break;
@@ -160,13 +161,13 @@ export class Scene {
     };
 
     let result = true;
-    for (let step of steps) {
+    for (const step of steps) {
       await stepEffect({ ...scope, step });
 
       try {
         const test = await attempt.step(() => step.execute({ browser }));
         if (test.status === 'fail') {
-          await failEffect({ ...scope, step, result: test });
+          await failEffect({ ...scope, step, reason: test });
           if (step.type !== 'assert') {
             result = false;
             break;
@@ -189,7 +190,7 @@ export class Scene {
           }
         }
       } catch (ex) {
-        await failEffect({ ...scope, step, result: ex });
+        await failEffect({ ...scope, step, reason: ex });
         result = false;
       }
     }
@@ -233,7 +234,7 @@ export class Scene {
       } catch (ex) {
         await recipeFailEffect({
           ...scope,
-          result: ex
+          reason: ex
         });
 
         return false;
@@ -260,7 +261,7 @@ export class Scene {
     } catch (ex) {
       await recipeFailEffect({
         ...scope,
-        result: ex
+        reason: ex
       });
 
       return false;

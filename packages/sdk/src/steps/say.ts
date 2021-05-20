@@ -1,13 +1,13 @@
 import { Guard } from '@skintest/common';
 import { InfoStep, StepContext } from '../command';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class SayStep implements InfoStep {
   type: 'info' = 'info';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private message: string
   ) {
     Guard.notNull(meta, 'meta');
@@ -17,7 +17,7 @@ export class SayStep implements InfoStep {
     return asTest(Promise.resolve());
   }
 
-  toString() {
+  toString(): string {
     return `I say ${this.message}`;
   }
 }

@@ -1,5 +1,5 @@
 import { platform, playwrightLauncher } from '@skintest/platform';
-import { exploreFeatures, tagFilter, ttyReporting } from '@skintest/plugins';
+import { exploreFeatures, tagFilter, ttyLogo, ttyReport } from '@skintest/plugins';
 import * as path from 'path';
 
 platform()
@@ -10,9 +10,10 @@ platform()
       playwrightLauncher()
       , exploreFeatures({ dir })
       , tagFilter({
-        tags: ['#dev'],
+        tags: ['#now'],
         include: 'all-when-no-matched',
       })
-      , ttyReporting()
+      , ttyLogo()
+      , ttyReport()
     );
   });

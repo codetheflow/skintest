@@ -1,7 +1,4 @@
-import { Command } from './command';
-import { Script } from './script';
-import { Suite } from './suite';
-import { TestFail, TestPass } from './test-result';
+import { Command, Script, Suite, TestFail, TestPass } from '@skintest/sdk';
 import { Zone } from './zone';
 
 // todo: better type
@@ -18,11 +15,11 @@ export type StepScope = ScenarioScope & { step: Command };
 
 export type CommandScope = StepScope & { site: Exclude<Zone, 'init' | 'destroy'> };
 export type CommandPassScope = CommandScope & { result: TestPass };
-export type CommandFailScope = CommandScope & { result: TestFail | Error };
+export type CommandFailScope = CommandScope & { reason: TestFail | Error };
 
 export type RecipeScope = CommandScope;
 export type RecipePassScope = RecipeScope & { message: string };
-export type RecipeFailScope = RecipeScope & { result: Error };
+export type RecipeFailScope = RecipeScope & { reason: Error };
 
 export type Stages = {
   'start': Stage<'start', StartScope>;

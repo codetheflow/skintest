@@ -1,13 +1,13 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class NavigationForwardStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
   ) {
     Guard.notNull(meta, 'meta');
   }
@@ -19,7 +19,7 @@ export class NavigationForwardStep implements ClientStep {
     return asTest(page.goForward());
   }
 
-  toString() {
+  toString(): string {
     return `I go forward`;
   }
 }

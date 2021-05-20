@@ -1,5 +1,6 @@
-import { invalidArgumentError } from '@skintest/common';
-import { OnStage, Plugin, Suite } from '@skintest/sdk';
+import { escapeRE, invalidArgumentError } from '@skintest/common';
+import { OnStage, Plugin } from '@skintest/platform';
+import { Suite } from '@skintest/sdk';
 
 type TagFilter = {
   tags: string[],
@@ -57,14 +58,10 @@ export function tagFilter(options: TagFilter): Plugin {
   });
 }
 
-// todo: add include and exclude maybe arrays?
-function matchHashTag(text: string) {
-  text = ('' + text).toLowerCase();
+function matchHashTag(search: string) {
   return (tag: string) => {
-    tag = ('' + tag).toLowerCase();
-
-    // todo: make regular expression
-    return text.indexOf(tag) >= 0;
+    const contains = new RegExp(`(^|\\s)${escapeRE(tag)}(\\s|$)`, 'gi');
+    return contains.test(search);
   };
 }
 

@@ -1,5 +1,6 @@
 {
   "name": "@skintest/plugins",
+  "version": "0.0.0",
   "description": "skintest plugins",
   "main": "dist/src/public-api.js",
   "types": "dist/src/public-api.d.ts",

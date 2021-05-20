@@ -1,13 +1,13 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class WaitUrlStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private url: string
   ) {
     Guard.notNull(meta, 'meta');
@@ -21,7 +21,7 @@ export class WaitUrlStep implements ClientStep {
     return asTest(page.waitForNavigation(this.url));
   }
 
-  toString() {
+  toString(): string {
     return `I wait url ${this.url}`;
   }
 }

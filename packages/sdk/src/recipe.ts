@@ -1,5 +1,4 @@
-import { invalidArgumentError } from '@skintest/common';
-import { Guard } from '@skintest/common';
+import { Guard, invalidArgumentError } from '@skintest/common';
 import { DOMElement } from './dom';
 import { Page } from './page';
 import { Query, QueryList } from './query';

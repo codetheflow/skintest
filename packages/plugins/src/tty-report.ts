@@ -1,7 +1,19 @@
-import { getMessage, OnStage, Plugin } from '@skintest/sdk';
+import { OnStage, Plugin } from '@skintest/platform';
+import { Command } from '@skintest/sdk';
 import * as chalk from 'chalk';
 
 const { stdout, stderr, stdin } = process;
+
+const dev = chalk.yellow;
+const error = chalk.bgRedBright.white;
+const fail = chalk.red;
+const h1 = chalk.magentaBright;
+const h2 = chalk.white;
+const hidden = chalk.hidden;
+const info = chalk.grey;
+const pass = chalk.greenBright;
+const tag = chalk.bgGray.whiteBright;
+const logo = chalk.grey;
 
 const CHECK_MARK = '\u2713';
 const CROSS_MARK = '\u2613';
@@ -9,20 +21,27 @@ const NEW_LINE = '\n';
 const WS = ' ';
 
 const CURSOR_CODE = '\x1b[6n'
-const CURSOR_PATTERN = /\[(\d+)\;(\d+)R$/;
+const CURSOR_RE = /\[(\d+)\;(\d+)R$/;
+
+const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
+
+async function getMessage(command: Command): Promise<string> {
+  try {
+    const meta = await command.meta;
+    return meta.code;
+  } catch {
+    return command.toString();
+  }
+}
 
 export function getCursor(): Promise<[number, number]> {
-  if (!('setRawMode' in stdin)) {
-    return Promise.resolve([0, 0]);
-  }
-
   return new Promise((resolve, reject) => {
     stdin.setRawMode(true);
 
     stdin.once('data', data => {
       stdin.setRawMode(false);
 
-      const match = CURSOR_PATTERN.exec(data.toString());
+      const match = CURSOR_RE.exec(data.toString());
       if (match) {
         const [x, y] = match.slice(1, 3).reverse().map(Number) as [number, number];
         resolve([x - 1, y - 1]);
@@ -53,23 +72,39 @@ function followLine() {
   return (...text: string[]): boolean => stdout.write(text.join(''));
 }
 
-export function ttyReporting(): Plugin {
+function writeError(ex: Error) {
+  stderr.write(error(`${ex.name}: ${ex.message}`));
+  stderr.write(NEW_LINE);
+
+  if (ex.stack) {
+    stderr.write(fail(ex.stack));
+  }
+
+  stderr.write(NEW_LINE);
+}
+
+export function ttyReport(): Plugin {
   let currentLine = followLine();
 
   return async (stage: OnStage) => stage({
-    'error': async ({ reason }) => {
-      // todo: better reporting error
-      console.error(reason);
+    'before.feature': async ({ script }) => {
+      const info = await script.meta;
+      currentLine(h1(info.file + `:${info.line}:${info.column}`), NEW_LINE);
+      currentLine = followLine();
     },
-    'before.scenario': async ({ script, scenario }) => {
+    'error': async ({ reason }) => writeError(reason),
+    'before.scenario': async ({ scenario }) => {
       currentLine = await fixedLine();
-      currentLine(chalk.whiteBright.bold(script.name), '\\', chalk.whiteBright(scenario), NEW_LINE);
+      const label = scenario.replace(TAG_RE, (...args) =>
+        args[1] + tag(args[2]) + args[3]);
+
+      currentLine(h2(label), NEW_LINE);
       currentLine = followLine();
     },
     'step': async ({ site, step }) => {
       if (step.type === 'dev') {
         const message = await getMessage(step);
-        currentLine(chalk.yellow(message, NEW_LINE));
+        currentLine(dev(message, NEW_LINE));
         currentLine = followLine();
         return;
       }
@@ -77,7 +112,7 @@ export function ttyReporting(): Plugin {
       if (site === 'step') {
         currentLine = await fixedLine();
         const message = await getMessage(step);
-        currentLine(chalk.hidden(CHECK_MARK), WS, chalk.grey(message));
+        currentLine(hidden(CHECK_MARK), WS, info(message));
       }
     },
     'step.pass': async ({ site, step, result }) => {
@@ -129,45 +164,34 @@ export function ttyReporting(): Plugin {
             return;
           }
 
-          stdout.write(chalk.bgRed(`$(\`${query}\`) didn't find any elements`));
+          stdout.write(error(`$(\`${query}\`) didn't find any elements`));
           stdout.write(NEW_LINE);
         }
 
         return;
       }
 
-      if (site === 'step' && step.type !== 'do') {
+      if (site === 'step') {
         const message = await getMessage(step);
-        currentLine(chalk.green(CHECK_MARK), WS, chalk.grey(message), NEW_LINE);
+        currentLine(pass(CHECK_MARK), WS, info(message), NEW_LINE);
         currentLine = followLine();
       }
     },
-    'step.fail': async ({ site, result, step }) => {
+    'recipe.fail': async ({ reason }) => writeError(reason),
+    'step.fail': async ({ site, reason, step }) => {
       if (site === 'step') {
         const message = await getMessage(step);
-        currentLine(chalk.red(CROSS_MARK), WS, chalk.gray(message), NEW_LINE);
+        currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
         currentLine = followLine();
 
-        if ('status' in result) {
-          stderr.write(chalk.hidden(CROSS_MARK));
+        if ('status' in reason) {
+          stderr.write(hidden(CROSS_MARK));
           stderr.write(WS);
-          stderr.write(chalk.bgRedBright.white(result.description));
+          stderr.write(error(reason.description));
           stderr.write(NEW_LINE);
         } else {
-          if (result.stack) {
-            stderr.write(chalk.red(result.stack));
-          } else {
-            stderr.write(chalk.bgRed(`${result.name}: ${result.message}`));
-          }
-
-          stderr.write(NEW_LINE);
+          writeError(reason);
         }
-      }
-    },
-    'recipe.pass': async ({ site, message }) => {
-      if (site === 'step') {
-        currentLine(chalk.green(CHECK_MARK), WS, chalk.grey(message), NEW_LINE);
-        currentLine = followLine();
       }
     },
   });

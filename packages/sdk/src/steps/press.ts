@@ -1,14 +1,14 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
 import { KeyboardKey } from '../keyboard';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class PressStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private key: KeyboardKey
   ) {
     Guard.notNull(meta, 'meta');
@@ -22,7 +22,7 @@ export class PressStep implements ClientStep {
     return asTest(page.keyPress(this.key));
   }
 
-  toString() {
+  toString(): string {
     return `I press ${this.key}`;
   }
 }

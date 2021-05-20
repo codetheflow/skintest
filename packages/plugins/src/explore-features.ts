@@ -1,4 +1,4 @@
-import { OnStage, Plugin } from '@skintest/sdk';
+import { OnStage, Plugin } from '@skintest/platform';
 import * as glob from 'glob';
 import * as path from 'path';
 
@@ -14,11 +14,8 @@ export function exploreFeatures(options: ExploreFeatures): Plugin {
       // todo: do we need to make it real async?
       // todo: reporting
       const files = glob.sync('*.js', { cwd: dir });
-      console.log(`found ${files.length} feature file(s)`);
-      for (let file of files) {
+      for (const file of files) {
         const feature = path.join(dir, file);
-        console.log(`explore: ${feature}`);
-
         require(feature);
       }
     }

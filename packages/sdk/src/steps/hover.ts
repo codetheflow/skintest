@@ -2,14 +2,14 @@ import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class HoverStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: Query<any>
   ) {
     Guard.notNull(meta, 'meta');
@@ -24,7 +24,7 @@ export class HoverStep implements ClientStep {
     return asTest(page.hover(selector));
   }
 
-  toString() {
+  toString(): string {
     const selector = this.query.toString();
     return `I hover ${formatSelector(selector)}`;
   }

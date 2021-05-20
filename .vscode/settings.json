@@ -2,10 +2,15 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.preferences.quoteStyle": "single",
   "javascript.preferences.quoteStyle": "single",
+  "files.insertFinalNewline": false,
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
   },
+  "eslint.workingDirectories": [
+    "packages",
+    "sandbox"
+  ],
 }

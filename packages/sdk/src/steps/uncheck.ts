@@ -2,14 +2,14 @@ import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class UncheckStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: Query<any>
   ) {
     Guard.notNull(meta, 'meta');
@@ -24,7 +24,7 @@ export class UncheckStep implements ClientStep {
     return asTest(page.uncheck(selector));
   }
 
-  toString() {
+  toString(): string {
     const selector = this.query.toString();
     return `I uncheck ${formatSelector(selector)}`;
   }

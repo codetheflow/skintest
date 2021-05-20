@@ -1,13 +1,13 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class OpenStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private name: string
   ) {
     Guard.notNull(meta, 'meta');
@@ -20,7 +20,7 @@ export class OpenStep implements ClientStep {
     return asTest(browser.openPage(this.name));
   }
 
-  toString() {
+  toString(): string {
     return `I open ${this.name}`;
   }
 }

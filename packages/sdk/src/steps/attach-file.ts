@@ -2,14 +2,14 @@ import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class AttachFileStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: Query<any>,
     private file: any,
   ) {
@@ -25,7 +25,7 @@ export class AttachFileStep implements ClientStep {
     return asTest(page.attachFile(selector, this.file));
   }
 
-  toString() {
+  toString(): string {
     const selector = this.query.toString();
     return `I attach file \`${this.file}\` to ${formatSelector(selector)}`
   }

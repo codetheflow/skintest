@@ -52,12 +52,12 @@ feature('todos add')
     , I.see(todos.list, has.length, 10)
   )
 
-  .scenario('#dev check that second todo page has updated list after reload'
+  .scenario('check that second todo page has updated list after reload'
     , I.open(page.one)
     , I.goto(todos.url)
 
     , I.open(page.two)
-    , I.goto(todos.url + 'qwerw')
+    , I.goto(todos.url)
     , I.do(add_todo, 'walk the dog')
 
     , I.open(page.one)
@@ -79,5 +79,3 @@ feature('todos add')
     , I.test('input has the same value as first todo')
     , I.see(todos.what, has.value, 'feed dragon')
   )
-
-

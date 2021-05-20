@@ -11,7 +11,7 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
 
   async value(): Promise<string> {
     const value = await this.page.$eval<any, HTMLInputElement>(this.selector, (el) => el.value)
-    return value;;
+    return value;
   }
 
   async hasFocus(): Promise<boolean> {

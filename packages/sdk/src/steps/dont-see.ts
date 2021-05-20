@@ -3,7 +3,7 @@ import { AssertHost, BinaryAssert, ListAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query, QueryList } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { dontSeeFail, pass, TestExecutionResult } from '../test-result';
 import { SeeStep } from './see';
 
@@ -11,7 +11,7 @@ export class DontSeeStep implements AssertStep {
   type: 'assert' = 'assert';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: Query<any> | QueryList<any>,
     private assert: BinaryAssert<any> | ListAssert<any>,
     private value: any
@@ -30,7 +30,7 @@ export class DontSeeStep implements AssertStep {
     return pass();
   }
 
-  toString() {
+  toString(): string {
     const query = this.query.toString();
     if (isUndefined(this.assert)) {
       return formatSelector(query);

@@ -3,7 +3,7 @@ import { DevStep, StepContext } from '../command';
 import { DOMElement } from '../dom';
 import { ElementRef, ElementRefList, Page } from '../page';
 import { Query, QueryList } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { pass, TestExecutionResult } from '../test-result';
 
 export interface Debugger {
@@ -32,7 +32,7 @@ export class DebugStep implements DevStep {
   type: 'dev' = 'dev';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private breakpoint: Breakpoint
   ) {
     Guard.notNull(meta, 'meta');
@@ -48,7 +48,7 @@ export class DebugStep implements DevStep {
     return pass();
   }
 
-  toString() {
+  toString(): string {
     return '__debug';
   }
 }

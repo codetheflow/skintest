@@ -1,14 +1,14 @@
-import { invalidArgumentError, isString, Guard } from '@skintest/common';
+import { Guard, invalidArgumentError, isString } from '@skintest/common';
 import { DevStep, StepContext } from '../command';
 import { Query, QueryList } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { inspect, TestExecutionResult } from '../test-result';
 
 export class InspectStep implements DevStep {
   type: 'dev' = 'dev';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: string | Query<any> | QueryList<any>
   ) {
     Guard.notNull(meta, 'meta');
@@ -40,7 +40,7 @@ export class InspectStep implements DevStep {
     }
   }
 
-  toString() {
+  toString(): string {
     return '__inspect';
   }
 }

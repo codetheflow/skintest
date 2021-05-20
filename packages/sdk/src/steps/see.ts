@@ -1,10 +1,9 @@
-import { invalidArgumentError, isUndefined } from '@skintest/common';
-import { Guard } from '@skintest/common';
+import { Guard, invalidArgumentError, isUndefined } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query, QueryList } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { notFoundElement, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 
@@ -12,7 +11,7 @@ export class SeeStep implements AssertStep {
   type: 'assert' = 'assert';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: Query<any> | QueryList<any>,
     private assert: BinaryAssert<any> | ListAssert<any>,
     private value: any
@@ -67,7 +66,7 @@ export class SeeStep implements AssertStep {
     }
   }
 
-  toString() {
+  toString(): string {
     const selector = this.query.toString();
 
     if (isUndefined(this.assert)) {

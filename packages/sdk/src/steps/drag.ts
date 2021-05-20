@@ -2,14 +2,14 @@ import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { Query } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class DragStep implements ClientStep {
   type: 'client' = 'client';
   
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: Query<any>,
     private x: number,
     private y: number
@@ -26,7 +26,7 @@ export class DragStep implements ClientStep {
     return asTest(page.drag(selector, this.x, this.y));
   }
 
-  toString() {
+  toString(): string {
     const selector = this.query.toString();
     return `I drag ${formatSelector(selector)} x: ${this.x}, y: ${this.y}`
   }

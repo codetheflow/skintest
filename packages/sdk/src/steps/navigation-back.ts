@@ -1,13 +1,13 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class NavigationBackStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>
+    public meta: Promise<StepMeta>
     ) {
       Guard.notNull(meta, 'meta');
   }
@@ -19,7 +19,7 @@ export class NavigationBackStep implements ClientStep {
     return asTest(page.goBack());
   }
 
-  toString() {
+  toString(): string {
     return `I go back`;
   }
 }

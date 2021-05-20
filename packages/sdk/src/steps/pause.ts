@@ -1,13 +1,13 @@
 import { Guard } from '@skintest/common';
 import { DevStep, StepContext } from '../command';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class PauseStep implements DevStep {
   type: 'dev' = 'dev';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
   ) {
     Guard.notNull(meta, 'meta');
   }
@@ -19,7 +19,7 @@ export class PauseStep implements DevStep {
     return asTest(page.pause());
   }
 
-  toString() {
+  toString(): string {
     return '__pause';
   }
 }

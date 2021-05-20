@@ -1,4 +1,5 @@
 import { Guard } from '@skintest/common';
+import { getMeta } from './reflect';
 import { ScenarioSchema, StorySchema } from './schema';
 import { RuntimeScript } from './script';
 import { getSuite } from './suite';
@@ -12,10 +13,10 @@ export function feature(name: string): Feature {
     `suite is not defined, make sure that you are running tests by using skintest's platform() function`
   );
 
-  const script = new RuntimeScript(name);
+  const script = new RuntimeScript(name, getMeta());
   suite.addScript(script);
   return script;
-};
+}
 
 export interface Feature {
   before(what: 'feature' | 'scenario' | 'step', ...plan: StorySchema): Feature;

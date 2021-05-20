@@ -1,14 +1,14 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
 import { Query } from '../query';
-import { Meta } from '../reflect';
+import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class TypeStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<Meta>,
+    public meta: Promise<StepMeta>,
     private query: Query<any>,
     private text: string
   ) {
@@ -24,7 +24,7 @@ export class TypeStep implements ClientStep {
     return asTest(page.type(selector, this.text));
   }
 
-  toString() {
+  toString(): string {
     return `I type ${this.text}`;
   }
 }
