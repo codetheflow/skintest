@@ -7,13 +7,12 @@ const { stdout, stderr, stdin } = process;
 const dev = chalk.yellow;
 const error = chalk.bgRedBright.white;
 const fail = chalk.red;
-const h1 = chalk.magentaBright;
+const h1 = chalk.cyan;
 const h2 = chalk.white;
 const hidden = chalk.hidden;
 const info = chalk.grey;
-const pass = chalk.greenBright;
-const tag = chalk.bgGray.whiteBright;
-const logo = chalk.grey;
+const pass = chalk.green;
+const tag = chalk.bgGrey.white;
 
 const CHECK_MARK = '\u2713';
 const CROSS_MARK = '\u2613';

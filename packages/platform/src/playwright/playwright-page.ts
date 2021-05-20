@@ -106,21 +106,12 @@ export class PlaywrightPage implements Page {
   }
 
   async dbgQuery<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
-    try {
-      const handle = await this.page.waitForSelector(selector);
-      if (handle) {
-        return new PlaywrightElement<T>(handle, this.page, selector);
-      }
-
-      return null
-    } catch (ex) {
-      if (ex instanceof playwright.errors.TimeoutError) {
-        // todo: add logging
-        return null;
-      }
-
-      throw ex;
+    const handle = await this.page.$(selector);
+    if (handle) {
+      return new PlaywrightElement<T>(handle, this.page, selector);
     }
+
+    return null;
   }
 
   async dbgQueryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {

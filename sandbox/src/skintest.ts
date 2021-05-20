@@ -7,8 +7,13 @@ platform()
     const dir = path.join(__dirname, 'todomvc/features');
 
     await project.run(
-      playwrightLauncher()
-      , exploreFeatures({ dir })
+      playwrightLauncher({
+        headless: true,
+        timeout: 100,
+      })
+      , exploreFeatures({
+        dir
+      })
       , tagFilter({
         tags: ['#now'],
         include: 'all-when-no-matched',

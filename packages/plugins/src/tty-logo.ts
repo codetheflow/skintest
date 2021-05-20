@@ -1,10 +1,9 @@
 import { OnStage, Plugin } from '@skintest/platform';
 import * as chalk from 'chalk';
 
-const { stdout, stderr, stdin } = process;
+const { stdout } = process;
 
-const ART = String.raw`
-__   .__        __                   __   
+const ART = String.raw`__   .__        __                   __   
 _____|  | _|__| _____/  |_  ____   _______/  |_ 
 /  ___/  |/ /  |/    \   __\/ __ \ /  ___/\   __\
 \___ \|    <|  |   |  \  | \  ___/ \___ \  |  |  
