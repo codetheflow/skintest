@@ -3,9 +3,9 @@ import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './c
 import { DOMElement } from './dom';
 import { Ego } from './ego';
 import { KeyboardKey } from './keyboard';
+import { getStepMeta } from './meta';
 import { Query, QueryList } from './query';
 import { ClientDo, ClientRecipe, ServerDo, ServerRecipe } from './recipe';
-import { getStepMeta } from './reflect';
 import { ActionStep } from './steps/action';
 import { CheckStep } from './steps/check';
 import { ClickStep } from './steps/click';

@@ -1,7 +1,7 @@
 import { Guard } from '@skintest/common';
 import { DoStep, StepContext } from '../command';
+import { StepMeta } from '../meta';
 import { ClientRecipe, ServerRecipe } from '../recipe';
-import { StepMeta } from '../reflect';
 import { pass, TestExecutionResult } from '../test-result';
 
 export class ActionStep implements DoStep {

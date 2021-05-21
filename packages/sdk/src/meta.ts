@@ -1,12 +1,14 @@
-import { callerNotFoundError } from '@skintest/common';
+import { callerNotFoundError, capture, StackFrame } from '@skintest/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { MappedPosition, SourceMapConsumer } from 'source-map';
 
-const FRAME_RE1 = new RegExp(/\((.*):(\d+):(\d+)\)/);
-const FRAME_RE2 = new RegExp(/at ([^(]*):(\d+):(\d+)/);
-
-const SDK_DIR = path.dirname(__filename);
+const PACKAGES = [
+  'common',
+  'sdk',
+  'plugins',
+  'platform'
+].map(x => path.sep + path.join(x, 'dist'));
 
 export interface Meta {
   file: string;
@@ -36,7 +38,7 @@ export function getStepMeta(): Promise<StepMeta> {
     const lines = originContent.split('\n');
 
     // todo: prettify/parse output
-    const code = trim(lines[pos.line - 1]);
+    const code = strip(lines[pos.line - 1]);
     return {
       file: path.resolve(caller.file, '../' + pos.source),
       ...pos,
@@ -63,42 +65,17 @@ export function getMeta(): Promise<Meta> {
   });
 }
 
-function getCaller(): Omit<StepMeta, 'code'> {
-  const site = new Error();
-  Error.captureStackTrace(site);
-
-  const frames: string[] = (site.stack || '')
-    .split('\n')
-    .slice(1);
-
-  for (const frame of frames) {
-    if (frame.indexOf(SDK_DIR) < 0) {
-      const info1 = FRAME_RE1.exec(frame);
-      if (info1) {
-        return {
-          file: info1[1],
-          line: Number(info1[2]),
-          column: Number(info1[3]),
-        };
-      }
-
-      const info2 = FRAME_RE2.exec(frame);
-      if (info2) {
-        return {
-          file: info2[1],
-          line: Number(info2[2]),
-          column: Number(info2[3]),
-        };
-      }
-
-      throw callerNotFoundError(frame.trim());
-    }
+function getCaller(): StackFrame {
+  const frames = capture(PACKAGES);
+  if (!frames.length) {
+    const allFrames = capture([]);
+    throw callerNotFoundError(allFrames[0]?.file);
   }
 
-  throw callerNotFoundError((frames[0] || '').trim());
+  return frames[0];
 }
 
-function trim(line: string): string {
+function strip(line: string): string {
   // todo: make it better
   let start = 0;
   let end = line.length - 1;

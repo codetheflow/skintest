@@ -1,3 +1,4 @@
+import { prettyStack } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command } from '@skintest/sdk';
 import * as chalk from 'chalk';
@@ -82,7 +83,7 @@ function writeError(ex: Error) {
   stderr.write(NEW_LINE);
 
   if (ex.stack) {
-    stderr.write(fail(ex.stack));
+    stderr.write(fail(prettyStack(ex.stack)));
   }
 
   stderr.write(NEW_LINE);

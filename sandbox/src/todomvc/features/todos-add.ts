@@ -34,7 +34,7 @@ feature('todos add')
     , I.see(todos.what, has.value, 'congratulate grandma')
   )
 
-  .scenario('check the input file should be empty after item was added'
+  .scenario('#now check the input file should be empty after item was added'
     , I.do(add_todo, 'call dad')
     , I.test('input field is empty')
     , I.see(todos.what, has.value, '')

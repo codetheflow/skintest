@@ -1,4 +1,4 @@
-import { I, recipe, StorySchema } from '@skintest/sdk';
+import { I, recipe } from '@skintest/sdk';
 import { todos } from '../components/todos';
 
 export const clear_todos = recipe.client(
@@ -17,7 +17,7 @@ export const clear_todos = recipe.client(
 
     const list = await client.query(todos.list);
     let last = list.length - 1;
-    const plan: StorySchema = [];
+    const plan = [];
     while (last >= 0) {
       plan.push(...remove(last));
       last--;

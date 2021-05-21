@@ -1,6 +1,6 @@
 import { Guard } from '@skintest/common';
 import { InfoStep, StepContext } from '../command';
-import { StepMeta } from '../reflect';
+import { StepMeta } from '../meta';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class SayStep implements InfoStep {

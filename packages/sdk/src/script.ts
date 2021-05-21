@@ -1,7 +1,7 @@
 import { invalidArgumentError } from '@skintest/common';
 import { Command } from './command';
 import { Feature, Scenario } from './feature';
-import { Meta } from './reflect';
+import { Meta } from './meta';
 import { ScenarioSchema, StorySchema } from './schema';
 
 export interface Script {

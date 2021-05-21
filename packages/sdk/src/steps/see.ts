@@ -2,8 +2,8 @@ import { Guard, invalidArgumentError, isUndefined } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
 import { formatSelector } from '../format';
+import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
-import { StepMeta } from '../reflect';
 import { notFoundElement, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 

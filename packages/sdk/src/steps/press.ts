@@ -1,7 +1,7 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
 import { KeyboardKey } from '../keyboard';
-import { StepMeta } from '../reflect';
+import { StepMeta } from '../meta';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class PressStep implements ClientStep {

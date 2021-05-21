@@ -1,6 +1,6 @@
 import { Browser } from './browser';
+import { StepMeta } from './meta';
 import { ClientRecipe, ServerRecipe } from './recipe';
-import { StepMeta } from './reflect';
 import { TestExecutionResult } from './test-result';
 
 export interface StepContext {

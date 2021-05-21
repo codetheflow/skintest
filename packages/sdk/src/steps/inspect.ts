@@ -1,7 +1,7 @@
 import { Guard, invalidArgumentError, isString } from '@skintest/common';
 import { DevStep, StepContext } from '../command';
+import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
-import { StepMeta } from '../reflect';
 import { inspect, TestExecutionResult } from '../test-result';
 
 export class InspectStep implements DevStep {

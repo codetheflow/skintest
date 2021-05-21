@@ -1,9 +1,9 @@
 import { Guard } from '@skintest/common';
 import { DevStep, StepContext } from '../command';
 import { DOMElement } from '../dom';
+import { StepMeta } from '../meta';
 import { ElementRef, ElementRefList, Page } from '../page';
 import { Query, QueryList } from '../query';
-import { StepMeta } from '../reflect';
 import { pass, TestExecutionResult } from '../test-result';
 
 export interface Debugger {

@@ -1,7 +1,7 @@
 import { Guard } from '@skintest/common';
 import { ClientStep, StepContext } from '../command';
+import { StepMeta } from '../meta';
 import { Query } from '../query';
-import { StepMeta } from '../reflect';
 import { asTest, TestExecutionResult } from '../test-result';
 
 export class TypeStep implements ClientStep {

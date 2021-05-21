@@ -1,5 +1,5 @@
 import { Guard } from '@skintest/common';
-import { getMeta } from './reflect';
+import { getMeta } from './meta';
 import { ScenarioSchema, StorySchema } from './schema';
 import { RuntimeScript } from './script';
 import { getSuite } from './suite';
