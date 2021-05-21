@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "declaration": true,
+    "experimentalDecorators": true,
     "module": "CommonJS",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -12,7 +13,10 @@
       "es2015",
       "dom"
     ],
-    "types": ["node", "glob"]
+    "types": [
+      "node",
+      "glob"
+    ]
   },
   "exclude": [
     "node_modules",

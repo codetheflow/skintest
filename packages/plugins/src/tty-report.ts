@@ -72,7 +72,13 @@ function followLine() {
 }
 
 function writeError(ex: Error) {
-  stderr.write(error(`${ex.name}: ${ex.message}`));
+  if (ex.name === 'skintest.timeout') {
+    stderr.write(error(ex.name + ': ' + ex.message));
+    stderr.write(NEW_LINE);
+    return;
+  }
+
+  stderr.write(error(ex.name + ': ' + ex.message));
   stderr.write(NEW_LINE);
 
   if (ex.stack) {
@@ -91,7 +97,6 @@ export function ttyReport(): Plugin {
       currentLine(h1(info.file + `:${info.line}:${info.column}`), NEW_LINE);
       currentLine = followLine();
     },
-    'error': async ({ reason }) => writeError(reason),
     'before.scenario': async ({ scenario }) => {
       currentLine = await fixedLine();
       const label = scenario.replace(TAG_RE, (...args) =>
@@ -176,22 +181,21 @@ export function ttyReport(): Plugin {
         currentLine = followLine();
       }
     },
-    'recipe.fail': async ({ reason }) => writeError(reason),
-    'step.fail': async ({ site, reason, step }) => {
-      if (site === 'step') {
-        const message = await getMessage(step);
-        currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
-        currentLine = followLine();
+    'step.fail': async ({ reason, step }) => {
+      const message = await getMessage(step);
+      currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
+      currentLine = followLine();
 
-        if ('status' in reason) {
-          stderr.write(hidden(CROSS_MARK));
-          stderr.write(WS);
-          stderr.write(error(reason.description));
-          stderr.write(NEW_LINE);
-        } else {
-          writeError(reason);
-        }
+      if ('status' in reason) {
+        stderr.write(hidden(CROSS_MARK));
+        stderr.write(WS);
+        stderr.write(error(reason.description));
+        stderr.write(NEW_LINE);
+      } else {
+        writeError(reason);
       }
     },
+    'recipe.fail': async ({ reason }) => writeError(reason),
+    'error': async ({ reason }) => writeError(reason),
   });
 }

@@ -1,11 +1,11 @@
 import { noCurrentPageError, pageNotFoundError } from '@skintest/common';
-import { Browser } from '@skintest/sdk';
+import { Browser, Page } from '@skintest/sdk';
 import * as playwright from 'playwright';
+import { PlaywrightAction } from './playwright-action';
 import { PlaywrightPage } from './playwright-page';
 
 export class PlaywrightBrowser implements Browser {
   private context: playwright.BrowserContext | null = null;
-
   private pages = new Map<string, PlaywrightPage>();
   private currentPage: PlaywrightPage | null = null;
 
@@ -15,6 +15,7 @@ export class PlaywrightBrowser implements Browser {
   ) {
   }
 
+  @PlaywrightAction()
   async openPage(id: string): Promise<void> {
     const existingPage = this.pages.get(id);
     if (existingPage) {
@@ -31,6 +32,7 @@ export class PlaywrightBrowser implements Browser {
     this.pages.set(id, this.currentPage);
   }
 
+  @PlaywrightAction()
   async closePage(id: string): Promise<void> {
     const existingPage = this.pages.get(id);
     if (!existingPage) {
@@ -40,16 +42,17 @@ export class PlaywrightBrowser implements Browser {
     return existingPage.close();
   }
 
-  getCurrentPage() {
+  @PlaywrightAction()
+  close(): Promise<void> {
+    return this.browser.close();
+  }
+
+  getCurrentPage(): Page {
     if (!this.currentPage) {
       throw noCurrentPageError();
     }
 
     return this.currentPage;
-  }
-
-  close(): Promise<void> {
-    return this.browser.close();
   }
 
   private async getContext(): Promise<playwright.BrowserContext> {

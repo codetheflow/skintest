@@ -6,6 +6,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "build": "yarn clean && tsc --build",
     "build:watch": "yarn clean && tsc --build --watch",

@@ -1,4 +1,4 @@
-import { pass, TestExecutionResult, unknownFail } from '@skintest/sdk';
+import { pass, TestExecutionResult } from '@skintest/sdk';
 
 export class Attempt {
   constructor(private retries: number) {
@@ -17,12 +17,12 @@ export class Attempt {
         result = await method();
       }
       catch (ex) {
-        error = unknownFail(ex);
+        error = ex;
       }
     }
 
     if (error) {
-      return error;
+      throw error;
     }
 
     return result;

@@ -1,5 +1,6 @@
 import * as playwright from 'playwright';
 import { BrowserFactory } from '../browser-factory';
+import { playwrightAction } from './playwright-action';
 import { PlaywrightBrowser } from './playwright-browser';
 
 const DEFAULT_OPTIONS = {
@@ -16,7 +17,8 @@ export function playwrightLauncher(options: LaunchOptions = {}): BrowserFactory 
       ...options
     };
 
-    const browser = await playwright['chromium'].launch(browserOptions);
+    const chromium = playwright['chromium'];
+    const browser = await playwrightAction('browser launch', () => chromium.launch(browserOptions));
     return new PlaywrightBrowser(browser, browserOptions.timeout || DEFAULT_OPTIONS.timeout);
-  }
+  };
 }

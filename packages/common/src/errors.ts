@@ -1,7 +1,9 @@
 export type Exception = Error;
 
 function error(name: string, message: string): Exception {
-  return new Error(`${name}: ${message}`);
+  const ex = new Error(message);
+  ex.name = `skintest.${name}`;
+  return ex;
 }
 
 export function invalidArgumentError<T>(name: string, value: T): Exception {
@@ -37,6 +39,10 @@ export function elementNotFoundError(selector: string): Exception {
   return error('elementNotFound', `element \`${selector}\` is not found`);
 }
 
-export function callerNotFoundError(frame: string): Exception {
-  return error('callerNotFoundError', `caller is not found in the ${frame}`);
+export function callerNotFoundError(site: string): Exception {
+  return error('callerNotFound', `here ${site}`);
+}
+
+export function timeoutError(source: string, ex: Error): Exception {
+  return error('timeout', `${source} timeout exceed`);
 }
