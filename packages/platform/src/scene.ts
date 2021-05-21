@@ -241,6 +241,7 @@ export class Scene {
       }
     }
 
+    throw new Error('fuck');
     const page = browser.getCurrentPage();
     const client = new PageClient(page);
     const action = step.recipe.action as ClientFunction;

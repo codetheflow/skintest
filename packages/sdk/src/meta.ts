@@ -53,9 +53,8 @@ export function getMeta(): Promise<Meta> {
 
   return SourceMapConsumer.with(callerContent, null, consumer => {
     const pos = consumer.originalPositionFor(caller) as MappedPosition;
-    // consumer.sourceContentFor()
     if (!pos) {
-      throw callerNotFoundError('source map');
+      throw callerNotFoundError('source-map');
     }
 
     return {
@@ -66,13 +65,16 @@ export function getMeta(): Promise<Meta> {
 }
 
 function getCaller(): StackFrame {
-  const frames = capture(PACKAGES);
-  if (!frames.length) {
-    const allFrames = capture([]);
-    throw callerNotFoundError(allFrames[0]?.file);
+  const frames = capture();
+  const callers = frames
+    .filter(x => x.file)
+    .filter(x => !PACKAGES.some(p => x.file.includes(p)))
+
+  if (!callers.length) {
+    throw callerNotFoundError(frames[0]?.file);
   }
 
-  return frames[0];
+  return callers[0];
 }
 
 function strip(line: string): string {

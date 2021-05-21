@@ -11,7 +11,6 @@ export const add_todo = recipe.client(
   function (name: string) {
     const client = this;
 
-    throw new Error('fuck');
     return client.do(`I add todo \`${name}\``
       , I.fill(todos.what, name)
       , I.press('Enter')

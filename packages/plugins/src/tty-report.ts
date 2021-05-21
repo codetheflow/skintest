@@ -1,7 +1,8 @@
-import { prettyStack } from '@skintest/common';
+import { parseStack } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command } from '@skintest/sdk';
 import * as chalk from 'chalk';
+import * as path from 'path';
 
 const { stdout, stderr, stdin } = process;
 
@@ -24,6 +25,17 @@ const CURSOR_CODE = '\x1b[6n'
 const CURSOR_RE = /\[(\d+)\;(\d+)R$/;
 
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
+
+const STACK_FUNC_IGNORE = [
+  '__awaiter',
+  'fulfilled',
+];
+
+const STACK_FILE_IGNORE = [
+  path.join('platform', 'dist', 'src', 'attempt.js'),
+  // from playwright
+  path.join('lib', 'utils', 'stackTrace.js')
+];
 
 async function getMessage(command: Command): Promise<string> {
   try {
@@ -83,7 +95,13 @@ function writeError(ex: Error) {
   stderr.write(NEW_LINE);
 
   if (ex.stack) {
-    stderr.write(fail(prettyStack(ex.stack)));
+    const frames = parseStack(ex.stack)
+      .filter(x => x.function && x.file)
+      .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
+      .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
+      .map(x => `${x.function} (${x.file}:${x.line}:${x.column})`);
+
+    stderr.write(fail(frames.join('\n')));
   }
 
   stderr.write(NEW_LINE);
