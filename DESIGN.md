@@ -3,7 +3,7 @@ ui automatization framework
 
 ### todo 
 
-DONE:
+0.1.0:
 * $ should wait - done
 * timeout, headless setting from the user (as a plugin) - done* setup eslint for project and core - done
 * use attempt in the scene not in the step - done
@@ -16,37 +16,39 @@ DONE:
 * tagFilter - add option to execute all if tags were not found in the project - done
 * handle `Ctrl+A`, `Ctrl+C` shortcuts etc. - done
 
-NEXT:
-* better fails/exception management
-* better stacktrace of exceptions, solutions/links to solutions
-* use value from the selector like `I.fill(todos.what, from.value, todos.user)`
+0.2.0:
+* better fails/exception management - done
+* better stacktrace of exceptions - done
 * full assert supports
+* https://www.chaijs.com/plugins/chai-webdriver/
+* https://www.chaijs.com/plugins/chai-dom/
 * has.state 'visible|checked|disabled|editable|enabled|hidden'
-* starter github repository
 * launch.json for debugging
-* add comments to the ego, selectors and recipes
-* total report
 * has.text and has.value are very similar, for inputs maybe make only value available or stay only with has.text
 * waitSelector doesn't take into account page's timeout
+* and inspect to dbg in .debug, better debugging experience
+* total report
 * fix yarn build
+* starter github repository
 * publish version 0.0.1
 
-NEXTNEXT:
-* better code parsing in the `reflect.ts`
-* CI
-* $$ should wait?
-* multiple selector strategy in $ and $$, data-test-id, search by the text
+0.3.0:
+* use value from the selector like `I.fill(todos.what, from.value, todos.user)`
+* add comments to the ego, selectors and recipes
+* show fail/error solutions/links to solutions
+* better code parsing in the `meta.ts`
 * file upload/download, how to assert results?
 * slowMo settings in camelCase - lint warning
 * start:watch command
-* https://www.chaijs.com/plugins/chai-webdriver/
-* https://www.chaijs.com/plugins/chai-dom/
 * stubs/network intersection support
 * keyboard keys - documentation
+
+next
+* CI
+* multiple selector strategy in $ and $$, data-test-id, search by the text
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
 * drag and drop
-* and inspect to dbg in .debug
 * playwright logs, verbose reporting, file logs, integration longs e. with allure
 * https://playwright.dev/docs/api/class-logger
 * add documentation
@@ -55,12 +57,12 @@ NEXTNEXT:
 * https://playwright.dev/docs/api/class-dialog
 * video and screenshots support
 * https://playwright.dev/docs/ci
-* copy/paste as recipe exmple
+* copy/paste as recipe example
 * https://github.com/microsoft/playwright/issues/2511
 
 
 ### questions
-
+* $$ should wait?
 * add `feature`, `component`, `recipe` postfixes?
 * recipe type `assert`?
 * skintest.io
