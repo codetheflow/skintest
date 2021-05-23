@@ -34,7 +34,7 @@ feature('todos add')
     , I.see(todos.what, has.value, 'congratulate grandma')
   )
 
-  .scenario('#now check the input file should be empty after item was added'
+  .scenario('check the input file should be empty after item was added'
     , I.do(add_todo, 'call dad')
     , I.test('input field is empty')
     , I.see(todos.what, has.value, '')
@@ -46,7 +46,7 @@ feature('todos add')
     , I.see(todos.item_at(0), has.text, 'pass the exams')
   )
 
-  .scenario('check the list supports many todos'
+  .scenario('#now check the list supports many todos'
     , I.do(generate_todos, 10)
     , I.test('list contains all the items')
     , I.see(todos.list, has.length, 10)

@@ -7,10 +7,10 @@ export class WaitUrlStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private url: string
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(url, 'url');
   }
 

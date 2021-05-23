@@ -1,7 +1,6 @@
-import { callerNotFoundError, capture, StackFrame } from '@skintest/common';
+import { callerNotFoundError, capture, StackFrame, withSourceMap } from '@skintest/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import { MappedPosition, SourceMapConsumer } from 'source-map';
 
 const PACKAGES = [
   'common',
@@ -10,61 +9,27 @@ const PACKAGES = [
   'platform'
 ].map(x => path.sep + path.join(x, 'dist'));
 
-export interface Meta {
-  file: string;
-  line: number;
-  column: number;
+export type Meta = Omit<StackFrame, 'function'>;
+export type StepMeta = Meta & { rootage: string };
+
+export async function getStepMeta(caller: StackFrame): Promise<StepMeta> {
+  const meta = await getMeta(caller);
+  const originContent = fs.readFileSync(meta.file).toString();
+  const lines = originContent.split('\n');
+
+  // todo: prettify/parse output
+  const rootage = strip(lines[meta.line - 1]);
+  return {
+    ...meta,
+    rootage
+  };
 }
 
-export interface StepMeta extends Meta {
-  file: string;
-  line: number;
-  column: number;
-  code: string;
+export function getMeta(caller: StackFrame): Promise<Meta> {
+  return withSourceMap(caller);
 }
 
-export function getStepMeta(): Promise<StepMeta> {
-  const caller = getCaller();
-  const callerContent = fs.readFileSync(caller.file + '.map').toString();
-
-  return SourceMapConsumer.with(callerContent, null, consumer => {
-    const pos = consumer.originalPositionFor(caller) as MappedPosition;
-    if (!pos) {
-      throw callerNotFoundError('source map');
-    }
-
-    const originFile = path.resolve(path.dirname(caller.file), pos.source);
-    const originContent = fs.readFileSync(originFile).toString();
-    const lines = originContent.split('\n');
-
-    // todo: prettify/parse output
-    const code = strip(lines[pos.line - 1]);
-    return {
-      file: path.resolve(caller.file, '../' + pos.source),
-      ...pos,
-      code
-    };
-  });
-}
-
-export function getMeta(): Promise<Meta> {
-  const caller = getCaller();
-  const callerContent = fs.readFileSync(caller.file + '.map').toString();
-
-  return SourceMapConsumer.with(callerContent, null, consumer => {
-    const pos = consumer.originalPositionFor(caller) as MappedPosition;
-    if (!pos) {
-      throw callerNotFoundError('source-map');
-    }
-
-    return {
-      file: path.resolve(caller.file, '../' + pos.source),
-      ...pos
-    }
-  });
-}
-
-function getCaller(): StackFrame {
+export function getCaller(): StackFrame {
   const frames = capture();
   const callers = frames
     .filter(x => x.file)

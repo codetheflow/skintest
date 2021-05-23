@@ -3,6 +3,7 @@ import { pass, TestExecutionResult } from '@skintest/sdk';
 export class Attempt {
   constructor(private retries: number) {
     if (retries <= 0) {
+      // todo: replace from errors
       throw new Error('number of retries should be bigger than 0');
     }
   }

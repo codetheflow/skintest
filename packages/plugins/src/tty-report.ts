@@ -39,14 +39,15 @@ const STACK_FILE_IGNORE = [
 
 async function getMessage(command: Command): Promise<string> {
   try {
-    const meta = await command.meta;
-    return meta.code;
+    const meta = await command.getMeta()
+    return meta.rootage;
   } catch {
     return command.toString();
   }
 }
 
-export function getCursor(): Promise<[number, number]> {
+export async function getCursor(): Promise<[number, number]> {
+  // todo: nodemon doesn't work with this code after the first watch
   return new Promise((resolve, reject) => {
     stdin.setRawMode(true);
 
@@ -63,12 +64,11 @@ export function getCursor(): Promise<[number, number]> {
     });
 
     stdout.write(CURSOR_CODE);
+    stdout.emit('data', CURSOR_CODE);
   });
 }
 
 async function fixedLine() {
-  stdin.resume();
-
   const [x, y] = await getCursor();
   return (...text: string[]) => {
     stdout.cursorTo(x, y);
@@ -80,19 +80,16 @@ async function fixedLine() {
 }
 
 function followLine() {
-  stdin.pause();
   return (...text: string[]): boolean => stdout.write(text.join(''));
 }
 
 function writeError(ex: Error) {
+  stderr.write(error((ex.name || 'Error') + ': ' + (ex.message) || 'unknown error'));
+  stderr.write(NEW_LINE);
+
   if (ex.name === 'skintest.timeout') {
-    stderr.write(error(ex.name + ': ' + ex.message));
-    stderr.write(NEW_LINE);
     return;
   }
-
-  stderr.write(error(ex.name + ': ' + ex.message));
-  stderr.write(NEW_LINE);
 
   if (ex.stack) {
     const frames = parseStack(ex.stack)
@@ -101,18 +98,32 @@ function writeError(ex: Error) {
       .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
       .map(x => `${x.function} (${x.file}:${x.line}:${x.column})`);
 
-    stderr.write(fail(frames.join('\n')));
+    stderr.write(fail(frames.join(NEW_LINE)));
+    stderr.write(NEW_LINE);
   }
-
-  stderr.write(NEW_LINE);
 }
 
 export function ttyReport(): Plugin {
+  if (!stdin.isTTY) {
+    // todo: safe tty operations
+    // todo: throw meaningful error?
+  }
+
   let currentLine = followLine();
 
   return async (stage: OnStage) => stage({
+    'start': async () => {
+      stdin.setEncoding('utf8');
+      stdin.setRawMode(true);
+      stdin.resume();
+    },
+    'stop': async () => {
+      stdin.setRawMode(false);
+      stdin.pause();
+      stdin.end();
+    },
     'before.feature': async ({ script }) => {
-      const info = await script.meta;
+      const info = await script.getMeta();
       currentLine(h1(info.file + `:${info.line}:${info.column}`), NEW_LINE);
       currentLine = followLine();
     },
@@ -200,6 +211,13 @@ export function ttyReport(): Plugin {
         currentLine = followLine();
       }
     },
+    'recipe.pass': async ({ site, step }) => {
+      if (site === 'step') {
+        const message = await getMessage(step);
+        currentLine(pass(CHECK_MARK), WS, info(message), NEW_LINE);
+        currentLine = followLine();
+      }
+    },
     'step.fail': async ({ reason, step }) => {
       const message = await getMessage(step);
       currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
@@ -214,7 +232,12 @@ export function ttyReport(): Plugin {
         writeError(reason);
       }
     },
-    'recipe.fail': async ({ reason }) => writeError(reason),
+    'recipe.fail': async ({ reason, step }) => {
+      const message = await getMessage(step);
+      currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
+      currentLine = followLine();
+      writeError(reason);
+    },
     'error': async ({ reason }) => writeError(reason),
   });
 }

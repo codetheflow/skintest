@@ -3,7 +3,7 @@ import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './c
 import { DOMElement } from './dom';
 import { Ego } from './ego';
 import { KeyboardKey } from './keyboard';
-import { getStepMeta } from './meta';
+import { getCaller, getStepMeta } from './meta';
 import { Query, QueryList } from './query';
 import { ClientDo, ClientRecipe, ServerDo, ServerRecipe } from './recipe';
 import { ActionStep } from './steps/action';
@@ -32,48 +32,58 @@ import { WaitUrlStep } from './steps/wait-url';
 
 class Me implements Ego {
   select<E extends DOMElement>(target: Query<E>): ClientStep {
-    return new SelectTextStep(getStepMeta(), target);
+    const caller = getCaller();
+    return new SelectTextStep(() => getStepMeta(caller), target);
   }
 
   open(name: string): ClientStep {
-    return new OpenStep(getStepMeta(), name);
+    const caller = getCaller();
+    return new OpenStep(() => getStepMeta(caller), name);
   }
 
   check<E extends DOMElement>(query: Query<E>): ClientStep {
-    return new CheckStep(getStepMeta(), query);
+    const caller = getCaller();
+    return new CheckStep(() => getStepMeta(caller), query);
   }
 
   dblclick<E extends DOMElement>(query: Query<E>): ClientStep {
-    return new DblClickStep(getStepMeta(), query);
+    const caller = getCaller();
+    return new DblClickStep(() => getStepMeta(caller), query);
   }
 
   type<E extends DOMElement>(query: Query<E>, value: string): ClientStep {
-    return new TypeStep(getStepMeta(), query, value);
+    const caller = getCaller();
+    return new TypeStep(() => getStepMeta(caller), query, value);
   }
 
   uncheck<E extends DOMElement>(query: Query<E>): ClientStep {
-    return new UncheckStep(getStepMeta(), query);
+    const caller = getCaller();
+    return new UncheckStep(() => getStepMeta(caller), query);
   }
 
   navigate(direction: 'forward' | 'back'): ClientStep {
+    const caller = getCaller();
     switch (direction) {
-      case 'forward': return new NavigationForwardStep(getStepMeta());
-      case 'back': return new NavigationBackStep(getStepMeta());
+      case 'forward': return new NavigationForwardStep(() => getStepMeta(caller));
+      case 'back': return new NavigationBackStep(() => getStepMeta(caller));
     }
   }
 
   reload(): ClientStep {
-    return new ReloadStep(getStepMeta());
+    const caller = getCaller();
+    return new ReloadStep(() => getStepMeta(caller));
   }
 
   do<T extends (...args: any) => ClientDo>(recipe: ClientRecipe<T>, ...args: Parameters<T>): DoStep;
   do<T extends (...args: any) => ServerDo>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep;
   do(recipe: any, args?: any[]) {
-    return new ActionStep(getStepMeta(), recipe, args || []);
+    const caller = getCaller();
+    return new ActionStep(() => getStepMeta(caller), recipe, args || []);
   }
 
   test(message: string): TestStep {
-    return new ExecuteStep(getStepMeta(), message);
+    const caller = getCaller();
+    return new ExecuteStep(() => getStepMeta(caller), message);
   }
 
   see<E extends DOMElement>(query: Query<E>): AssertStep;
@@ -81,7 +91,8 @@ class Me implements Ego {
   see<E extends DOMElement, V>(query: Query<E>, assert: BinaryAssert<V>, value: V): AssertStep;
   see<E extends DOMElement, V>(query: QueryList<E>, assert: ListAssert<V>, value: V): AssertStep;
   see(query: any, assert?: any, value?: any): AssertStep {
-    return new SeeStep(getStepMeta(), query, assert, value);
+    const caller = getCaller();
+    return new SeeStep(() => getStepMeta(caller), query, assert, value);
   }
 
   // dontSee<E extends DOMElement>(query: Query<E>): AssertStep;
@@ -93,31 +104,38 @@ class Me implements Ego {
   // }
 
   goto(url: string): ClientStep {
-    return new GotoStep(getStepMeta(), url);
+    const caller = getCaller();
+    return new GotoStep(() => getStepMeta(caller), url);
   }
 
   wait(url: string): ClientStep {
-    return new WaitUrlStep(getStepMeta(), url);
+    const caller = getCaller();
+    return new WaitUrlStep(() => getStepMeta(caller), url);
   }
 
   click<E extends DOMElement>(query: Query<E>): ClientStep {
-    return new ClickStep(getStepMeta(), query);
+    const caller = getCaller();
+    return new ClickStep(() => getStepMeta(caller), query);
   }
 
   hover<E extends DOMElement>(query: Query<E>): ClientStep {
-    return new HoverStep(getStepMeta(), query);
+    const caller = getCaller();
+    return new HoverStep(() => getStepMeta(caller), query);
   }
 
   press(key: KeyboardKey): ClientStep {
-    return new PressStep(getStepMeta(), key);
+    const caller = getCaller();
+    return new PressStep(() => getStepMeta(caller), key);
   }
 
   fill<E extends DOMElement>(query: Query<E>, value: string): ClientStep {
-    return new FillStep(getStepMeta(), query, value);
+    const caller = getCaller();
+    return new FillStep(() => getStepMeta(caller), query, value);
   }
 
   focus<E extends DOMElement>(query: Query<E>): ClientStep {
-    return new FocusStep(getStepMeta(), query);
+    const caller = getCaller();
+    return new FocusStep(() => getStepMeta(caller), query);
   }
 
   // drag<E extends DOMElement>(query: Query<E>, x: number, y: number): ClientStep {
@@ -129,19 +147,23 @@ class Me implements Ego {
   // }
 
   say(message: string): InfoStep {
-    return new SayStep(getStepMeta(), message);
+    const caller = getCaller();
+    return new SayStep(() => getStepMeta(caller), message);
   }
 
   __debug(breakpoint: Breakpoint): DevStep {
-    return new DebugStep(getStepMeta(), breakpoint)
+    const caller = getCaller();
+    return new DebugStep(() => getStepMeta(caller), breakpoint)
   }
 
   __inspect<T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep {
-    return new InspectStep(getStepMeta(), selector);
+    const caller = getCaller();
+    return new InspectStep(() => getStepMeta(caller), selector);
   }
 
   __pause(): DevStep {
-    return new PauseStep(getStepMeta(),);
+    const caller = getCaller();
+    return new PauseStep(() => getStepMeta(caller),);
   }
 }
 

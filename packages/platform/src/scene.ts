@@ -165,17 +165,6 @@ export class Scene {
       await stepEffect({ ...scope, step });
 
       try {
-        const test = await attempt.step(() => step.execute({ browser }));
-        if (test.status === 'fail') {
-          await failEffect({ ...scope, step, reason: test });
-          if (step.type !== 'assert') {
-            result = false;
-            break;
-          }
-        } else {
-          await passEffect({ ...scope, step, result: test });
-        }
-
         if (step.type === 'do') {
           const recipeOk = await this.runRecipe(
             site,
@@ -187,6 +176,17 @@ export class Scene {
           if (!recipeOk) {
             result = false;
             break;
+          }
+        } else {
+          const test = await attempt.step(() => step.execute({ browser }));
+          if (test.status === 'fail') {
+            await failEffect({ ...scope, step, reason: test });
+            if (step.type !== 'assert') {
+              result = false;
+              break;
+            }
+          } else {
+            await passEffect({ ...scope, step, result: test });
           }
         }
       } catch (ex) {

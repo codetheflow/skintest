@@ -8,10 +8,10 @@ export class InspectStep implements DevStep {
   type: 'dev' = 'dev';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private query: string | Query<any> | QueryList<any>
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
   }
 

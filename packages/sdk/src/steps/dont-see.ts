@@ -11,17 +11,17 @@ export class DontSeeStep implements AssertStep {
   type: 'assert' = 'assert';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private query: Query<any> | QueryList<any>,
     private assert: BinaryAssert<any> | ListAssert<any>,
     private value: any
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
   }
 
   async execute(context: StepContext): Promise<TestExecutionResult> {
-    const seeStep = new SeeStep(this.meta, this.query, this.assert, this.value);
+    const seeStep = new SeeStep(this.getMeta, this.query, this.assert, this.value);
     const failReason = await seeStep.execute(context);
     if (!failReason) {
       return dontSeeFail();

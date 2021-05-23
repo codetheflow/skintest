@@ -8,6 +8,7 @@ export { Feature, feature, Scenario } from './feature';
 export { has, Has, HasAll } from './has';
 export { KeyboardKey } from './keyboard';
 export { I } from './me';
+export { Meta, StepMeta } from './meta';
 export { ElementRef, ElementRefList, Page } from './page';
 export { $, $$, Query, QueryList } from './query';
 export { Client, ClientDo, ClientElement, ClientElementList, ClientFunction, ClientRecipe, PageClient, Process, recipe, Server, ServerDo, ServerFunction, ServerRecipe } from './recipe';

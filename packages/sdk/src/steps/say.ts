@@ -7,10 +7,10 @@ export class SayStep implements InfoStep {
   type: 'info' = 'info';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private message: string
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
   }
 
   execute(context: StepContext): Promise<TestExecutionResult> {

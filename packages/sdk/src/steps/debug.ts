@@ -32,10 +32,10 @@ export class DebugStep implements DevStep {
   type: 'dev' = 'dev';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private breakpoint: Breakpoint
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(breakpoint, 'breakpoint');
   }
 

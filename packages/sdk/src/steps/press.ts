@@ -8,10 +8,10 @@ export class PressStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private key: KeyboardKey
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
     Guard.notEmpty(key, 'key');
   }
 

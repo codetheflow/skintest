@@ -7,9 +7,9 @@ export class NavigationBackStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
-    public meta: Promise<StepMeta>
+    public getMeta: () => Promise<StepMeta>
     ) {
-      Guard.notNull(meta, 'meta');
+      Guard.notNull(getMeta, 'getMeta');
   }
 
   execute(context: StepContext): Promise<TestExecutionResult> {

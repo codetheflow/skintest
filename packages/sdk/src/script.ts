@@ -6,7 +6,7 @@ import { ScenarioSchema, StorySchema } from './schema';
 
 export interface Script {
   readonly name: string;
-  readonly meta: Promise<Meta>;
+  readonly getMeta: () => Promise<Meta>;
 
   beforeFeature: ReadonlyArray<Command>;
   afterFeature: ReadonlyArray<Command>
@@ -34,7 +34,7 @@ export class RuntimeScript implements Script, Feature, Scenario {
 
   constructor(
     public name: string,
-    public meta: Promise<Meta>,
+    public getMeta: () => Promise<Meta>,
   ) {
   }
 

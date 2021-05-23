@@ -11,12 +11,12 @@ export class SeeStep implements AssertStep {
   type: 'assert' = 'assert';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private query: Query<any> | QueryList<any>,
     private assert: BinaryAssert<any> | ListAssert<any>,
     private value: any
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
   }
 

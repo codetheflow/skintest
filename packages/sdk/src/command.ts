@@ -18,7 +18,7 @@ export type Command =
 export interface CommandBody {
   execute(context: StepContext): Promise<TestExecutionResult>;
   toString(): string;
-  meta: Promise<StepMeta>;
+  getMeta(): Promise<StepMeta>;
 }
 
 export interface ClientStep extends CommandBody {

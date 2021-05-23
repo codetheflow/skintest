@@ -7,10 +7,10 @@ export class ExecuteStep implements TestStep {
   type: 'test' = 'test';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     private what: string
   ) {
-    Guard.notNull(meta, 'meta');
+    Guard.notNull(getMeta, 'getMeta');
   }
 
   execute(context: StepContext): Promise<TestExecutionResult> {

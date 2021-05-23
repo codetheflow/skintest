@@ -8,7 +8,7 @@ export class ActionStep implements DoStep {
   type: 'do' = 'do';
 
   constructor(
-    public meta: Promise<StepMeta>,
+    public getMeta: () => Promise<StepMeta>,
     public recipe: ClientRecipe<any> | ServerRecipe<any>,
     public args: any[]
   ) {
