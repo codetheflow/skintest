@@ -224,8 +224,6 @@ export function ttyReport(): Plugin {
       currentLine = followLine();
 
       if ('status' in reason) {
-        stderr.write(hidden(CROSS_MARK));
-        stderr.write(WS);
         stderr.write(error(reason.description));
         stderr.write(NEW_LINE);
       } else {
