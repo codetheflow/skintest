@@ -9,7 +9,7 @@ platform()
     await project.run(
       playwrightLauncher({
         headless: true,
-        timeout: 30000,
+        timeout: 30 * 1000,
       })
       , exploreFeatures({
         dir

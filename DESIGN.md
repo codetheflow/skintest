@@ -44,6 +44,7 @@ ui automatization framework
 * keyboard keys - documentation
 
 next
+* reporting UX
 * CI
 * multiple selector strategy in $ and $$, data-test-id, search by the text
 * https://playwright.dev/docs/api/class-download
