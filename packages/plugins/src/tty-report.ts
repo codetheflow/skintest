@@ -1,4 +1,4 @@
-import { parseStack } from '@skintest/common';
+import { prettyStack } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command } from '@skintest/sdk';
 import * as chalk from 'chalk';
@@ -33,6 +33,7 @@ const STACK_FUNC_IGNORE = [
 
 const STACK_FILE_IGNORE = [
   path.join('platform', 'dist', 'src', 'attempt.js'),
+  path.join('platform', 'src', 'attempt.ts'),
   // from playwright
   path.join('lib', 'utils', 'stackTrace.js')
 ];
@@ -83,7 +84,7 @@ function followLine() {
   return (...text: string[]): boolean => stdout.write(text.join(''));
 }
 
-function writeError(ex: Error) {
+async function writeError(ex: Error) {
   stderr.write(error((ex.name || 'Error') + ': ' + (ex.message) || 'unknown error'));
   stderr.write(NEW_LINE);
 
@@ -92,7 +93,7 @@ function writeError(ex: Error) {
   }
 
   if (ex.stack) {
-    const frames = parseStack(ex.stack)
+    const frames = (await prettyStack(ex.stack))
       .filter(x => x.function && x.file)
       .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
       .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
@@ -227,15 +228,15 @@ export function ttyReport(): Plugin {
         stderr.write(error(reason.description));
         stderr.write(NEW_LINE);
       } else {
-        writeError(reason);
+        await writeError(reason);
       }
     },
     'recipe.fail': async ({ reason, step }) => {
       const message = await getMessage(step);
       currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
       currentLine = followLine();
-      writeError(reason);
+      await writeError(reason);
     },
-    'error': async ({ reason }) => writeError(reason),
+    'error': async ({ reason }) => await writeError(reason),
   });
 }

@@ -5,16 +5,38 @@ import * as path from 'path';
 import { MappedPosition, SourceMapConsumer } from 'source-map';
 import * as StackUtils from 'stack-utils';
 import { callerNotFoundError } from './errors';
+import { isUndefined } from './utils';
 
 const su = new StackUtils();
 const CWD = process.cwd();
 
-export function parseStack(stack: string): StackFrame[] {
-  // todo: map to ts files where possible
+function goodFrame(frame: StackFrame | null) {
+  return frame
+    && frame.file
+    && !isUndefined(frame.line)
+    && !isUndefined(frame.column);
+}
+
+export async function prettyStack(stack: string): Promise<StackFrame[]> {
+  const frames = parseStack(stack);
+  const prettyFrames: StackFrame[] = [];
+  for (const frame of frames) {
+    try {
+      const prettyFrame = await withSourceMap(frame);
+      prettyFrames.push(prettyFrame);
+    } catch {
+      prettyFrames.push(frame);
+    }
+  }
+
+  return prettyFrames;
+}
+
+function parseStack(stack: string): StackFrame[] {
   const frames: StackFrame[] = [];
   for (const line of stack.split('\n')) {
-    const frame = su.parseLine(line);
-    if (!frame || !frame.file) {
+    const frame = su.parseLine(line) as StackFrame;
+    if (!goodFrame(frame)) {
       continue;
     }
 
@@ -49,16 +71,17 @@ export function capture(): StackFrame[] {
 
 export function withSourceMap(caller: StackFrame): Promise<StackFrame> {
   const sourceMap = fs.readFileSync(caller.file + '.map').toString();
-  
+
   return SourceMapConsumer.with(sourceMap, null, consumer => {
     const pos = consumer.originalPositionFor(caller) as MappedPosition;
-    if (!pos) {
+    if (!pos || !pos.source) {
       throw callerNotFoundError('source-map');
     }
 
     return {
+      ...caller,
+      ...pos,
       file: path.resolve(caller.file, '../' + pos.source),
-      ...pos
-    }
+    };
   });
 }
