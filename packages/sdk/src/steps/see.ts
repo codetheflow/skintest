@@ -1,6 +1,7 @@
-import { errors, Guard, isUndefined } from '@skintest/common';
-import { AssertHost, BinaryAssert, ListAssert } from '../assert';
+import { errors, Guard, isUndefined, reinterpret } from '@skintest/common';
+import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
+import { DOMElement } from '../dom';
 import { formatSelector } from '../format';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
@@ -12,9 +13,9 @@ export class SeeStep implements AssertStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query<any> | QueryList<any>,
-    private assert: BinaryAssert<any> | ListAssert<any>,
-    private value: any
+    private query: Query<DOMElement> | QueryList<DOMElement>,
+    private assert: BinaryAssert<DOMElement> | ListBinaryAssert<DOMElement>,
+    private value: unknown
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
@@ -55,7 +56,7 @@ export class SeeStep implements AssertStep {
     }
 
     const verify = new Verify(page);
-    const { what, how } = this.assert as AssertHost<any>;
+    const { what, how } = reinterpret<AssertHost>(this.assert);
 
     switch (this.query.type) {
       case 'query': {
@@ -72,12 +73,11 @@ export class SeeStep implements AssertStep {
 
   toString(): string {
     const selector = this.query.toString();
-
     if (isUndefined(this.assert)) {
       return formatSelector(selector);
     }
 
-    const { what, how } = this.assert as AssertHost<any>;
+    const { what, how } = reinterpret<AssertHost>(this.assert);
     if (isUndefined(this.value)) {
       return `I see ${formatSelector(selector)} has ${what}`;
     }

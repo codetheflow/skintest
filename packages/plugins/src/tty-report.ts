@@ -15,7 +15,7 @@ const hidden = chalk.hidden;
 const info = chalk.grey;
 const pass = chalk.green;
 const tag = chalk.bgGrey.white;
-const value = chalk.bgRedBright; //chalk.bgRed.white;
+const value = chalk.redBright;
 
 const CHECK_MARK = '\u2713';
 const CROSS_MARK = '\u2613';
@@ -119,7 +119,7 @@ function writeFail(reason: TestFail) {
     const method = body.query.type === 'query' ? '$' : '$$';
 
     stderr.write(fail(
-      `${method}(${selector}).${body.what}: expected ${value(' ' + body.actual + ' ')} to ${body.how} ${value(' ' + body.etalon + ' ')}`
+      `${method}(${selector}).${body.what}: expected ${value('`' + body.actual + '`')} to ${body.how} ${value('`' + body.etalon + '`')}`
     ));
   } else {
     stderr.write(fail(reason.description));

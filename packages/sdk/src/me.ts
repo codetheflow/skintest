@@ -1,4 +1,4 @@
-import { BinaryAssert, ListAssert, UnaryAssert } from './assert';
+import { BinaryAssert, ListBinaryAssert } from './assert';
 import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
 import { DOMElement } from './dom';
 import { Ego } from './ego';
@@ -81,9 +81,8 @@ class Me implements Ego {
   }
 
   see<E extends DOMElement>(target: Query<E>): AssertStep;
-  see<E extends DOMElement>(target: Query<E>, assert: UnaryAssert): AssertStep;
   see<E extends DOMElement, V>(target: Query<E>, assert: BinaryAssert<V>, value: V): AssertStep;
-  see<E extends DOMElement, V>(target: QueryList<E>, assert: ListAssert<V>, value: V): AssertStep;
+  see<E extends DOMElement, V>(target: QueryList<E>, assert: ListBinaryAssert<V>, value: V): AssertStep;
   see(target: any, assert?: any, value?: any): AssertStep {
     const caller = getCaller();
     return new SeeStep(() => getStepMeta(caller), target, assert, value);

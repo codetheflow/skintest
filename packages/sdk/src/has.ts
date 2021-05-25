@@ -1,17 +1,18 @@
 import {
+  AssertHow,
   AssertWhat,
   BinaryAssert,
+  BinaryAssertHost,
   KeyValueAssert,
-  KeyValueAssertCore,
-  NumberAssert,
-  NumberAssertCore,
-  StateAssertCore,
+  KeyValueAssertHost,
+  ListNumberAssert,
+  ListNumberAssertHost,
   StringAssert,
-  StringAssertCore
+  StringAssertHost
 } from './assert';
 import { ElementState } from './element';
 
-export interface Has<V> {
+export interface Has {
   class: StringAssert;
   state: BinaryAssert<ElementState>;
   attribute: KeyValueAssert;
@@ -20,38 +21,38 @@ export interface Has<V> {
   value: StringAssert;
 }
 
-export interface HasAll<V> {
-  length: NumberAssert;
+export interface ListHas {
+  length: ListNumberAssert;
 }
 
-class Assertion<V> implements Has<V>, HasAll<V> {
+class Assertion implements Has, ListHas {
   get attribute(): KeyValueAssert {
-    return new KeyValueAssertCore(AssertWhat.attribute);
+    return new KeyValueAssertHost(AssertWhat.attribute);
   }
 
   get style(): KeyValueAssert {
-    return new KeyValueAssertCore(AssertWhat.style);
+    return new KeyValueAssertHost(AssertWhat.style);
   }
 
   get text(): StringAssert {
-    return new StringAssertCore(AssertWhat.text);
+    return new StringAssertHost(AssertWhat.text);
   }
 
   get value(): StringAssert {
-    return new StringAssertCore(AssertWhat.value);
+    return new StringAssertHost(AssertWhat.value);
   }
 
-  get length(): NumberAssert {
-    return new NumberAssertCore(AssertWhat.length);
+  get length(): ListNumberAssert {
+    return new ListNumberAssertHost(AssertWhat.length);
   }
 
   get state(): BinaryAssert<ElementState> {
-    return new StateAssertCore();
+    return new BinaryAssertHost<ElementState>(AssertWhat.state, AssertHow.equals);
   }
 
   get class(): StringAssert {
-    return new StringAssertCore(AssertWhat.class);
+    return new StringAssertHost(AssertWhat.class);
   }
 }
 
-export const has: Has<unknown> & HasAll<unknown> = new Assertion();
+export const has: Has & ListHas = new Assertion();

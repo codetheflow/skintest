@@ -1,6 +1,3 @@
-# skintest
-ui automatization framework
-
 ### todo 
 
 0.1.0:
@@ -20,24 +17,23 @@ ui automatization framework
 * better fails/exception management - done
 * better stacktrace of exceptions - done
 * typescript stacktrace - done
+* use `mark` as checked\unchecked - done
+* errors namespace - done
+* has.state 'visible|checked|disabled|editable|enabled|hidden' - done
 * full assert supports
 * https://www.chaijs.com/plugins/chai-webdriver/
 * https://www.chaijs.com/plugins/chai-dom/
-* has.state 'visible|checked|disabled|editable|enabled|hidden'
 * launch.json for debugging
 * has.text and has.value are very similar, for inputs maybe make only value available or stay only with has.text
-* waitSelector doesn't take into account page's timeout
-* and inspect to dbg in .debug, better debugging experience
-* use value from the selector like `I.fill(todos.what, from.value, todos.user)` maybe it should be a recipe?
-* use `mark` as checked\unchecked
-* errors namespace
 * one feature per file constraint
 * total report
 * fix yarn build
 * starter github repository
-* publish version 0.0.1
+* publish version 0.2.0
 
 0.3.0:
+* and inspect to dbg in .debug, better debugging experience
+* waitSelector doesn't take into account page's timeout
 * add comments to the ego, selectors and recipes
 * show fail/error solutions/links to solutions
 * better code parsing in the `meta.ts`
@@ -48,6 +44,7 @@ ui automatization framework
 * keyboard keys - documentation
 
 next
+* use value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?
 * reporting UX
 * CI
 * multiple selector strategy in $ and $$, data-test-id, search by the text
@@ -64,6 +61,7 @@ next
 * https://playwright.dev/docs/ci
 * copy/paste as recipe example
 * https://github.com/microsoft/playwright/issues/2511
+* get value from selector and fill input recipe example
 
 
 ### questions

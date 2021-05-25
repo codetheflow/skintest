@@ -1,4 +1,4 @@
-import { BinaryAssert, ListAssert, UnaryAssert } from './assert';
+import { BinaryAssert, ListBinaryAssert } from './assert';
 import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
 import { DOMElement } from './dom';
 import { KeyboardKey } from './keyboard';
@@ -23,10 +23,9 @@ export interface Ego {
 
   test(message: string): TestStep;
   see<E extends DOMElement>(target: Query<E>): AssertStep;
-  see<E extends DOMElement>(target: Query<E>, assert: UnaryAssert): AssertStep;
-  see<E extends DOMElement, V>(target: Query<E>, assert: BinaryAssert<V>, value: V): AssertStep;
-  see<E extends DOMElement, V>(targets: QueryList<E>, assert: ListAssert<V>, value: V): AssertStep;
-  
+  see<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): AssertStep;
+  see<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): AssertStep;
+
   // todo: make more explicit `E` types
   mark<E extends DOMElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep;
   click<E extends DOMElement>(target: Query<E>): ClientStep;
@@ -38,8 +37,4 @@ export interface Ego {
   say(message: string): InfoStep;
   type<E extends DOMElement>(target: Query<E>, value: string): ClientStep;
   select<E extends DOMElement>(target: Query<E>): ClientStep;
-
-  // select<E extends DOMElement>(target: Query<E>, option: string): ClientStep;
-  // attachFile(from: Query<HTMLFormElement>, file: any): ClientStep;
-  // drag<S extends DOMElement>(target: Query<S>, x: number, y: number): ClientStep;
 }
