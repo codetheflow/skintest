@@ -1,4 +1,5 @@
-export { callerNotFoundError, elementNotFoundError, invalidArgumentError, noCurrentPageError, pageNotFoundError, timeoutError, unknownError } from './errors';
+export { errors } from './errors';
 export { Guard } from './guard';
 export { capture, prettyStack, StackFrame, withSourceMap } from './stack-trace';
-export { escapeRE, isString, isUndefined, yes } from './utils';
+export { KeyValue, NumberDictionary, StringDictionary } from './types';
+export { escapeRE, isString, isUndefined, reinterpret, yes } from './utils';

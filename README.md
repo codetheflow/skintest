@@ -16,5 +16,5 @@ yarn build:watch
 ```
 second terminal
 ```bash
-yarn start
+yarn sandbox
 ```

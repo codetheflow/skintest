@@ -1,4 +1,4 @@
-import { elementNotFoundError } from '@skintest/common';
+import { errors } from '@skintest/common';
 import { DOMElement, ElementRef, ElementRefList, KeyboardKey, Page } from '@skintest/sdk';
 import * as playwright from 'playwright';
 import { PlaywrightAction } from './playwright-action';
@@ -95,17 +95,6 @@ export class PlaywrightPage implements Page {
     return this.page.focus(selector);
   }
 
-  // todo: implement
-  @PlaywrightAction()
-  drag(target: string, x: number, y: number): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
-  @PlaywrightAction()
-  attachFile(target: string, file: any): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
   @PlaywrightAction()
   pause(): Promise<void> {
     return this.page.pause();
@@ -118,7 +107,7 @@ export class PlaywrightPage implements Page {
       return new PlaywrightElement<T>(handle, this.page, selector);
     }
 
-    throw elementNotFoundError(selector);
+    throw errors.elementNotFound(selector);
   }
 
   @PlaywrightAction()

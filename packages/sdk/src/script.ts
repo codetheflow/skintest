@@ -1,4 +1,4 @@
-import { invalidArgumentError } from '@skintest/common';
+import { errors } from '@skintest/common';
 import { Command } from './command';
 import { Feature, Scenario } from './feature';
 import { Meta } from './meta';
@@ -50,7 +50,7 @@ export class RuntimeScript implements Script, Feature, Scenario {
         this.beforeStep.push(...schema);
         break;
       default:
-        throw invalidArgumentError('what', what);
+        throw errors.invalidArgument('what', what);
     }
 
     return this;
@@ -68,7 +68,7 @@ export class RuntimeScript implements Script, Feature, Scenario {
         this.afterStep.push(...schema);
         break;
       default:
-        throw invalidArgumentError('what', what);
+        throw errors.invalidArgument('what', what);
     }
 
     return this;

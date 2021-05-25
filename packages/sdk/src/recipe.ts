@@ -1,4 +1,4 @@
-import { Guard, invalidArgumentError } from '@skintest/common';
+import { errors, Guard } from '@skintest/common';
 import { DOMElement } from './dom';
 import { Page } from './page';
 import { Query, QueryList } from './query';
@@ -41,6 +41,7 @@ export class PageClient implements Client {
 
   query<T extends DOMElement>(query: Query<T>): Promise<ClientElement<T>>;
   query<T extends DOMElement>(query: QueryList<T>): Promise<ClientElementList<T>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   query(query: Query<any> | QueryList<any>): Promise<any> {
     Guard.notNull(query, 'query');
 
@@ -48,7 +49,7 @@ export class PageClient implements Client {
     switch (query.type) {
       case 'query': return this.page.query(selector);
       case 'queryList': return this.page.queryList(selector);
-      default: throw invalidArgumentError('type', (query as any).type);
+      default: throw errors.invalidArgument('type', (query as any).type);
     }
   }
 }

@@ -26,13 +26,9 @@ export interface Ego {
   see<E extends DOMElement>(target: Query<E>, assert: UnaryAssert): AssertStep;
   see<E extends DOMElement, V>(target: Query<E>, assert: BinaryAssert<V>, value: V): AssertStep;
   see<E extends DOMElement, V>(targets: QueryList<E>, assert: ListAssert<V>, value: V): AssertStep;
-  // dontSee<S extends DOMElement>(target: Query<S>): AssertStep;
-  // dontSee<S extends DOMElement>(target: Query<S>, assert: UnaryAssert): AssertStep;
-  // dontSee<S extends DOMElement, V>(target: Query<S>, assert: BinaryAssert<V>, value: V): AssertStep;
-  // dontSee<S extends DOMElement, V>(targets: QueryList<S>, assert: ListAssert<V>, value: V): AssertStep;
-
+  
   // todo: make more explicit `E` types
-  check<E extends DOMElement>(target: Query<E>): ClientStep;
+  mark<E extends DOMElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep;
   click<E extends DOMElement>(target: Query<E>): ClientStep;
   dblclick<E extends DOMElement>(target: Query<E>): ClientStep;
   fill<E extends DOMElement>(target: Query<E>, value: string): ClientStep;
@@ -41,7 +37,6 @@ export interface Ego {
   press(key: KeyboardKey): ClientStep;
   say(message: string): InfoStep;
   type<E extends DOMElement>(target: Query<E>, value: string): ClientStep;
-  uncheck<E extends DOMElement>(target: Query<E>): ClientStep;
   select<E extends DOMElement>(target: Query<E>): ClientStep;
 
   // select<E extends DOMElement>(target: Query<E>, option: string): ClientStep;

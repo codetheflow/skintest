@@ -1,10 +1,10 @@
-import { Guard, invalidArgumentError, isUndefined } from '@skintest/common';
+import { errors, Guard, isUndefined } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
-import { notFoundElement, TestExecutionResult } from '../test-result';
+import { fails, TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 
 export class SeeStep implements AssertStep {
@@ -31,7 +31,9 @@ export class SeeStep implements AssertStep {
         case 'query': {
           const element = await page.query(selector);
           if (!element) {
-            return notFoundElement(selector);
+            return fails.elementNotFound({
+              query: this.query
+            });
           }
 
           break;
@@ -39,13 +41,15 @@ export class SeeStep implements AssertStep {
         case 'queryList': {
           const elements = await page.queryList(selector);
           if (!elements.length) {
-            return notFoundElement(selector);
+            return fails.elementNotFound({
+              query: this.query
+            });
           }
 
           break;
         }
         default: {
-          throw invalidArgumentError('selector', (this.query as any).type);
+          throw errors.invalidArgument('selector', (this.query as any).type);
         }
       }
     }
@@ -61,7 +65,7 @@ export class SeeStep implements AssertStep {
         return await verify.elementList(this.query, what, how, this.value);
       }
       default: {
-        throw invalidArgumentError('selector', (this.query as any).type);
+        throw errors.invalidArgument('selector', (this.query as any).type);
       }
     }
   }

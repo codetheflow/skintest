@@ -1,15 +1,21 @@
+import { KeyValue } from '@skintest/common';
+import { ElementState } from './element';
 
 export enum AssertHow {
-  equals = 'equals to',
-  above = 'above',
-  below = 'below',
-  regexp = 'matches to',
+  above = 'be above',
+  below = 'be below',
+  contains = 'contain',
+  equals = 'equal',
+  regexp = 'match',
 }
 
 export enum AssertWhat {
+  attribute = 'attribute',
+  class = 'class',
   length = 'length',
-  innerText = 'text',
-  focus = 'focus',
+  state = 'state',
+  style = 'style',
+  text = 'text',
   value = 'value',
 }
 
@@ -24,11 +30,17 @@ export interface ListAssert<V> {
 
 export interface StringAssert {
   match: BinaryAssert<RegExp>;
+  like: BinaryAssert<string>;
 }
 
 export interface NumberAssert {
   above: BinaryAssert<number>;
   below: BinaryAssert<number>;
+}
+
+export interface KeyValueAssert extends BinaryAssert<KeyValue<string>> {
+  match: StringAssert['match'];
+  like: StringAssert['like'];
 }
 
 export class AssertHost<V> implements UnaryAssert, BinaryAssert<V>, ListAssert<V> {
@@ -46,6 +58,10 @@ export class StringAssertCore extends AssertHost<string> implements StringAssert
   get match(): BinaryAssert<RegExp> {
     return new AssertHost<string>(this.what, AssertHow.regexp);
   }
+
+  get like(): BinaryAssert<string> {
+    return new AssertHost<string>(this.what, AssertHow.contains);
+  }
 }
 
 export class NumberAssertCore extends AssertHost<number> implements NumberAssert {
@@ -59,6 +75,18 @@ export class NumberAssertCore extends AssertHost<number> implements NumberAssert
 
   get below(): BinaryAssert<number> {
     return new AssertHost<number>(this.what, AssertHow.below);
+  }
+}
+
+export class StateAssertCore extends AssertHost<ElementState> {
+  constructor() {
+    super(AssertWhat.state, AssertHow.equals)
+  }
+}
+
+export class KeyValueAssertCore extends StringAssertCore {
+  constructor(what: AssertWhat) {
+    super(what);
   }
 }
 

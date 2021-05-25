@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { MappedPosition, SourceMapConsumer } from 'source-map';
 import * as StackUtils from 'stack-utils';
-import { callerNotFoundError } from './errors';
+import { errors } from './errors';
 import { isUndefined } from './utils';
 
 const su = new StackUtils();
@@ -75,7 +75,7 @@ export function withSourceMap(caller: StackFrame): Promise<StackFrame> {
   return SourceMapConsumer.with(sourceMap, null, consumer => {
     const pos = consumer.originalPositionFor(caller) as MappedPosition;
     if (!pos || !pos.source) {
-      throw callerNotFoundError('source-map');
+      throw errors.callerNotFound('source-map');
     }
 
     return {

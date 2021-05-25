@@ -1,4 +1,4 @@
-import { escapeRE, invalidArgumentError } from '@skintest/common';
+import { errors, escapeRE } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Suite } from '@skintest/sdk';
 
@@ -51,7 +51,7 @@ export function tagFilter(options: TagFilter): Plugin {
           break;
         }
         default: {
-          throw invalidArgumentError('include', include);
+          throw errors.invalidArgument('include', include);
         }
       }
     }

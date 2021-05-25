@@ -3,7 +3,9 @@ import { page } from '../components/page';
 import { todos } from '../components/todos';
 import { add_todo } from '../recipes/add-todo';
 import { clear_todos } from '../recipes/clear-todos';
+import { copy_from } from '../recipes/copy-from';
 import { generate_todos } from '../recipes/generate-todos';
+import { paste_to } from '../recipes/paste-to';
 
 feature('todos add')
   .before('scenario'
@@ -14,8 +16,13 @@ feature('todos add')
 
   .scenario('check the input field should be in focus on initial load'
     , I.test('focus in the input field')
-    , I.see(todos.what, has.focus)
+    , I.see(todos.what, has.state, 'focused')
   )
+
+  .scenario('check the input field should have placeholder'
+  , I.test('placeholder in the input field')
+  , I.see(todos.what, has.attribute, ['placeholder', 'What needs to be done?'])
+)
 
   .scenario('check the list has all added items'
     , I.fill(todos.what, 'learn testing')
@@ -24,8 +31,8 @@ feature('todos add')
     , I.press('Enter')
     , I.test('list contains added items')
     , I.see(todos.list, has.length, 2)
-    , I.see(todos.item_at(0), has.text, 'learn testing')
-    , I.see(todos.item_at(1), has.text, 'be cool')
+    , I.see(todos.item_label_at(0), has.text, 'learn testing')
+    , I.see(todos.item_label_at(1), has.text, 'be cool')
   )
 
   .scenario('check the input field should contain entered text'
@@ -43,10 +50,10 @@ feature('todos add')
   .scenario('check item text is trimmed after it added to the list'
     , I.do(add_todo, '  pass the exams  ')
     , I.test('todo item contains trimmed text')
-    , I.see(todos.item_at(0), has.text, 'pass the exams')
+    , I.see(todos.item_label_at(0), has.text, 'pass the exams')
   )
 
-  .scenario('#now check the list supports many todos'
+  .scenario('check the list supports many todos'
     , I.do(generate_todos, 10)
     , I.test('list contains all the items')
     , I.see(todos.list, has.length, 10)
@@ -65,17 +72,13 @@ feature('todos add')
 
     , I.test('page one has the same items as page two')
     , I.see(todos.list, has.length, 1)
-    , I.see(todos.item_at(0), has.text, 'walk the dog')
+    , I.see(todos.item_label_at(0), has.text, 'walk the dog')
   )
 
   .scenario('check that todo item can be copy pasted by using clipboard'
     , I.do(add_todo, 'feed dragon')
-    , I.select(todos.item_at(0))
-    , I.press('Control+C')
-    // todo: investigate why focus doesn't work?
-    , I.focus(todos.what)
-    , I.fill(todos.what, '')
-    , I.press('Control+V')
+    , I.do(copy_from, todos.item_label_at(0))
+    , I.do(paste_to, todos.what)
     , I.test('input has the same value as first todo')
     , I.see(todos.what, has.value, 'feed dragon')
   )

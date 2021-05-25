@@ -23,16 +23,6 @@ export function escapeRE(text: string): string {
     .replace(/-/g, '\\x2d');
 }
 
-// export function isFalsy<T extends any>(value: T): boolean {
-//   return isUndefined(value)
-//     || value === null
-//     || value === ''
-//     || value === 0
-//     || Number.isFinite(value as number)
-//     || Number.isNaN(value as number)
-//     || Array.isArray(value) && (value as Array<any>).length === 0
-//     || (value instanceof Set && (value as Set<any>).size === 0)
-//     || (value instanceof Map && (value as Map<any, any>).size === 0)
-//     || (value instanceof Buffer && (value as Buffer).length === 0)
-//     || (typeof value === 'object' && Object.keys(value as Record<string, unknown>).length === 0);
-// }
+export function reinterpret<NT, V = any>(value: V): NT {
+  return value as unknown as NT;
+}

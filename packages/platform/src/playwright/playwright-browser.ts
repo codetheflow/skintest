@@ -1,4 +1,4 @@
-import { noCurrentPageError, pageNotFoundError } from '@skintest/common';
+import { errors } from '@skintest/common';
 import { Browser, Page } from '@skintest/sdk';
 import * as playwright from 'playwright';
 import { PlaywrightAction } from './playwright-action';
@@ -36,7 +36,7 @@ export class PlaywrightBrowser implements Browser {
   async closePage(id: string): Promise<void> {
     const existingPage = this.pages.get(id);
     if (!existingPage) {
-      throw pageNotFoundError(id);
+      throw errors.pageNotFound(id);
     }
 
     return existingPage.close();
@@ -49,7 +49,7 @@ export class PlaywrightBrowser implements Browser {
 
   getCurrentPage(): Page {
     if (!this.currentPage) {
-      throw noCurrentPageError();
+      throw errors.noCurrentPage();
     }
 
     return this.currentPage;

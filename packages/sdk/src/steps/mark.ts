@@ -5,12 +5,13 @@ import { StepMeta } from '../meta';
 import { Query } from '../query';
 import { asTest, TestExecutionResult } from '../test-result';
 
-export class CheckStep implements ClientStep {
+export class MarkStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query<any>
+    private query: Query<any>,
+    private value: 'checked' | 'unchecked'
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
@@ -21,11 +22,15 @@ export class CheckStep implements ClientStep {
 
     const page = browser.getCurrentPage();
     const selector = this.query.toString();
-    return asTest(page.check(selector));
+    return asTest(
+      this.value === 'checked'
+        ? page.check(selector)
+        : page.uncheck(selector)
+    );
   }
 
   toString(): string {
     const selector = this.query.toString();
-    return `I check ${formatSelector(selector)}`;
+    return `I mark ${formatSelector(selector)} as ${this.value}`;
   }
 }

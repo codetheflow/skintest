@@ -1,6 +1,6 @@
 import { prettyStack } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
-import { Command } from '@skintest/sdk';
+import { Command, TestFail } from '@skintest/sdk';
 import * as chalk from 'chalk';
 import * as path from 'path';
 
@@ -15,6 +15,7 @@ const hidden = chalk.hidden;
 const info = chalk.grey;
 const pass = chalk.green;
 const tag = chalk.bgGrey.white;
+const value = chalk.bgRedBright; //chalk.bgRed.white;
 
 const CHECK_MARK = '\u2713';
 const CROSS_MARK = '\u2613';
@@ -84,16 +85,21 @@ function followLine() {
   return (...text: string[]): boolean => stdout.write(text.join(''));
 }
 
-async function writeError(ex: Error) {
-  stderr.write(error((ex.name || 'Error') + ': ' + (ex.message) || 'unknown error'));
+function fillWidth(text: string) {
+  return text + Array(Math.max(0, stdout.columns - text.length)).fill(WS).join('');
+}
+
+async function writeError(reason: Error) {
+  const text = (reason.name || 'Error') + ': ' + (reason.message || 'unknown error');
+  stderr.write(error(fillWidth(text)));
   stderr.write(NEW_LINE);
 
-  if (ex.name === 'skintest.timeout') {
+  if (reason.name === 'skintest.timeout') {
     return;
   }
 
-  if (ex.stack) {
-    const frames = (await prettyStack(ex.stack))
+  if (reason.stack) {
+    const frames = (await prettyStack(reason.stack))
       .filter(x => x.function && x.file)
       .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
       .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
@@ -102,6 +108,24 @@ async function writeError(ex: Error) {
     stderr.write(fail(frames.join(NEW_LINE)));
     stderr.write(NEW_LINE);
   }
+}
+
+function writeFail(reason: TestFail) {
+  const { body } = reason;
+  const keys = ['query', 'how', 'what', 'actual', 'etalon'];
+  const isBinary = keys.every(key => key in body);
+  if (isBinary) {
+    const selector = body.query;
+    const method = body.query.type === 'query' ? '$' : '$$';
+
+    stderr.write(fail(
+      `${method}(${selector}).${body.what}: expected ${value(' ' + body.actual + ' ')} to ${body.how} ${value(' ' + body.etalon + ' ')}`
+    ));
+  } else {
+    stderr.write(fail(reason.description));
+  }
+
+  stderr.write(NEW_LINE);
 }
 
 export function ttyReport(): Plugin {
@@ -225,8 +249,7 @@ export function ttyReport(): Plugin {
       currentLine = followLine();
 
       if ('status' in reason) {
-        stderr.write(error(reason.description));
-        stderr.write(NEW_LINE);
+        writeFail(reason);
       } else {
         await writeError(reason);
       }

@@ -1,4 +1,4 @@
-import { callerNotFoundError, capture, StackFrame, withSourceMap } from '@skintest/common';
+import { capture, errors, StackFrame, withSourceMap } from '@skintest/common';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -36,7 +36,7 @@ export function getCaller(): StackFrame {
     .filter(x => !PACKAGES.some(p => x.file.includes(p)))
 
   if (!callers.length) {
-    throw callerNotFoundError(frames[0]?.file);
+    throw errors.callerNotFound(frames[0]?.file);
   }
 
   return callers[0];

@@ -1,4 +1,4 @@
-import { timeoutError } from '@skintest/common';
+import { errors } from '@skintest/common';
 import * as playwright from 'playwright';
 
 export function PlaywrightAction() {
@@ -19,7 +19,7 @@ export async function playwrightAction<T>(source: string, action: () => Promise<
   }
   catch (ex) {
     if (ex instanceof playwright.errors.TimeoutError) {
-      throw timeoutError(source, ex);
+      throw errors.timeout(source, ex);
     }
 
     throw ex;

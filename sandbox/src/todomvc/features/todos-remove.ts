@@ -13,8 +13,8 @@ feature('todos remove')
 
   .scenario('check the remove button deletes items'
     , I.do(add_todo, 'item to remove')
-    , I.hover(todos.item_at(0))
-    , I.click(todos.remove_at(0))
+    , I.hover(todos.item_label_at(0))
+    , I.click(todos.remove_button_at(0))
     , I.test('todos list is empty after remove button clicked')
     , I.see(todos.list, has.length, 0)
   )

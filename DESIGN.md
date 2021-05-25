@@ -19,6 +19,7 @@ ui automatization framework
 0.2.0:
 * better fails/exception management - done
 * better stacktrace of exceptions - done
+* typescript stacktrace - done
 * full assert supports
 * https://www.chaijs.com/plugins/chai-webdriver/
 * https://www.chaijs.com/plugins/chai-dom/
@@ -27,13 +28,16 @@ ui automatization framework
 * has.text and has.value are very similar, for inputs maybe make only value available or stay only with has.text
 * waitSelector doesn't take into account page's timeout
 * and inspect to dbg in .debug, better debugging experience
+* use value from the selector like `I.fill(todos.what, from.value, todos.user)` maybe it should be a recipe?
+* use `mark` as checked\unchecked
+* errors namespace
+* one feature per file constraint
 * total report
 * fix yarn build
 * starter github repository
 * publish version 0.0.1
 
 0.3.0:
-* use value from the selector like `I.fill(todos.what, from.value, todos.user)`
 * add comments to the ego, selectors and recipes
 * show fail/error solutions/links to solutions
 * better code parsing in the `meta.ts`
@@ -63,6 +67,7 @@ next
 
 
 ### questions
+* think about todos.item.at/label_at etc.
 * $$ should wait?
 * add `feature`, `component`, `recipe` postfixes?
 * recipe type `assert`?
@@ -111,5 +116,17 @@ next
     , I.fill(todos.what, from.text, todos.item_at(0)) // from.text
     , I.test('input contains text from the first todo')
     , I.see(todos.what, has.value, 'send a letter')
+  )
+```
+
+```typescript
+  .scenario('check complete button completes only checked items'
+    , I.do(add_todo, 'send a letter')
+    , I.do(add_todo, 'do exercise')
+    , I.mark(todos.item_at(0), as, 'checked')
+    , I.mark(todos.item_at(1), as, 'unchecked')
+    , I.click(todos.complete)
+    , I.test('todos list contains only the second item')
+    , I.see(todos.item_at(0), has.text, 'do exercise')
   )
 ```

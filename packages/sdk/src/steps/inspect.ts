@@ -1,4 +1,4 @@
-import { Guard, invalidArgumentError, isString } from '@skintest/common';
+import { errors, Guard, isString } from '@skintest/common';
 import { DevStep, StepContext } from '../command';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
@@ -35,7 +35,7 @@ export class InspectStep implements DevStep {
       }
 
       default: {
-        throw invalidArgumentError('type', type);
+        throw errors.invalidArgument('type', type);
       }
     }
   }

@@ -12,7 +12,8 @@
     "lerna": "lerna",
     "build": "lerna run build",
     "build:watch": "lerna run --parallel build:watch",
-    "start": "node sandbox/dist/src/skintest.js",
+    "sandbox": "node sandbox/dist/src/skintest.js",
+    "sandbox:watch": "nodemon --watch sandbox/dist --no-stdin --delay 1 sandbox/dist/src/skintest.js",
     "lint": "yarn lint:packages & yarn lint:sandbox",
     "lint:packages": "eslint packages -c packages/.eslintrc",
     "lint:sandbox": "eslint sandbox -c sandbox/.eslintrc"
@@ -22,6 +23,7 @@
     "@typescript-eslint/parser": "4.24.0",
     "eslint": "7.26.0",
     "lerna": "4.0.0",
+    "nodemon": "^2.0.7",
     "typescript": "4.2.4"
   }
 }
