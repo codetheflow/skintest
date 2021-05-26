@@ -6,12 +6,12 @@ export interface Stage<Z extends Zone, S> {
   (scope: S): Promise<void>;
 }
 
-export type StartScope = void;
-export type StopScope = void;
-export type InitScope = { suite: Suite };
-export type ErrorScope = { reason: Error };
+export type StartScope = { suite: Suite };
+export type StopScope = StartScope;
+export type InitScope = StartScope;
+export type ErrorScope = StartScope & { reason: Error };
 
-export type FeatureScope = { script: Script };
+export type FeatureScope = StartScope & { script: Script };
 export type ScenarioScope = FeatureScope & { scenario: string };
 export type StepScope = ScenarioScope & { step: Command };
 

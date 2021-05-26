@@ -39,6 +39,9 @@ export const errors = {
   timeout(source: string, ex: Error): Exception {
     return error('timeout', `${source} timeout exceed`, ex);
   },
+  constraint(message: string): Exception {
+    return error('constraint', message);
+  },
   runtime(ex: Error): Exception {
     return error('runtime', ex.message, ex);
   }

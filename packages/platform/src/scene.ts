@@ -1,4 +1,4 @@
-import { Browser, ClientFunction, Command, DoStep, PageClient, Process, Script, ServerFunction, SuiteOperations } from '@skintest/sdk';
+import { Browser, ClientFunction, Command, DoStep, PageClient, Process, Script, ServerFunction, Suite } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { CommandScope, Staging } from './stage';
 
@@ -6,9 +6,9 @@ const NO_SCENARIO = '';
 
 export class Scene {
   constructor(
+    private suite: Suite,
     private effect: Staging,
     private browser: Browser,
-    private operations: SuiteOperations,
     private attempt: Attempt,
   ) {
   }
@@ -22,7 +22,8 @@ export class Scene {
     const afterFeatureEffect = this.effect('after.feature');
 
     const scope = {
-      script
+      suite: this.suite,
+      script,
     };
 
     await beforeFeatureEffect(scope);
@@ -35,9 +36,11 @@ export class Scene {
     );
 
     if (ok) {
+      const { operations } = this.suite;
+
       const scenarios = script
         .scenarios
-        .filter(([name]) => this.operations.filterScenario(script.name, name));
+        .filter(([name]) => operations.filterScenario(script.name, name));
 
       for (const [scenario, steps] of scenarios) {
         await this.scenario(script, scenario, steps);
@@ -64,8 +67,9 @@ export class Scene {
     const afterScenarioEffect = this.effect('after.scenario');
 
     const scope = {
+      suite: this.suite,
       script,
-      scenario
+      scenario,
     };
 
     await beforeScenarioEffect(scope);
@@ -106,6 +110,7 @@ export class Scene {
     const afterStepEffect = this.effect('after.step');
 
     const scope = {
+      suite: this.suite,
       script,
       scenario,
       step,
@@ -155,6 +160,7 @@ export class Scene {
     const failEffect = this.effect('step.fail');
 
     const scope = {
+      suite: this.suite,
       site,
       script,
       scenario,
@@ -208,6 +214,7 @@ export class Scene {
     const { browser, attempt } = this;
 
     const scope = {
+      suite: this.suite,
       site,
       script,
       scenario,

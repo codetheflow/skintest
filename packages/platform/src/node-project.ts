@@ -23,7 +23,7 @@ export class NodeProject implements Project {
     const error = effect('error');
 
     try {
-      await start();
+      await start({ suite });
       await init({ suite });
 
       const scripts = suite
@@ -34,9 +34,9 @@ export class NodeProject implements Project {
         const browser = await createBrowser();
         try {
           const scene = new Scene(
+            suite,
             effect,
             browser,
-            suite.operations,
             attempt
           );
 
@@ -47,9 +47,9 @@ export class NodeProject implements Project {
       }
 
     } catch (ex) {
-      await error({ reason: ex });
+      await error({ suite, reason: ex });
     } finally {
-      await stop();
+      await stop({suite});
     }
   }
 }

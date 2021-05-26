@@ -26,8 +26,9 @@
 * stay with has.text for both innerText and value -done
 * move playwright to the plugins - done
 * use literal templates in $ and $$ - done
-* one feature per file constraint
-* add has.not?
+* add has.no - done
+* one feature per file constraint - done
+* options from launcher - 
 * total report
 * launch.json for debugging
 * fix yarn build
