@@ -55,14 +55,14 @@ export class SeeStep implements AssertStep {
     }
 
     const verify = new Verify(page);
-    const { what, how } = reinterpret<AssertHost>(this.assert);
+    const host = reinterpret<AssertHost>(this.assert);
 
     switch (this.query.type) {
       case 'query': {
-        return await verify.element(this.query, what, how, this.value);
+        return await verify.query(host, this.query, this.value);
       }
       case 'queryList': {
-        return await verify.elementList(this.query, what, how, this.value);
+        return await verify.queryList(host, this.query, this.value);
       }
       default: {
         throw errors.invalidArgument('selector', reinterpret<Query>(this.query).type);

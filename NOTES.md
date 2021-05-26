@@ -23,10 +23,10 @@
 * full assert supports - done
 * https://www.chaijs.com/plugins/chai-webdriver/
 * force user to use <> in $ and $$ - done
-* has.text and has.value are very similar, for inputs maybe make only value available or stay only with has.text
-* one feature per file constraint
+* stay with has.text for both innerText and value -done
 * move playwright to the plugins - done
 * use literal templates in $ and $$ - done
+* one feature per file constraint
 * add has.not?
 * total report
 * launch.json for debugging

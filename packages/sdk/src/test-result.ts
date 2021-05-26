@@ -1,5 +1,5 @@
 import { StringDictionary } from '@skintest/common';
-import { AssertHow, AssertWhat } from './assert';
+import { AssertHost } from './assert';
 import { DOMElement } from './dom';
 import { ElementRef } from './element';
 import { formatSelector } from './format';
@@ -50,9 +50,8 @@ export async function asTest(promise: Promise<void>): Promise<TestExecutionResul
 export const fails = {
 
   binaryAssert(body: {
+    assert: AssertHost,
     query: Query | QueryList,
-    what: AssertWhat,
-    how: AssertHow,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     etalon: any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,8 +61,10 @@ export const fails = {
     const method = body.query.type === 'query' ? '$' : '$$';
 
     const description =
-      `${method}(${selector}).${body.what}:` +
-      `expected \`${body.actual}\` to ${body.how} \`${body.etalon}\``;
+      `${method}(${selector}).${body.assert.what}:` +
+      `expected \`${body.actual}\` to ` +
+      `${body.assert.no ? 'not' : ''} ` +
+      `${body.assert.how} \`${body.etalon}\``;
 
     return {
       status: 'fail',

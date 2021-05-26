@@ -2,6 +2,7 @@ import { prettyStack, StringDictionary } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command, DOMElement, ElementRef, ElementState, TestFail } from '@skintest/sdk';
 import * as chalk from 'chalk';
+import { AssertHost } from 'packages/sdk/src/assert';
 import * as path from 'path';
 
 const { stdout, stderr, stdin } = process;
@@ -114,14 +115,18 @@ async function writeError(reason: Error) {
 
 function writeFail(reason: TestFail) {
   const { body } = reason;
-  const keys = ['query', 'how', 'what', 'actual', 'etalon'];
+  const keys = ['query', 'assert', 'actual', 'etalon'];
   const isBinary = keys.every(key => key in body);
   if (isBinary) {
     const selector = body.query;
     const method = body.query.type === 'query' ? '$' : '$$';
+    const assert: AssertHost = body.assert;
 
     stderr.write(fail(
-      `${method}(${selector}).${body.what}: expected ${value('`' + body.actual + '`')} to ${body.how} ${value('`' + body.etalon + '`')}`
+      `${method}(${selector}).${assert.what}: ` +
+      `expected ${value('`' + body.actual + '`')} ` +
+      `to ${assert.no ? 'not' : ''} ${assert.how} ` +
+      `${value('`' + body.etalon + '`')}`
     ));
   } else {
     stderr.write(fail(reason.description));

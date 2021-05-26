@@ -1,6 +1,5 @@
 import { errors, isRegExp, isString, KeyValue, likeKeyValue, reinterpret } from '@skintest/common';
-import { AssertHow, AssertWhat } from './assert';
-import { DOMElement } from './dom';
+import { AssertHost, AssertHow, AssertWhat } from './assert';
 import { ElementState } from './element';
 import { Page } from './page';
 import { Query, QueryList } from './query';
@@ -10,10 +9,9 @@ export class Verify {
   constructor(private page: Page) {
   }
 
-  async element<V>(
+  async query<V>(
+    assert: AssertHost,
     query: Query,
-    what: AssertWhat,
-    how: AssertHow,
     expected: V
   ): Promise<TestExecutionResult> {
     const selector = query.toString();
@@ -23,11 +21,11 @@ export class Verify {
     }
 
     // todo: remove copy/paste code below
-    switch (what) {
+    switch (assert.what) {
       case AssertWhat.text: {
         const actual = await elementRef.text();
         const etalon = reinterpret<string>(expected);
-        if (this.binaryTest(how, actual, etalon) === true) {
+        if (this.binaryTest(assert, actual, etalon) === true) {
           return pass();
         }
 
@@ -35,9 +33,8 @@ export class Verify {
           .binaryAssert({
             actual,
             etalon,
-            how,
             query,
-            what,
+            assert,
           });
       }
       case AssertWhat.state: {
@@ -51,9 +48,8 @@ export class Verify {
           .binaryAssert({
             actual: '' + actual,
             etalon,
-            how,
             query,
-            what,
+            assert,
           });
       }
       case AssertWhat.class: {
@@ -67,24 +63,23 @@ export class Verify {
           .binaryAssert({
             actual: classList.toString(),
             etalon,
-            how,
             query,
-            what,
+            assert,
           });
       }
       case AssertWhat.attribute:
       case AssertWhat.style: {
         const getActual = (name: string) =>
-          what === AssertWhat.attribute
+          assert.what === AssertWhat.attribute
             ? elementRef.attribute(name)
             : elementRef.style(name);
 
         if (isString(expected)) {
           const etalon = reinterpret<string>(expected);
           const actual = await getActual(etalon);
-          how = AssertHow.exists;
+          assert.how = AssertHow.exists;
 
-          if (this.binaryTest(how, actual, etalon)) {
+          if (this.binaryTest(assert, actual, etalon)) {
             return pass();
           }
 
@@ -92,9 +87,8 @@ export class Verify {
             .binaryAssert({
               actual,
               etalon,
-              how,
               query,
-              what,
+              assert,
             });
         }
 
@@ -102,10 +96,10 @@ export class Verify {
           const [name, etalon] = reinterpret<KeyValue<string>>(expected);
           const actual = await getActual(name);
           if (!isString(etalon)) {
-            how = AssertHow.like;
+            assert.how = AssertHow.like;
           }
 
-          if (this.binaryTest(how, actual, etalon)) {
+          if (this.binaryTest(assert, actual, etalon)) {
             return pass();
           }
 
@@ -113,33 +107,31 @@ export class Verify {
             .binaryAssert({
               actual,
               etalon,
-              how,
               query,
-              what,
+              assert,
             });
         }
 
         throw errors.invalidArgument('expected', expected);
       }
       default: {
-        throw errors.invalidArgument('what', what);
+        throw errors.invalidArgument('what', assert.what);
       }
     }
   }
 
-  async elementList<S extends DOMElement, V>(
-    query: QueryList<S>,
-    what: AssertWhat,
-    how: AssertHow,
+  async queryList<V>(
+    assert: AssertHost,
+    query: QueryList,
     expected: V
   ): Promise<TestExecutionResult> {
     const selector = query.toString();
-    const elementRefList = await this.page.queryList<S>(selector);
-    switch (what) {
+    const elementRefList = await this.page.queryList(selector);
+    switch (assert.what) {
       case AssertWhat.length: {
         const actual = await elementRefList.length;
         const etalon = reinterpret<number>(expected);
-        if (this.binaryTest(how, actual, etalon)) {
+        if (this.binaryTest(assert, actual, etalon)) {
           return pass();
         }
 
@@ -147,48 +139,55 @@ export class Verify {
           .binaryAssert({
             actual,
             etalon,
-            how,
             query,
-            what,
+            assert,
           });
       }
       default: {
-        throw errors.invalidArgument('what', what);
+        throw errors.invalidArgument('what', assert.what);
       }
     }
   }
 
-  private binaryTest<V>(how: AssertHow, actual: V, etalon: V): boolean {
-    switch (how) {
+  private binaryTest<V>(assert: AssertHost, actual: V, etalon: V): boolean {
+    let result: boolean;
+    switch (assert.how) {
       case AssertHow.exists: {
-        return !!actual;
+        result = !!actual;
+        break;
       }
       case AssertHow.above: {
-        return etalon > actual;
+        result = etalon > actual;
+        break;
       }
       case AssertHow.below: {
-        return etalon < actual;
-
+        result = etalon < actual;
+        break;
       }
       case AssertHow.equals: {
-        return etalon === actual;
+        result = etalon === actual;
+        break;
       }
       case AssertHow.like: {
         if (isString(etalon)) {
-          return ('' + actual).includes('' + etalon);
+          result = ('' + actual).includes('' + etalon);
+          break;
         }
 
         if (isRegExp(etalon)) {
           const actualText = '' + actual;
           const regexp = reinterpret<RegExp>(etalon);
-          return actualText.match(regexp) !== null;
+          result = actualText.match(regexp) !== null;
+          break;
         }
 
         throw errors.invalidArgument('etalon', etalon);
       }
       default: {
-        throw errors.invalidArgument('how', how);
+        throw errors.invalidArgument('how', assert.how);
       }
     }
+
+    return assert.no ? !result : result;
   }
 }

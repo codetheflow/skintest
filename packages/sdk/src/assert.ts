@@ -47,12 +47,14 @@ export type ListNumberAssert = ListBinaryAssert<number> & {
 }
 
 export interface AssertHost {
+  no: boolean;
   what: AssertWhat;
   how: AssertHow;
 }
 
 export class BinaryAssertHost<V> extends BinaryAssert<V> implements AssertHost {
   constructor(
+    public no: boolean,
     public what: AssertWhat,
     public how: AssertHow,
   ) {
@@ -62,6 +64,7 @@ export class BinaryAssertHost<V> extends BinaryAssert<V> implements AssertHost {
 
 export class ListBinaryAssertHost<V> extends ListBinaryAssert<V> implements AssertHost {
   constructor(
+    public no: boolean,
     public what: AssertWhat,
     public how: AssertHow,
   ) {
@@ -70,49 +73,49 @@ export class ListBinaryAssertHost<V> extends ListBinaryAssert<V> implements Asse
 }
 
 export class StringAssertHost extends BinaryAssertHost<string> implements StringAssert {
-  constructor(what: AssertWhat) {
-    super(what, AssertHow.equals);
+  constructor(no: boolean, what: AssertWhat) {
+    super(no, what, AssertHow.equals);
   }
 
   get like(): BinaryAssert<string | RegExp> {
-    return new BinaryAssertHost(this.what, AssertHow.like);
+    return new BinaryAssertHost(this.no, this.what, AssertHow.like);
   }
 }
 
 export class NumberAssertHost extends BinaryAssertHost<number> implements NumberAssert {
-  constructor(what: AssertWhat) {
-    super(what, AssertHow.equals);
+  constructor(no: boolean, what: AssertWhat) {
+    super(no, what, AssertHow.equals);
   }
 
   get above(): BinaryAssert<number> {
-    return new BinaryAssertHost(this.what, AssertHow.above);
+    return new BinaryAssertHost(this.no, this.what, AssertHow.above);
   }
 
   get below(): BinaryAssert<number> {
-    return new BinaryAssertHost(this.what, AssertHow.below);
+    return new BinaryAssertHost(this.no, this.what, AssertHow.below);
   }
 }
 
 export class ListNumberAssertHost extends ListBinaryAssertHost<number> implements ListNumberAssert {
-  constructor(what: AssertWhat) {
-    super(what, AssertHow.equals);
+  constructor(no: boolean, what: AssertWhat) {
+    super(no, what, AssertHow.equals);
   }
 
   get above(): ListBinaryAssert<number> {
-    return new ListBinaryAssertHost(this.what, AssertHow.above);
+    return new ListBinaryAssertHost(this.no, this.what, AssertHow.above);
   }
 
   get below(): ListBinaryAssert<number> {
-    return new ListBinaryAssertHost(this.what, AssertHow.below);
+    return new ListBinaryAssertHost(this.no, this.what, AssertHow.below);
   }
 }
 
 export class KeyValueAssertHost extends BinaryAssertHost<string | KeyValue<string>> implements KeyValueAssert {
-  constructor(what: AssertWhat) {
-    super(what, AssertHow.equals);
+  constructor(no: boolean, what: AssertWhat) {
+    super(no, what, AssertHow.equals);
   }
 
   get like(): BinaryAssert<string | RegExp> {
-    return new BinaryAssertHost(this.what, AssertHow.like);
+    return new BinaryAssertHost(this.no, this.what, AssertHow.like);
   }
 }

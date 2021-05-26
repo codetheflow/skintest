@@ -2,6 +2,7 @@ import { AssertHow, AssertWhat, BinaryAssert, BinaryAssertHost, KeyValueAssert, 
 import { ElementState } from './element';
 
 export interface Has {
+  no: HasNo;
   class: StringAssert;
   state: BinaryAssert<ElementState>;
   attribute: KeyValueAssert;
@@ -10,36 +11,48 @@ export interface Has {
 }
 
 export interface ListHas {
+  no: ListHasNo;
   length: ListNumberAssert;
 }
 
+export type HasNo = Omit<Has, 'not'>;
+export type ListHasNo = Omit<ListHas, 'not'>;
+
 class Assertion implements Has, ListHas {
+  private not = false;
+
+  get no() {
+    const negative = new Assertion();
+    negative.not = true;
+    return negative;
+  }
+
   get attribute(): KeyValueAssert {
-    return new KeyValueAssertHost(AssertWhat.attribute);
+    return new KeyValueAssertHost(this.not, AssertWhat.attribute);
   }
 
   get style(): KeyValueAssert {
-    return new KeyValueAssertHost(AssertWhat.style);
+    return new KeyValueAssertHost(this.not, AssertWhat.style);
   }
 
   get text(): StringAssert {
-    return new StringAssertHost(AssertWhat.text);
+    return new StringAssertHost(this.not, AssertWhat.text);
   }
 
   get value(): StringAssert {
-    return new StringAssertHost(AssertWhat.value);
+    return new StringAssertHost(this.not, AssertWhat.value);
   }
 
   get length(): ListNumberAssert {
-    return new ListNumberAssertHost(AssertWhat.length);
+    return new ListNumberAssertHost(this.not, AssertWhat.length);
   }
 
   get state(): BinaryAssert<ElementState> {
-    return new BinaryAssertHost<ElementState>(AssertWhat.state, AssertHow.equals);
+    return new BinaryAssertHost<ElementState>(this.not, AssertWhat.state, AssertHow.equals);
   }
 
   get class(): StringAssert {
-    return new StringAssertHost(AssertWhat.class);
+    return new StringAssertHost(this.not, AssertWhat.class);
   }
 }
 
