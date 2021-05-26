@@ -1,5 +1,5 @@
 import { platform } from '@skintest/platform';
-import { exploreFeatures, playwrightLauncher, tagFilter, ttyLogo, ttyReport } from '@skintest/plugins';
+import { exploreFeatures, playwrightLauncher, tagFilter, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
 
 platform()
@@ -20,5 +20,6 @@ platform()
       })
       , ttyLogo()
       , ttyReport()
+      , ttySummaryReport()
     );
   });

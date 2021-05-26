@@ -28,12 +28,12 @@
 * use literal templates in $ and $$ - done
 * add has.no - done
 * one feature per file constraint - done
+* summary report - done
 * options from launcher - 
-* total report
-* launch.json for debugging
-* fix yarn build
-* starter github repository
-* publish version 0.2.0
+* launch.json for debugging -
+* fix yarn build -
+* starter github repository -
+* publish version 0.2.0 -
 
 0.3.0:
 * and inspect to dbg in .debug, better debugging experience

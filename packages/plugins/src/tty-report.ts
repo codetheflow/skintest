@@ -209,7 +209,8 @@ export function ttyReport(): Plugin {
               for (const element of target) {
                 list.push({
                   text: strip(await element.text()),
-                  checked: await element.state('checked')
+                  visible: await element.state('visible'),
+                  enabled: await element.state('enabled'),
                 });
               }
 
