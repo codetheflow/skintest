@@ -1,4 +1,4 @@
-import { errors, isString, KeyValue, reinterpret } from '@skintest/common';
+import { errors, isRegExp, isString, KeyValue, likeKeyValue, reinterpret } from '@skintest/common';
 import { AssertHow, AssertWhat } from './assert';
 import { DOMElement } from './dom';
 import { ElementState } from './element';
@@ -10,18 +10,19 @@ export class Verify {
   constructor(private page: Page) {
   }
 
-  async element<S extends DOMElement, V>(
-    query: Query<S>,
+  async element<V>(
+    query: Query,
     what: AssertWhat,
     how: AssertHow,
     expected: V
   ): Promise<TestExecutionResult> {
     const selector = query.toString();
-    const elementRef = await this.page.query<S>(selector);
+    const elementRef = await this.page.query(selector);
     if (!elementRef) {
       return fails.elementNotFound({ query });
     }
 
+    // todo: remove copy/paste code below
     switch (what) {
       case AssertWhat.text: {
         const actual = await elementRef.innerText();
@@ -87,44 +88,18 @@ export class Verify {
             what,
           });
       }
-      case AssertWhat.attribute: {
-        if (isString(expected)) {
-          const etalon = reinterpret<string>(expected);
-          const actual = await elementRef.attribute(etalon);
-          if (this.binaryTest(how, actual, etalon)) {
-            return pass();
-          }
-
-          return fails
-            .binaryAssert({
-              actual,
-              etalon,
-              how,
-              query,
-              what,
-            });
-        }
-
-        const [name, etalon] = reinterpret<KeyValue<string>>(expected);
-        const actual = await elementRef.attribute(name);
-        if (actual === etalon) {
-          return pass();
-        }
-
-        return fails
-          .binaryAssert({
-            actual,
-            etalon,
-            how,
-            query,
-            what,
-          });
-      }
-
+      case AssertWhat.attribute:
       case AssertWhat.style: {
+        const getActual = (name: string) =>
+          what === AssertWhat.attribute
+            ? elementRef.attribute(name)
+            : elementRef.style(name);
+
         if (isString(expected)) {
           const etalon = reinterpret<string>(expected);
-          const actual = await elementRef.style(etalon);
+          const actual = await getActual(etalon);
+          how = AssertHow.exists;
+
           if (this.binaryTest(how, actual, etalon)) {
             return pass();
           }
@@ -139,20 +114,28 @@ export class Verify {
             });
         }
 
-        const [name, etalon] = reinterpret<KeyValue<string>>(expected);
-        const actual = await elementRef.style(name);
-        if (actual === etalon) {
-          return pass();
+        if (likeKeyValue(expected)) {
+          const [name, etalon] = reinterpret<KeyValue<string>>(expected);
+          const actual = await getActual(name);
+          if (!isString(etalon)) {
+            how = AssertHow.like;
+          }
+
+          if (this.binaryTest(how, actual, etalon)) {
+            return pass();
+          }
+
+          return fails
+            .binaryAssert({
+              actual,
+              etalon,
+              how,
+              query,
+              what,
+            });
         }
 
-        return fails
-          .binaryAssert({
-            actual,
-            etalon,
-            how,
-            query,
-            what,
-          });
+        throw errors.invalidArgument('expected', expected);
       }
       default: {
         throw errors.invalidArgument('what', what);
@@ -193,6 +176,9 @@ export class Verify {
 
   private binaryTest<V>(how: AssertHow, actual: V, etalon: V): boolean {
     switch (how) {
+      case AssertHow.exists: {
+        return !!actual;
+      }
       case AssertHow.above: {
         return etalon > actual;
       }
@@ -203,10 +189,18 @@ export class Verify {
       case AssertHow.equals: {
         return etalon === actual;
       }
-      case AssertHow.regexp: {
-        const actualText = '' + actual;
-        const regexp = reinterpret<RegExp>(etalon);
-        return actualText.match(regexp) !== null;
+      case AssertHow.like: {
+        if (isString(etalon)) {
+          return ('' + actual).includes('' + etalon);
+        }
+
+        if (isRegExp(etalon)) {
+          const actualText = '' + actual;
+          const regexp = reinterpret<RegExp>(etalon);
+          return actualText.match(regexp) !== null;
+        }
+
+        throw errors.invalidArgument('etalon', etalon);
       }
       default: {
         throw errors.invalidArgument('how', how);

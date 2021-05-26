@@ -10,7 +10,7 @@ export class MarkStep implements ClientStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query<any>,
+    private query: Query,
     private value: 'checked' | 'unchecked'
   ) {
     Guard.notNull(getMeta, 'getMeta');

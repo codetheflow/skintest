@@ -10,7 +10,7 @@ export class FillStep implements ClientStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query<any>,
+    private query: Query,
     private value: string,
   ) {
     Guard.notNull(getMeta, 'getMeta');

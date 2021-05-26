@@ -8,8 +8,8 @@ import { Query, QueryList } from '../query';
 import { pass, TestExecutionResult } from '../test-result';
 
 export interface Debugger {
-  $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null>;
-  $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRef<T>[]>;
+  $<E extends DOMElement>(query: string | Query<E>): Promise<ElementRef<E> | null>;
+  $$<E extends DOMElement>(query: string | QueryList<E>): Promise<ElementRef<E>[]>;
   //inspect()
 }
 
@@ -18,14 +18,14 @@ export type Breakpoint = (dbg: Debugger) => Promise<void>;
 class PageDebugger implements Debugger {
   constructor(private page: Page) { }
 
-  $<T extends DOMElement>(query: string | Query<T>): Promise<ElementRef<T> | null> {
+  $<E extends DOMElement>(query: string | Query<E>): Promise<ElementRef<E> | null> {
     const selector = query.toString();
-    return this.page.dbgQuery<T>(selector);
+    return this.page.immediateQuery<E>(selector);
   }
 
-  $$<T extends DOMElement>(query: string | QueryList<T>): Promise<ElementRefList<T>> {
+  $$<E extends DOMElement>(query: string | QueryList<E>): Promise<ElementRefList<E>> {
     const selector = query.toString();
-    return this.page.dbgQueryList<T>(selector);
+    return this.page.immediateQueryList<E>(selector);
   }
 }
 

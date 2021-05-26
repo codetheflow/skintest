@@ -1,4 +1,4 @@
-import { errors, Guard, isString } from '@skintest/common';
+import { errors, Guard, isString, reinterpret } from '@skintest/common';
 import { DevStep, StepContext } from '../command';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
@@ -9,7 +9,7 @@ export class InspectStep implements DevStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: string | Query<any> | QueryList<any>
+    private query: string | Query | QueryList
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
@@ -22,15 +22,15 @@ export class InspectStep implements DevStep {
     const selector = this.query.toString();
 
     // todo: get rid of `any`
-    const type = isString(this.query) ? 'queryList' : (this.query as any).type
+    const type = isString(this.query) ? 'queryList' : reinterpret<Query>(this.query).type
     switch (type) {
       case 'query': {
-        const target = await page.query(selector);
+        const target = await page.immediateQuery(selector);
         return inspect({ selector, target });
       }
 
       case 'queryList': {
-        const target = await page.queryList(selector);
+        const target = await page.immediateQueryList(selector);
         return inspect({ selector, target });
       }
 

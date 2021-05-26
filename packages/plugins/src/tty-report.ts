@@ -1,6 +1,6 @@
-import { prettyStack } from '@skintest/common';
+import { prettyStack, StringDictionary } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
-import { Command, TestFail } from '@skintest/sdk';
+import { Command, DOMElement, ElementRef, ElementState, TestFail } from '@skintest/sdk';
 import * as chalk from 'chalk';
 import * as path from 'path';
 
@@ -23,18 +23,20 @@ const NEW_LINE = '\n';
 const WS = ' ';
 
 const CURSOR_CODE = '\x1b[6n'
-const CURSOR_RE = /\[(\d+)\;(\d+)R$/;
+const CURSOR_RE = /\[(\d+);(\d+)R$/;
 
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
 
 const STACK_FUNC_IGNORE = [
   '__awaiter',
   'fulfilled',
+  'rejected',
 ];
 
 const STACK_FILE_IGNORE = [
   path.join('platform', 'dist', 'src', 'attempt.js'),
   path.join('platform', 'src', 'attempt.ts'),
+  path.join('common', 'src', 'errors.ts'),
   // from playwright
   path.join('lib', 'utils', 'stackTrace.js')
 ];
@@ -100,10 +102,10 @@ async function writeError(reason: Error) {
 
   if (reason.stack) {
     const frames = (await prettyStack(reason.stack))
-      .filter(x => x.function && x.file)
+      .filter(x => x.file)
       .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
       .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
-      .map(x => `${x.function} (${x.file}:${x.line}:${x.column})`);
+      .map(x => `${x.function || 'at'} (${x.file}:${x.line}:${x.column})`);
 
     stderr.write(fail(frames.join(NEW_LINE)));
     stderr.write(NEW_LINE);
@@ -177,9 +179,10 @@ export function ttyReport(): Plugin {
     'step.pass': async ({ site, step, result }) => {
       if (step.type === 'dev') {
         if (result.inspect) {
-          let { selector: query, target } = result.inspect;
+          // eslint-disable-next-line prefer-const
+          let { selector, target } = result.inspect;
 
-          const textForTable = (text: string): string => {
+          const strip = (text: string): string => {
             if (!text) {
               return text;
             }
@@ -194,14 +197,14 @@ export function ttyReport(): Plugin {
 
           if (Array.isArray(target)) {
             if (target.length > 1) {
-              stdout.write(`$(\`${query}\`) found ${target.length} elements`);
+              stdout.write(`$(\`${selector}\`) found ${target.length} elements`);
               stdout.write(NEW_LINE);
 
-              const list: any[] = [];
+              const list: Array<StringDictionary<unknown>> = [];
               for (const element of target) {
-                const text = textForTable(await element.innerText());
                 list.push({
-                  innerText: text
+                  innerText: strip(await element.innerText()),
+                  checked: await element.state('checked')
                 });
               }
 
@@ -213,17 +216,43 @@ export function ttyReport(): Plugin {
           }
 
           if (target) {
-            stdout.write(`$(\`${query}\`) found 1 element`);
+            const elementRef = target as ElementRef<DOMElement>;
+            stdout.write(`$(\`${selector}\`) found 1 element`);
             stdout.write(NEW_LINE);
 
-            console.table({
-              innerText: textForTable(await target.innerText())
-            });
+            const info: StringDictionary<unknown> = {
+              innerText: strip(await elementRef.innerText()),
+              classList: strip((await elementRef.classList()).toString()),
+            };
 
+            const addState = async (key: ElementState) => {
+              try {
+                info[key] = await elementRef.state(key);
+                // eslint-disable-next-line no-empty
+              } catch (ex) {
+              }
+            };
+
+            const addValue = async () => {
+              try {
+                info.value = await elementRef.value();
+                // eslint-disable-next-line no-empty
+              } catch (ex) {
+              }
+            };
+
+            await addValue();
+            await addState('checked');
+            await addState('editable');
+            await addState('enabled');
+            await addState('focused');
+            await addState('visible')
+
+            console.table(info);
             return;
           }
 
-          stdout.write(error(`$(\`${query}\`) didn't find any elements`));
+          stdout.write(error(`$(\`${selector}\`) didn't find any elements`));
           stdout.write(NEW_LINE);
         }
 

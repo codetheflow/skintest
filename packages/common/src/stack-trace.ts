@@ -24,7 +24,8 @@ export async function prettyStack(stack: string): Promise<StackFrame[]> {
     try {
       const prettyFrame = await withSourceMap(frame);
       prettyFrames.push(prettyFrame);
-    } catch {
+    } catch (ex) {
+      // todo: do we need to show or log error?
       prettyFrames.push(frame);
     }
   }

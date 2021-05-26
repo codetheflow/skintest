@@ -9,7 +9,7 @@ export class TypeStep implements ClientStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query<any>,
+    private query: Query,
     private text: string
   ) {
     Guard.notNull(getMeta, 'getMeta');

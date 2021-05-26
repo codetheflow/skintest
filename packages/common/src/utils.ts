@@ -2,12 +2,20 @@ export function yes(): boolean {
   return true;
 }
 
-export function isUndefined<T>(value: T): boolean {
-  return value === undefined;
+export function isUndefined<T>(test: T): boolean {
+  return test === undefined;
 }
 
-export function isString<T>(value: T): boolean {
-  return Object.prototype.toString.call(value) === '[object String]';
+export function isString<T>(test: T): boolean {
+  return Object.prototype.toString.call(test) === '[object String]';
+}
+
+export function isRegExp<T>(test: T): boolean {
+  return Object.prototype.toString.call(test) == '[object RegExp]'
+}
+
+export function isFunction<T>(test: T): boolean {
+  return typeof test === 'function'
 }
 
 export function escapeRE(text: string): string {
@@ -23,6 +31,11 @@ export function escapeRE(text: string): string {
     .replace(/-/g, '\\x2d');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function reinterpret<NT, V = any>(value: V): NT {
   return value as unknown as NT;
+}
+
+export function likeKeyValue(test: unknown): boolean {
+  return Array.isArray(test) && test.length == 2;
 }

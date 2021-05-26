@@ -1,5 +1,6 @@
 import { StringDictionary } from '@skintest/common';
 import { AssertHow, AssertWhat } from './assert';
+import { DOMElement } from './dom';
 import { ElementRef } from './element';
 import { formatSelector } from './format';
 import { Query, QueryList } from './query';
@@ -9,6 +10,7 @@ export interface TestFail {
   status: 'fail',
   description: string;
   solution: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: StringDictionary<any>;
 }
 
@@ -19,7 +21,7 @@ export interface TestPass {
 
 export interface InspectInfo {
   selector: string;
-  target: ElementRef<any> | ElementRef<any>[] | null;
+  target: ElementRef<DOMElement> | ElementRef<DOMElement>[] | null;
 }
 
 export type TestExecutionResult = TestFail | TestPass;
@@ -47,26 +49,32 @@ export async function asTest(promise: Promise<void>): Promise<TestExecutionResul
 
 export const fails = {
 
-  binaryAssert<V>(body: {
-    query: Query<any> | QueryList<any>,
+  binaryAssert(body: {
+    query: Query | QueryList,
     what: AssertWhat,
     how: AssertHow,
-    etalon: V,
-    actual: V,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    etalon: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    actual: any,
   }): TestFail {
     const selector = formatSelector(body.query.toString());
     const method = body.query.type === 'query' ? '$' : '$$';
 
+    const description =
+      `${method}(${selector}).${body.what}:` +
+      `expected \`${body.actual}\` to ${body.how} \`${body.etalon}\``;
+
     return {
       status: 'fail',
-      description: `${method}(${selector}).${body.what}: expected \`${body.actual}\` to ${body.how} \`${body.etalon}\``,
+      description,
       solution: 'check assert condition',
       body
     };
   },
 
-  elementNotFound<V>(body: {
-    query: Query<any> | QueryList<any>,
+  elementNotFound(body: {
+    query: Query | QueryList,
   }): TestFail {
     const selector = formatSelector(body.query.toString());
     const method = body.query.type === 'query' ? '$' : '$$';

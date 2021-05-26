@@ -18,4 +18,3 @@ export { Script } from './script';
 export { Breakpoint, Debugger } from './steps/debug';
 export { newSuite, Suite, SuiteOperations } from './suite';
 export { InspectInfo, pass, TestExecutionResult, TestFail, TestPass } from './test-result';
-

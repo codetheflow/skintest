@@ -13,8 +13,9 @@ export function orchestrate(plugins: Plugin[]): Staging {
             const run = stages[zone];
             if (run) {
               // todo: get rid of any
-              // todo: better return result
-              await run(scope[0] as any);
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const arg = scope[0] as any;
+              await run(arg);
             }
           }
         }

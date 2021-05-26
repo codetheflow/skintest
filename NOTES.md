@@ -20,13 +20,16 @@
 * use `mark` as checked\unchecked - done
 * errors namespace - done
 * has.state 'visible|checked|disabled|editable|enabled|hidden' - done
-* full assert supports
+* full assert supports - done
 * https://www.chaijs.com/plugins/chai-webdriver/
-* https://www.chaijs.com/plugins/chai-dom/
-* launch.json for debugging
+* force user to use <> in $ and $$ - done
 * has.text and has.value are very similar, for inputs maybe make only value available or stay only with has.text
 * one feature per file constraint
+* move playwright to the plugins - done
+* use literal templates in $ and $$ - done
+* add has.not?
 * total report
+* launch.json for debugging
 * fix yarn build
 * starter github repository
 * publish version 0.2.0
@@ -42,6 +45,7 @@
 * start:watch command
 * stubs/network intersection support
 * keyboard keys - documentation
+* remove logs from the playwright errors
 
 next
 * use value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?

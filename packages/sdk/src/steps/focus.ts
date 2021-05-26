@@ -10,7 +10,7 @@ export class FocusStep implements ClientStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query<any>
+    private query: Query,
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');

@@ -1,8 +1,13 @@
 export type Exception = Error;
 
-function error(name: string, message: string): Exception {
+function error(name: string, message: string, inner?: Exception): Exception {
   const ex = new Error(message);
   ex.name = `skintest.${name}`;
+  if (inner) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (ex as any).inner = inner;
+  }
+
   return ex;
 }
 
@@ -32,6 +37,9 @@ export const errors = {
     return error('callerNotFound', `here ${site}`);
   },
   timeout(source: string, ex: Error): Exception {
-    return error('timeout', `${source} timeout exceed`);
+    return error('timeout', `${source} timeout exceed`, ex);
+  },
+  runtime(ex: Error): Exception {
+    return error('runtime', ex.message, ex);
   }
 }

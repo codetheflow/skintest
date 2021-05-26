@@ -24,9 +24,9 @@ export interface Page {
 
   pause(): Promise<void>;
 
-  query<T extends DOMElement>(selector: string): Promise<ElementRef<T>>;
-  queryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
+  query<E extends DOMElement>(selector: string): Promise<ElementRef<E>>;
+  queryList<E extends DOMElement>(selector: string): Promise<ElementRefList<E>>;
 
-  dbgQuery<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null>;
-  dbgQueryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>>;
+  immediateQuery<E extends DOMElement>(selector: string): Promise<ElementRef<E> | null>;
+  immediateQueryList<E extends DOMElement>(selector: string): Promise<ElementRefList<E>>;
 }

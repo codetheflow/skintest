@@ -1,5 +1,5 @@
+import { BrowserFactory } from '@skintest/platform';
 import * as playwright from 'playwright';
-import { BrowserFactory } from '../browser-factory';
 import { playwrightAction } from './playwright-action';
 import { PlaywrightBrowser } from './playwright-browser';
 
@@ -10,7 +10,7 @@ const DEFAULT_OPTIONS = {
 
 type LaunchOptions = Pick<playwright.LaunchOptions, 'timeout' | 'headless'>;
 
-export function playwrightLauncher(options: LaunchOptions = {}): BrowserFactory {
+export function playwrightLauncher(options: Partial<LaunchOptions> = {}): BrowserFactory {
   return async function browserFactory() {
     const browserOptions: playwright.LaunchOptions = {
       ...DEFAULT_OPTIONS,

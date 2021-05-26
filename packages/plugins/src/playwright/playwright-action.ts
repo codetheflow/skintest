@@ -22,6 +22,7 @@ export async function playwrightAction<T>(source: string, action: () => Promise<
       throw errors.timeout(source, ex);
     }
 
-    throw ex;
+    // todo: remove logs from the playwright errors
+    throw errors.runtime(ex);
   }
 }

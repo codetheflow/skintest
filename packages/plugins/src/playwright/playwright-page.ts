@@ -1,4 +1,4 @@
-import { errors } from '@skintest/common';
+import { errors, reinterpret } from '@skintest/common';
 import { DOMElement, ElementRef, ElementRefList, KeyboardKey, Page } from '@skintest/sdk';
 import * as playwright from 'playwright';
 import { PlaywrightAction } from './playwright-action';
@@ -15,17 +15,17 @@ export class PlaywrightPage implements Page {
 
   @PlaywrightAction()
   goBack(): Promise<void> {
-    return this.page.goBack() as Promise<any>;
+    return  reinterpret<Promise<void>>(this.page.goBack());
   }
 
   @PlaywrightAction()
   goForward(): Promise<void> {
-    return this.page.goForward() as Promise<any>;
+    return reinterpret<Promise<void>>(this.page.goForward());
   }
 
   @PlaywrightAction()
   reload(): Promise<void> {
-    return this.page.reload() as Promise<any>;
+    return reinterpret<Promise<void>>(this.page.reload());
   }
 
   @PlaywrightAction()
@@ -50,7 +50,7 @@ export class PlaywrightPage implements Page {
 
   @PlaywrightAction()
   selectOption(selector: string, label: string): Promise<void> {
-    return this.page.selectOption(selector, { label }) as Promise<any>;
+    return reinterpret<Promise<void>>(this.page.selectOption(selector, { label }));
   }
 
   @PlaywrightAction()
@@ -62,12 +62,12 @@ export class PlaywrightPage implements Page {
 
   @PlaywrightAction()
   goto(url: string): Promise<void> {
-    return this.page.goto(url) as Promise<any>;
+    return reinterpret<Promise<void>>(this.page.goto(url));
   }
 
   @PlaywrightAction()
   waitForNavigation(url: string): Promise<void> {
-    return this.page.waitForNavigation({ url }) as Promise<any>;
+    return reinterpret<Promise<void>>(this.page.waitForNavigation({ url }));
   }
 
   @PlaywrightAction()
@@ -118,7 +118,7 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
-  async dbgQuery<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
+  async immediateQuery<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
     const handle = await this.page.$(selector);
     if (handle) {
       return new PlaywrightElement<T>(handle, this.page, selector);
@@ -128,7 +128,7 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
-  async dbgQueryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
+  async immediateQueryList<T extends DOMElement>(selector: string): Promise<ElementRefList<T>> {
     return (await this.page.$$(selector))
       .map(handle => new PlaywrightElement(handle, this.page, selector));
   }

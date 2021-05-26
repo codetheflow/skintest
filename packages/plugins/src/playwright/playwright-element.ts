@@ -16,12 +16,25 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
   }
 
   async style(name: string): Promise<string | null> {
-    const value = await this.page.$eval<string, HTMLInputElement>(this.selector, x => window.getComputedStyle(x).getPropertyValue(name));
+    const value = await this
+      .page
+      .$eval<string, string, HTMLElement>(
+        this.selector,
+        (el, name) => window.getComputedStyle(el).getPropertyValue(name),
+        name
+      );
+
     return value;
   }
 
   async value(): Promise<string> {
-    const value = await this.page.$eval<any, HTMLInputElement>(this.selector, x => x.value);
+    const value = await this
+      .page
+      .$eval<string, HTMLInputElement>(
+        this.selector,
+        x => x.value
+      );
+
     return value;
   }
 
@@ -45,7 +58,13 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
   }
 
   async classList(): Promise<ElementClassList> {
-    const classList = await this.page.$eval<NumberDictionary<string>, HTMLElement>(this.selector, x => x.classList);
+    const classList = await this
+      .page
+      .$eval<NumberDictionary<string>, HTMLElement>(
+        this.selector,
+        x => x.classList
+      );
+
     const set = new Set(
       Object
         .keys(classList)

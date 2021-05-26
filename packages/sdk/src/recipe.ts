@@ -1,4 +1,4 @@
-import { errors, Guard } from '@skintest/common';
+import { errors, Guard, reinterpret } from '@skintest/common';
 import { DOMElement } from './dom';
 import { Page } from './page';
 import { Query, QueryList } from './query';
@@ -7,9 +7,10 @@ import { StorySchema } from './schema';
 export type ClientDo =
   Promise<{
     message: string,
-    plan: StorySchema
+    plan: StorySchema,
   }>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ClientFunction = (this: Client, ...args: any[]) => ClientDo;
 
 export interface ClientRecipe<T extends ClientFunction> {
@@ -17,15 +18,18 @@ export interface ClientRecipe<T extends ClientFunction> {
   action: T;
 }
 
-export interface ClientElement<T extends DOMElement> {
+export interface ClientElement<T extends DOMElement = never> {
+  // we need to keep something with type V, to turn on type checking
+  // todo: investigate better solution
+  token?: T;
 }
 
-export type ClientElementList<T extends DOMElement> = ClientElement<T>[];
+export type ClientElementList<T extends DOMElement = never> = ClientElement<T>[];
 
 export interface Client {
   do(message: string, ...plan: StorySchema): ClientDo;
-  query<T extends DOMElement>(query: Query<T>): Promise<ClientElement<T>>;
-  query<T extends DOMElement>(query: QueryList<T>): Promise<ClientElementList<T>>;
+  query<E extends DOMElement>(query: Query<E>): Promise<ClientElement<E>>;
+  query<E extends DOMElement>(query: QueryList<E>): Promise<ClientElementList<E>>;
 }
 
 export class PageClient implements Client {
@@ -39,26 +43,23 @@ export class PageClient implements Client {
     });
   }
 
-  query<T extends DOMElement>(query: Query<T>): Promise<ClientElement<T>>;
-  query<T extends DOMElement>(query: QueryList<T>): Promise<ClientElementList<T>>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query(query: Query<any> | QueryList<any>): Promise<any> {
+  query<E extends DOMElement>(query: Query<E>): Promise<ClientElement<E>>;
+  query<E extends DOMElement>(query: QueryList<E>): Promise<ClientElementList<E>>;
+  query(query: Query<DOMElement> | QueryList<DOMElement>): Promise<ClientElement<DOMElement> | ClientElementList<DOMElement>> {
     Guard.notNull(query, 'query');
 
     const selector = query.toString();
     switch (query.type) {
       case 'query': return this.page.query(selector);
       case 'queryList': return this.page.queryList(selector);
-      default: throw errors.invalidArgument('type', (query as any).type);
+      default: throw errors.invalidArgument('type', reinterpret<Query>(query).type);
     }
   }
 }
 
-export type ServerDo =
-  Promise<{
-    message: string,
-  }>;
+export type ServerDo = Promise<{ message: string, }>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServerFunction = (this: Server, ...args: any[]) => ServerDo;
 
 export interface ServerRecipe<T extends ServerFunction> {

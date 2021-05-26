@@ -10,7 +10,7 @@ import { Breakpoint } from './steps/debug';
 export interface Ego {
   __pause(): DevStep;
   __debug(breakpoint: Breakpoint): DevStep;
-  __inspect<T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep;
+  __inspect<E extends DOMElement>(selector: string | Query<E> | QueryList<E>): DevStep;
 
   open(name: string): ClientStep;
   goto(url: string): ClientStep;

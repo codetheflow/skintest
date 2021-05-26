@@ -1,29 +1,48 @@
+import { isFunction } from '@skintest/common';
 import { DOMElement } from './dom';
 
-export interface Query<E extends DOMElement> {
+export interface Query<E = DOMElement> {
+  // we need to keep something with type V, to turn on type checking
+  // todo: investigate better solution
+  token?: E;
+
   type: 'query';
   toString(): string;
 }
 
-export interface QueryList<E extends DOMElement> {
+export interface QueryList<E = DOMElement> {
+  token?: E;
+
   type: 'queryList'
   toString(): string;
 }
 
-export function $<E extends DOMElement>(query: string): Query<E> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function $<E>(query: TemplateStringsArray, ...args: any[]): Query<E> {
   return {
     type: 'query',
     toString() {
-      return query;
+      return String.raw(query, ...args.map(stringify));
     }
   };
 }
 
-export function $$<E extends DOMElement>(query: string): QueryList<E> {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function $$<E>(query: TemplateStringsArray, ...args: any[]): QueryList<E> {
   return {
     type: 'queryList',
     toString() {
-      return query;
+      return String.raw(query, ...args.map(stringify));
     }
   };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function stringify(arg: any): any {
+  if (arg && arg.toString && isFunction(arg.toString)) {
+    return arg.toString();
+  }
+
+  return arg;
 }

@@ -1,7 +1,6 @@
 import { errors, Guard, isUndefined, reinterpret } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
-import { DOMElement } from '../dom';
 import { formatSelector } from '../format';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
@@ -13,8 +12,8 @@ export class SeeStep implements AssertStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query<DOMElement> | QueryList<DOMElement>,
-    private assert: BinaryAssert<DOMElement> | ListBinaryAssert<DOMElement>,
+    private query: Query | QueryList,
+    private assert: BinaryAssert<unknown> | ListBinaryAssert<unknown>,
     private value: unknown
   ) {
     Guard.notNull(getMeta, 'getMeta');
@@ -50,7 +49,7 @@ export class SeeStep implements AssertStep {
           break;
         }
         default: {
-          throw errors.invalidArgument('selector', (this.query as any).type);
+          throw errors.invalidArgument('selector', reinterpret<Query>(this.query).type);
         }
       }
     }
@@ -66,7 +65,7 @@ export class SeeStep implements AssertStep {
         return await verify.elementList(this.query, what, how, this.value);
       }
       default: {
-        throw errors.invalidArgument('selector', (this.query as any).type);
+        throw errors.invalidArgument('selector', reinterpret<Query>(this.query).type);
       }
     }
   }

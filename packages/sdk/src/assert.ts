@@ -3,9 +3,9 @@ import { KeyValue } from '@skintest/common';
 export enum AssertHow {
   above = 'be above',
   below = 'be below',
-  contains = 'contain',
   equals = 'equal',
-  regexp = 'match',
+  like = 'be like',
+  exists = 'exist for',
 }
 
 export enum AssertWhat {
@@ -18,19 +18,18 @@ export enum AssertWhat {
   value = 'value',
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export abstract class BinaryAssert<V> {
-  private type = 'binary';
+  // we need to keep something with type V, to turn on type checking
+  // todo: investigate better solution
+  private token?: V;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export abstract class ListBinaryAssert<V> {
-  private type = 'list-binary';
+  private token?: V;
 }
 
 export abstract class StringAssert extends BinaryAssert<string> {
-  abstract match: BinaryAssert<RegExp>;
-  abstract like: BinaryAssert<string>;
+  abstract like: BinaryAssert<string | RegExp>;
 }
 
 export abstract class NumberAssert extends BinaryAssert<number> {
@@ -38,14 +37,13 @@ export abstract class NumberAssert extends BinaryAssert<number> {
   abstract below: BinaryAssert<number>;
 }
 
-export abstract class KeyValueAssert extends BinaryAssert<KeyValue<string>> {
-  abstract match: StringAssert['match'];
+export abstract class KeyValueAssert extends BinaryAssert<KeyValue<string | RegExp> | string> {
   abstract like: StringAssert['like'];
 }
 
-export abstract class ListNumberAssert extends ListBinaryAssert<number> {
-  abstract above: ListBinaryAssert<number>;
-  abstract below: ListBinaryAssert<number>;
+export type ListNumberAssert = ListBinaryAssert<number> & {
+  above: ListBinaryAssert<number>,
+  below: ListBinaryAssert<number>,
 }
 
 export interface AssertHost {
@@ -71,21 +69,17 @@ export class ListBinaryAssertHost<V> extends ListBinaryAssert<V> implements Asse
   }
 }
 
-export class StringAssertHost<V = string> extends BinaryAssertHost<V> implements StringAssert {
+export class StringAssertHost extends BinaryAssertHost<string> implements StringAssert {
   constructor(what: AssertWhat) {
     super(what, AssertHow.equals);
   }
 
-  get match(): BinaryAssert<RegExp> {
-    return new BinaryAssertHost(this.what, AssertHow.regexp);
-  }
-
-  get like(): BinaryAssert<V> {
-    return new BinaryAssertHost(this.what, AssertHow.contains);
+  get like(): BinaryAssert<string | RegExp> {
+    return new BinaryAssertHost(this.what, AssertHow.like);
   }
 }
 
-export class NumberAssertHost<V = number> extends BinaryAssertHost<V> implements NumberAssert {
+export class NumberAssertHost extends BinaryAssertHost<number> implements NumberAssert {
   constructor(what: AssertWhat) {
     super(what, AssertHow.equals);
   }
@@ -99,8 +93,7 @@ export class NumberAssertHost<V = number> extends BinaryAssertHost<V> implements
   }
 }
 
-
-export class ListNumberAssertHost<V = number> extends ListBinaryAssertHost<V> implements ListNumberAssert {
+export class ListNumberAssertHost extends ListBinaryAssertHost<number> implements ListNumberAssert {
   constructor(what: AssertWhat) {
     super(what, AssertHow.equals);
   }
@@ -114,16 +107,12 @@ export class ListNumberAssertHost<V = number> extends ListBinaryAssertHost<V> im
   }
 }
 
-export class KeyValueAssertHost<V = KeyValue<string>> extends BinaryAssertHost<V> implements KeyValueAssert {
+export class KeyValueAssertHost extends BinaryAssertHost<string | KeyValue<string>> implements KeyValueAssert {
   constructor(what: AssertWhat) {
     super(what, AssertHow.equals);
   }
 
-  get match(): BinaryAssert<RegExp> {
-    return new BinaryAssertHost(this.what, AssertHow.regexp);
-  }
-
-  get like(): BinaryAssert<string> {
-    return new BinaryAssertHost(this.what, AssertHow.contains);
+  get like(): BinaryAssert<string | RegExp> {
+    return new BinaryAssertHost(this.what, AssertHow.like);
   }
 }

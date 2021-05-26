@@ -43,6 +43,8 @@ export interface InfoStep extends CommandBody {
 
 export interface DoStep extends CommandBody {
   type: 'do';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   recipe: ClientRecipe<any> | ServerRecipe<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: any[];
 }

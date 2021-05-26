@@ -1,8 +1,10 @@
 import { Command, Script, Suite, TestFail, TestPass } from '@skintest/sdk';
 import { Zone } from './zone';
 
-// todo: better type
-export type Stage<Z extends Zone, S> = (scope: S) => Promise<void>;
+export interface Stage<Z extends Zone, S> {
+  token?: Z;
+  (scope: S): Promise<void>;
+}
 
 export type StartScope = void;
 export type StopScope = void;

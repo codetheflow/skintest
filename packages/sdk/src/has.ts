@@ -1,15 +1,4 @@
-import {
-  AssertHow,
-  AssertWhat,
-  BinaryAssert,
-  BinaryAssertHost,
-  KeyValueAssert,
-  KeyValueAssertHost,
-  ListNumberAssert,
-  ListNumberAssertHost,
-  StringAssert,
-  StringAssertHost
-} from './assert';
+import { AssertHow, AssertWhat, BinaryAssert, BinaryAssertHost, KeyValueAssert, KeyValueAssertHost, ListNumberAssert, ListNumberAssertHost, StringAssert, StringAssertHost } from './assert';
 import { ElementState } from './element';
 
 export interface Has {

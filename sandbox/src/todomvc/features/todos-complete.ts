@@ -11,20 +11,22 @@ feature('todos complete')
     , I.do(clear_todos)
   )
 
-  .scenario('#now check the complete checkbox marks item as completed'
+  .scenario('check the complete checkbox marks item as completed'
     , I.do(add_todo, 'win a gold')
-    , I.mark(todos.complete_checkbox_at(0), 'checked')
+    , I.mark(todos.item_complete_at(0), 'checked')
     , I.test('completed item has a corresponding class')
     , I.see(todos.item_at(0), has.class, 'completed')
-    , I.see(todos.item_label_at(0), has.style, ['text-decoration', 'line-through'])
+    , I.see(todos.item_label_at(0), has.style, ['text-decoration', /line-through/])
   )
 
   .scenario('#now check the clear completed button removes completed items from the list'
     , I.do(add_todo, 'win a gold')
     , I.do(add_todo, 'drink a wine')
-    , I.mark(todos.complete_checkbox_at(0), 'checked')
+    // todo: use `win a gold` instead of 0 index
+    , I.mark(todos.item_complete_at(0), 'checked')
     , I.click(todos.clear_completed)
     , I.test('completed todos are not visible after click clear')
-    , I.see(todos.list, has.length, 2)
-    , I.see(todos.item_at(0), has.text, 'drink a wine1')
+    , I.see(todos.list, has.length, 1)
+    , I.see(todos.item_at(0), has.text, 'drink a wine')
+    , I.__inspect(todos.item_complete_at(0))
   )

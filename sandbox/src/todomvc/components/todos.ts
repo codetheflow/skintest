@@ -4,18 +4,13 @@ import { env } from '../project/env';
 export const todos = {
   url: env.url
 
-  , what: $<HTMLInputElement>('input.new-todo')
+  , what: $<HTMLInputElement>`.new-todo`
 
-  , list: $$<HTMLElement>('.todo-list > li')
-  , clear_completed: $('button.clear-completed')
+  , list: $$<HTMLElement>`.todo-list > li`
+  , clear_completed: $<HTMLButtonElement>`.clear-completed`
 
-  , item_at: (index: number) => $(`.todo-list li:nth-child(${index + 1})`)
-
-  , item_label: (text: string) => $(`.todo-list li label[innerText="${text}"]`)
-  , item_label_at: (index: number) => $(`.todo-list li:nth-child(${index + 1}) label`)
-
-  , remove_button: (text: string) => $(`.todo-list li label[innerText="${text}"] button.destroy`)
-  , remove_button_at: (index: number) => $(`.todo-list > li:nth-child(${index + 1}) button.destroy`)
-
-  , complete_checkbox_at: (index: number) => $(`.todo-list > li:nth-child(${index + 1}) input[type=checkbox]`)
+  , item_at: (index: number) => $<HTMLLIElement>`${todos.list}:nth-child(${index + 1})`
+  , item_label_at: (index: number) => $<HTMLElement>`${todos.item_at(index)} label`
+  , item_remove_at: (index: number) => $<HTMLButtonElement>`${todos.item_at(index)} button.destroy`
+  , item_complete_at: (index: number) => $<HTMLInputElement>`${todos.item_at(index)} input[type=checkbox]`
 };
