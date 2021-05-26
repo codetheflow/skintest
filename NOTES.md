@@ -29,7 +29,7 @@
 * add has.no - done
 * one feature per file constraint - done
 * summary report - done
-* options from launcher - 
+* options from launcher - done
 * launch.json for debugging -
 * fix yarn build -
 * starter github repository -

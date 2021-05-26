@@ -20,11 +20,11 @@
     "lint:sandbox": "eslint sandbox -c sandbox/.eslintrc"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "4.24.0",
-    "@typescript-eslint/parser": "4.24.0",
-    "eslint": "7.26.0",
+    "@typescript-eslint/eslint-plugin": "4.25.0",
+    "@typescript-eslint/parser": "4.25.0",
+    "eslint": "7.27.0",
     "lerna": "4.0.0",
     "nodemon": "^2.0.7",
-    "typescript": "4.2.4"
+    "typescript": "4.3.2"
   }
 }
