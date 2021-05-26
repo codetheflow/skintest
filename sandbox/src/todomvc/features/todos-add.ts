@@ -7,8 +7,6 @@ import { copy_from } from '../recipes/copy-from';
 import { generate_todos } from '../recipes/generate-todos';
 import { paste_to } from '../recipes/paste-to';
 
-feature('x');
-
 feature('todos add')
   .before('scenario'
     , I.open(page.start)
