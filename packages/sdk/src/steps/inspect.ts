@@ -22,7 +22,7 @@ export class InspectStep implements DevStep {
     const selector = this.query.toString();
 
     // todo: get rid of `any`
-    const type = isString(this.query) ? 'queryList' : reinterpret<Query>(this.query).type
+    const type = isString(this.query) ? 'queryList' : reinterpret<Query>(this.query).type;
     switch (type) {
       case 'query': {
         const target = await page.immediateQuery(selector);

@@ -1,4 +1,4 @@
-import { BrowserFactory } from '@skintest/platform';
+import { Launcher } from '@skintest/platform';
 import * as playwright from 'playwright';
 import { playwrightAction } from './playwright-action';
 import { PlaywrightBrowser } from './playwright-browser';
@@ -10,8 +10,8 @@ const DEFAULT_OPTIONS = {
 
 type LaunchOptions = Pick<playwright.LaunchOptions, 'timeout' | 'headless'>;
 
-export function playwrightLauncher(options: Partial<LaunchOptions> = {}): BrowserFactory {
-  return async function browserFactory() {
+export function playwrightLauncher(options: Partial<LaunchOptions> = {}): Launcher {
+  async function createBrowser() {
     const browserOptions: playwright.LaunchOptions = {
       ...DEFAULT_OPTIONS,
       ...options
@@ -20,5 +20,12 @@ export function playwrightLauncher(options: Partial<LaunchOptions> = {}): Browse
     const chromium = playwright['chromium'];
     const browser = await playwrightAction('browser launch', () => chromium.launch(browserOptions));
     return new PlaywrightBrowser(browser, browserOptions.timeout || DEFAULT_OPTIONS.timeout);
+  }
+
+  return {
+    createBrowser,
+    options: {
+      retries: 1
+    }
   };
 }

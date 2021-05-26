@@ -26,7 +26,7 @@ export function ttySummaryReport(): Plugin {
       statistics.fails++;
     },
     'error': async () => {
-      statistics.errors
+      statistics.errors;
     }
   });
 }

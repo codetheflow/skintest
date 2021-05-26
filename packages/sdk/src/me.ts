@@ -134,7 +134,7 @@ class Me implements Ego {
 
   __debug(breakpoint: Breakpoint): DevStep {
     const caller = getCaller();
-    return new DebugStep(() => getStepMeta(caller), breakpoint)
+    return new DebugStep(() => getStepMeta(caller), breakpoint);
   }
 
   __inspect<T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep {

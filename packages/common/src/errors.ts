@@ -45,4 +45,4 @@ export const errors = {
   runtime(ex: Error): Exception {
     return error('runtime', ex.message, ex);
   }
-}
+};

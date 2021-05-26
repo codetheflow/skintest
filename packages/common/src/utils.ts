@@ -11,11 +11,11 @@ export function isString<T>(test: T): boolean {
 }
 
 export function isRegExp<T>(test: T): boolean {
-  return Object.prototype.toString.call(test) == '[object RegExp]'
+  return Object.prototype.toString.call(test) == '[object RegExp]';
 }
 
 export function isFunction<T>(test: T): boolean {
-  return typeof test === 'function'
+  return typeof test === 'function';
 }
 
 export function escapeRE(text: string): string {

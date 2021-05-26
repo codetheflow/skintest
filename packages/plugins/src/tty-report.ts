@@ -23,7 +23,7 @@ const CROSS_MARK = '\u2613';
 const NEW_LINE = '\n';
 const WS = ' ';
 
-const CURSOR_CODE = '\x1b[6n'
+const CURSOR_CODE = '\x1b[6n';
 const CURSOR_RE = /\[(\d+);(\d+)R$/;
 
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
@@ -39,12 +39,13 @@ const STACK_FILE_IGNORE = [
   path.join('platform', 'src', 'attempt.ts'),
   path.join('common', 'src', 'errors.ts'),
   // from playwright
+  // todo: propagate it here for the launcher options
   path.join('lib', 'utils', 'stackTrace.js')
 ];
 
 async function getMessage(command: Command): Promise<string> {
   try {
-    const meta = await command.getMeta()
+    const meta = await command.getMeta();
     return meta.rootage;
   } catch {
     return command.toString();
@@ -81,7 +82,7 @@ async function fixedLine() {
 
     const line = text.join('');
     return stdout.write(line);
-  }
+  };
 }
 
 function followLine() {
@@ -243,7 +244,7 @@ export function ttyReport(): Plugin {
             await addState('editable');
             await addState('enabled');
             await addState('focused');
-            await addState('visible')
+            await addState('visible');
 
             console.table(info);
             return;

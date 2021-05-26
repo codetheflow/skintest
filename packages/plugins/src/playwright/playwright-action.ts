@@ -9,7 +9,7 @@ export function PlaywrightAction() {
       // todo: use meta?
       const source = `${propertyKey}(${args.map(x => `"${x}"`).join(', ')})`;
       return playwrightAction(source, () => method.apply(this, args));
-    }
+    };
   };
 }
 

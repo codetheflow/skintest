@@ -44,7 +44,7 @@ export class DebugStep implements DevStep {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
-    const dbg = new PageDebugger(page)
+    const dbg = new PageDebugger(page);
     await this.breakpoint(dbg);
     return pass();
   }

@@ -28,7 +28,7 @@ export function tagFilter(options: TagFilter): Plugin {
 
         suite.operations.filterScenario = (feature: string, scenario: string) =>
           stat[feature].featureMatch ||
-          stat[feature].scenarioMatches.has(scenario)
+          stat[feature].scenarioMatches.has(scenario);
       };
 
       switch (include) {
@@ -76,7 +76,7 @@ function getStat(suite: Suite, tags: string[]): Statistics {
           .map(([name]) => name)
           .filter(name => tags.some(matchHashTag(name)))
       )
-    }
+    };
   }
 
   return stat;

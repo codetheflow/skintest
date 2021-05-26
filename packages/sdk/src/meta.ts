@@ -33,7 +33,7 @@ export function getCaller(): StackFrame {
   const frames = capture();
   const callers = frames
     .filter(x => x.file)
-    .filter(x => !PACKAGES.some(p => x.file.includes(p)))
+    .filter(x => !PACKAGES.some(p => x.file.includes(p)));
 
   if (!callers.length) {
     throw errors.callerNotFound(frames[0]?.file);

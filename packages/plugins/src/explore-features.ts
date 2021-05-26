@@ -24,7 +24,7 @@ export function exploreFeatures(options: ExploreFeatures): Plugin {
 
         const diff = countAtEnt - countAtStart;
         if (diff > 1) {
-          throw errors.constraint(`${feature} expected 1 feature per file, got ${diff}`)
+          throw errors.constraint(`${feature} expected 1 feature per file, got ${diff}`);
         }
       }
     }
