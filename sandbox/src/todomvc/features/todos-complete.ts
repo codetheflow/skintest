@@ -19,7 +19,7 @@ feature('todos complete')
     , I.see(todos.item_label_at(0), has.style, ['text-decoration', /line-through/])
   )
 
-  .scenario('#now check the clear completed button removes completed items from the list'
+  .scenario('check the clear completed button removes completed items from the list'
     , I.do(add_todo, 'win a gold')
     , I.do(add_todo, 'drink a wine')
     // todo: use `win a gold` instead of 0 index
@@ -28,5 +28,4 @@ feature('todos complete')
     , I.test('completed todos are not visible after click clear')
     , I.see(todos.list, has.length, 1)
     , I.see(todos.item_at(0), has.text, 'drink a wine')
-    , I.__inspect(todos.item_complete_at(0))
   )

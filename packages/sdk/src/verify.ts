@@ -25,23 +25,7 @@ export class Verify {
     // todo: remove copy/paste code below
     switch (what) {
       case AssertWhat.text: {
-        const actual = await elementRef.innerText();
-        const etalon = reinterpret<string>(expected);
-        if (this.binaryTest(how, actual, etalon) === true) {
-          return pass();
-        }
-
-        return fails
-          .binaryAssert({
-            actual,
-            etalon,
-            how,
-            query,
-            what,
-          });
-      }
-      case AssertWhat.value: {
-        const actual = await elementRef.value();
+        const actual = await elementRef.text();
         const etalon = reinterpret<string>(expected);
         if (this.binaryTest(how, actual, etalon) === true) {
           return pass();

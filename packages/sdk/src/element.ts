@@ -17,8 +17,7 @@ export interface ElementClassList {
 }
 
 export interface ElementRef<E extends DOMElement> extends ClientElement<E> {
-  innerText(): Promise<string>;
-  value(): Promise<string>;
+  text(): Promise<string>;
   state(state: ElementState): Promise<boolean>;
   classList(): Promise<ElementClassList>;
   attribute(name: string): Promise<string | null>;

@@ -18,10 +18,10 @@ export interface ClientRecipe<T extends ClientFunction> {
   action: T;
 }
 
-export interface ClientElement<T extends DOMElement = never> {
+export abstract class ClientElement<T extends DOMElement = never> {
   // we need to keep something with type V, to turn on type checking
   // todo: investigate better solution
-  token?: T;
+  private token?: T;
 }
 
 export type ClientElementList<T extends DOMElement = never> = ClientElement<T>[];

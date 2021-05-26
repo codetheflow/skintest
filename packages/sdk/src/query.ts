@@ -1,20 +1,20 @@
 import { isFunction } from '@skintest/common';
 import { DOMElement } from './dom';
 
-export interface Query<E = DOMElement> {
+export abstract class Query<E = DOMElement> {
   // we need to keep something with type V, to turn on type checking
   // todo: investigate better solution
-  token?: E;
+  private token?: E;
 
-  type: 'query';
-  toString(): string;
+  type: 'query' = 'query';
+  abstract toString(): string;
 }
 
-export interface QueryList<E = DOMElement> {
-  token?: E;
+export abstract class QueryList<E = DOMElement> {
+  private token?: E;
 
-  type: 'queryList'
-  toString(): string;
+  type: 'queryList' = 'queryList';
+  abstract toString(): string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

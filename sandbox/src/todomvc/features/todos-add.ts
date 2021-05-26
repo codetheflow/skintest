@@ -38,13 +38,13 @@ feature('todos add')
   .scenario('check the input field should contain entered text'
     , I.fill(todos.what, 'congratulate grandma')
     , I.test('input field has entered text')
-    , I.see(todos.what, has.value, 'congratulate grandma')
+    , I.see(todos.what, has.text, 'congratulate grandma')
   )
 
   .scenario('check the input file should be empty after item was added'
     , I.do(add_todo, 'call dad')
     , I.test('input field is empty')
-    , I.see(todos.what, has.value, '')
+    , I.see(todos.what, has.text, '')
   )
 
   .scenario('check item text is trimmed after it added to the list'
@@ -80,5 +80,5 @@ feature('todos add')
     , I.do(copy_from, todos.item_label_at(0))
     , I.do(paste_to, todos.what)
     , I.test('input has the same value as first todo')
-    , I.see(todos.what, has.value, 'feed dragon')
+    , I.see(todos.what, has.text, 'feed dragon')
   )

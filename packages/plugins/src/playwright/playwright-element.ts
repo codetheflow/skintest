@@ -27,17 +27,6 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
     return value;
   }
 
-  async value(): Promise<string> {
-    const value = await this
-      .page
-      .$eval<string, HTMLInputElement>(
-        this.selector,
-        x => x.value
-      );
-
-    return value;
-  }
-
   async state(state: ElementState): Promise<boolean> {
     switch (state) {
       case 'checked': return await this.handle.isChecked();
@@ -52,9 +41,14 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
     }
   }
 
-  async innerText(): Promise<string> {
-    const value = await this.handle?.innerText();
-    return value || '';
+  async text(): Promise<string> {
+    const value = await this.value();
+    if (value) {
+      return value;
+    }
+
+    const innerText = await this.handle?.innerText();
+    return innerText || '';
   }
 
   async classList(): Promise<ElementClassList> {
@@ -79,5 +73,16 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
         return Array.from(set.values()).join('|');
       }
     };
+  }
+
+  private async value(): Promise<string> {
+    const value = await this
+      .page
+      .$eval<string, HTMLInputElement>(
+        this.selector,
+        x => x.value
+      );
+
+    return value;
   }
 }

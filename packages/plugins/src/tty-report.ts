@@ -203,7 +203,7 @@ export function ttyReport(): Plugin {
               const list: Array<StringDictionary<unknown>> = [];
               for (const element of target) {
                 list.push({
-                  innerText: strip(await element.innerText()),
+                  text: strip(await element.text()),
                   checked: await element.state('checked')
                 });
               }
@@ -221,7 +221,7 @@ export function ttyReport(): Plugin {
             stdout.write(NEW_LINE);
 
             const info: StringDictionary<unknown> = {
-              innerText: strip(await elementRef.innerText()),
+              text: strip(await elementRef.text()),
               classList: strip((await elementRef.classList()).toString()),
             };
 
@@ -233,15 +233,6 @@ export function ttyReport(): Plugin {
               }
             };
 
-            const addValue = async () => {
-              try {
-                info.value = await elementRef.value();
-                // eslint-disable-next-line no-empty
-              } catch (ex) {
-              }
-            };
-
-            await addValue();
             await addState('checked');
             await addState('editable');
             await addState('enabled');

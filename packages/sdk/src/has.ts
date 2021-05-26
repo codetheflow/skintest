@@ -7,7 +7,6 @@ export interface Has {
   attribute: KeyValueAssert;
   style: KeyValueAssert;
   text: StringAssert;
-  value: StringAssert;
 }
 
 export interface ListHas {
