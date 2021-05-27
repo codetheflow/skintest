@@ -102,6 +102,7 @@ next
 * browser and node runners?
 * https://gist.github.com/vzaidman/ef6e4b772b311ffb98368da5f7a9582a#file-codecept-example-js
 * press vs hit? press target?
+* CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
 
 ### code style
 
