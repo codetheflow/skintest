@@ -62,6 +62,7 @@ If you have read-write privileges in skintest's [npm org](https://www.npmjs.com/
 Once that's done, run the release script:
 
 ```sh
+yarn build
 yarn publish
 ```
 
