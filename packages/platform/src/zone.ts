@@ -1,6 +1,8 @@
 export type Zone =
-  'project:start'
-  | 'project:stop'
+  'platform:mount'
+  | 'platform:unmount'
+  | 'project:mount'
+  | 'project:unmount'
   | 'project:init'
   | 'project:error'
   | 'feature:before'

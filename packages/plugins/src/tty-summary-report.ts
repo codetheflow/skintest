@@ -16,10 +16,10 @@ export function ttySummaryReport(): Plugin {
   let startTime: number;
 
   return async (stage: OnStage) => stage({
-    'project:start': async () => {
+    'project:mount': async () => {
       startTime = performance.now();
     },
-    'project:stop': async () => {
+    'project:unmount': async () => {
       const stopTime = performance.now();
 
       tty.newLine(stdout, `executed in ${ticksToTime(stopTime - startTime)}!`);

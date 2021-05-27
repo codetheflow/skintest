@@ -133,10 +133,10 @@ async function writeInspect(inspect: InspectInfo) {
 
 export function ttyReport(): Plugin {
   return async (stage: OnStage) => stage({
-    'project:start': async () => {
+    'project:mount': async () => {
       tty.newLine(stdout);
     },
-    'project:stop': async () => {
+    'project:unmount': async () => {
       tty.newLine(stdout);
     },
     'feature:before': async ({ script }) => {

@@ -6,7 +6,7 @@ import { OnStage } from './stage';
 
 export function nodeFeatureExplorer(): Plugin {
   return (stage: OnStage) => stage({
-    'project:start': async ({ suite }) => {
+    'project:mount': async ({ suite }) => {
       // todo: add reporting?
       const cwd = path.join(suite.uri, 'features');
       const files = glob.sync('*.js', { cwd });

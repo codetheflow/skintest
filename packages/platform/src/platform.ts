@@ -4,6 +4,7 @@ import { Project } from './project';
 
 export interface Platform {
   newProject(uri: string, build: (project: Project) => Promise<void>): Promise<void>;
+  destroy(): void;
 }
 
 export function nodePlatform(...plugins: Plugin[]): Platform {

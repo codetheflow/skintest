@@ -12,13 +12,13 @@ export class NodeProject implements Project {
     const { suite, effect } = this;
     const attempt = new Attempt(launch.options.retries);
 
-    const start = effect('project:start');
-    const stop = effect('project:stop');
+    const mount = effect('project:mount');
+    const unmount = effect('project:unmount');
     const init = effect('project:init');
     const error = effect('project:error');
 
     try {
-      await start({ suite });
+      await mount({ suite });
       await init({ suite });
 
       const scripts = suite
@@ -44,7 +44,7 @@ export class NodeProject implements Project {
     } catch (ex) {
       await error({ suite, reason: ex });
     } finally {
-      await stop({ suite });
+      await unmount({ suite });
     }
   }
 }

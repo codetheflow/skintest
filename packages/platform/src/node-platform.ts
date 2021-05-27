@@ -12,11 +12,18 @@ export class NodePlatform implements Platform {
   ]);
 
   constructor(private plugins: Plugin[]) {
+    const mount = this.effect('platform:mount');
+    mount();
   }
 
   newProject(uri: string, build: (project: Project) => Promise<void>): Promise<void> {
     const suite = newSuite(uri);
     const project = new NodeProject(suite, this.effect);
     return build(project);
+  }
+
+  destroy(): void {
+    const unmount = this.effect('platform:unmount');
+    unmount();
   }
 }

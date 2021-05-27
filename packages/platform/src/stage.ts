@@ -6,12 +6,15 @@ export interface Stage<Z extends Zone, S> {
   (scope: S): Promise<void>;
 }
 
-export type StartScope = { suite: Suite };
-export type StopScope = StartScope;
-export type InitScope = StartScope;
-export type ErrorScope = StartScope & { reason: Error };
+export type PlatformMount = void;
+export type PlatformUnmount = void;
 
-export type FeatureScope = StartScope & { script: Script };
+export type ProjectStartScope = { suite: Suite };
+export type ProjectStopScope = ProjectStartScope;
+export type ProjectInitScope = ProjectStartScope;
+export type ProjectErrorScope = ProjectStartScope & { reason: Error };
+
+export type FeatureScope = ProjectStartScope & { script: Script };
 export type ScenarioScope = FeatureScope & { scenario: string };
 export type StepScope = ScenarioScope & { step: Command };
 
@@ -24,10 +27,12 @@ export type RecipePassScope = RecipeScope & { message: string };
 export type RecipeFailScope = RecipeScope & { reason: Error };
 
 export type Stages = {
-  'project:start': Stage<'project:start', StartScope>;
-  'project:stop': Stage<'project:stop', StopScope>;
-  'project:init': Stage<'project:init', InitScope>;
-  'project:error': Stage<'project:error', ErrorScope>
+  'platform:mount': Stage<'platform:mount', PlatformMount>;
+  'platform:unmount': Stage<'platform:unmount', PlatformUnmount>;
+  'project:mount': Stage<'project:mount', ProjectStartScope>;
+  'project:unmount': Stage<'project:unmount', ProjectStopScope>;
+  'project:init': Stage<'project:init', ProjectInitScope>;
+  'project:error': Stage<'project:error', ProjectErrorScope>
 
   'feature:before': Stage<'feature:before', FeatureScope>;
   'feature:after': Stage<'feature:after', FeatureScope>;
