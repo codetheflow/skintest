@@ -4,6 +4,9 @@
   "description": "skintest platform",
   "main": "dist/src/public-api.js",
   "types": "dist/src/public-api.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
@@ -37,5 +40,6 @@
   "peerDependencies": {
     "@skintest/common": "*",
     "@skintest/sdk": "*"
-  }
+  },
+  "gitHead": "dbf2fed6614ab8bb65ea7b3af488197044ea1d0b"
 }

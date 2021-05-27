@@ -13,7 +13,7 @@
     "build": "yarn clean && tsc --build",
     "build:watch": "yarn clean && tsc --build --watch",
     "clean": "rimraf dist",
-    "start": "node ./dist/src/skintest.js" 
+    "start": "node ./dist/src/skintest.js"
   },
   "repository": {
     "type": "git",
@@ -39,8 +39,8 @@
     "typescript": "4.3.2"
   },
   "dependencies": {
-    "@skintest/platform": "*",
-    "@skintest/plugins": "*",
-    "@skintest/sdk": "*"
+    "@skintest/platform": "^1.0.4-alpha.0",
+    "@skintest/plugins": "^1.0.4-alpha.0",
+    "@skintest/sdk": "^1.0.4-alpha.0"
   }
 }
