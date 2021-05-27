@@ -1,6 +1,6 @@
 {
   "name": "@skintest/sandbox",
-  "version": "1.0.5-alpha.0",
+  "version": "1.0.6-alpha.0",
   "private": true,
   "description": "skintest sandbox",
   "files": [
