@@ -51,6 +51,7 @@
 * drag and drop
 
 next
+* add recipes package with copy/paste etc.
 * show fail/error solutions/links to solutions
 * slowMo settings in camelCase - lint warning
 * stubs/network intersection support

@@ -61,7 +61,7 @@ export function ticksToTime(ms: number): string {
     return text.substring(text.length - 2);
   };
 
-  const seconds = ms / 1000;
+  const seconds = Math.floor(ms / 1000);
   const hour = Math.floor(seconds / 3600);
   const minute = Math.floor((seconds / 60) % 60);
   const second = seconds % 60;
