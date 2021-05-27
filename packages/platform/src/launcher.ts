@@ -1,6 +1,7 @@
 import { Browser } from '@skintest/sdk';
 
-export type BrowserFactory = () => Promise<Browser>
+export type BrowserFactory = () => Promise<Browser>;
+
 export type LauncherOptions = {
   retries: number;
 };

@@ -1,18 +1,16 @@
 import { Suite } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { Launcher } from './launcher';
-import { orchestrate, Plugin } from './plugin';
 import { Project } from './project';
 import { Scene } from './scene';
+import { Staging } from './stage';
 
 export class NodeProject implements Project {
-  constructor(private suite: Suite) { }
+  constructor(private suite: Suite, private effect: Staging) { }
 
-  async run(launch: Launcher, ...plugins: Plugin[]): Promise<void> {
-    const { suite } = this;
+  async run(launch: Launcher): Promise<void> {
+    const { suite, effect } = this;
     const attempt = new Attempt(launch.options.retries);
-
-    const effect = orchestrate(Array.from(plugins));
 
     const start = effect('start');
     const stop = effect('stop');
@@ -46,7 +44,7 @@ export class NodeProject implements Project {
     } catch (ex) {
       await error({ suite, reason: ex });
     } finally {
-      await stop({suite});
+      await stop({ suite });
     }
   }
 }

@@ -2,12 +2,11 @@ import { yes } from '@skintest/common';
 import { Script } from './script';
 
 export interface Suite {
-  readonly name: string;
+  readonly uri: string;
+  readonly operations: SuiteOperations;
 
   addScript(script: Script): void;
   getScripts(): Script[];
-
-  operations: SuiteOperations;
 }
 
 export interface SuiteOperations {
@@ -18,13 +17,13 @@ export interface SuiteOperations {
 class ProjectSuite implements Suite {
   private scripts: Script[] = [];
 
-  operations = {
+  readonly operations = {
     filterScript: yes,
     filterFeature: yes,
     filterScenario: yes,
   };
 
-  constructor(public readonly name: string) {
+  constructor(public readonly uri: string) {
   }
 
   addScript(script: Script): void {
@@ -38,8 +37,8 @@ class ProjectSuite implements Suite {
 
 let currentSuite: Suite;
 
-export function newSuite(name: string): Suite {
-  const suite = new ProjectSuite(name);
+export function newSuite(uri: string): Suite {
+  const suite = new ProjectSuite(uri);
   currentSuite = suite;
   return suite;
 }

@@ -1,26 +1,27 @@
-import { platform } from '@skintest/platform';
-import { exploreFeatures, exploreNodeProjects, NodeProjectSite, playwrightLauncher, tagFilter, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { nodePlatform } from '@skintest/platform';
+import { exploreNodeProjects, NodeProjectSite, playwrightLauncher, tagFilter, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
 
-const start = (site: NodeProjectSite) =>
-  platform()
-    .newProject(site.name, async project => {
-      await project.run(
+const design = nodePlatform(
+  ttyLogo()
+  , ttyReport()
+  , ttySummaryReport()
+  , tagFilter({
+    tags: ['#now'],
+    include: 'all-when-no-matched',
+  })
+);
+
+function execute(site: NodeProjectSite) {
+  return design
+    .newProject(site.path, project =>
+      project.run(
         playwrightLauncher({
           headless: true,
           timeout: 30 * 1000,
         })
-        , exploreFeatures({
-          cwd: site.featuresPath
-        })
-        , tagFilter({
-          tags: ['#now'],
-          include: 'all-when-no-matched',
-        })
-        , ttyLogo()
-        , ttyReport()
-        , ttySummaryReport()
-      );
-    })
+      )
+    );
+}
 
 exploreNodeProjects(__dirname)
-  .forEach(start);
+  .forEach(execute);

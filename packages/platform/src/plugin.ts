@@ -24,6 +24,5 @@ export function orchestrate(plugins: Plugin[]): Staging {
       for (const plugin of plugins) {
         await plugin(onStage);
       }
-
     };
 }

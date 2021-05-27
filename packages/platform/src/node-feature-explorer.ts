@@ -1,19 +1,14 @@
 import { errors } from '@skintest/common';
-import { OnStage, Plugin } from '@skintest/platform';
 import * as glob from 'glob';
 import * as path from 'path';
+import { Plugin } from './plugin';
+import { OnStage } from './stage';
 
-type ExploreFeatures = {
-  cwd: string;
-}
-
-export function exploreFeatures(options: ExploreFeatures): Plugin {
-  const { cwd } = options;
-
+export function nodeFeatureExplorer(): Plugin {
   return (stage: OnStage) => stage({
     'start': async ({ suite }) => {
-      // todo: do we need to make it real async?
-      // todo: reporting
+      // todo: add reporting?
+      const cwd = path.join(suite.uri, 'features');
       const files = glob.sync('*.js', { cwd });
       for (const file of files) {
         const feature = path.join(cwd, file);
