@@ -133,17 +133,17 @@ async function writeInspect(inspect: InspectInfo) {
 
 export function ttyReport(): Plugin {
   return async (stage: OnStage) => stage({
-    'start': async () => {
+    'project:start': async () => {
       tty.newLine(stdout);
     },
-    'stop': async () => {
+    'project:stop': async () => {
       tty.newLine(stdout);
     },
-    'before.feature': async ({ script }) => {
+    'feature:before': async ({ script }) => {
       const info = await script.getMeta();
       tty.newLine(stdout, tty.h1(info.file + `:${info.line}:${info.column}`));
     },
-    'before.scenario': async ({ scenario }) => {
+    'scenario:before': async ({ scenario }) => {
       const label = scenario.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
       tty.newLine(stdout, tty.h2(label));
     },
@@ -159,7 +159,7 @@ export function ttyReport(): Plugin {
         tty.newLine(stdout, tty.hidden(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
-    'step.pass': async ({ site, step, result }) => {
+    'step:pass': async ({ site, step, result }) => {
       if (step.type === 'dev') {
         if (result.inspect) {
           await writeInspect(result.inspect);
@@ -172,13 +172,13 @@ export function ttyReport(): Plugin {
         tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
-    'recipe.pass': async ({ site, step }) => {
+    'recipe:pass': async ({ site, step }) => {
       if (site === 'step') {
         const message = await getMessage(step);
         tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
-    'step.fail': async ({ reason, step }) => {
+    'step:fail': async ({ reason, step }) => {
       const message = await getMessage(step);
       tty.replaceLine(stderr, tty.fail(tty.CROSS_MARK), ' ', tty.info(message));
 
@@ -188,12 +188,12 @@ export function ttyReport(): Plugin {
         await writeError(reason);
       }
     },
-    'recipe.fail': async ({ reason, step }) => {
+    'recipe:fail': async ({ reason, step }) => {
       const message = await getMessage(step);
       tty.replaceLine(stderr, tty.fail(tty.CROSS_MARK), ' ', tty.info(message));
       await writeError(reason);
     },
-    'error': async ({ reason }) => {
+    'project:error': async ({ reason }) => {
       await writeError(reason);
     }
   });

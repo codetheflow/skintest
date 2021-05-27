@@ -12,10 +12,10 @@ export class NodeProject implements Project {
     const { suite, effect } = this;
     const attempt = new Attempt(launch.options.retries);
 
-    const start = effect('start');
-    const stop = effect('stop');
-    const init = effect('init');
-    const error = effect('error');
+    const start = effect('project:start');
+    const stop = effect('project:stop');
+    const init = effect('project:init');
+    const error = effect('project:error');
 
     try {
       await start({ suite });

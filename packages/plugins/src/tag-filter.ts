@@ -18,7 +18,7 @@ export function tagFilter(options: TagFilter): Plugin {
   const { tags, include } = options;
 
   return async (stage: OnStage) => stage({
-    'init': async ({ suite }) => {
+    'project:init': async ({ suite }) => {
 
       const stat = getStat(suite, tags);
       const onlyMatched = () => {

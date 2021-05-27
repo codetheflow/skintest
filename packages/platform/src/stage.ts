@@ -24,25 +24,25 @@ export type RecipePassScope = RecipeScope & { message: string };
 export type RecipeFailScope = RecipeScope & { reason: Error };
 
 export type Stages = {
-  'start': Stage<'start', StartScope>;
-  'stop': Stage<'stop', StopScope>;
-  'init': Stage<'init', InitScope>;
-  'error': Stage<'error', ErrorScope>
+  'project:start': Stage<'project:start', StartScope>;
+  'project:stop': Stage<'project:stop', StopScope>;
+  'project:init': Stage<'project:init', InitScope>;
+  'project:error': Stage<'project:error', ErrorScope>
 
-  'before.feature': Stage<'before.feature', FeatureScope>;
-  'after.feature': Stage<'after.feature', FeatureScope>;
-  'before.scenario': Stage<'before.scenario', ScenarioScope>;
-  'after.scenario': Stage<'after.scenario', ScenarioScope>;
-  'before.step': Stage<'before.step', StepScope>;
-  'after.step': Stage<'after.step', StepScope>;
+  'feature:before': Stage<'feature:before', FeatureScope>;
+  'feature:after': Stage<'feature:after', FeatureScope>;
+  'scenario:before': Stage<'scenario:before', ScenarioScope>;
+  'scenario:after': Stage<'scenario:after', ScenarioScope>;
+  'step:before': Stage<'step:before', StepScope>;
+  'step:after': Stage<'step:after', StepScope>;
 
   'step': Stage<'step', CommandScope>;
-  'step.pass': Stage<'step.pass', CommandPassScope>;
-  'step.fail': Stage<'step.fail', CommandFailScope>;
+  'step:pass': Stage<'step:pass', CommandPassScope>;
+  'step:fail': Stage<'step:fail', CommandFailScope>;
 
   'recipe': Stage<'recipe', RecipeScope>;
-  'recipe.pass': Stage<'recipe.pass', RecipePassScope>;
-  'recipe.fail': Stage<'recipe.fail', RecipeFailScope>;
+  'recipe:pass': Stage<'recipe:pass', RecipePassScope>;
+  'recipe:fail': Stage<'recipe:fail', RecipeFailScope>;
 };
 
 export type Staging = <Z extends Zone>(zone: Z) => (...stageScope: Parameters<Stages[Z]>) => Promise<void>;

@@ -18,8 +18,8 @@ export class Scene {
   }
 
   private async feature(script: Script): Promise<void> {
-    const beforeFeatureEffect = this.effect('before.feature');
-    const afterFeatureEffect = this.effect('after.feature');
+    const beforeFeatureEffect = this.effect('feature:before');
+    const afterFeatureEffect = this.effect('feature:after');
 
     const scope = {
       suite: this.suite,
@@ -29,7 +29,7 @@ export class Scene {
     await beforeFeatureEffect(scope);
 
     const ok = await this.runPlan(
-      'before.feature',
+      'feature:before',
       script,
       NO_SCENARIO,
       script.beforeFeature
@@ -50,7 +50,7 @@ export class Scene {
     await afterFeatureEffect(scope);
 
     await this.runPlan(
-      'after.feature',
+      'feature:after',
       script,
       NO_SCENARIO,
       script.afterFeature
@@ -63,8 +63,8 @@ export class Scene {
     steps: ReadonlyArray<Command>,
   ): Promise<void> {
 
-    const beforeScenarioEffect = this.effect('before.scenario');
-    const afterScenarioEffect = this.effect('after.scenario');
+    const beforeScenarioEffect = this.effect('scenario:before');
+    const afterScenarioEffect = this.effect('scenario:after');
 
     const scope = {
       suite: this.suite,
@@ -75,7 +75,7 @@ export class Scene {
     await beforeScenarioEffect(scope);
 
     const ok = await this.runPlan(
-      'before.scenario',
+      'scenario:before',
       script,
       scenario,
       script.beforeScenario
@@ -93,7 +93,7 @@ export class Scene {
     await afterScenarioEffect(scope);
 
     await this.runPlan(
-      'after.scenario',
+      'scenario:after',
       script,
       scenario,
       script.afterScenario
@@ -106,8 +106,8 @@ export class Scene {
     step: Command
   ): Promise<boolean> {
 
-    const beforeStepEffect = this.effect('before.step');
-    const afterStepEffect = this.effect('after.step');
+    const beforeStepEffect = this.effect('step:before');
+    const afterStepEffect = this.effect('step:after');
 
     const scope = {
       suite: this.suite,
@@ -119,7 +119,7 @@ export class Scene {
     await beforeStepEffect(scope);
 
     let ok = await this.runPlan(
-      'before.step',
+      'step:before',
       script,
       scenario,
       script.beforeStep
@@ -137,7 +137,7 @@ export class Scene {
     await afterStepEffect(scope);
 
     ok = await this.runPlan(
-      'after.step',
+      'step:after',
       script,
       scenario,
       script.afterStep
@@ -156,8 +156,8 @@ export class Scene {
     const { browser, attempt } = this;
 
     const stepEffect = this.effect('step');
-    const passEffect = this.effect('step.pass');
-    const failEffect = this.effect('step.fail');
+    const passEffect = this.effect('step:pass');
+    const failEffect = this.effect('step:fail');
 
     const scope = {
       suite: this.suite,
@@ -222,8 +222,8 @@ export class Scene {
     };
 
     const recipeEffect = this.effect('recipe');
-    const recipePassEffect = this.effect('recipe.pass');
-    const recipeFailEffect = this.effect('recipe.fail');
+    const recipePassEffect = this.effect('recipe:pass');
+    const recipeFailEffect = this.effect('recipe:fail');
 
     await recipeEffect(scope);
 

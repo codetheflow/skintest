@@ -16,33 +16,33 @@ export function ttySummaryReport(): Plugin {
   let startTime: number;
 
   return async (stage: OnStage) => stage({
-    'start': async () => {
+    'project:start': async () => {
       startTime = performance.now();
     },
-    'stop': async () => {
+    'project:stop': async () => {
       const stopTime = performance.now();
 
       tty.newLine(stdout, `executed in ${ticksToTime(stopTime - startTime)}!`);
       tty.newLine(stdout);
       console.table(statistics);
     },
-    'before.feature': async () => {
+    'feature:before': async () => {
       statistics.features++;
     },
-    'before.scenario': async () => {
+    'scenario:before': async () => {
       statistics.scenarios++;
     },
-    'step.fail': async ({ reason }) => {
+    'step:fail': async ({ reason }) => {
       if ('status' in reason) {
         statistics.fails++;
       } else {
         statistics.errors++;
       }
     },
-    'recipe.fail': async () => {
+    'recipe:fail': async () => {
       statistics.errors++;
     },
-    'error': async () => {
+    'project:error': async () => {
       statistics.errors++;
     }
   });
