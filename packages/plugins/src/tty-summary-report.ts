@@ -6,6 +6,7 @@ import { tty } from './tty';
 const { stdout } = process;
 
 export function ttySummaryReport(): Plugin {
+  let startTime: number;
   const statistics = {
     features: 0,
     scenarios: 0,
@@ -13,13 +14,11 @@ export function ttySummaryReport(): Plugin {
     errors: 0
   };
 
-  let startTime: number;
-
   return async (stage: OnStage) => stage({
-    'project:mount': async () => {
+    'platform:mount': async () => {
       startTime = performance.now();
     },
-    'project:unmount': async () => {
+    'platform:unmount': async () => {
       const stopTime = performance.now();
 
       tty.newLine(stdout, `executed in ${ticksToTime(stopTime - startTime)}!`);

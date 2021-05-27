@@ -1,27 +1,22 @@
 import { nodePlatform } from '@skintest/platform';
-import { exploreNodeProjects, NodeProjectSite, playwrightLauncher, tagFilter, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { exploreNodeProjects, playwrightLauncher, tagFilter, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
 
-const design = nodePlatform(
+const launcher = playwrightLauncher({
+  headless: true,
+  timeout: 30 * 1000,
+});
+
+const plugins = [
   ttyLogo()
   , ttyReport()
   , ttySummaryReport()
   , tagFilter({
-    tags: ['#now'],
-    include: 'all-when-no-matched',
+    include: ['#now'],
+    method: 'all-when-no-matched',
   })
-);
+];
 
-function execute(site: NodeProjectSite) {
-  return design
-    .newProject(site.path, project =>
-      project.run(
-        playwrightLauncher({
-          headless: true,
-          timeout: 30 * 1000,
-        })
-      )
-    );
-}
-
+const platform = nodePlatform(...plugins);
 exploreNodeProjects(__dirname)
-  .forEach(execute);
+  .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
+  .then(() => platform.destroy());

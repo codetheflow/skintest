@@ -1,4 +1,4 @@
-export { exploreNodeProjects, NodeProjectSite } from './explore-node-projects';
+export { exploreNodeProjects } from './explore-node-projects';
 export { playwrightLauncher } from './playwright/playwright-launcher';
 export { tagFilter } from './tag-filter';
 export { ttyLogo } from './tty-logo';

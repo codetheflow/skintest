@@ -14,7 +14,7 @@ _____|  | _|__| _____/  |_  ____   _______/  |_
 `.trim();
 
 export function ttyLogo(): Plugin {
-  tty.newLine(stdout, tty.logo(ART));
-
-  return async (stage: OnStage) => stage({});
+  return async (stage: OnStage) => stage({
+    'platform:mount': async () => tty.newLine(stdout, tty.logo(ART)),
+  });
 }

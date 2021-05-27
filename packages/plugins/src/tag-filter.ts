@@ -2,9 +2,9 @@ import { errors, escapeRE } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Suite } from '@skintest/sdk';
 
-type TagFilter = {
-  tags: string[],
-  include: 'only-matched' | 'all-when-no-matched'
+type TagFilterOptions = {
+  include: string[],
+  method: 'only-matched' | 'all-when-no-matched'
 };
 
 type Statistics = {
@@ -14,13 +14,13 @@ type Statistics = {
   }
 };
 
-export function tagFilter(options: TagFilter): Plugin {
-  const { tags, include } = options;
+export function tagFilter(options: TagFilterOptions): Plugin {
+  const { include, method } = options;
 
   return async (stage: OnStage) => stage({
     'project:init': async ({ suite }) => {
 
-      const stat = getStat(suite, tags);
+      const stat = getStat(suite, include);
       const onlyMatched = () => {
         suite.operations.filterFeature = (feature: string) =>
           stat[feature].featureMatch ||
@@ -31,7 +31,7 @@ export function tagFilter(options: TagFilter): Plugin {
           stat[feature].scenarioMatches.has(scenario);
       };
 
-      switch (include) {
+      switch (method) {
         case 'only-matched': {
           onlyMatched();
           break;
@@ -51,7 +51,7 @@ export function tagFilter(options: TagFilter): Plugin {
           break;
         }
         default: {
-          throw errors.invalidArgument('include', include);
+          throw errors.invalidArgument('method', method);
         }
       }
     }
@@ -65,16 +65,16 @@ function matchHashTag(search: string) {
   };
 }
 
-function getStat(suite: Suite, tags: string[]): Statistics {
+function getStat(suite: Suite, include: string[]): Statistics {
   const stat: Statistics = {};
   for (const script of suite.getScripts()) {
     stat[script.name] = {
-      featureMatch: tags.some(matchHashTag(script.name)),
+      featureMatch: include.some(matchHashTag(script.name)),
       scenarioMatches: new Set(
         script
           .scenarios
           .map(([name]) => name)
-          .filter(name => tags.some(matchHashTag(name)))
+          .filter(name => include.some(matchHashTag(name)))
       )
     };
   }
