@@ -64,3 +64,7 @@ Once that's done, run the release script:
 ```sh
 yarn publish
 ```
+
+Use --canary flag for the `alpha` releases
+
+https://github.com/lerna/lerna/blob/main/commands/publish/README.md#--canary

@@ -21,7 +21,7 @@
     "lint:fix": "eslint packages -c packages/.eslintrc --fix & eslint sandbox -c sandbox/.eslintrc --fix",
     "lint:packages": "eslint packages -c packages/.eslintrc",
     "lint:sandbox": "eslint sandbox -c sandbox/.eslintrc",
-    "publish": "lerna publish --canary"
+    "release": "lerna publish"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "4.25.0",
