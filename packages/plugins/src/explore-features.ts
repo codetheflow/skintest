@@ -4,19 +4,19 @@ import * as glob from 'glob';
 import * as path from 'path';
 
 type ExploreFeatures = {
-  dir: string;
+  cwd: string;
 }
 
 export function exploreFeatures(options: ExploreFeatures): Plugin {
-  const { dir } = options;
+  const { cwd } = options;
 
   return (stage: OnStage) => stage({
     'start': async ({ suite }) => {
       // todo: do we need to make it real async?
       // todo: reporting
-      const files = glob.sync('*.js', { cwd: dir });
+      const files = glob.sync('*.js', { cwd });
       for (const file of files) {
-        const feature = path.join(dir, file);
+        const feature = path.join(cwd, file);
 
         const countAtStart = suite.getScripts().length;
         require(feature);

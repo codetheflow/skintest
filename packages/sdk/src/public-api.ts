@@ -1,5 +1,5 @@
 
-export { BinaryAssert, ListBinaryAssert, ListNumberAssert, NumberAssert, StringAssert } from './assert';
+export { AssertHost, BinaryAssert, ListBinaryAssert, ListNumberAssert, NumberAssert, StringAssert } from './assert';
 export { Browser } from './browser';
 export { AssertStep, ClientStep, Command, CommandBody, DevStep, DoStep, InfoStep, StepContext } from './command';
 export { DOMElement } from './dom';

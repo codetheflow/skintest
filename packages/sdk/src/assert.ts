@@ -1,4 +1,5 @@
 import { KeyValue } from '@skintest/common';
+import { ElementState } from './element';
 
 export enum AssertHow {
   above = 'be above',
@@ -45,6 +46,8 @@ export type ListNumberAssert = ListBinaryAssert<number> & {
   above: ListBinaryAssert<number>,
   below: ListBinaryAssert<number>,
 }
+
+export type StateAssert = BinaryAssert<ElementState>;
 
 export interface AssertHost {
   no: boolean;

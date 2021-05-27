@@ -33,49 +33,45 @@
 * launch.json for debugging -
 * fix yarn build - done
 * github lint workflow - done
-* starter github repository -
-* publish version 0.2.0 -
+* starter github repository - done
+* publish version 1.0.0.alpha - done
+* sandbox:watch command - done
+* copy/paste as recipe example - done
+* https://github.com/microsoft/playwright/issues/2511
 
 0.3.0:
-* and inspect to dbg in .debug, better debugging experience
-* waitSelector doesn't take into account page's timeout
-* add comments to the ego, selectors and recipes
-* show fail/error solutions/links to solutions
-* better code parsing in the `meta.ts`
 * file upload/download, how to assert results?
-* slowMo settings in camelCase - lint warning
-* start:watch command
-* stubs/network intersection support
-* keyboard keys - documentation
-* remove logs from the playwright errors
-
-next
-* start writing unit tests
-* use value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?
-* reporting UX
-* CI
-* multiple selector strategy in $ and $$, data-test-id, search by the text
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
+* and inspect to dbg in .debug, better debugging experience
+* better code parsing in the `meta.ts`
+* add comments to the ego, selectors, recipes and keyboard keys
+* has.state doesn't trigger type checking, because string is extendable from the string
+* example of using value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?
 * drag and drop
+
+next
+* show fail/error solutions/links to solutions
+* slowMo settings in camelCase - lint warning
+* stubs/network intersection support
+* remove logs from the playwright errors
+* waitSelector doesn't take into account page's timeout
+* start writing unit tests
+* better reporting UX
+* CI
+* multiple selector strategy in $ and $$, data-test-id, search by the text
 * playwright logs, verbose reporting, file logs, integration longs e. with allure
 * https://playwright.dev/docs/api/class-logger
-* add documentation
-* https://playwright.dev/docs/selectors
 * dialog support, alert(), confirm(), prompt()
 * https://playwright.dev/docs/api/class-dialog
 * video and screenshots support
 * https://playwright.dev/docs/ci
-* copy/paste as recipe example
-* https://github.com/microsoft/playwright/issues/2511
-* get value from selector and fill input recipe example
-
 
 ### questions
 * think about todos.item.at/label_at etc.
 * $$ should wait?
 * add `feature`, `component`, `recipe` postfixes?
-* recipe type `assert`?
+* recipe types `assert` and `query`?
 * skintest.io
 * cli tool
 * time 

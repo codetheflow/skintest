@@ -4,7 +4,7 @@ import { AssertStep, StepContext } from '../command';
 import { formatSelector } from '../format';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
-import { fails, TestExecutionResult } from '../test-result';
+import { TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 
 export class SeeStep implements AssertStep {
@@ -18,42 +18,13 @@ export class SeeStep implements AssertStep {
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
+    Guard.notNull(assert, 'assert');
   }
 
   async execute(context: StepContext): Promise<TestExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
-    if (isUndefined(this.assert)) {
-      const selector = this.query.toString();
-
-      switch (this.query.type) {
-        case 'query': {
-          const element = await page.query(selector);
-          if (!element) {
-            return fails.elementNotFound({
-              query: this.query
-            });
-          }
-
-          break;
-        }
-        case 'queryList': {
-          const elements = await page.queryList(selector);
-          if (!elements.length) {
-            return fails.elementNotFound({
-              query: this.query
-            });
-          }
-
-          break;
-        }
-        default: {
-          throw errors.invalidArgument('selector', reinterpret<Query>(this.query).type);
-        }
-      }
-    }
-
     const verify = new Verify(page);
     const host = reinterpret<AssertHost>(this.assert);
 

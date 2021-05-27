@@ -1,5 +1,5 @@
 import { OnStage, Plugin } from '@skintest/platform';
-import * as chalk from 'chalk';
+import { tty } from './tty';
 
 const { stdout } = process;
 
@@ -13,12 +13,8 @@ _____|  | _|__| _____/  |_  ____   _______/  |_
    \/     \/       \/          \/     \/        
 `.trim();
 
-const NEW_LINE = '\n';
-const logo = chalk.grey;
-
 export function ttyLogo(): Plugin {
-  stdout.write(logo(ART));
-  stdout.write(NEW_LINE);
+  tty.newLine(stdout, tty.logo(ART));
 
   return async (stage: OnStage) => stage({});
 }

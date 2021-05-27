@@ -1,10 +1,10 @@
-import { AssertHow, AssertWhat, BinaryAssert, BinaryAssertHost, KeyValueAssert, KeyValueAssertHost, ListNumberAssert, ListNumberAssertHost, StringAssert, StringAssertHost } from './assert';
+import { AssertHow, AssertWhat, BinaryAssertHost, KeyValueAssert, KeyValueAssertHost, ListNumberAssert, ListNumberAssertHost, StateAssert, StringAssert, StringAssertHost } from './assert';
 import { ElementState } from './element';
 
 export interface Has {
   no: HasNo;
   class: StringAssert;
-  state: BinaryAssert<ElementState>;
+  state: StateAssert,
   attribute: KeyValueAssert;
   style: KeyValueAssert;
   text: StringAssert;
@@ -47,7 +47,7 @@ class Assertion implements Has, ListHas {
     return new ListNumberAssertHost(this.not, AssertWhat.length);
   }
 
-  get state(): BinaryAssert<ElementState> {
+  get state(): StateAssert {
     return new BinaryAssertHost<ElementState>(this.not, AssertWhat.state, AssertHow.equals);
   }
 

@@ -1,30 +1,10 @@
-import { prettyStack, StringDictionary } from '@skintest/common';
+import { ellipsis, padRight, prettyStack, StringDictionary } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
-import { Command, DOMElement, ElementRef, ElementState, TestFail } from '@skintest/sdk';
-import * as chalk from 'chalk';
-import { AssertHost } from 'packages/sdk/src/assert';
+import { AssertHost, Command, DOMElement, ElementRef, ElementState, InspectInfo, TestFail } from '@skintest/sdk';
 import * as path from 'path';
+import { tty } from './tty';
 
-const { stdout, stderr, stdin } = process;
-
-const dev = chalk.yellow;
-const error = chalk.bgRedBright.white;
-const fail = chalk.red;
-const h1 = chalk.cyan;
-const h2 = chalk.white;
-const hidden = chalk.hidden;
-const info = chalk.grey;
-const pass = chalk.green;
-const tag = chalk.bgGrey.white;
-const value = chalk.redBright;
-
-const CHECK_MARK = '\u2713';
-const CROSS_MARK = '\u2613';
-const NEW_LINE = '\n';
-const WS = ' ';
-
-const CURSOR_CODE = '\x1b[6n';
-const CURSOR_RE = /\[(\d+);(\d+)R$/;
+const { stdout, stderr } = process;
 
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
 
@@ -33,6 +13,8 @@ const STACK_FUNC_IGNORE = [
   'fulfilled',
   'rejected',
 ];
+
+const KNOWN_ERRORS = new Set(['skintest.timeout']);
 
 const STACK_FILE_IGNORE = [
   path.join('platform', 'dist', 'src', 'attempt.js'),
@@ -52,228 +34,153 @@ async function getMessage(command: Command): Promise<string> {
   }
 }
 
-export async function getCursor(): Promise<[number, number]> {
-  // todo: nodemon doesn't work with this code after the first watch
-  return new Promise((resolve, reject) => {
-    stdin.setRawMode(true);
-
-    stdin.once('data', data => {
-      stdin.setRawMode(false);
-
-      const match = CURSOR_RE.exec(data.toString());
-      if (match) {
-        const [x, y] = match.slice(1, 3).reverse().map(Number) as [number, number];
-        resolve([x - 1, y - 1]);
-      } else {
-        reject('can\'t find terminal cursor position');
-      }
-    });
-
-    stdout.write(CURSOR_CODE);
-    stdout.emit('data', CURSOR_CODE);
-  });
-}
-
-async function fixedLine() {
-  const [x, y] = await getCursor();
-  return (...text: string[]) => {
-    stdout.cursorTo(x, y);
-    stdout.clearScreenDown();
-
-    const line = text.join('');
-    return stdout.write(line);
-  };
-}
-
-function followLine() {
-  return (...text: string[]): boolean => stdout.write(text.join(''));
-}
-
-function fillWidth(text: string) {
-  return text + Array(Math.max(0, stdout.columns - text.length)).fill(WS).join('');
-}
-
 async function writeError(reason: Error) {
-  const text = (reason.name || 'Error') + ': ' + (reason.message || 'unknown error');
-  stderr.write(error(fillWidth(text)));
-  stderr.write(NEW_LINE);
+  const message = (reason.name || 'Error') + ': ' + (reason.message || 'unknown error');
+  tty.newLine(stderr, tty.error(padRight(message, stderr.columns)));
 
-  if (reason.name === 'skintest.timeout') {
-    return;
-  }
+  if (!KNOWN_ERRORS.has(reason.name) && reason.stack) {
+    const stackTrace = await prettyStack(reason.stack);
 
-  if (reason.stack) {
-    const frames = (await prettyStack(reason.stack))
+    stackTrace
       .filter(x => x.file)
       .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
       .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
-      .map(x => `${x.function || 'at'} (${x.file}:${x.line}:${x.column})`);
-
-    stderr.write(fail(frames.join(NEW_LINE)));
-    stderr.write(NEW_LINE);
+      .map(x => `${x.function || 'at'} (${x.file}:${x.line}:${x.column})`)
+      .forEach(x => tty.newLine(stderr, tty.fail(x)));
   }
 }
 
 function writeFail(reason: TestFail) {
   const { body } = reason;
-  const keys = ['query', 'assert', 'actual', 'etalon'];
-  const isBinary = keys.every(key => key in body);
-  if (isBinary) {
-    const selector = body.query;
+
+  // todo: make it better
+  const pivot = ['query', 'assert', 'actual', 'etalon'];
+  const isBinaryAssert = pivot.every(key => key in body);
+
+  if (isBinaryAssert) {
+    const selector = body.query.toString();
     const method = body.query.type === 'query' ? '$' : '$$';
     const assert: AssertHost = body.assert;
 
-    stderr.write(fail(
+    tty.newLine(stderr, tty.fail(
       `${method}(${selector}).${assert.what}: ` +
-      `expected ${value('`' + body.actual + '`')} ` +
+      `expected ${tty.value('`' + body.actual + '`')} ` +
       `to ${assert.no ? 'not' : ''} ${assert.how} ` +
-      `${value('`' + body.etalon + '`')}`
+      `${tty.value('`' + body.etalon + '`')}`
     ));
   } else {
-    stderr.write(fail(reason.description));
+    tty.newLine(stderr, tty.fail(reason.description));
+  }
+}
+
+async function writeInspect(inspect: InspectInfo) {
+  // eslint-disable-next-line prefer-const
+  let { selector, target } = inspect;
+  const maxWidth = 40;
+
+  target = Array.isArray(target)
+    ? target.length > 1
+      ? target
+      : target[0]
+    : target;
+
+  if (!target) {
+    tty.newLine(stderr, tty.error(`$(\`${selector}\`) didn't find any elements`));
+    return;
   }
 
-  stderr.write(NEW_LINE);
+  if (Array.isArray(target)) {
+    tty.newLine(stdout, `$(\`${selector}\`) found ${target.length} elements`);
+
+    const list: Array<StringDictionary<unknown>> = [];
+    for (const element of target) {
+      list.push({
+        text: ellipsis(await element.text(), maxWidth),
+        visible: await element.state('visible'),
+        enabled: await element.state('enabled'),
+      });
+    }
+
+    tty.newLine(stdout);
+    console.table(list);
+  } else {
+    const elementRef = target as ElementRef<DOMElement>;
+    tty.newLine(stdout, `$(\`${selector}\`) found 1 element`);
+
+    const info: StringDictionary<unknown> = {
+      text: ellipsis(await elementRef.text(), maxWidth),
+      classList: ellipsis((await elementRef.classList()).toString(), maxWidth),
+    };
+
+    const addState = async (key: ElementState) => {
+      try {
+        info[key] = await elementRef.state(key);
+        // eslint-disable-next-line no-empty
+      } catch (ex) {
+      }
+    };
+
+    await addState('checked');
+    await addState('editable');
+    await addState('enabled');
+    await addState('focused');
+    await addState('visible');
+
+    tty.newLine(stdout);
+    console.table(info);
+  }
 }
 
 export function ttyReport(): Plugin {
-  if (!stdin.isTTY) {
-    // todo: safe tty operations
-    // todo: throw meaningful error?
-  }
-
-  let currentLine = followLine();
-
   return async (stage: OnStage) => stage({
     'start': async () => {
-      stdin.setEncoding('utf8');
-      stdin.setRawMode(true);
-      stdin.resume();
+      tty.newLine(stdout);
     },
     'stop': async () => {
-      stdin.setRawMode(false);
-      stdin.pause();
-      stdin.end();
+      tty.newLine(stdout);
     },
     'before.feature': async ({ script }) => {
       const info = await script.getMeta();
-      currentLine(h1(info.file + `:${info.line}:${info.column}`), NEW_LINE);
-      currentLine = followLine();
+      tty.newLine(stdout, tty.h1(info.file + `:${info.line}:${info.column}`));
     },
     'before.scenario': async ({ scenario }) => {
-      currentLine = await fixedLine();
-      const label = scenario.replace(TAG_RE, (...args) =>
-        args[1] + tag(args[2]) + args[3]);
-
-      currentLine(h2(label), NEW_LINE);
-      currentLine = followLine();
+      const label = scenario.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
+      tty.newLine(stdout, tty.h2(label));
     },
     'step': async ({ site, step }) => {
       if (step.type === 'dev') {
         const message = await getMessage(step);
-        currentLine(dev(message, NEW_LINE));
-        currentLine = followLine();
+        tty.newLine(stdout, tty.dev(message));
         return;
       }
 
       if (site === 'step') {
-        currentLine = await fixedLine();
         const message = await getMessage(step);
-        currentLine(hidden(CHECK_MARK), WS, info(message));
+        tty.newLine(stdout, tty.hidden(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
     'step.pass': async ({ site, step, result }) => {
       if (step.type === 'dev') {
         if (result.inspect) {
-          // eslint-disable-next-line prefer-const
-          let { selector, target } = result.inspect;
-
-          const strip = (text: string): string => {
-            if (!text) {
-              return text;
-            }
-
-            const MAX_LENGTH = 40;
-            if (text.length < MAX_LENGTH) {
-              return text;
-            }
-
-            return text.substring(0, MAX_LENGTH) + '...';
-          };
-
-          if (Array.isArray(target)) {
-            if (target.length > 1) {
-              stdout.write(`$(\`${selector}\`) found ${target.length} elements`);
-              stdout.write(NEW_LINE);
-
-              const list: Array<StringDictionary<unknown>> = [];
-              for (const element of target) {
-                list.push({
-                  text: strip(await element.text()),
-                  visible: await element.state('visible'),
-                  enabled: await element.state('enabled'),
-                });
-              }
-
-              console.table(list);
-              return;
-            }
-
-            target = target[0];
-          }
-
-          if (target) {
-            const elementRef = target as ElementRef<DOMElement>;
-            stdout.write(`$(\`${selector}\`) found 1 element`);
-            stdout.write(NEW_LINE);
-
-            const info: StringDictionary<unknown> = {
-              text: strip(await elementRef.text()),
-              classList: strip((await elementRef.classList()).toString()),
-            };
-
-            const addState = async (key: ElementState) => {
-              try {
-                info[key] = await elementRef.state(key);
-                // eslint-disable-next-line no-empty
-              } catch (ex) {
-              }
-            };
-
-            await addState('checked');
-            await addState('editable');
-            await addState('enabled');
-            await addState('focused');
-            await addState('visible');
-
-            console.table(info);
-            return;
-          }
-
-          stdout.write(error(`$(\`${selector}\`) didn't find any elements`));
-          stdout.write(NEW_LINE);
+          await writeInspect(result.inspect);
+          return;
         }
-
-        return;
       }
 
       if (site === 'step') {
         const message = await getMessage(step);
-        currentLine(pass(CHECK_MARK), WS, info(message), NEW_LINE);
-        currentLine = followLine();
+        tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
     'recipe.pass': async ({ site, step }) => {
       if (site === 'step') {
         const message = await getMessage(step);
-        currentLine(pass(CHECK_MARK), WS, info(message), NEW_LINE);
-        currentLine = followLine();
+        tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
     'step.fail': async ({ reason, step }) => {
       const message = await getMessage(step);
-      currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
-      currentLine = followLine();
+      tty.replaceLine(stderr, tty.fail(tty.CROSS_MARK), ' ', tty.info(message));
 
       if ('status' in reason) {
         writeFail(reason);
@@ -283,10 +190,11 @@ export function ttyReport(): Plugin {
     },
     'recipe.fail': async ({ reason, step }) => {
       const message = await getMessage(step);
-      currentLine(fail(CROSS_MARK), WS, info(message), NEW_LINE);
-      currentLine = followLine();
+      tty.replaceLine(stderr, tty.fail(tty.CROSS_MARK), ' ', tty.info(message));
       await writeError(reason);
     },
-    'error': async ({ reason }) => await writeError(reason),
+    'error': async ({ reason }) => {
+      await writeError(reason);
+    }
   });
 }

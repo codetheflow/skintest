@@ -1,4 +1,9 @@
+import { ticksToTime } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
+import { performance } from 'perf_hooks';
+import { tty } from './tty';
+
+const { stdout } = process;
 
 export function ttySummaryReport(): Plugin {
   const statistics = {
@@ -8,9 +13,17 @@ export function ttySummaryReport(): Plugin {
     errors: 0
   };
 
+  let startTime: number;
+
   return async (stage: OnStage) => stage({
+    'start': async () => {
+      startTime = performance.now();
+    },
     'stop': async () => {
-      console.log('run summary');
+      const stopTime = performance.now();
+
+      tty.newLine(stdout, `executed in ${ticksToTime(stopTime - startTime)}!`);
+      tty.newLine(stdout);
       console.table(statistics);
     },
     'before.feature': async () => {
@@ -19,14 +32,18 @@ export function ttySummaryReport(): Plugin {
     'before.scenario': async () => {
       statistics.scenarios++;
     },
-    'step.fail': async () => {
-      statistics.fails++;
+    'step.fail': async ({ reason }) => {
+      if ('status' in reason) {
+        statistics.fails++;
+      } else {
+        statistics.errors++;
+      }
     },
     'recipe.fail': async () => {
-      statistics.fails++;
+      statistics.errors++;
     },
     'error': async () => {
-      statistics.errors;
+      statistics.errors++;
     }
   });
 }
