@@ -31,7 +31,8 @@
 * summary report - done
 * options from launcher - done
 * launch.json for debugging -
-* fix yarn build -
+* fix yarn build - done
+* github lint workflow - done
 * starter github repository -
 * publish version 0.2.0 -
 
@@ -49,6 +50,7 @@
 * remove logs from the playwright errors
 
 next
+* start writing unit tests
 * use value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?
 * reporting UX
 * CI
