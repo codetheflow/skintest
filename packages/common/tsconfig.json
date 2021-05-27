@@ -6,6 +6,6 @@
     "composite": true
   },
   "include": [
-    "**/*.ts"
+    "src/**/*.ts"
   ]
 }
