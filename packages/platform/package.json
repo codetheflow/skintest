@@ -1,6 +1,6 @@
 {
   "name": "@skintest/platform",
-  "version": "1.0.5-alpha.0",
+  "version": "1.0.7-alpha.0",
   "description": "skintest platform",
   "main": "dist/src/public-api.js",
   "types": "dist/src/public-api.d.ts",
