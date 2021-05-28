@@ -1,4 +1,4 @@
+**/*.log
 **/dist
 **/node_modules
-yarn-error.log
-**/tsconfig.tsbuildinfo
+**/*.tsbuildinfo

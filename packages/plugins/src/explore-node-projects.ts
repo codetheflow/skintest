@@ -10,6 +10,7 @@ export function exploreNodeProjects(cwd: string): NodeProjectVisitor {
     .readdirSync(cwd, { withFileTypes: true })
     .filter(dir => dir.isDirectory())
     .map(dir => path.join(cwd, dir.name))
+    .concat([cwd])
     .filter(likeProject);
 
   return {

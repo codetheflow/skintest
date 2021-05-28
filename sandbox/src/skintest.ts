@@ -1,5 +1,6 @@
 import { nodePlatform } from '@skintest/platform';
 import { exploreNodeProjects, playwrightLauncher, tagFilter, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import * as path from 'path';
 
 const launcher = playwrightLauncher({
   headless: true,
@@ -17,6 +18,9 @@ const plugins = [
 ];
 
 const platform = nodePlatform(...plugins);
-exploreNodeProjects(__dirname)
+
+// if you want to run multiple projects just replace 
+// `path.join(__dirname, 'todomvc')` with `__dirname`
+exploreNodeProjects(path.join(__dirname, 'todomvc'))
   .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
   .then(() => platform.destroy());
