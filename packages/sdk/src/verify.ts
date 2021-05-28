@@ -1,4 +1,4 @@
-import { errors, isRegExp, isString, KeyValue, likeKeyValue, reinterpret } from '@skintest/common';
+import { errors, Guard, isRegExp, isString, KeyValue, likeKeyValue, reinterpret } from '@skintest/common';
 import { AssertHost, AssertHow, AssertWhat } from './assert';
 import { ElementState } from './element';
 import { Page } from './page';
@@ -9,23 +9,53 @@ export class Verify {
   constructor(private page: Page) {
   }
 
-  async query<V>(
+  theCondition<V>(
+    query: Query | QueryList,
     assert: AssertHost,
+    expected: V
+  ): Promise<TestExecutionResult> {
+    Guard.notNull(query, 'query');
+    Guard.notNull(assert, 'assert');
+
+    if (query.type === 'query') {
+      return this.conditionOnQuery(query, assert, expected);
+    }
+
+    return this.conditionOnQueryList(query, assert, expected);
+  }
+
+  private async conditionOnQuery<V>(
     query: Query,
+    assert: AssertHost,
     expected: V
   ): Promise<TestExecutionResult> {
     const selector = query.toString();
     const elementRef = await this.page.query(selector);
     if (!elementRef) {
+      if (assert.what === 'state' && '' + expected === 'exists') {
+        if (assert.no) {
+          return pass();
+        }
+
+        return fails
+          .binaryAssert({
+            assert,
+            query,
+            actual: 'not exists',
+            etalon: expected
+          });
+      }
+
       return fails.elementNotFound({ query });
     }
+
 
     // todo: remove copy/paste code below
     switch (assert.what) {
       case AssertWhat.text: {
         const actual = await elementRef.text();
         const etalon = reinterpret<string>(expected);
-        if (this.binaryTest(assert, actual, etalon) === true) {
+        if (this.test(assert, actual, etalon) === true) {
           return pass();
         }
 
@@ -40,13 +70,13 @@ export class Verify {
       case AssertWhat.state: {
         const etalon = reinterpret<ElementState>(expected);
         const actual = await elementRef.state(etalon);
-        if (actual) {
+        if (this.test(assert, actual, true)) {
           return pass();
         }
 
         return fails
           .binaryAssert({
-            actual: '' + actual,
+            actual: assert.no ? etalon : opposite(etalon),
             etalon,
             query,
             assert,
@@ -79,7 +109,7 @@ export class Verify {
           const actual = await getActual(etalon);
           assert.how = AssertHow.exists;
 
-          if (this.binaryTest(assert, actual, etalon)) {
+          if (this.test(assert, actual, etalon)) {
             return pass();
           }
 
@@ -99,7 +129,7 @@ export class Verify {
             assert.how = AssertHow.like;
           }
 
-          if (this.binaryTest(assert, actual, etalon)) {
+          if (this.test(assert, actual, etalon)) {
             return pass();
           }
 
@@ -120,9 +150,9 @@ export class Verify {
     }
   }
 
-  async queryList<V>(
-    assert: AssertHost,
+  private async conditionOnQueryList<V>(
     query: QueryList,
+    assert: AssertHost,
     expected: V
   ): Promise<TestExecutionResult> {
     const selector = query.toString();
@@ -131,7 +161,7 @@ export class Verify {
       case AssertWhat.length: {
         const actual = await elementRefList.length;
         const etalon = reinterpret<number>(expected);
-        if (this.binaryTest(assert, actual, etalon)) {
+        if (this.test(assert, actual, etalon)) {
           return pass();
         }
 
@@ -149,7 +179,7 @@ export class Verify {
     }
   }
 
-  private binaryTest<V>(assert: AssertHost, actual: V, etalon: V): boolean {
+  private test<V>(assert: AssertHost, actual: V, etalon: V): boolean {
     let result: boolean;
     switch (assert.how) {
       case AssertHow.exists: {
@@ -190,4 +220,19 @@ export class Verify {
 
     return assert.no ? !result : result;
   }
+}
+
+function opposite(state: ElementState): string {
+  switch (state) {
+    case 'checked': return 'unchecked';
+    case 'disabled': return 'enabled';
+    case 'editable': return 'not editable';
+    case 'enabled': return 'disabled';
+    case 'exists': return 'not exists';
+    case 'focused': return 'not focused';
+    case 'hidden': return 'visible';
+    case 'visible': return 'not visible';
+    default: throw errors.invalidArgument('state', state);
+  }
+
 }

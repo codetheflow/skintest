@@ -1,4 +1,4 @@
-import { errors, reinterpret } from '@skintest/common';
+import { reinterpret } from '@skintest/common';
 import { DOMElement, ElementRef, ElementRefList, KeyboardKey, Page } from '@skintest/sdk';
 import * as playwright from 'playwright';
 import { PlaywrightAction } from './playwright-action';
@@ -15,7 +15,7 @@ export class PlaywrightPage implements Page {
 
   @PlaywrightAction()
   goBack(): Promise<void> {
-    return  reinterpret<Promise<void>>(this.page.goBack());
+    return reinterpret<Promise<void>>(this.page.goBack());
   }
 
   @PlaywrightAction()
@@ -101,13 +101,17 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
-  async query<T extends DOMElement>(selector: string): Promise<ElementRef<T>> {
-    const handle = await this.page.waitForSelector(selector);
-    if (handle) {
+  async query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
+    try {
+      const handle = await this.page.waitForSelector(selector);
       return new PlaywrightElement<T>(handle, this.page, selector);
-    }
+    } catch (ex) {
+      if (ex instanceof playwright.errors.TimeoutError) {
+        return null;
+      }
 
-    throw errors.elementNotFound(selector);
+      throw ex;
+    }
   }
 
   @PlaywrightAction()

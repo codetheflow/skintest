@@ -24,7 +24,7 @@ export interface Page {
 
   pause(): Promise<void>;
 
-  query<E extends DOMElement>(selector: string): Promise<ElementRef<E>>;
+  query<E extends DOMElement>(selector: string): Promise<ElementRef<E> | null>;
   queryList<E extends DOMElement>(selector: string): Promise<ElementRefList<E>>;
 
   immediateQuery<E extends DOMElement>(selector: string): Promise<ElementRef<E> | null>;

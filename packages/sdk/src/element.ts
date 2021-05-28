@@ -9,7 +9,8 @@ export type ElementState =
   | 'enabled'
   | 'hidden'
   | 'unchecked'
-  | 'visible';
+  | 'visible'
+  | 'exists';
 
 export interface ElementClassList {
   has(name: string): boolean;

@@ -45,14 +45,25 @@ export class PageClient implements Client {
 
   query<E extends DOMElement>(query: Query<E>): Promise<ClientElement<E>>;
   query<E extends DOMElement>(query: QueryList<E>): Promise<ClientElementList<E>>;
-  query(query: Query<DOMElement> | QueryList<DOMElement>): Promise<ClientElement<DOMElement> | ClientElementList<DOMElement>> {
+  async query(query: Query<DOMElement> | QueryList<DOMElement>): Promise<ClientElement<DOMElement> | ClientElementList<DOMElement>> {
     Guard.notNull(query, 'query');
 
     const selector = query.toString();
     switch (query.type) {
-      case 'query': return this.page.query(selector);
-      case 'queryList': return this.page.queryList(selector);
-      default: throw errors.invalidArgument('type', reinterpret<Query>(query).type);
+      case 'query': {
+        const element = await this.page.query(selector);
+        if (!element) {
+          throw errors.elementNotFound(selector);
+        }
+
+        return element;
+      }
+      case 'queryList': {
+        return this.page.queryList(selector);
+      }
+      default: {
+        throw errors.invalidArgument('type', reinterpret<Query>(query).type);
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { errors, Guard, isUndefined, reinterpret } from '@skintest/common';
+import { Guard, isUndefined, reinterpret } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
 import { AssertStep, StepContext } from '../command';
 import { formatSelector } from '../format';
@@ -27,18 +27,7 @@ export class SeeStep implements AssertStep {
     const page = browser.getCurrentPage();
     const verify = new Verify(page);
     const host = reinterpret<AssertHost>(this.assert);
-
-    switch (this.query.type) {
-      case 'query': {
-        return await verify.query(host, this.query, this.value);
-      }
-      case 'queryList': {
-        return await verify.queryList(host, this.query, this.value);
-      }
-      default: {
-        throw errors.invalidArgument('selector', reinterpret<Query>(this.query).type);
-      }
-    }
+    return await verify.theCondition(this.query, host, this.value);
   }
 
   toString(): string {

@@ -1,4 +1,4 @@
-import { errors, NumberDictionary } from '@skintest/common';
+import { errors, Guard, NumberDictionary } from '@skintest/common';
 import { DOMElement, ElementClassList, ElementRef, ElementState } from '@skintest/sdk';
 import * as playwright from 'playwright';
 
@@ -8,6 +8,9 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
     private page: playwright.Page,
     private selector: string,
   ) {
+    Guard.notNull(handle, 'handle');
+    Guard.notNull(page, 'page');
+    Guard.notEmpty(selector, 'selector');
   }
 
   async attribute(name: string): Promise<string | null> {
@@ -37,6 +40,7 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
       case 'hidden': return await this.handle.isHidden();
       case 'unchecked': return !(await this.handle.isChecked());
       case 'visible': return await this.handle.isVisible();
+      case 'exists': return true;
       default: throw errors.invalidArgument('state', state);
     }
   }
