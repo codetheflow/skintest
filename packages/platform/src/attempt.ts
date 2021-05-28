@@ -10,9 +10,9 @@ export class Attempt {
 
   async step(method: () => Promise<TestExecutionResult>): Promise<TestExecutionResult> {
     let attempts = this.retries;
-
     let result: TestExecutionResult = pass();
     let error = null;
+    
     while (--attempts >= 0) {
       try {
         result = await method();

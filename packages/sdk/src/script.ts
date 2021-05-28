@@ -6,18 +6,16 @@ import { ScenarioSchema, StorySchema } from './schema';
 
 export interface Script {
   readonly name: string;
-  readonly getMeta: () => Promise<Meta>;
 
-  beforeFeature: ReadonlyArray<Command>;
-  afterFeature: ReadonlyArray<Command>
+  readonly scenarios: ReadonlyArray<[string, ReadonlyArray<Command>]>;
+  readonly beforeFeature: ReadonlyArray<Command>;
+  readonly afterFeature: ReadonlyArray<Command>
+  readonly beforeScenario: ReadonlyArray<Command>;
+  readonly afterScenario: ReadonlyArray<Command>;
+  readonly beforeStep: ReadonlyArray<Command>;
+  readonly afterStep: ReadonlyArray<Command>;
 
-  beforeScenario: ReadonlyArray<Command>;
-  afterScenario: ReadonlyArray<Command>;
-
-  beforeStep: ReadonlyArray<Command>;
-  afterStep: ReadonlyArray<Command>;
-
-  scenarios: ReadonlyArray<[string, ReadonlyArray<Command>]>;
+  getMeta(): Promise<Meta>;
 }
 
 export class RuntimeScript implements Script, Feature, Scenario {

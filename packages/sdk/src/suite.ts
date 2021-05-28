@@ -11,19 +11,19 @@ export interface Suite {
 
 export interface SuiteOperations {
   filterFeature: (feature: string) => boolean;
-  filterScenario: (feature: string, scenario: string) => boolean; 
+  filterScenario: (feature: string, scenario: string) => boolean;
 }
 
 class ProjectSuite implements Suite {
   private scripts: Script[] = [];
 
-  readonly operations = {
+  operations = {
     filterScript: yes,
     filterFeature: yes,
     filterScenario: yes,
   };
 
-  constructor(public readonly uri: string) {
+  constructor(public uri: string) {
   }
 
   addScript(script: Script): void {

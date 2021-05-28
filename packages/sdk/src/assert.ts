@@ -16,7 +16,6 @@ export enum AssertWhat {
   state = 'state',
   style = 'style',
   text = 'text',
-  value = 'value',
 }
 
 export abstract class BinaryAssert<V> {

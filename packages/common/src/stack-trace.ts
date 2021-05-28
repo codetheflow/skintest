@@ -82,7 +82,7 @@ export function withSourceMap(caller: StackFrame): Promise<StackFrame> {
     return {
       ...caller,
       ...pos,
-      file: path.resolve(caller.file, '../' + pos.source),
+      file: path.resolve(caller.file, '..' + path.sep + pos.source),
     };
   });
 }

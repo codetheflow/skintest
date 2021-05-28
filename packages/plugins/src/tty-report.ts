@@ -7,14 +7,13 @@ import { tty } from './tty';
 const { stdout, stderr } = process;
 
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
+const KNOWN_ERRORS = new Set(['skintest.timeout']);
 
 const STACK_FUNC_IGNORE = [
   '__awaiter',
   'fulfilled',
   'rejected',
 ];
-
-const KNOWN_ERRORS = new Set(['skintest.timeout']);
 
 const STACK_FILE_IGNORE = [
   path.join('platform', 'dist', 'src', 'attempt.js'),
@@ -178,9 +177,14 @@ export function ttyReport(): Plugin {
         tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
-    'step:fail': async ({ reason, step }) => {
+    'step:fail': async ({ reason, step, site }) => {
       const message = await getMessage(step);
-      tty.replaceLine(stderr, tty.fail(tty.CROSS_MARK), ' ', tty.info(message));
+      const line = [tty.fail(tty.CROSS_MARK), ' ', tty.info(message)];
+      if (site === 'step') {
+        tty.replaceLine(stderr, ...line);
+      } else {
+        tty.newLine(stderr, ...line);
+      }
 
       if ('status' in reason) {
         writeFail(reason);

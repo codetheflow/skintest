@@ -39,10 +39,6 @@ class Assertion implements Has, ListHas {
     return new StringAssertHost(this.not, AssertWhat.text);
   }
 
-  get value(): StringAssert {
-    return new StringAssertHost(this.not, AssertWhat.value);
-  }
-
   get length(): ListNumberAssert {
     return new ListNumberAssertHost(this.not, AssertWhat.length);
   }

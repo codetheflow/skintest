@@ -40,6 +40,8 @@
 * https://github.com/microsoft/playwright/issues/2511
 
 0.3.0:
+* add attached/detached state?
+* add methods to the ClientElement
 * file upload/download, how to assert results?
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser

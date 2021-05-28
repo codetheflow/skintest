@@ -22,7 +22,6 @@ export interface Ego {
   do<T extends ServerFunction>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep
 
   test(message: string): TestStep;
-  see<E extends DOMElement>(target: Query<E>): AssertStep;
   see<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): AssertStep;
   see<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): AssertStep;
 

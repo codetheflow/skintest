@@ -3,10 +3,6 @@ import { StepMeta } from './meta';
 import { ClientRecipe, ServerRecipe } from './recipe';
 import { TestExecutionResult } from './test-result';
 
-export interface StepContext {
-  browser: Browser;
-}
-
 export type Command =
   ClientStep
   | TestStep
@@ -14,6 +10,10 @@ export type Command =
   | DevStep
   | InfoStep
   | DoStep;
+
+export interface StepContext {
+  browser: Browser;
+}
 
 export interface CommandBody {
   execute(context: StepContext): Promise<TestExecutionResult>;

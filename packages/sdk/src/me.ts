@@ -83,11 +83,10 @@ class Me implements Ego {
     return new ExecuteStep(() => getStepMeta(caller), message);
   }
 
-  see<E extends DOMElement>(target: Query<E>): AssertStep;
   see<E extends DOMElement, V>(target: Query<E>, assert: BinaryAssert<V>, value: V): AssertStep;
   see<E extends DOMElement, V>(target: QueryList<E>, assert: ListBinaryAssert<V>, value: V): AssertStep;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  see(target: any, assert?: any, value?: any): AssertStep {
+  see(target: any, assert: any, value: any): AssertStep {
     const caller = getCaller();
     return new SeeStep(() => getStepMeta(caller), target, assert, value);
   }

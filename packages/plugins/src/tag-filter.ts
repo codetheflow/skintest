@@ -1,4 +1,4 @@
-import { errors, escapeRE } from '@skintest/common';
+import { errors, escapeRE, StringDictionary } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Suite } from '@skintest/sdk';
 
@@ -7,19 +7,16 @@ type TagFilterOptions = {
   method: 'only-matched' | 'all-when-no-matched'
 };
 
-type Statistics = {
-  [key: string]: {
-    featureMatch: boolean,
-    scenarioMatches: Set<string>,
-  }
-};
+type Statistics = StringDictionary<{
+  featureMatch: boolean,
+  scenarioMatches: Set<string>,
+}>;
 
 export function tagFilter(options: TagFilterOptions): Plugin {
   const { include, method } = options;
 
   return async (stage: OnStage) => stage({
     'project:init': async ({ suite }) => {
-
       const stat = getStat(suite, include);
       const onlyMatched = () => {
         suite.operations.filterFeature = (feature: string) =>
