@@ -42,7 +42,7 @@ export const errors = {
   constraint(message: string): Exception {
     return error('constraint', message);
   },
-  runtime(ex: Error): Exception {
-    return error('runtime', ex.message, ex);
+  runtime(message: string, ex: Error): Exception {
+    return error('runtime', message, ex);
   }
 };

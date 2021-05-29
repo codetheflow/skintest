@@ -1,6 +1,6 @@
 ### todo 
 
-0.1.0:
+0.0.1:
 * $ should wait - done
 * timeout, headless setting from the user (as a plugin) - done* setup eslint for project and core - done
 * use attempt in the scene not in the step - done
@@ -13,7 +13,7 @@
 * tagFilter - add option to execute all if tags were not found in the project - done
 * handle `Ctrl+A`, `Ctrl+C` shortcuts etc. - done
 
-0.2.0:
+0.0.9:
 * better fails/exception management - done
 * better stacktrace of exceptions - done
 * typescript stacktrace - done
@@ -39,20 +39,24 @@
 * copy/paste as recipe example - done
 * https://github.com/microsoft/playwright/issues/2511
 
-0.3.0:
-* add attached/detached state?
+0.0.10:
+* add `exists` state - done
+* escape arguments inside the $,$$ functions - done
 * add methods to the ClientElement
-* file upload/download, how to assert results?
+* file upload/download
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
+* custom asserts
+* `__pause` is frozen sometimes
+
+next
+* add `secret` function to show `***` instead of value
+* has.state doesn't trigger type checking, because string is extendable from the string
+* drag and drop
+* example of using value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?
 * and inspect to dbg in .debug, better debugging experience
 * better code parsing in the `meta.ts`
 * add comments to the ego, selectors, recipes and keyboard keys
-* has.state doesn't trigger type checking, because string is extendable from the string
-* example of using value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?
-* drag and drop
-
-next
 * remove redundant new lines in tty-report and tty-pause
 * add recipes package with copy/paste etc.
 * show fail/error solutions/links to solutions

@@ -4,11 +4,11 @@ import * as path from 'path';
 
 // if you want to run multiple projects just replace 
 // `path.join(__dirname, 'todomvc')` with `__dirname`
-const PROJECT_FOLDER = path.join(__dirname, 'todomvc');
+const PROJECT_FOLDER = path.join(__dirname, 'qgrid');
 
 const launcher = playwrightLauncher({
   headless: true,
-  timeout: 30 * 1000,
+  timeout: 15 * 1000,
 });
 
 const plugins = [

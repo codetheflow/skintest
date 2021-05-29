@@ -16,6 +16,7 @@ const STACK_FILE_IGNORE = [
   path.join('platform', 'dist', 'src', 'attempt.js'),
   path.join('platform', 'src', 'attempt.ts'),
   path.join('common', 'src', 'errors.ts'),
+  path.join('common', 'src', 'guard.ts'),
   // from playwright
   // todo: propagate it here for the launcher options
   path.join('lib', 'utils', 'stackTrace.js')
@@ -77,7 +78,7 @@ export const tty = {
       tty.newLine(stream, tty.fail(
         `${method}(${selector}).${assert.what}: ` +
         `expected ${tty.testValue('`' + body.actual + '`')} ` +
-        `to ${assert.no ? 'not' : ''} ${assert.how} ` +
+        `to${assert.no ? ' not' : ''} ${assert.how} ` +
         `${tty.testValue('`' + body.etalon + '`')}`
       ));
     } else {
@@ -150,6 +151,9 @@ export const tty = {
         }
       };
 
+      // todo:
+      // - write tag name
+      // - write data-test- attributes or id if exists
       await addState('checked');
       await addState('editable');
       await addState('enabled');

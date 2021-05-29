@@ -40,9 +40,14 @@ export function $$<E>(query: TemplateStringsArray, ...args: any[]): QueryList<E>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function stringify(arg: any): any {
+  let text: string;
   if (arg && arg.toString && isFunction(arg.toString)) {
-    return arg.toString();
+    text = arg.toString();
+  } else {
+    text = '' + arg;
   }
 
-  return arg;
+  // escape " with \"
+  // https://playwright.dev/docs/selectors#text-selector
+  return text.replace('"', '\\"');
 }

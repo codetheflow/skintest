@@ -22,7 +22,10 @@ export async function playwrightAction<T>(source: string, action: () => Promise<
       throw errors.timeout(source, ex);
     }
 
-    // todo: remove logs from the playwright errors
-    throw errors.runtime(ex);
+    // remove logs from the playwright errors
+    let { message } = (ex as Error);
+    message = message.split('\n')[0];
+    
+    throw errors.runtime(message, ex);
   }
 }
