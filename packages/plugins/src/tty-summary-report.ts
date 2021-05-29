@@ -1,12 +1,17 @@
 import { ticksToTime } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
+import { TestFail } from '@skintest/sdk';
 import { performance } from 'perf_hooks';
 import { tty } from './tty';
 
-const { stdout } = process;
+const { stdout, stderr } = process;
 
 export function ttySummaryReport(): Plugin {
   let startTime: number;
+
+  const errors: Error[] = [];
+  const fails: TestFail[] = [];
+
   const statistics = {
     features: 0,
     scenarios: 0,
@@ -34,15 +39,19 @@ export function ttySummaryReport(): Plugin {
     'step:fail': async ({ reason }) => {
       if ('status' in reason) {
         statistics.fails++;
+        fails.push(reason);
       } else {
         statistics.errors++;
+        errors.push(reason);
       }
     },
-    'recipe:fail': async () => {
+    'recipe:fail': async ({ reason }) => {
       statistics.errors++;
+      errors.push(reason);
     },
-    'project:error': async () => {
+    'project:error': async ({ reason }) => {
       statistics.errors++;
+      errors.push(reason);
     }
   });
 }
