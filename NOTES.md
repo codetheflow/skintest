@@ -53,6 +53,7 @@
 * drag and drop
 
 next
+* remove redundant new lines in tty-report and tty-pause
 * add recipes package with copy/paste etc.
 * show fail/error solutions/links to solutions
 * slowMo settings in camelCase - lint warning
