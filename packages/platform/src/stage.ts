@@ -1,4 +1,4 @@
-import { Command, Script, Suite, TestFail, TestPass } from '@skintest/sdk';
+import { Browser, Command, Script, Suite, TestFail, TestPass } from '@skintest/sdk';
 import { Zone } from './zone';
 
 export interface Stage<Z extends Zone, S> {
@@ -14,7 +14,7 @@ export type ProjectStopScope = ProjectStartScope;
 export type ProjectInitScope = ProjectStartScope;
 export type ProjectErrorScope = ProjectStartScope & { reason: Error };
 
-export type FeatureScope = ProjectStartScope & { script: Script };
+export type FeatureScope = ProjectStartScope & { script: Script, browser: Browser };
 export type ScenarioScope = FeatureScope & { scenario: string };
 export type StepScope = ScenarioScope & { step: Command };
 

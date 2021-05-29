@@ -1,6 +1,10 @@
 import { nodePlatform } from '@skintest/platform';
-import { exploreNodeProjects, playwrightLauncher, tagFilter, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { exploreNodeProjects, playwrightLauncher, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
+
+// if you want to run multiple projects just replace 
+// `path.join(__dirname, 'todomvc')` with `__dirname`
+const PROJECT_FOLDER = path.join(__dirname, 'todomvc');
 
 const launcher = playwrightLauncher({
   headless: true,
@@ -11,6 +15,7 @@ const plugins = [
   ttyLogo()
   , ttyReport()
   , ttySummaryReport()
+  , ttyPause()
   , tagFilter({
     include: ['#now'],
     method: 'all-when-no-matched',
@@ -19,8 +24,6 @@ const plugins = [
 
 const platform = nodePlatform(...plugins);
 
-// if you want to run multiple projects just replace 
-// `path.join(__dirname, 'todomvc')` with `__dirname`
-exploreNodeProjects(path.join(__dirname, 'todomvc'))
+exploreNodeProjects(PROJECT_FOLDER)
   .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
-  .then(() => platform.destroy());
+  .finally(() => platform.destroy());

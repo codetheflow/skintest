@@ -23,6 +23,7 @@ export class Scene {
 
     const scope = {
       suite: this.suite,
+      browser: this.browser,
       script,
     };
 
@@ -68,6 +69,7 @@ export class Scene {
 
     const scope = {
       suite: this.suite,
+      browser: this.browser,
       script,
       scenario,
     };
@@ -111,6 +113,7 @@ export class Scene {
 
     const scope = {
       suite: this.suite,
+      browser: this.browser,
       script,
       scenario,
       step,
@@ -161,6 +164,7 @@ export class Scene {
 
     const scope = {
       suite: this.suite,
+      browser,
       site,
       script,
       scenario,
@@ -215,6 +219,7 @@ export class Scene {
 
     const scope = {
       suite: this.suite,
+      browser,
       site,
       script,
       scenario,

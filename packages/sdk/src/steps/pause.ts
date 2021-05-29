@@ -1,7 +1,7 @@
 import { Guard } from '@skintest/common';
-import { DevStep, StepContext } from '../command';
+import { DevStep } from '../command';
 import { StepMeta } from '../meta';
-import { asTest, TestExecutionResult } from '../test-result';
+import { pass, TestExecutionResult } from '../test-result';
 
 export class PauseStep implements DevStep {
   type: 'dev' = 'dev';
@@ -12,11 +12,8 @@ export class PauseStep implements DevStep {
     Guard.notNull(getMeta, 'getMeta');
   }
 
-  execute(context: StepContext): Promise<TestExecutionResult> {
-    const { browser } = context;
-
-    const page = browser.getCurrentPage();
-    return asTest(page.pause());
+  async execute(): Promise<TestExecutionResult> {
+    return pass();
   }
 
   toString(): string {

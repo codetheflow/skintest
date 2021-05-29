@@ -3,7 +3,6 @@ import { Command } from '@skintest/sdk';
 import { tty } from './tty';
 
 const { stdout, stderr } = process;
-
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
 
 async function getMessage(command: Command): Promise<string> {
@@ -16,6 +15,8 @@ async function getMessage(command: Command): Promise<string> {
 }
 
 export function ttyReport(): Plugin {
+  tty.test(stdout);
+
   return async (stage: OnStage) => stage({
     'project:mount': async () => {
       tty.newLine(stdout);
@@ -47,8 +48,9 @@ export function ttyReport(): Plugin {
       if (step.type === 'dev') {
         if (result.inspect) {
           await tty.writeInspect(stdout, result.inspect);
-          return;
         }
+
+        return;
       }
 
       if (site === 'step') {

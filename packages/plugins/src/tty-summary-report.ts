@@ -4,9 +4,11 @@ import { TestFail } from '@skintest/sdk';
 import { performance } from 'perf_hooks';
 import { tty } from './tty';
 
-const { stdout, stderr } = process;
+const { stdout } = process;
 
 export function ttySummaryReport(): Plugin {
+  tty.test(stdout);
+
   let startTime: number;
 
   const errors: Error[] = [];

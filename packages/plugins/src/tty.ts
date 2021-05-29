@@ -1,4 +1,4 @@
-import { ellipsis, padRight, prettyStack, StringDictionary } from '@skintest/common';
+import { ellipsis, errors, padRight, prettyStack, StringDictionary } from '@skintest/common';
 import { AssertHost, DOMElement, ElementRef, ElementState, InspectInfo, TestFail } from '@skintest/sdk';
 import * as chalk from 'chalk';
 import * as path from 'path';
@@ -26,6 +26,7 @@ export const tty = {
   CARET: '\x1b[0G',
   CHECK_MARK: '\u2713',
   CROSS_MARK: '\u2613',
+  PROMPT: '> ',
 
   logo: chalk.grey,
   dev: chalk.yellow,
@@ -37,7 +38,17 @@ export const tty = {
   info: chalk.grey,
   pass: chalk.green,
   tag: chalk.bgGrey.white,
-  value: chalk.redBright,
+  testValue: chalk.redBright,
+  shortcut: chalk.bold,
+
+  test(stream: WriteStream): void {
+    if (!stream.isTTY) {
+      throw errors.invalidArgument(
+        'stream',
+        'tty is not supported, try to use terminal where tty is on'
+      );
+    }
+  },
 
   replaceLine(stream: WriteStream, ...text: string[]): void {
     stream.clearScreenDown();
@@ -65,9 +76,9 @@ export const tty = {
 
       tty.newLine(stream, tty.fail(
         `${method}(${selector}).${assert.what}: ` +
-        `expected ${tty.value('`' + body.actual + '`')} ` +
+        `expected ${tty.testValue('`' + body.actual + '`')} ` +
         `to ${assert.no ? 'not' : ''} ${assert.how} ` +
-        `${tty.value('`' + body.etalon + '`')}`
+        `${tty.testValue('`' + body.etalon + '`')}`
       ));
     } else {
       tty.newLine(stream, tty.fail(reason.description));
@@ -93,7 +104,9 @@ export const tty = {
   async writeInspect(stream: WriteStream, inspect: InspectInfo): Promise<void> {
     // eslint-disable-next-line prefer-const
     let { selector, target } = inspect;
-    const maxWidth = 40;
+    
+    // width - column-size? * column-number
+    const maxWidth = Math.max(8, stream.columns - 15 * 3);
 
     target = Array.isArray(target)
       ? target.length > 1

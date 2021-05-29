@@ -96,11 +96,6 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
-  pause(): Promise<void> {
-    return this.page.pause();
-  }
-
-  @PlaywrightAction()
   async query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
     try {
       const handle = await this.page.waitForSelector(selector);
