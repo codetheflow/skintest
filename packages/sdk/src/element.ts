@@ -1,5 +1,5 @@
 import { DOMElement } from './dom';
-import { ClientElement } from './recipe';
+import { ClientElement } from './recipes/client';
 
 export type ElementState =
   'checked'
@@ -18,11 +18,11 @@ export interface ElementClassList {
 }
 
 export interface ElementRef<E extends DOMElement> extends ClientElement<E> {
-  text(): Promise<string>;
-  state(state: ElementState): Promise<boolean>;
-  classList(): Promise<ElementClassList>;
   attribute(name: string): Promise<string | null>;
+  classList(): Promise<ElementClassList>;
+  state(state: ElementState): Promise<boolean>;
   style(name: string): Promise<string | null>;
+  text(): Promise<string>;
 }
 
 export type ElementRefList<E extends DOMElement> = ElementRef<E>[];

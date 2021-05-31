@@ -1,8 +1,7 @@
 import { Guard } from '@skintest/common';
-import { ClientStep, StepContext } from '../command';
+import { asTest, ClientStep, StepContext, StepExecutionResult } from '../command';
 import { KeyboardKey } from '../keyboard';
 import { StepMeta } from '../meta';
-import { asTest, TestExecutionResult } from '../test-result';
 
 export class PressStep implements ClientStep {
   type: 'client' = 'client';
@@ -15,7 +14,7 @@ export class PressStep implements ClientStep {
     Guard.notEmpty(key, 'key');
   }
 
-  execute(context: StepContext): Promise<TestExecutionResult> {
+  execute(context: StepContext): StepExecutionResult {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

@@ -1,8 +1,8 @@
 import { errors, Guard, isString, reinterpret } from '@skintest/common';
-import { DevStep, StepContext } from '../command';
+import { DevStep, StepContext, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
-import { inspect, TestExecutionResult } from '../test-result';
+import { inspect } from '../test-result';
 
 export class InspectStep implements DevStep {
   type: 'dev' = 'dev';
@@ -15,7 +15,7 @@ export class InspectStep implements DevStep {
     Guard.notNull(query, 'query');
   }
 
-  async execute(context: StepContext): Promise<TestExecutionResult> {
+  async execute(context: StepContext): StepExecutionResult {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
@@ -26,12 +26,18 @@ export class InspectStep implements DevStep {
     switch (type) {
       case 'query': {
         const target = await page.immediateQuery(selector);
-        return inspect({ selector, target });
+        return {
+          result: inspect({ selector, target }),
+          plans: [],
+        };
       }
 
       case 'queryList': {
         const target = await page.immediateQueryList(selector);
-        return inspect({ selector, target });
+        return {
+          result: inspect({ selector, target }),
+          plans: [],
+        };
       }
 
       default: {

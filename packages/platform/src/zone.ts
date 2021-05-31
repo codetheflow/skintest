@@ -13,7 +13,4 @@ export type Zone =
   | 'step:after'
   | 'step'
   | 'step:pass'
-  | 'step:fail'
-  | 'recipe'
-  | 'recipe:pass'
-  | 'recipe:fail';
+  | 'step:fail';

@@ -1,5 +1,5 @@
 import { errors } from '@skintest/common';
-import { pass, TestExecutionResult } from '@skintest/sdk';
+import { pass, StepExecutionResult } from '@skintest/sdk';
 
 export class Attempt {
   constructor(private retries: number) {
@@ -8,14 +8,16 @@ export class Attempt {
     }
   }
 
-  async step(method: () => Promise<TestExecutionResult>): Promise<TestExecutionResult> {
+  async step(method: () => StepExecutionResult): StepExecutionResult {
     let attempts = this.retries;
-    let result: TestExecutionResult = pass();
+
+    // todo: better type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let error = null;
-    
+
     while (--attempts >= 0) {
       try {
-        result = await method();
+        return await method();
       }
       catch (ex) {
         error = ex;
@@ -26,22 +28,9 @@ export class Attempt {
       throw error;
     }
 
-    return result;
-  }
-
-  async action<T>(method: () => Promise<T>): Promise<T> {
-    let attempts = this.retries;
-
-    let error = null;
-    while (--attempts >= 0) {
-      try {
-        return await method();
-      }
-      catch (ex) {
-        error = ex;
-      }
-    }
-
-    throw error;
+    return {
+      result: pass(),
+      plans: [],
+    };
   }
 }

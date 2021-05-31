@@ -7,11 +7,12 @@ import { Query, QueryList } from './query';
 
 // todo: make enum, solution as hyperlink?
 export interface TestFail {
-  status: 'fail',
-  description: string;
-  solution: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: StringDictionary<any>;
+  description: string;
+  loop: 'break' | 'continue',
+  solution: string;
+  status: 'fail',
 }
 
 export interface TestPass {
@@ -24,7 +25,7 @@ export interface InspectInfo {
   target: ElementRef<DOMElement> | ElementRef<DOMElement>[] | null;
 }
 
-export type TestExecutionResult = TestFail | TestPass;
+export type TestResult = TestFail | TestPass;
 
 export function pass(): TestPass {
   return {
@@ -40,15 +41,7 @@ export function inspect(info: InspectInfo): TestPass {
   };
 }
 
-export async function asTest(promise: Promise<void>): Promise<TestExecutionResult> {
-  await promise;
-
-  // if there were no exception return `ok`
-  return pass();
-}
-
 export const fails = {
-
   binaryAssert(body: {
     assert: AssertHost,
     query: Query | QueryList,
@@ -70,10 +63,10 @@ export const fails = {
       status: 'fail',
       description,
       solution: 'check assert condition',
-      body
+      loop: 'continue',
+      body,
     };
   },
-
   elementNotFound(body: {
     query: Query | QueryList,
   }): TestFail {
@@ -84,8 +77,20 @@ export const fails = {
       status: 'fail',
       description: `${method}(${selector}) is not reachable`,
       solution: 'check selector correctness and availability',
+      loop: 'continue',
       body,
     };
   },
-
+  that(body: {
+    description: string,
+    solution: string,
+  }): TestFail {
+    return {
+      status: 'fail',
+      description: body.description,
+      solution: body.solution,
+      loop: 'continue',
+      body,
+    };
+  }
 };

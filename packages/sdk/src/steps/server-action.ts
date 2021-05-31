@@ -1,16 +1,15 @@
 import { Guard } from '@skintest/common';
-import { DoStep } from '../command';
+import { asTest, DoStep, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
-import { ClientRecipe, ServerRecipe } from '../recipe';
-import { pass, TestExecutionResult } from '../test-result';
+import { Process, ServerFunction, ServerRecipe } from '../recipes/server';
 
-export class ActionStep implements DoStep {
+export class ServerActionStep implements DoStep {
   type: 'do' = 'do';
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public recipe: ClientRecipe<any> | ServerRecipe<any>,
+    public recipe: ServerRecipe<any>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public args: any[]
   ) {
@@ -18,8 +17,12 @@ export class ActionStep implements DoStep {
     Guard.notNull(args, 'args');
   }
 
-  async execute(): Promise<TestExecutionResult> {
-    return pass();
+  async execute(): StepExecutionResult {
+    const server = new Process();
+    const action = this.recipe.action as ServerFunction;
+    await action.apply(server, this.args);
+
+    return asTest(Promise.resolve());
   }
 
   toString(): string {

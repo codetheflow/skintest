@@ -47,10 +47,6 @@ export function ttySummaryReport(): Plugin {
         errors.push(reason);
       }
     },
-    'recipe:fail': async ({ reason }) => {
-      statistics.errors++;
-      errors.push(reason);
-    },
     'project:error': async ({ reason }) => {
       statistics.errors++;
       errors.push(reason);

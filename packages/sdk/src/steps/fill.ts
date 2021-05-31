@@ -1,9 +1,8 @@
 import { Guard } from '@skintest/common';
-import { ClientStep, StepContext } from '../command';
+import { asTest, ClientStep, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
 import { StepMeta } from '../meta';
 import { Query } from '../query';
-import { asTest, TestExecutionResult } from '../test-result';
 
 export class FillStep implements ClientStep {
   type: 'client' = 'client';
@@ -17,7 +16,7 @@ export class FillStep implements ClientStep {
     Guard.notNull(query, 'query');
   }
 
-  execute(context: StepContext): Promise<TestExecutionResult> {
+  execute(context: StepContext): StepExecutionResult {
     const { browser } = context;
 
     const page = browser.getCurrentPage();

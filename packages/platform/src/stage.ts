@@ -16,15 +16,11 @@ export type ProjectErrorScope = ProjectStartScope & { reason: Error };
 
 export type FeatureScope = ProjectStartScope & { script: Script, browser: Browser };
 export type ScenarioScope = FeatureScope & { scenario: string };
-export type StepScope = ScenarioScope & { step: Command };
+export type StepScope = ScenarioScope & { step: Command, depth: number };
 
 export type CommandScope = StepScope & { site: Exclude<Zone, 'init' | 'destroy'> };
 export type CommandPassScope = CommandScope & { result: TestPass };
 export type CommandFailScope = CommandScope & { reason: TestFail | Error };
-
-export type RecipeScope = CommandScope;
-export type RecipePassScope = RecipeScope & { message: string };
-export type RecipeFailScope = RecipeScope & { reason: Error };
 
 export type Stages = {
   'platform:mount': Stage<'platform:mount', PlatformMount>;
@@ -36,18 +32,15 @@ export type Stages = {
 
   'feature:before': Stage<'feature:before', FeatureScope>;
   'feature:after': Stage<'feature:after', FeatureScope>;
+  
   'scenario:before': Stage<'scenario:before', ScenarioScope>;
   'scenario:after': Stage<'scenario:after', ScenarioScope>;
+
   'step:before': Stage<'step:before', StepScope>;
   'step:after': Stage<'step:after', StepScope>;
-
   'step': Stage<'step', CommandScope>;
   'step:pass': Stage<'step:pass', CommandPassScope>;
   'step:fail': Stage<'step:fail', CommandFailScope>;
-
-  'recipe': Stage<'recipe', RecipeScope>;
-  'recipe:pass': Stage<'recipe:pass', RecipePassScope>;
-  'recipe:fail': Stage<'recipe:fail', RecipeFailScope>;
 };
 
 export type Staging = <Z extends Zone>(zone: Z) => (...stageScope: Parameters<Stages[Z]>) => Promise<void>;

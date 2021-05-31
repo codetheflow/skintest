@@ -1,7 +1,6 @@
 import { Guard } from '@skintest/common';
-import { DevStep } from '../command';
+import { asTest, DevStep, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
-import { pass, TestExecutionResult } from '../test-result';
 
 export class PauseStep implements DevStep {
   type: 'dev' = 'dev';
@@ -12,8 +11,8 @@ export class PauseStep implements DevStep {
     Guard.notNull(getMeta, 'getMeta');
   }
 
-  async execute(): Promise<TestExecutionResult> {
-    return pass();
+  execute(): StepExecutionResult {
+    return asTest(Promise.resolve());
   }
 
   toString(): string {

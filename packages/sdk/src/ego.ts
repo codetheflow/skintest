@@ -3,9 +3,10 @@ import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './c
 import { DOMElement } from './dom';
 import { KeyboardKey } from './keyboard';
 import { Query, QueryList } from './query';
-import { ClientFunction, ClientRecipe, ServerFunction, ServerRecipe } from './recipe';
+import { ClientFunction, ClientRecipe } from './recipes/client';
+import { ServerFunction, ServerRecipe } from './recipes/server';
+import { ThatFunction, ThatRecipe } from './recipes/that';
 import { Breakpoint } from './steps/debug';
-
 
 export interface Ego {
   __pause(): DevStep;
@@ -16,12 +17,13 @@ export interface Ego {
   goto(url: string): ClientStep;
   navigate(direction: 'back' | 'forward'): ClientStep;
   reload(): ClientStep;
-  wait(url: string): ClientStep;
+  wait(what: 'url', url: string | RegExp): ClientStep;
 
-  do<T extends ClientFunction>(recipe: ClientRecipe<T>, ...args: Parameters<T>): DoStep
-  do<T extends ServerFunction>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep
+  do<A extends ClientFunction>(recipe: ClientRecipe<A>, ...args: Parameters<A>): DoStep
+  do<A extends ServerFunction>(recipe: ServerRecipe<A>, ...args: Parameters<A>): DoStep
 
   test(message: string): TestStep;
+  see<A extends ThatFunction>(recipe: ThatRecipe<A>, ...args: Parameters<A>): AssertStep;
   see<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): AssertStep;
   see<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): AssertStep;
 

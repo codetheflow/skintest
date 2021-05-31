@@ -1,14 +1,16 @@
 import { nodePlatform } from '@skintest/platform';
 import { exploreNodeProjects, playwrightLauncher, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
+import { env } from './qgrid/project/env';
 
 // if you want to run multiple projects just replace 
 // `path.join(__dirname, 'todomvc')` with `__dirname`
 const PROJECT_FOLDER = path.join(__dirname, 'qgrid');
 
 const launcher = playwrightLauncher({
-  headless: true,
-  timeout: 15 * 1000,
+  headless: false,
+  timeout: 30 * 1000,
+  downloadsPath: env.downloads_path,
 });
 
 const plugins = [

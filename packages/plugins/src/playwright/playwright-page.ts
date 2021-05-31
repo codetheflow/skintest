@@ -96,6 +96,13 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
+  async waitDownload(path: string): Promise<void> {
+    return this.page
+      .waitForEvent('download')
+      .then(x => x.saveAs(path));
+  }
+
+  @PlaywrightAction()
   async query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
     try {
       const handle = await this.page.waitForSelector(selector);

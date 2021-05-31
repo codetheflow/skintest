@@ -5,9 +5,11 @@ import { Ego } from './ego';
 import { KeyboardKey } from './keyboard';
 import { getCaller, getStepMeta } from './meta';
 import { Query, QueryList } from './query';
-import { ClientDo, ClientRecipe, ServerDo, ServerRecipe } from './recipe';
-import { ActionStep } from './steps/action';
+import { ClientDo, ClientRecipe } from './recipes/client';
+import { ServerDo, ServerRecipe } from './recipes/server';
+import { ThatFunction, ThatRecipe } from './recipes/that';
 import { ClickStep } from './steps/click';
+import { ClientActionStep } from './steps/client-action';
 import { DblClickStep } from './steps/dblclick';
 import { Breakpoint, DebugStep } from './steps/debug';
 import { FillStep } from './steps/fill';
@@ -25,7 +27,9 @@ import { ReloadStep } from './steps/reload';
 import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
 import { SelectTextStep } from './steps/select-text';
+import { ServerActionStep } from './steps/server-action';
 import { ExecuteStep } from './steps/test';
+import { ThatActionStep } from './steps/that-action';
 import { TypeStep } from './steps/type';
 import { WaitUrlStep } from './steps/wait-url';
 
@@ -73,9 +77,13 @@ class Me implements Ego {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   do<T extends (...args: any) => ServerDo>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  do(recipe: any, args?: any[]) {
+  do(recipe: ClientRecipe<any> | ServerRecipe<any>, ...args: any[]) {
     const caller = getCaller();
-    return new ActionStep(() => getStepMeta(caller), recipe, args || []);
+    if (recipe.type === 'client') {
+      return new ClientActionStep(() => getStepMeta(caller), recipe, args || []);
+    }
+
+    return new ServerActionStep(() => getStepMeta(caller), recipe, args || []);
   }
 
   test(message: string): TestStep {
@@ -83,12 +91,17 @@ class Me implements Ego {
     return new ExecuteStep(() => getStepMeta(caller), message);
   }
 
+  see<A extends ThatFunction>(recipe: ThatRecipe<A>, ...args: Parameters<A>): AssertStep;
   see<E extends DOMElement, V>(target: Query<E>, assert: BinaryAssert<V>, value: V): AssertStep;
   see<E extends DOMElement, V>(target: QueryList<E>, assert: ListBinaryAssert<V>, value: V): AssertStep;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  see(target: any, assert: any, value: any): AssertStep {
+  see(targetOrRecipe: any, ...args: any[]): AssertStep {
     const caller = getCaller();
-    return new SeeStep(() => getStepMeta(caller), target, assert, value);
+    if (targetOrRecipe.type === 'assert') {
+      return new ThatActionStep(() => getStepMeta(caller), targetOrRecipe, args);
+    }
+
+    return new SeeStep(() => getStepMeta(caller), targetOrRecipe, args[0], args[1]);
   }
 
   goto(url: string): ClientStep {
@@ -96,7 +109,7 @@ class Me implements Ego {
     return new GotoStep(() => getStepMeta(caller), url);
   }
 
-  wait(url: string): ClientStep {
+  wait(what: 'url', url: string): ClientStep {
     const caller = getCaller();
     return new WaitUrlStep(() => getStepMeta(caller), url);
   }

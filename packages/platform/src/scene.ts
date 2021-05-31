@@ -1,4 +1,4 @@
-import { Browser, ClientFunction, Command, DoStep, PageClient, Process, Script, ServerFunction, Suite } from '@skintest/sdk';
+import { Browser, Command, pass, Script, Suite } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { CommandScope, Staging } from './stage';
 
@@ -105,7 +105,7 @@ export class Scene {
   private async step(
     script: Script,
     scenario: string,
-    step: Command
+    step: Command,
   ): Promise<boolean> {
 
     const beforeStepEffect = this.effect('step:before');
@@ -117,6 +117,7 @@ export class Scene {
       script,
       scenario,
       step,
+      depth: 0,
     };
 
     await beforeStepEffect(scope);
@@ -153,7 +154,8 @@ export class Scene {
     site: CommandScope['site'],
     script: Script,
     scenario: string,
-    steps: ReadonlyArray<Command>
+    steps: ReadonlyArray<Command>,
+    depth = 0,
   ): Promise<boolean> {
 
     const { browser, attempt } = this;
@@ -168,6 +170,7 @@ export class Scene {
       site,
       script,
       scenario,
+      depth,
     };
 
     let result = true;
@@ -175,108 +178,37 @@ export class Scene {
       await stepEffect({ ...scope, step });
 
       try {
-        if (step.type === 'do') {
-          const recipeOk = await this.runRecipe(
-            site,
-            script,
-            scenario,
-            step
-          );
-
-          if (!recipeOk) {
-            result = false;
+        const test = await attempt.step(() => step.execute({ browser }));
+        if (test.result.status === 'pass') {
+          await passEffect({ ...scope, step, result: pass() });
+        } else {
+          result = false;
+          await failEffect({ ...scope, step, reason: test.result });
+          if (test.result.loop === 'break') {
             break;
           }
-        } else {
-          const test = await attempt.step(() => step.execute({ browser }));
-          if (test.status === 'fail') {
-            await failEffect({ ...scope, step, reason: test });
-            if (step.type !== 'assert') {
-              result = false;
-              break;
-            }
-          } else {
-            await passEffect({ ...scope, step, result: test });
-          }
         }
+
+        const results = await Promise.all(
+          test
+            .plans
+            .map(plan => this.runPlan(
+              site,
+              script,
+              scenario,
+              plan,
+              depth + 1
+            ))
+        );
+
+        result = result && !results.includes(false);
       } catch (ex) {
         await failEffect({ ...scope, step, reason: ex });
         result = false;
+        break;
       }
     }
 
     return result;
-  }
-
-  private async runRecipe(
-    site: CommandScope['site'],
-    script: Script,
-    scenario: string,
-    step: DoStep
-  ): Promise<boolean> {
-
-    const { browser, attempt } = this;
-
-    const scope = {
-      suite: this.suite,
-      browser,
-      site,
-      script,
-      scenario,
-      step,
-    };
-
-    const recipeEffect = this.effect('recipe');
-    const recipePassEffect = this.effect('recipe:pass');
-    const recipeFailEffect = this.effect('recipe:fail');
-
-    await recipeEffect(scope);
-
-    if (step.recipe.type === 'server') {
-      const server = new Process();
-      const action = step.recipe.action as ServerFunction;
-      try {
-        const { message } = await attempt.action(() => action.apply(server, step.args));
-        await recipePassEffect({
-          ...scope,
-          message
-        });
-
-        return true;
-      } catch (ex) {
-        await recipeFailEffect({
-          ...scope,
-          reason: ex
-        });
-
-        return false;
-      }
-    }
-
-    const page = browser.getCurrentPage();
-    const client = new PageClient(page);
-    const action = step.recipe.action as ClientFunction;
-
-    try {
-      const { message, plan } = await attempt.action(() => action.call(client, step.args));
-      await recipePassEffect({
-        ...scope,
-        message
-      });
-
-      return await this.runPlan(
-        'recipe',
-        script,
-        scenario,
-        plan
-      );
-    } catch (ex) {
-      await recipeFailEffect({
-        ...scope,
-        reason: ex
-      });
-
-      return false;
-    }
   }
 }

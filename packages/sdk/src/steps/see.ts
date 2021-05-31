@@ -1,10 +1,9 @@
 import { Guard, isUndefined, reinterpret } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
-import { AssertStep, StepContext } from '../command';
+import { AssertStep, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
 import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
-import { TestExecutionResult } from '../test-result';
 import { Verify } from '../verify';
 
 export class SeeStep implements AssertStep {
@@ -21,13 +20,16 @@ export class SeeStep implements AssertStep {
     Guard.notNull(assert, 'assert');
   }
 
-  async execute(context: StepContext): Promise<TestExecutionResult> {
+  async execute(context: StepContext): StepExecutionResult {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
     const verify = new Verify(page);
     const host = reinterpret<AssertHost>(this.assert);
-    return await verify.theCondition(this.query, host, this.value);
+    return {
+      result: await verify.theCondition(this.query, host, this.value),
+      plans: []
+    };
   }
 
   toString(): string {

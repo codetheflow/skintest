@@ -32,19 +32,19 @@ export function ttyReport(): Plugin {
       const label = scenario.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
       tty.newLine(stdout, tty.h2(label));
     },
-    'step': async ({ site, step }) => {
+    'step': async ({ site, step, depth }) => {
       if (step.type === 'dev') {
         const message = await getMessage(step);
         tty.newLine(stdout, tty.dev(message));
         return;
       }
 
-      if (site === 'step') {
+      if (site === 'step' && depth === 0) {
         const message = await getMessage(step);
         tty.newLine(stdout, tty.hidden(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
-    'step:pass': async ({ site, step, result }) => {
+    'step:pass': async ({ site, step, result, depth }) => {
       if (step.type === 'dev') {
         if (result.inspect) {
           await tty.writeInspect(stdout, result.inspect);
@@ -53,13 +53,7 @@ export function ttyReport(): Plugin {
         return;
       }
 
-      if (site === 'step') {
-        const message = await getMessage(step);
-        tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
-      }
-    },
-    'recipe:pass': async ({ site, step }) => {
-      if (site === 'step') {
+      if (site === 'step' && depth === 0) {
         const message = await getMessage(step);
         tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
@@ -78,11 +72,6 @@ export function ttyReport(): Plugin {
       } else {
         await tty.writeError(stderr, reason);
       }
-    },
-    'recipe:fail': async ({ reason, step }) => {
-      const message = await getMessage(step);
-      tty.replaceLine(stderr, tty.fail(tty.CROSS_MARK), ' ', tty.info(message));
-      await tty.writeError(stderr, reason);
     },
     'project:error': async ({ reason }) => {
       await tty.writeError(stderr, reason);

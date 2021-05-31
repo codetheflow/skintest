@@ -79,7 +79,7 @@ next
 * think about todos.item.at/label_at etc.
 * $$ should wait?
 * add `feature`, `component`, `recipe` postfixes?
-* recipe types `assert` and `query`?
+* recipe types `assert`, `query`?
 * skintest.io
 * cli tool
 * time 

@@ -1,24 +1,28 @@
 import { Browser } from './browser';
 import { StepMeta } from './meta';
-import { ClientRecipe, ServerRecipe } from './recipe';
-import { TestExecutionResult } from './test-result';
+import { pass, TestResult } from './test-result';
 
 export type Command =
   ClientStep
-  | TestStep
   | AssertStep
   | DevStep
+  | DoStep
   | InfoStep
-  | DoStep;
+  | TestStep;
 
 export interface StepContext {
   browser: Browser;
 }
 
+export type StepExecutionResult = Promise<{
+  result: TestResult,
+  plans: Command[][],
+}>;
+
 export interface CommandBody {
-  execute(context: StepContext): Promise<TestExecutionResult>;
-  toString(): string;
+  execute(context: StepContext): StepExecutionResult;
   getMeta(): Promise<StepMeta>;
+  toString(): string;
 }
 
 export interface ClientStep extends CommandBody {
@@ -43,8 +47,14 @@ export interface InfoStep extends CommandBody {
 
 export interface DoStep extends CommandBody {
   type: 'do';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  recipe: ClientRecipe<any> | ServerRecipe<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args: any[];
+}
+
+export async function asTest(promise: Promise<void>): StepExecutionResult {
+  await promise;
+
+  // if there were no exception return `ok`
+  return {
+    result: pass(),
+    plans: []
+  };
 }

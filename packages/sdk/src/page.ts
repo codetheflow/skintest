@@ -22,6 +22,8 @@ export interface Page {
   selectOption(selector: string, label: string): Promise<void>;
   selectText(selector: string): Promise<void>;
 
+  waitDownload(path: string): Promise<void>;
+
   query<E extends DOMElement>(selector: string): Promise<ElementRef<E> | null>;
   queryList<E extends DOMElement>(selector: string): Promise<ElementRefList<E>>;
 

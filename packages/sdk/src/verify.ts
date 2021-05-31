@@ -3,7 +3,7 @@ import { AssertHost, AssertHow, AssertWhat } from './assert';
 import { ElementState } from './element';
 import { Page } from './page';
 import { Query, QueryList } from './query';
-import { fails, pass, TestExecutionResult } from './test-result';
+import { fails, pass, TestResult } from './test-result';
 
 export class Verify {
   constructor(private page: Page) {
@@ -13,7 +13,7 @@ export class Verify {
     query: Query | QueryList,
     assert: AssertHost,
     expected: V
-  ): Promise<TestExecutionResult> {
+  ): Promise<TestResult> {
     Guard.notNull(query, 'query');
     Guard.notNull(assert, 'assert');
 
@@ -28,7 +28,7 @@ export class Verify {
     query: Query,
     assert: AssertHost,
     expected: V
-  ): Promise<TestExecutionResult> {
+  ): Promise<TestResult> {
     const selector = query.toString();
     const elementRef = await this.page.query(selector);
     if (!elementRef) {
@@ -154,7 +154,7 @@ export class Verify {
     query: QueryList,
     assert: AssertHost,
     expected: V
-  ): Promise<TestExecutionResult> {
+  ): Promise<TestResult> {
     const selector = query.toString();
     const elementRefList = await this.page.queryList(selector);
     switch (assert.what) {
@@ -234,5 +234,4 @@ function opposite(state: ElementState): string {
     case 'visible': return 'not visible';
     default: throw errors.invalidArgument('state', state);
   }
-
 }

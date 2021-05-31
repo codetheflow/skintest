@@ -60,7 +60,7 @@ export class PlaywrightBrowser implements Browser {
       return this.context;
     }
 
-    const context = await this.browser.newContext();
+    const context = await this.browser.newContext({ acceptDownloads: true });
     this.context = context;
     return context;
   }

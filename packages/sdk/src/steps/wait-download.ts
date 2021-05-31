@@ -1,29 +1,25 @@
 import { Guard } from '@skintest/common';
 import { asTest, ClientStep, StepContext, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
-import { Query } from '../query';
 
-export class TypeStep implements ClientStep {
+export class WaitDownloadStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    private query: Query,
-    private text: string
+    public path: string,
   ) {
     Guard.notNull(getMeta, 'getMeta');
-    Guard.notNull(text, 'text');
+    Guard.notEmpty(path, 'path');
   }
 
-  execute(context: StepContext): StepExecutionResult {
+  async execute(context: StepContext): StepExecutionResult {
     const { browser } = context;
-
     const page = browser.getCurrentPage();
-    const selector = this.query.toString();
-    return asTest(page.type(selector, this.text));
+    return asTest(page.waitDownload(this.path));
   }
 
   toString(): string {
-    return `I type ${this.text}`;
+    return `I wait download \`${this.path}\``;
   }
 }
