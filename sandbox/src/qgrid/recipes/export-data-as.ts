@@ -21,7 +21,10 @@ export const export_data_as = recipe.client(
     )
       .toUpperCase();
 
-    // todo: add network idle or check of the first row?
+    // wait for the rows
+    // todo: how to do it better, add network idle or check of the first row?
+    await page.query(grid.row_at(0));
+  
     return page
       .wait('download')
       .save(path.join(env.downloads_path, file_name))

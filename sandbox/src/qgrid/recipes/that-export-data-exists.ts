@@ -15,9 +15,14 @@ export const that_export_data_exists = recipe.assert(
 
     const path_to_file = path.join(env.downloads_path, file_name);
     if (fs.existsSync(path_to_file)) {
-      return pass();
+      const { size } = fs.statSync(path_to_file);
+      if (size > 0) {
+        return pass();
+      }
+
+      return fail(`\`${path_to_file}\` doesn't contain data`)
     }
 
-    return fail(`${path_to_file} doesn't contain data`);
+    return fail(`\`${path_to_file}\` doesn't exist`);
   }
 );

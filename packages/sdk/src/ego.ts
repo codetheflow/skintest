@@ -17,7 +17,7 @@ export interface Ego {
   goto(url: string): ClientStep;
   navigate(direction: 'back' | 'forward'): ClientStep;
   reload(): ClientStep;
-  wait(what: 'url', url: string | RegExp): ClientStep;
+  // wait(what: 'url', url: string | RegExp): ClientStep;
 
   do<A extends ClientFunction>(recipe: ClientRecipe<A>, ...args: Parameters<A>): DoStep
   do<A extends ServerFunction>(recipe: ServerRecipe<A>, ...args: Parameters<A>): DoStep
