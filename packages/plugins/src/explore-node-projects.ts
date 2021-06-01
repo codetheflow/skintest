@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 type NodeProjectVisitor = {
+  filter: (predicate: (uri: string) => boolean) => NodeProjectVisitor;
   forEach: (visit: (uri: string) => Promise<void>) => Promise<void>;
 };
 
@@ -13,9 +14,23 @@ export function exploreNodeProjects(cwd: string): NodeProjectVisitor {
     .concat([cwd])
     .filter(likeProject);
 
-  return {
-    forEach: visit => sites.reduce((memo, uri) => memo.then(() => visit(uri)), Promise.resolve())
+  let filterSites = Array.from(sites);
+
+  const visitor: NodeProjectVisitor = {
+    filter: predicate => {
+      filterSites = filterSites.filter(predicate);
+      return visitor;
+    },
+    forEach: visit => {
+      return filterSites
+        .reduce(
+          (memo, uri) => memo.then(() => visit(uri)),
+          Promise.resolve()
+        );
+    }
   };
+
+  return visitor;
 }
 
 function likeProject(dir: string) {

@@ -1,5 +1,4 @@
 import { Launcher } from '@skintest/platform';
-import * as path from 'path';
 import * as playwright from 'playwright';
 import { playwrightAction } from './playwright-action';
 import { PlaywrightBrowser } from './playwright-browser';
@@ -7,7 +6,6 @@ import { PlaywrightBrowser } from './playwright-browser';
 const DEFAULT_OPTIONS: playwright.LaunchOptions = {
   headless: true,
   timeout: 30000,
-  downloadsPath: path.join(process.cwd(), 'output', 'downloads'),
 };
 
 type LaunchOptions = Pick<playwright.LaunchOptions, 'timeout' | 'headless' | 'downloadsPath'>;
