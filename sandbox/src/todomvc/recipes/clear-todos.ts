@@ -8,14 +8,14 @@ export const clear_todos = recipe.client(
    * @returns clear todos client recipe
    */
   async function () {
-    const client = this;
+    const { page } = this;
 
     const remove = (index: number) => [
       I.hover(todos.item_label_at(index)),
       I.click(todos.item_remove_at(index)),
     ];
 
-    const list = await client.query(todos.list);
+    const list = await page.query(todos.list);
     let last = list.length - 1;
     const plan = [];
     while (last >= 0) {
@@ -23,6 +23,6 @@ export const clear_todos = recipe.client(
       last--;
     }
 
-    return client.do(`I clear todos`, ...plan);
+    return page.do(`I clear todos`, ...plan);
   }
 );

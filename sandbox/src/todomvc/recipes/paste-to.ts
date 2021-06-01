@@ -8,8 +8,9 @@ export const paste_to = recipe.client(
    * @returns paste text client recipe
    */
   function (query: Query<HTMLElement>) {
-    const client = this;
-    return client.do(`I paste ${query.toString()}`
+    const { page } = this;
+
+    return page.do(`I paste ${query.toString()}`
       // todo: investigate why focus doesn't work?
       , I.focus(query)
       , I.fill(query, '')

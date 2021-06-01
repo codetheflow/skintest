@@ -9,9 +9,9 @@ export const add_todo = recipe.client(
    * @returns todo client recipe
    */
   function (name: string) {
-    const client = this;
+    const { page } = this;
 
-    return client.do(`I add todo \`${name}\``
+    return page.do(`I add todo \`${name}\``
       , I.fill(todos.what, name)
       , I.press('Enter')
     );

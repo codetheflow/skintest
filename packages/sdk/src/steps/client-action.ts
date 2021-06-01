@@ -1,7 +1,7 @@
 import { Guard } from '@skintest/common';
 import { DoStep, StepContext, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
-import { ClientFunction, ClientRecipe, PageClient } from '../recipes/client';
+import { ClientFunction, ClientPage, ClientRecipe } from '../recipes/client';
 import { pass } from '../test-result';
 
 export class ClientActionStep implements DoStep {
@@ -21,10 +21,9 @@ export class ClientActionStep implements DoStep {
   async execute(context: StepContext): StepExecutionResult {
     const { browser } = context;
     const page = browser.getCurrentPage();
-
-    const client = new PageClient(page);
+    const clientPage = new ClientPage(page);
     const action = this.recipe.action as ClientFunction;
-    const { plan } = await action.apply(client, this.args);
+    const { plan } = await action.apply({ page: clientPage }, this.args);
 
     return {
       result: pass(),

@@ -8,8 +8,9 @@ export const copy_from = recipe.client(
    * @returns copy text client recipe
    */
   function (query: Query<HTMLElement>) {
-    const client = this;
-    return client.do(`I copy ${query.toString()}`
+    const { page } = this;
+
+    return page.do(`I copy ${query.toString()}`
       , I.select(query)
       , I.press('Control+C')
     );

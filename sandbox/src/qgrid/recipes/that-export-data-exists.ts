@@ -11,13 +11,13 @@ export const that_export_data_exists = recipe.assert(
    * @returns data exists assert recipe
    */
   async function (file_name: string) {
-    const assert = this;
+    const { pass, fail } = this;
 
     const path_to_file = path.join(env.downloads_path, file_name);
     if (fs.existsSync(path_to_file)) {
-      return assert.pass();
+      return pass();
     }
 
-    return assert.fail(`${path_to_file} doesn't contain data`);
+    return fail(`${path_to_file} doesn't contain data`);
   }
 );

@@ -37,16 +37,20 @@
 * publish version 1.0.0.alpha - done
 * sandbox:watch command - done
 * copy/paste as recipe example - done
+* playwright in the plugins - done
 * https://github.com/microsoft/playwright/issues/2511
 
 0.0.10:
 * add `exists` state - done
 * escape arguments inside the $,$$ functions - done
-* add methods to the ClientElement
-* file upload/download
+* add methods to the ClientElement - done
+* custom assert recipes - done
+* remove logs from the playwright errors - done
+* file download - done
+* file upload -
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
-* custom asserts
+
 * `__pause` is frozen sometimes
 
 next
@@ -62,7 +66,7 @@ next
 * show fail/error solutions/links to solutions
 * slowMo settings in camelCase - lint warning
 * stubs/network intersection support
-* remove logs from the playwright errors
+
 * waitSelector doesn't take into account page's timeout
 * start writing unit tests
 * better reporting UX
@@ -98,7 +102,6 @@ next
 * auth, session and local storages?
 * https://playwright.dev/docs/auth
 * device emulation
-* playwright as a plugin?
 * browser console messages? error catching?
 * https://playwright.dev/docs/verification
 * own browser instance for each feature/scenario/before.scenario?

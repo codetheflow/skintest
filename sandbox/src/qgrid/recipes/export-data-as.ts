@@ -11,14 +11,18 @@ export const export_data_as = recipe.client(
    * @returns download client recipe
    */
   async function (file_name: string) {
-    const client = this;
-    const ext = path
-      .extname(file_name)
-      .split('.')
-      .pop()!
+    const { page } = this;
+
+    const ext = (
+      path
+        .extname(file_name)
+        .split('.')
+        .pop() || ''
+    )
       .toUpperCase();
 
-    return client
+    // todo: add network idle or check of the first row?
+    return page
       .wait('download')
       .save(path.join(env.downloads_path, file_name))
       .when(`I click \`Export to ${ext}\` to download`

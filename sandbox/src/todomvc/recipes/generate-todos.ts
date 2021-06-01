@@ -9,8 +9,9 @@ export const generate_todos = recipe.client(
    * @returns generate todos client recipe
    */
   function (count: number) {
-    const client = this;
+    const { page } = this;
+
     const path = [...Array(count)].map((x, i) => I.do(add_todo, `generated todo #${i}`))
-    return client.do(`I generate ${count} todos`, ...path);
+    return page.do(`I generate ${count} todos`, ...path);
   }
 );

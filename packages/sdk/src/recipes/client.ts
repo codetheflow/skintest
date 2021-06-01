@@ -47,13 +47,15 @@ export type ClientWaitHooks = {
 }
 
 export interface Client {
-  do: ClientStory;
-  wait<E extends keyof ClientWaitEvents>(event: E): ClientWaitEvents[E];
-  query<E extends DOMElement>(query: Query<E>): Promise<ClientElement<E>>;
-  query<E extends DOMElement>(query: QueryList<E>): Promise<ClientElementList<E>>;
+  page: {
+    do: ClientStory;
+    wait<E extends keyof ClientWaitEvents>(event: E): ClientWaitEvents[E];
+    query<E extends DOMElement>(query: Query<E>): Promise<ClientElement<E>>;
+    query<E extends DOMElement>(query: QueryList<E>): Promise<ClientElementList<E>>;
+  };
 }
 
-export class PageClient implements Client {
+export class ClientPage {
   constructor(private page: Page) { }
 
   wait<E extends keyof ClientWaitEvents>(event: E): ClientWaitEvents[E] {
