@@ -1,28 +1,25 @@
 import { recipe } from '@skintest/sdk';
 import * as fs from 'fs';
-import { env } from '../project/env';
-import path = require('path');
 
 export const that_export_data_exists = recipe.assert(
   /**
    * assert that file is not empty
    * 
-   * @param file_name name of the file
+   * @param file_path path to the file
    * @returns data exists assert recipe
    */
-  async function (file_name: string) {
+  async function (file_path: string) {
     const { pass, fail } = this;
-
-    const path_to_file = path.join(env.downloads_path, file_name);
-    if (fs.existsSync(path_to_file)) {
-      const { size } = fs.statSync(path_to_file);
+    
+    if (fs.existsSync(file_path)) {
+      const { size } = fs.statSync(file_path);
       if (size > 0) {
         return pass();
       }
 
-      return fail(`\`${path_to_file}\` doesn't contain data`)
+      return fail(`\`${file_path}\` doesn't contain data`)
     }
 
-    return fail(`\`${path_to_file}\` doesn't exist`);
+    return fail(`\`${file_path}\` doesn't exist`);
   }
 );

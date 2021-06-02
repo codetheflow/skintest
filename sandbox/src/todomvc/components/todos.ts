@@ -2,7 +2,7 @@ import { $, $$ } from '@skintest/sdk';
 import { env } from '../project/env';
 
 export const todos = {
-  url: env.url
+  url: env.base_url
 
   , what: $<HTMLInputElement>`.new-todo`
 

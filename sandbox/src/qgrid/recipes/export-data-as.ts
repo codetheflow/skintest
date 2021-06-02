@@ -1,21 +1,20 @@
 import { I, recipe } from '@skintest/sdk';
 import * as path from 'path';
 import { grid } from '../components/grid';
-import { env } from '../project/env';
 
 export const export_data_as = recipe.client(
   /**
    * waits for download completed after the click to the grid action
    * 
-   * @param file_name export file name
-   * @returns download client recipe
+   * @param file_path export file path
+   * @returns export data client recipe
    */
-  async function (file_name: string) {
+  async function (file_path: string) {
     const { page } = this;
 
     const ext = (
       path
-        .extname(file_name)
+        .extname(file_path)
         .split('.')
         .pop() || ''
     )
@@ -27,7 +26,7 @@ export const export_data_as = recipe.client(
   
     return page
       .wait('download')
-      .save(path.join(env.downloads_path, file_name))
+      .save(path.join(file_path))
       .when(`I click \`Export to ${ext}\` to download`
         , I.click(grid.action(`Export to ${ext}`))
       );

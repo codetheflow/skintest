@@ -50,10 +50,10 @@
 * file upload -
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
-
 * `__pause` is frozen sometimes
 
 next
+* feature name /scenario name uniq constraint
 * add `secret` function to show `***` instead of value
 * has.state doesn't trigger type checking, because string is extendable from the string
 * drag and drop
@@ -80,6 +80,7 @@ next
 * https://playwright.dev/docs/ci
 
 ### questions
+* wait `visible/invisible`?
 * think about todos.item.at/label_at etc.
 * $$ should wait?
 * add `feature`, `component`, `recipe` postfixes?

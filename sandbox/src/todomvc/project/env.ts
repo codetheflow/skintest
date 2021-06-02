@@ -1,3 +1,3 @@
 export const env = {
-  url: 'https://todomvc.com/examples/react/#/'
+  base_url: 'https://todomvc.com/examples/react/#/'
 };

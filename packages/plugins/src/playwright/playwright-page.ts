@@ -103,6 +103,13 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
+  async waitFileChooser(paths: string[]): Promise<void> {
+    return this.page
+      .waitForEvent('filechooser')
+      .then(x => x.setFiles(paths));
+  }
+
+  @PlaywrightAction()
   async query<T extends DOMElement>(selector: string): Promise<ElementRef<T> | null> {
     try {
       const handle = await this.page.waitForSelector(selector);

@@ -7,6 +7,7 @@ import { Query, QueryList } from '../query';
 import { StorySchema } from '../schema';
 import { WaitStep } from '../steps/wait';
 import { WaitDownloadStep } from '../steps/wait-download';
+import { WaitFileChooserStep } from '../steps/wait-file-chooser';
 
 export type ClientDo =
   Promise<{
@@ -37,7 +38,8 @@ export abstract class ClientElement<T extends DOMElement = never> {
 export type ClientElementList<T extends DOMElement = never> = ClientElement<T>[];
 
 export type ClientWaitEvents = {
-  download: { save(name: string): ClientWaitHooks },
+  'download': { save(name: string): ClientWaitHooks },
+  'file-chooser': { open(...paths: string[]): ClientWaitHooks },
 };
 
 export type ClientStory = (message: string, ...plan: StorySchema) => ClientDo;
@@ -83,7 +85,30 @@ export class ClientPage {
           }
         };
 
-        return download;
+        // todo: can we do it without reinterpret?
+        return reinterpret<ClientWaitEvents[E]>(download);
+      }
+      case 'file-chooser': {
+        const fileChooser: ClientWaitEvents['file-chooser'] = {
+          open(...paths: string[]) {
+            return {
+              when(message: string, ...plan: StorySchema) {
+                return Promise.resolve({
+                  message,
+                  plan: [
+                    new WaitStep(
+                      getMeta,
+                      [new WaitFileChooserStep(getMeta, paths)],
+                      plan
+                    )
+                  ]
+                });
+              }
+            };
+          }
+        };
+
+        return reinterpret<ClientWaitEvents[E]>(fileChooser);
       }
       default: {
         throw errors.invalidArgument('event', event);

@@ -5,7 +5,7 @@ import * as path from 'path';
 const PROJECTS_FOLDER = path.join(__dirname);
 
 const launcher = playwrightLauncher({
-  headless: false,
+  headless: true,
   timeout: 30 * 1000,
 });
 
