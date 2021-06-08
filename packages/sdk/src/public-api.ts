@@ -17,7 +17,7 @@ export { repeat } from './operators/repeat';
 export { ClientPageWaitEvents, wait } from './operators/wait';
 export { Page } from './page';
 export { $, $$, Query, QueryList } from './query';
-export { Recipe, recipe, RecipeOperator } from './recipe';
+export { Recipe, recipe, RecipeFunction, RecipeIterable, RecipeOperator } from './recipe';
 export { ConditionSchema, ScenarioSchema, StorySchema, StoryStep, VerifyStep } from './schema';
 export { Script } from './script';
 export { Breakpoint, Debugger } from './steps/debug';

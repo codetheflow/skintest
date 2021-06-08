@@ -8,6 +8,7 @@ export class RepeatStep implements ClientStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
+    private message: string,
     private plan: ConditionSchema,
   ) {
     Guard.notNull(getMeta, 'getMeta');
@@ -22,6 +23,6 @@ export class RepeatStep implements ClientStep {
   }
 
   toString(): string {
-    return `repeat`;
+    return `repeat ${this.message}`;
   }
 }

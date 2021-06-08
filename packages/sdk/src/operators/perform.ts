@@ -1,13 +1,11 @@
 import { getCaller, getStepMeta } from '../meta';
-import { RecipeOperator } from '../recipe';
+import { RecipeIterable, RecipeOperator } from '../recipe';
 import { StorySchema } from '../schema';
 import { PerformStep } from '../steps/perform';
 
-export function perform(message: string, ...plan: StorySchema): RecipeOperator {
+export function perform(message: string, ...plan: StorySchema): RecipeOperator<RecipeIterable | undefined, RecipeIterable> {
   const caller = getCaller();
   const getMeta = () => getStepMeta(caller);
 
-  return async () => ({
-    plan: [new PerformStep(getMeta, message, plan)]
-  });
+  return source => [...(source || []), new PerformStep(getMeta, message, plan)];
 }

@@ -169,7 +169,7 @@ async function navigate(product: string, item: string): Promise<Recipe> {
        , I.click(hub.menu)
        , I.click(hub.menu_link(product))
        , I.do(wait_navigation)
-    }),
+    ),
     
     perform(`navigation to the ${item}`
       , I.click(hub.sub_menu_link(item))
@@ -178,5 +178,4 @@ async function navigate(product: string, item: string): Promise<Recipe> {
     wait('hidden', hub.spinner),
   );
 }
-
 ```

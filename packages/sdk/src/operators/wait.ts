@@ -1,7 +1,6 @@
-import { errors } from '@skintest/common';
 import { getCaller, getStepMeta } from '../meta';
 import { Query } from '../query';
-import { RecipeOperator } from '../recipe';
+import { RecipeIterable, RecipeOperator } from '../recipe';
 
 export type ClientPageWaitEvents = {
   'download': (visit: { save(path: string): void }) => void,
@@ -18,13 +17,29 @@ export type ClientPageWaitEvents = {
   'exists': Query,
 };
 
-export function wait<E extends keyof ClientPageWaitEvents>(event: E, options: ClientPageWaitEvents[E]): RecipeOperator {
+export function wait<E extends keyof ClientPageWaitEvents>(event: E, options: ClientPageWaitEvents[E]): RecipeOperator<RecipeIterable | undefined, RecipeIterable> {
   const caller = getCaller();
   const getMeta = () => getStepMeta(caller);
 
-  switch (event) {
-    default: {
-      throw errors.invalidArgument('event', event);
-    }
-  }
+  return source => [...(source || [])];
+  // switch (event) {
+  //   case 'checked':
+  //   case 'disabled':
+  //   case 'focused':
+  //   case 'editable':
+  //   case 'enabled':
+  //   case 'hidden':
+  //   case 'unchecked':
+  //   case 'visible':
+  //   case 'exists': {
+
+  //   }
+  //     break;
+  // }
+
+  // switch (event) {
+  //   default: {
+  //     throw errors.invalidArgument('event', event);
+  //   }
+  // }
 }

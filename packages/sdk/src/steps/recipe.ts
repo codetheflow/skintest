@@ -17,11 +17,12 @@ export class RecipeStep implements DoStep {
   }
 
   async execute(): Promise<StepExecutionResult> {
-    const recipe = await this.recipe(...this.args);
+    const op = await this.recipe(...this.args);
+    const plan = op(undefined);
 
     return {
       type: 'recipe',
-      plan: recipe.plan,
+      plan: Array.from(plan),
     };
   }
 
