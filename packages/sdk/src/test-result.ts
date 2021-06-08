@@ -10,14 +10,12 @@ export interface TestFail {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: StringDictionary<any>;
   description: string;
-  loop: 'break' | 'continue',
   solution: string;
-  status: 'fail',
+  status: 'fail';
 }
 
 export interface TestPass {
   status: 'pass';
-  inspect: InspectInfo | null;
 }
 
 export interface InspectInfo {
@@ -29,20 +27,12 @@ export type TestResult = TestFail | TestPass;
 
 export function pass(): TestPass {
   return {
-    status: 'pass',
-    inspect: null
+    status: 'pass'
   };
 }
 
-export function inspect(info: InspectInfo): TestPass {
-  return {
-    status: 'pass',
-    inspect: info
-  };
-}
-
-export const fails = {
-  binaryAssert(body: {
+export const fail = {
+  conditionError(body: {
     assert: AssertHost,
     query: Query | QueryList,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,7 +44,7 @@ export const fails = {
     const method = body.query.type === 'query' ? '$' : '$$';
 
     const description =
-      `${method}(${selector}).${body.assert.what}:` +
+      `${method}(${selector}).${body.assert.what}: ` +
       `expected \`${body.actual}\` to ` +
       `${body.assert.no ? 'not' : ''} ` +
       `${body.assert.how} \`${body.etalon}\``;
@@ -63,7 +53,6 @@ export const fails = {
       status: 'fail',
       description,
       solution: 'check assert condition',
-      loop: 'continue',
       body,
     };
   },
@@ -77,11 +66,10 @@ export const fails = {
       status: 'fail',
       description: `${method}(${selector}) is not reachable`,
       solution: 'check selector correctness and availability',
-      loop: 'continue',
       body,
     };
   },
-  that(body: {
+  reason(body: {
     description: string,
     solution: string,
   }): TestFail {
@@ -89,7 +77,6 @@ export const fails = {
       status: 'fail',
       description: body.description,
       solution: body.solution,
-      loop: 'continue',
       body,
     };
   }

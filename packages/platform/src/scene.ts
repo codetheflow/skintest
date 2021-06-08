@@ -1,4 +1,5 @@
-import { Browser, Command, pass, Script, Suite } from '@skintest/sdk';
+import { errors, reinterpret } from '@skintest/common';
+import { Browser, Command, pass, Script, StepExecutionResult, Suite } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { CommandScope, Staging } from './stage';
 
@@ -117,7 +118,6 @@ export class Scene {
       script,
       scenario,
       step,
-      depth: 0,
     };
 
     await beforeStepEffect(scope);
@@ -155,7 +155,7 @@ export class Scene {
     script: Script,
     scenario: string,
     steps: ReadonlyArray<Command>,
-    depth = 0,
+    path: Array<StepExecutionResult['type']> = []
   ): Promise<boolean> {
 
     const { browser, attempt } = this;
@@ -163,6 +163,7 @@ export class Scene {
     const stepEffect = this.effect('step');
     const passEffect = this.effect('step:pass');
     const failEffect = this.effect('step:fail');
+    const inspectEffect = this.effect('step:inspect');
 
     const scope = {
       suite: this.suite,
@@ -170,45 +171,97 @@ export class Scene {
       site,
       script,
       scenario,
-      depth,
     };
 
-    let result = true;
+    let breakLoop = false;
+    const fails: string[] = [];
+
     for (const step of steps) {
-      await stepEffect({ ...scope, step });
+      if (breakLoop) {
+        break;
+      }
+
+      await stepEffect({ ...scope, step, path });
 
       try {
-        const test = await attempt.step(() => step.execute({ browser }));
-        if (test.result.status === 'pass') {
-          await passEffect({ ...scope, step, result: pass() });
-        } else {
-          result = false;
-          await failEffect({ ...scope, step, reason: test.result });
-          if (test.result.loop === 'break') {
-            break;
-          }
-        }
+        const run = await attempt.step(() => step.execute({ browser }));
 
-        const results = await Promise.all(
-          test
-            .plans
-            .map(plan => this.runPlan(
+        const runPlan =
+          (commands: Command[]) =>
+            this.runPlan(
               site,
               script,
               scenario,
-              plan,
-              depth + 1
-            ))
-        );
+              commands,
+              path.concat(run.type)
+            );
 
-        result = result && !results.includes(false);
+        switch (run.type) {
+          case 'method': {
+            await passEffect({ ...scope, step, result: pass(), path });
+            break;
+          }
+          case 'assert': {
+            const { result } = run;
+
+            if (result.status === 'fail') {
+              const host = path[path.length - 1];
+              breakLoop = host === 'condition' || host === 'repeat';
+
+              fails.push(result.description);
+              await failEffect({ ...scope, step, reason: result, path });
+            } else {
+              await passEffect({ ...scope, step, result, path });
+            }
+
+            break;
+          }
+          case 'inspect': {
+            await inspectEffect({ ...scope, step, inspect: run.info, path });
+            await passEffect({ ...scope, step, result: pass(), path });
+            break;
+          }
+          case 'perform':
+          case 'recipe': {
+            await runPlan(run.plan);
+            await passEffect({ ...scope, step, result: pass(), path });
+            break;
+          }
+          case 'condition': {
+            await runPlan(run.plan);
+            await passEffect({ ...scope, step, result: pass(), path });
+            break;
+          }
+          case 'repeat': {
+            // todo: add timeout exception or warning if loop runs too long
+            let next = true;
+            while (next) {
+              next = await runPlan(run.plan);
+            }
+
+            await passEffect({ ...scope, step, result: pass(), path });
+            break;
+          }
+          case 'wait': {
+            await Promise.all([
+              runPlan([run.waiter]),
+              runPlan(run.trigger),
+            ]);
+
+            await passEffect({ ...scope, step, result: pass(), path });
+            break;
+          }
+          default: {
+            throw errors.invalidArgument('type', reinterpret<StepExecutionResult>(run).type);
+          }
+        }
       } catch (ex) {
-        await failEffect({ ...scope, step, reason: ex });
-        result = false;
+        await failEffect({ ...scope, step, reason: ex, path: path });
+        fails.push(ex.message);
         break;
       }
     }
 
-    return result;
+    return fails.length === 0;
   }
 }

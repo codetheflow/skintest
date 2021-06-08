@@ -1,5 +1,5 @@
+import { ClientElement } from './client';
 import { DOMElement } from './dom';
-import { ClientElement } from './recipes/client';
 
 export type ElementState =
   'checked'

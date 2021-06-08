@@ -1,3 +1,4 @@
+import { isFunction } from '@skintest/common';
 import { BinaryAssert, ListBinaryAssert } from './assert';
 import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
 import { DOMElement } from './dom';
@@ -5,11 +6,8 @@ import { Ego } from './ego';
 import { KeyboardKey } from './keyboard';
 import { getCaller, getStepMeta } from './meta';
 import { Query, QueryList } from './query';
-import { ClientDo, ClientRecipe } from './recipes/client';
-import { ServerDo, ServerRecipe } from './recipes/server';
-import { ThatFunction, ThatRecipe } from './recipes/that';
+import { RecipeFunction } from './recipe';
 import { ClickStep } from './steps/click';
-import { ClientActionStep } from './steps/client-action';
 import { DblClickStep } from './steps/dblclick';
 import { Breakpoint, DebugStep } from './steps/debug';
 import { FillStep } from './steps/fill';
@@ -23,17 +21,35 @@ import { NavigationForwardStep } from './steps/navigation-forward';
 import { OpenStep } from './steps/open';
 import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
+import { RecipeStep } from './steps/recipe';
 import { ReloadStep } from './steps/reload';
 import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
 import { SelectTextStep } from './steps/select-text';
-import { ServerActionStep } from './steps/server-action';
 import { ExecuteStep } from './steps/test';
-import { ThatActionStep } from './steps/that-action';
+import { ThatStep } from './steps/that';
 import { TypeStep } from './steps/type';
-import { WaitUrlStep } from './steps/wait-url';
+import { ThatFunction } from './that';
 
 class Me implements Ego {
+  do<F extends RecipeFunction>(recipe: F, ...args: Parameters<F>): DoStep {
+    const caller = getCaller();
+    return new RecipeStep(() => getStepMeta(caller), recipe, args);
+  }
+
+  see<F extends ThatFunction>(recipe: F, ...args: Parameters<F>): AssertStep;
+  see<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): AssertStep;
+  see<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): AssertStep;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  see(targetOrRecipe: any, ...args: any[]): AssertStep {
+    const caller = getCaller();
+    if (isFunction(targetOrRecipe)) {
+      return new ThatStep(() => getStepMeta(caller), targetOrRecipe, args);
+    }
+
+    return new SeeStep(() => getStepMeta(caller), targetOrRecipe, args[0], args[1]);
+  }
+
   mark<E extends DOMElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep {
     const caller = getCaller();
     return new MarkStep(() => getStepMeta(caller), target, value);
@@ -72,46 +88,14 @@ class Me implements Ego {
     return new ReloadStep(() => getStepMeta(caller));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  do<T extends (...args: any) => ClientDo>(recipe: ClientRecipe<T>, ...args: Parameters<T>): DoStep;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  do<T extends (...args: any) => ServerDo>(recipe: ServerRecipe<T>, ...args: Parameters<T>): DoStep;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  do(recipe: ClientRecipe<any> | ServerRecipe<any>, ...args: any[]) {
-    const caller = getCaller();
-    if (recipe.type === 'client') {
-      return new ClientActionStep(() => getStepMeta(caller), recipe, args || []);
-    }
-
-    return new ServerActionStep(() => getStepMeta(caller), recipe, args || []);
-  }
-
   test(message: string): TestStep {
     const caller = getCaller();
     return new ExecuteStep(() => getStepMeta(caller), message);
   }
 
-  see<A extends ThatFunction>(recipe: ThatRecipe<A>, ...args: Parameters<A>): AssertStep;
-  see<E extends DOMElement, V>(target: Query<E>, assert: BinaryAssert<V>, value: V): AssertStep;
-  see<E extends DOMElement, V>(target: QueryList<E>, assert: ListBinaryAssert<V>, value: V): AssertStep;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  see(targetOrRecipe: any, ...args: any[]): AssertStep {
-    const caller = getCaller();
-    if (targetOrRecipe.type === 'assert') {
-      return new ThatActionStep(() => getStepMeta(caller), targetOrRecipe, args);
-    }
-
-    return new SeeStep(() => getStepMeta(caller), targetOrRecipe, args[0], args[1]);
-  }
-
   goto(url: string): ClientStep {
     const caller = getCaller();
     return new GotoStep(() => getStepMeta(caller), url);
-  }
-
-  wait(what: 'url', url: string): ClientStep {
-    const caller = getCaller();
-    return new WaitUrlStep(() => getStepMeta(caller), url);
   }
 
   click<E extends DOMElement>(target: Query<E>): ClientStep {

@@ -1,5 +1,5 @@
 import { Guard } from '@skintest/common';
-import { asTest, StepExecutionResult, TestStep } from '../command';
+import { methodResult, StepExecutionResult, TestStep } from '../command';
 import { StepMeta } from '../meta';
 
 export class ExecuteStep implements TestStep {
@@ -12,8 +12,8 @@ export class ExecuteStep implements TestStep {
     Guard.notNull(getMeta, 'getMeta');
   }
 
-  execute(): StepExecutionResult {
-    return asTest(Promise.resolve());
+  execute(): Promise<StepExecutionResult> {
+    return methodResult(Promise.resolve());
   }
 
   toString(): string {

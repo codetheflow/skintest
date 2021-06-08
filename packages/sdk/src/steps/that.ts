@@ -1,15 +1,15 @@
 import { Guard } from '@skintest/common';
 import { AssertStep, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
-import { AssertThat, ThatFunction, ThatRecipe } from '../recipes/that';
+import { ThatFunction } from '../that';
 
-export class ThatActionStep implements AssertStep {
+export class ThatStep implements AssertStep {
   type: 'assert' = 'assert';
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public recipe: ThatRecipe<any>,
+    public recipe: ThatFunction,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public args: any[]
   ) {
@@ -17,13 +17,12 @@ export class ThatActionStep implements AssertStep {
     Guard.notNull(args, 'args');
   }
 
-  async execute(): StepExecutionResult {
-    const that = new AssertThat();
-    const action = this.recipe.action as ThatFunction;
-    const { result } = await action.apply(that, this.args);
+  async execute(): Promise<StepExecutionResult> {
+    const result = await this.recipe(this.args);
+
     return {
+      type: 'assert',
       result,
-      plans: [],
     };
   }
 

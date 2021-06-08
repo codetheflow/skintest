@@ -38,7 +38,13 @@ export function ttySummaryReport(): Plugin {
     'scenario:before': async () => {
       statistics.scenarios++;
     },
-    'step:fail': async ({ reason }) => {
+    'step:fail': async ({ reason, path }) => {
+      const host = path[path.length - 1];
+      if (host === 'repeat' || host === 'condition') {
+        // todo: verbose log?
+        return;
+      }
+
       if ('status' in reason) {
         statistics.fails++;
         fails.push(reason);

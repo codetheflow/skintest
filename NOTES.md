@@ -53,6 +53,15 @@
 * `__pause` is frozen sometimes
 
 next
+* add script/feature error zone?
+* add max time that scenario could take (for `until` operations)
+* add playwright plugin to make things like pw(async p => await p.evaluate...);
+* add fail\error hook in the scenario as a debug option
+* generate and use some name/text further? how it to implement? through the recipe?
+* maybe I.generate_name('my-name', 'basename');
+* page `until`
+* I.fill(input, uniq `my job`)
+* I.check(title, uniq `my job`)
 * feature name /scenario name uniq constraint
 * add `secret` function to show `***` instead of value
 * has.state doesn't trigger type checking, because string is extendable from the string
@@ -111,6 +120,7 @@ next
 * https://gist.github.com/vzaidman/ef6e4b772b311ffb98368da5f7a9582a#file-codecept-example-js
 * press vs hit? press target?
 * CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
+* install/uninstall setup/teardown
 
 ### code style
 
@@ -143,4 +153,30 @@ next
     , I.test('todos list contains only the second item')
     , I.see(todos.item_at(0), has.text, 'do exercise')
   )
+```
+
+```typescript
+async function navigate(product: string, item: string): Promise<Recipe> {
+  return recipe(
+    evaluate(`remove survey monkey`, async () => {
+      const { body } = document;
+      body.setAttribute('id', 'smcx-sdk');
+    }),
+
+    iif(`not already on the product page`
+       , I.see(nav.title, has.no.text, product)
+       , I.say(`then navigate to the ${product}`)
+       , I.click(hub.menu)
+       , I.click(hub.menu_link(product))
+       , I.do(wait_navigation)
+    }),
+    
+    perform(`navigation to the ${item}`
+      , I.click(hub.sub_menu_link(item))
+    ),
+    
+    wait('hidden', hub.spinner),
+  );
+}
+
 ```

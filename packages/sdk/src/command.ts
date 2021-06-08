@@ -1,6 +1,7 @@
 import { Browser } from './browser';
 import { StepMeta } from './meta';
-import { pass, TestResult } from './test-result';
+import { ConditionSchema, StorySchema } from './schema';
+import { InspectInfo, TestResult } from './test-result';
 
 export type Command =
   ClientStep
@@ -14,13 +15,58 @@ export interface StepContext {
   browser: Browser;
 }
 
-export type StepExecutionResult = Promise<{
+export type StepExecutionResult =
+  StepExecutionAssertResult
+  | StepExecutionConditionResult
+  | StepExecutionInspectResult
+  | StepExecutionMethodResult
+  | StepExecutionPerformResult
+  | StepExecutionRecipeResult
+  | StepExecutionRepeatResult
+  | StepExecutionWaitResult;
+
+export type StepExecutionInspectResult = {
+  type: 'inspect',
+  info: InspectInfo,
+}
+
+export type StepExecutionAssertResult = {
+  type: 'assert',
   result: TestResult,
-  plans: Command[][],
-}>;
+}
+
+export type StepExecutionMethodResult = {
+  type: 'method',
+}
+
+export type StepExecutionRecipeResult = {
+  type: 'recipe',
+  plan: Command[],
+}
+
+export type StepExecutionPerformResult = {
+  type: 'perform',
+  plan: StorySchema,
+}
+
+export type StepExecutionWaitResult = {
+  type: 'wait',
+  waiter: Command,
+  trigger: StorySchema,
+}
+
+export type StepExecutionRepeatResult = {
+  type: 'repeat',
+  plan: ConditionSchema,
+}
+
+export type StepExecutionConditionResult = {
+  type: 'condition',
+  plan: ConditionSchema,
+}
 
 export interface CommandBody {
-  execute(context: StepContext): StepExecutionResult;
+  execute(context: StepContext): Promise<StepExecutionResult>;
   getMeta(): Promise<StepMeta>;
   toString(): string;
 }
@@ -49,12 +95,11 @@ export interface DoStep extends CommandBody {
   type: 'do';
 }
 
-export async function asTest(promise: Promise<void>): StepExecutionResult {
+export async function methodResult(promise: Promise<void>): Promise<StepExecutionResult> {
   await promise;
 
   // if there were no exception return `ok`
   return {
-    result: pass(),
-    plans: []
+    type: 'method',
   };
 }

@@ -1,11 +1,15 @@
-export type Zone =
+export type PlatformZone =
   'platform:mount'
-  | 'platform:unmount'
+  | 'platform:unmount';
+
+export type ProjectZone =
   | 'project:mount'
   | 'project:unmount'
   | 'project:init'
-  | 'project:error'
-  | 'feature:before'
+  | 'project:error';
+
+export type ScriptZone =
+  'feature:before'
   | 'feature:after'
   | 'scenario:before'
   | 'scenario:after'
@@ -13,4 +17,10 @@ export type Zone =
   | 'step:after'
   | 'step'
   | 'step:pass'
-  | 'step:fail';
+  | 'step:fail'
+  | 'step:inspect';
+
+export type Zone =
+  PlatformZone
+  | ProjectZone
+  | ScriptZone;

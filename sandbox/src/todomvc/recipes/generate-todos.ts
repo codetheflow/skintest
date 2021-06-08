@@ -1,17 +1,21 @@
-import { I, recipe } from '@skintest/sdk';
+import { has, I, Recipe, recipe, repeat } from '@skintest/sdk';
+import { todos } from '../components/todos';
 import { add_todo } from './add-todo';
 
-export const generate_todos = recipe.client(
-  /**
-   * generate todo times and put them to the list of todos
-   * 
-   * @param count number of items to generate
-   * @returns generate todos client recipe
-   */
-  function (count: number) {
-    const { page } = this;
+/**
+ * generate todo times and put them to the list of todos
+ * 
+ * @param count number of items to generate
+ * @returns generate todos client recipe
+ */
+export async function generate_todos(count: number): Promise<Recipe> {
+  let id = 1;
 
-    const path = [...Array(count)].map((x, i) => I.do(add_todo, `generated todo #${i}`))
-    return page.do(`I generate ${count} todos`, ...path);
-  }
-);
+  return recipe(
+    repeat(`until list has ${count} items`
+      , I.see(todos.list, has.no.length, count)
+      , I.say('adding a new item')
+      , I.do(add_todo, `generated todo #${id++}`)
+    ),
+  );
+}

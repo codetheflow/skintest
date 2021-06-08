@@ -3,7 +3,7 @@ import { AssertHost, AssertHow, AssertWhat } from './assert';
 import { ElementState } from './element';
 import { Page } from './page';
 import { Query, QueryList } from './query';
-import { fails, pass, TestResult } from './test-result';
+import { fail, pass, TestResult } from './test-result';
 
 export class Verify {
   constructor(private page: Page) {
@@ -37,8 +37,8 @@ export class Verify {
           return pass();
         }
 
-        return fails
-          .binaryAssert({
+        return fail
+          .conditionError({
             assert,
             query,
             actual: 'not exists',
@@ -46,7 +46,7 @@ export class Verify {
           });
       }
 
-      return fails.elementNotFound({ query });
+      return fail.elementNotFound({ query });
     }
 
 
@@ -59,8 +59,8 @@ export class Verify {
           return pass();
         }
 
-        return fails
-          .binaryAssert({
+        return fail
+          .conditionError({
             actual,
             etalon,
             query,
@@ -74,8 +74,8 @@ export class Verify {
           return pass();
         }
 
-        return fails
-          .binaryAssert({
+        return fail
+          .conditionError({
             actual: assert.no ? etalon : opposite(etalon),
             etalon,
             query,
@@ -89,8 +89,8 @@ export class Verify {
           return pass();
         }
 
-        return fails
-          .binaryAssert({
+        return fail
+          .conditionError({
             actual: classList.toString(),
             etalon,
             query,
@@ -113,8 +113,8 @@ export class Verify {
             return pass();
           }
 
-          return fails
-            .binaryAssert({
+          return fail
+            .conditionError({
               actual,
               etalon,
               query,
@@ -133,8 +133,8 @@ export class Verify {
             return pass();
           }
 
-          return fails
-            .binaryAssert({
+          return fail
+            .conditionError({
               actual,
               etalon,
               query,
@@ -165,8 +165,8 @@ export class Verify {
           return pass();
         }
 
-        return fails
-          .binaryAssert({
+        return fail
+          .conditionError({
             actual,
             etalon,
             query,
@@ -187,11 +187,11 @@ export class Verify {
         break;
       }
       case AssertHow.above: {
-        result = etalon > actual;
+        result = actual > etalon;
         break;
       }
       case AssertHow.below: {
-        result = etalon < actual;
+        result = actual < etalon;
         break;
       }
       case AssertHow.equals: {

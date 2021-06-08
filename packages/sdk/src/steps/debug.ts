@@ -1,5 +1,5 @@
 import { Guard } from '@skintest/common';
-import { asTest, DevStep, StepContext, StepExecutionResult } from '../command';
+import { DevStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { DOMElement } from '../dom';
 import { ElementRef, ElementRefList } from '../element';
 import { StepMeta } from '../meta';
@@ -39,13 +39,13 @@ export class DebugStep implements DevStep {
     Guard.notNull(breakpoint, 'breakpoint');
   }
 
-  async execute(context: StepContext): StepExecutionResult {
+  async execute(context: StepContext): Promise<StepExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
     const dbg = new PageDebugger(page);
     await this.breakpoint(dbg);
-    return asTest(Promise.resolve());
+    return methodResult(Promise.resolve());
   }
 
   toString(): string {

@@ -4,7 +4,7 @@ import { Suite } from '@skintest/sdk';
 
 type TagFilterOptions = {
   include: string[],
-  method: 'only-matched' | 'all-when-no-matched'
+  method: 'include-only-matched' | 'include-all-when-no-matches'
 };
 
 type Statistics = StringDictionary<{
@@ -29,11 +29,11 @@ export function tagFilter(options: TagFilterOptions): Plugin {
       };
 
       switch (method) {
-        case 'only-matched': {
+        case 'include-only-matched': {
           onlyMatched();
           break;
         }
-        case 'all-when-no-matched': {
+        case 'include-all-when-no-matches': {
           const hasMatches = Object
             .keys(stat)
             .some(key =>

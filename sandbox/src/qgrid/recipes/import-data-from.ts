@@ -1,21 +1,17 @@
-import { I, recipe } from '@skintest/sdk';
+import { I, perform, Recipe, recipe, wait } from '@skintest/sdk';
 import { grid } from '../components/grid';
 
-export const import_data_from = recipe.client(
-  /**
-   * waits for download completed after the click to the grid action
-   * 
-   * @param file_path import file path
-   * @returns import data client recipe
-   */
-  async function (file_path: string) {
-    const { page } = this;
-
-    return page
-      .wait('file-chooser')
-      .open(file_path)
-      .when(`I click \`Import file\``
-        , I.click(grid.action(`Import file`))
-      );
-  }
-);
+/**
+ * waits for download completed after the click to the grid action
+ * 
+ * @param file_path import file path
+ * @returns recipe
+ */
+export async function import_data_from(file_path: string): Promise<Recipe> {
+  return recipe(
+    perform(`click \`Import file\``
+      , I.click(grid.action(`Import file`))
+    ),
+    wait('file-chooser', x => x.open(file_path))
+  );
+}

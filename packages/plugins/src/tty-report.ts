@@ -14,7 +14,25 @@ async function getMessage(command: Command): Promise<string> {
   }
 }
 
-export function ttyReport(): Plugin {
+const DEFAULT_OPTIONS: TTYReportOptions = {
+  level: 0,
+};
+
+enum TTYReportOutputLevel {
+  default = 0,
+  verbose = 1,
+}
+
+type TTYReportOptions = {
+  level: TTYReportOutputLevel,
+};
+
+export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
+  const { level } = {
+    ...DEFAULT_OPTIONS,
+    ...options || {}
+  };
+
   tty.test(stdout);
 
   return async (stage: OnStage) => stage({
@@ -32,33 +50,43 @@ export function ttyReport(): Plugin {
       const label = scenario.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
       tty.newLine(stdout, tty.h2(label));
     },
-    'step': async ({ site, step, depth }) => {
+    'step': async ({ site, step, path }) => {
       if (step.type === 'dev') {
         const message = await getMessage(step);
         tty.newLine(stdout, tty.dev(message));
         return;
       }
 
-      if (site === 'step' && depth === 0) {
+      if ((site === 'step' && path.length === 0) || level > 0) {
         const message = await getMessage(step);
         tty.newLine(stdout, tty.hidden(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
-    'step:pass': async ({ site, step, result, depth }) => {
+    'step:inspect': async ({ inspect }) => {
+      await tty.writeInspect(stdout, inspect);
+    },
+    'step:pass': async ({ site, step, path }) => {
       if (step.type === 'dev') {
-        if (result.inspect) {
-          await tty.writeInspect(stdout, result.inspect);
+        return;
+      }
+
+      if ((site === 'step' && path.length === 0) || level > 0) {
+        const message = await getMessage(step);
+        tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
+      }
+    },
+    'step:fail': async ({ reason, step, site, path }) => {
+      const host = path[path.length - 1];
+      if (host === 'repeat' || host === 'condition') {
+        if (level > 0) {
+          const message = await getMessage(step);
+          const line = [tty.pass(tty.CROSS_MARK), ' ', tty.info(message)];
+          tty.replaceLine(stdout, ...line);
         }
 
         return;
       }
 
-      if (site === 'step' && depth === 0) {
-        const message = await getMessage(step);
-        tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
-      }
-    },
-    'step:fail': async ({ reason, step, site }) => {
       const message = await getMessage(step);
       const line = [tty.fail(tty.CROSS_MARK), ' ', tty.info(message)];
       if (site === 'step') {

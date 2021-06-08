@@ -1,30 +1,28 @@
 import { Guard } from '@skintest/common';
-import { ClientStep, Command, StepExecutionResult } from '../command';
+import { ClientStep, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
 import { StorySchema } from '../schema';
 
-export class WaitStep implements ClientStep {
+export class PerformStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    public waiter: Command,
-    public trigger: StorySchema,
+    private message: string,
+    private plan: StorySchema,
   ) {
     Guard.notNull(getMeta, 'getMeta');
-    Guard.notNull(waiter, 'event');
-    Guard.notNull(trigger, 'trigger');
+    Guard.notNull(plan, 'plan');
   }
 
   async execute(): Promise<StepExecutionResult> {
     return {
-      type: 'wait',
-      waiter: this.waiter,
-      trigger: this.trigger,
+      type: 'perform',
+      plan: this.plan,
     };
   }
 
   toString(): string {
-    return `I wait...`;
+    return this.message;
   }
 }

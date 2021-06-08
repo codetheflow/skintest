@@ -1,5 +1,5 @@
 import { Guard } from '@skintest/common';
-import { asTest, ClientStep, StepContext, StepExecutionResult } from '../command';
+import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
 
 export class OpenStep implements ClientStep {
@@ -13,10 +13,10 @@ export class OpenStep implements ClientStep {
     Guard.notEmpty(name, 'name');
   }
 
-  execute(context: StepContext): StepExecutionResult {
+  execute(context: StepContext): Promise<StepExecutionResult> {
     const { browser } = context;
 
-    return asTest(browser.openPage(this.name));
+    return methodResult(browser.openPage(this.name));
   }
 
   toString(): string {

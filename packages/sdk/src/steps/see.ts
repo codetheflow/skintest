@@ -1,4 +1,4 @@
-import { Guard, isUndefined, reinterpret } from '@skintest/common';
+import { Guard, reinterpret } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
 import { AssertStep, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
@@ -20,29 +20,31 @@ export class SeeStep implements AssertStep {
     Guard.notNull(assert, 'assert');
   }
 
-  async execute(context: StepContext): StepExecutionResult {
+  async execute(context: StepContext): Promise<StepExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
     const verify = new Verify(page);
     const host = reinterpret<AssertHost>(this.assert);
+    const result = await verify.theCondition(this.query, host, this.value);
+
     return {
-      result: await verify.theCondition(this.query, host, this.value),
-      plans: []
+      type: 'assert',
+      result
     };
   }
 
   toString(): string {
-    const selector = this.query.toString();
-    if (isUndefined(this.assert)) {
-      return formatSelector(selector);
-    }
+    const { query, assert, value } = this;
+    const host = reinterpret<AssertHost>(assert);
+    const selector = formatSelector(query.toString());
+    const method = query.type === 'query' ? '$' : '$$';
 
-    const { what, how } = reinterpret<AssertHost>(this.assert);
-    if (isUndefined(this.value)) {
-      return `I see ${formatSelector(selector)} has ${what}`;
-    }
+    const text =
+      `I see ${method}(${selector}).${host.what}:` +
+      `${host.no ? 'not' : ''} ` +
+      `${host.how} \`${value}\``;
 
-    return `I see ${formatSelector(selector)} has ${what} ${how} \`${this.value}\``;
+    return text;
   }
 }

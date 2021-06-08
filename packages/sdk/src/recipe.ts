@@ -1,26 +1,21 @@
-import { ClientFunction, ClientRecipe } from './recipes/client';
-import { ServerFunction, ServerRecipe } from './recipes/server';
-import { ThatFunction, ThatRecipe } from './recipes/that';
+import { Command } from './command';
 
-export const recipe = {
-  client<A extends ClientFunction>(action: A): ClientRecipe<A> {
-    return {
-      type: 'client',
-      action
-    };
-  },
+export type RecipeOperator = () => Promise<Recipe>;
+export interface Recipe {
+  plan: Command[];
+}
 
-  server<A extends ServerFunction>(action: A): ServerRecipe<A> {
-    return {
-      type: 'server',
-      action
-    };
-  },
-
-  assert<A extends ThatFunction>(action: A): ThatRecipe<A> {
-    return {
-      type: 'assert',
-      action
-    };
+export async function recipe(...operators: RecipeOperator[]): Promise<Recipe> {
+  const commands = [];
+  for (const op of operators) {
+    const { plan } = await op();
+    commands.push(...plan);
   }
-};
+
+  return {
+    plan: commands,
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RecipeFunction = (...args: any[]) => Promise<Recipe>;

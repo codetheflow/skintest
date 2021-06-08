@@ -1,5 +1,5 @@
 import { errors } from '@skintest/common';
-import { pass, StepExecutionResult } from '@skintest/sdk';
+import { StepExecutionResult } from '@skintest/sdk';
 
 export class Attempt {
   constructor(private retries: number) {
@@ -8,7 +8,7 @@ export class Attempt {
     }
   }
 
-  async step(method: () => StepExecutionResult): StepExecutionResult {
+  async step(method: () => Promise<StepExecutionResult>): Promise<StepExecutionResult> {
     let attempts = this.retries;
 
     // todo: better type
@@ -24,13 +24,6 @@ export class Attempt {
       }
     }
 
-    if (error) {
-      throw error;
-    }
-
-    return {
-      result: pass(),
-      plans: [],
-    };
+    throw error;
   }
 }

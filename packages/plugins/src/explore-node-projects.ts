@@ -7,22 +7,22 @@ type NodeProjectVisitor = {
 };
 
 export function exploreNodeProjects(cwd: string): NodeProjectVisitor {
-  const sites = fs
+  const projectFolders = fs
     .readdirSync(cwd, { withFileTypes: true })
     .filter(dir => dir.isDirectory())
     .map(dir => path.join(cwd, dir.name))
     .concat([cwd])
     .filter(likeProject);
 
-  let filterSites = Array.from(sites);
+  let matchedProjectFolders = Array.from(projectFolders);
 
   const visitor: NodeProjectVisitor = {
     filter: predicate => {
-      filterSites = filterSites.filter(predicate);
+      matchedProjectFolders = matchedProjectFolders.filter(predicate);
       return visitor;
     },
     forEach: visit => {
-      return filterSites
+      return matchedProjectFolders
         .reduce(
           (memo, uri) => memo.then(() => visit(uri)),
           Promise.resolve()

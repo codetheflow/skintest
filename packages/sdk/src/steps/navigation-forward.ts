@@ -1,5 +1,5 @@
 import { Guard } from '@skintest/common';
-import { asTest, ClientStep, StepContext, StepExecutionResult } from '../command';
+import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
 
 export class NavigationForwardStep implements ClientStep {
@@ -11,11 +11,11 @@ export class NavigationForwardStep implements ClientStep {
     Guard.notNull(getMeta, 'getMeta');
   }
 
-  execute(context: StepContext): StepExecutionResult {
+  execute(context: StepContext): Promise<StepExecutionResult> {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
-    return asTest(page.goForward());
+    return methodResult(page.goForward());
   }
 
   toString(): string {

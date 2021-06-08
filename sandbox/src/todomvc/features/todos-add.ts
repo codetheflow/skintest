@@ -20,15 +20,13 @@ feature('todos add')
   )
 
   .scenario('check the input field should have placeholder'
-  , I.test('placeholder in the input field')
-  , I.see(todos.what, has.attribute, ['placeholder', 'What needs to be done?'])
-)
+    , I.test('placeholder in the input field')
+    , I.see(todos.what, has.attribute, ['placeholder', 'What needs to be done?'])
+  )
 
   .scenario('check the list has all added items'
-    , I.fill(todos.what, 'learn testing')
-    , I.press('Enter')
-    , I.fill(todos.what, 'be cool')
-    , I.press('Enter')
+    , I.do(add_todo, 'learn testing')
+    , I.do(add_todo, 'be cool')
     , I.test('list contains added items')
     , I.see(todos.list, has.length, 2)
     , I.see(todos.item_label_at(0), has.text, 'learn testing')

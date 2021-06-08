@@ -15,8 +15,8 @@ const plugins = [
   , ttySummaryReport()
   , ttyPause()
   , tagFilter({
+    method: 'include-all-when-no-matches',
     include: ['#now'],
-    method: 'all-when-no-matched',
   })
 ];
 
@@ -25,6 +25,6 @@ const platform = nodePlatform(...plugins);
 exploreNodeProjects(PROJECTS_FOLDER)
   // if you want to run multiple projects just 
   // comment out filter function or modify the filter predicate
-  .filter(uri => /qgrid/.test(uri))
+  // .filter(uri => /todomvc/.test(uri))
   .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
   .finally(() => platform.destroy());

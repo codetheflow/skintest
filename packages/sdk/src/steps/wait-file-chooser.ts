@@ -1,5 +1,5 @@
 import { Guard } from '@skintest/common';
-import { asTest, ClientStep, StepContext, StepExecutionResult } from '../command';
+import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
 
 export class WaitFileChooserStep implements ClientStep {
@@ -13,10 +13,10 @@ export class WaitFileChooserStep implements ClientStep {
     Guard.notNull(paths, 'paths');
   }
 
-  async execute(context: StepContext): StepExecutionResult {
+  async execute(context: StepContext): Promise<StepExecutionResult> {
     const { browser } = context;
     const page = browser.getCurrentPage();
-    return asTest(page.waitFileChooser(this.paths));
+    return methodResult(page.waitFileChooser(this.paths));
   }
 
   toString(): string {
