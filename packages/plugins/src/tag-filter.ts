@@ -16,7 +16,7 @@ export function tagFilter(options: TagFilterOptions): Plugin {
   const { include, method } = options;
 
   return async (stage: OnStage) => stage({
-    'project:init': async ({ suite }) => {
+    'project:ready': async ({ suite }) => {
       const stat = getStat(suite, include);
       const onlyMatched = () => {
         suite.operations.filterFeature = (feature: string) =>

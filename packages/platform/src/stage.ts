@@ -13,7 +13,7 @@ export type PlatformUnmount = void;
 
 export type ProjectStartScope = { suite: Suite };
 export type ProjectStopScope = ProjectStartScope;
-export type ProjectInitScope = ProjectStartScope;
+export type ProjectReadyScope = ProjectStartScope;
 export type ProjectErrorScope = ProjectStartScope & { reason: Error };
 
 export type FeatureScope = ProjectStartScope & { script: Script, browser: Browser };
@@ -30,7 +30,7 @@ export type Stages = {
   'platform:unmount': Stage<'platform:unmount', PlatformUnmount>;
   'project:mount': Stage<'project:mount', ProjectStartScope>;
   'project:unmount': Stage<'project:unmount', ProjectStopScope>;
-  'project:init': Stage<'project:init', ProjectInitScope>;
+  'project:ready': Stage<'project:ready', ProjectReadyScope>;
   'project:error': Stage<'project:error', ProjectErrorScope>
 
   'feature:before': Stage<'feature:before', FeatureScope>;

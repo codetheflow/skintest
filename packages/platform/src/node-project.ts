@@ -14,12 +14,12 @@ export class NodeProject implements Project {
 
     const mount = effect('project:mount');
     const unmount = effect('project:unmount');
-    const init = effect('project:init');
+    const ready = effect('project:ready');
     const error = effect('project:error');
 
     try {
       await mount({ suite });
-      await init({ suite });
+      await ready({ suite });
 
       const scripts = suite
         .getScripts()

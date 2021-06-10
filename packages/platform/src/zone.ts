@@ -5,7 +5,7 @@ export type PlatformZone =
 export type ProjectZone =
   | 'project:mount'
   | 'project:unmount'
-  | 'project:init'
+  | 'project:ready'
   | 'project:error';
 
 export type ScriptZone =
