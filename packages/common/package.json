@@ -1,6 +1,6 @@
 {
   "name": "@skintest/common",
-  "version": "1.0.9-alpha.0",
+  "version": "1.0.11-alpha.0",
   "description": "skintest common",
   "main": "dist/src/public-api.js",
   "types": "dist/src/public-api.d.ts",
