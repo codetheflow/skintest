@@ -20,12 +20,12 @@ export function feature(name: string): Feature {
 }
 
 export interface Feature {
-  before(what: 'feature' | 'scenario' | 'step', ...plan: StorySchema): Feature;
-  after(what: 'feature' | 'scenario' | 'step', ...plan: StorySchema): Feature;
+  before(what: 'feature' | 'scenario' | 'step', ...step: StorySchema): Feature;
+  after(what: 'feature' | 'scenario' | 'step', ...step: StorySchema): Feature;
 
-  scenario(name: string, ...plan: ScenarioSchema): Scenario;
+  scenario(name: string, ...step: ScenarioSchema): Scenario;
 }
 
 export interface Scenario {
-  scenario(name: string, ...plan: ScenarioSchema): Scenario;
+  scenario(name: string, ...step: ScenarioSchema): Scenario;
 }

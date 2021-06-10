@@ -21,7 +21,7 @@ export class RecipeStep implements DoStep {
     const plan = op(undefined);
 
     return {
-      type: 'recipe',
+      type: 'perform',
       plan: Array.from(plan),
     };
   }

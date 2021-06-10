@@ -73,12 +73,12 @@ export const tty = {
     if (isBinaryAssert) {
       const selector = body.query.toString();
       const method = body.query.type === 'query' ? '$' : '$$';
-      const assert: AssertHost = body.assert;
+      const host: AssertHost = body.host;
 
       tty.newLine(stream, tty.fail(
-        `${method}(${selector}).${assert.what}: ` +
+        `${method}(${selector}).${host.what}: ` +
         `expected ${tty.testValue('`' + body.actual + '`')} ` +
-        `to${assert.no ? ' not' : ''} ${assert.how} ` +
+        `to${host.no ? ' not' : ''} ${host.how} ` +
         `${tty.testValue('`' + body.etalon + '`')}`
       ));
     } else {

@@ -163,19 +163,24 @@ async function navigate(product: string, item: string): Promise<Recipe> {
       body.setAttribute('id', 'smcx-sdk');
     }),
 
-    iif(`not already on the product page`
-       , I.see(nav.title, has.no.text, product)
-       , I.say(`then navigate to the ${product}`)
-       , I.click(hub.menu)
-       , I.click(hub.menu_link(product))
-       , I.do(wait_navigation)
+    perform('do navigation'
+      , I.click(hub.menu)
+      , I.click(hub.menu_link(product))
+      , I.do(wait_navigation)
+      , iif(`not already on the product page`)
+      , I.see(nav.title, has.no.text, product)
     ),
     
     perform(`navigation to the ${item}`
       , I.click(hub.sub_menu_link(item))
     ),
     
-    wait('hidden', hub.spinner),
+    perform('remove item'
+      , I.hover(todos.item_label_at(0))
+      , I.click(todos.item_remove_at(0))
+      , till('list has items')
+      , I.see(todos.list, has.length.above, 0)
+    ),
   );
 }
 ```

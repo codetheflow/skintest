@@ -8,9 +8,6 @@ const downloads_path = path.join(output_path, 'downloads');
 export const data = {
   base_path
 
-  , downloads: {
-    data_csv_path: path.join(downloads_path)
-  }
-
+  , downloads_path
   , atoms_csv_path: path.join(data_path, 'atoms.csv')
 };

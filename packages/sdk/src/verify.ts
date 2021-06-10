@@ -38,15 +38,15 @@ export class Verify {
         }
 
         return fail
-          .conditionError({
-            assert,
+          .condition({
+            host: assert,
             query,
             actual: 'not exists',
             etalon: expected
           });
       }
 
-      return fail.elementNotFound({ query });
+      return fail.element({ query });
     }
 
 
@@ -60,11 +60,11 @@ export class Verify {
         }
 
         return fail
-          .conditionError({
+          .condition({
             actual,
             etalon,
             query,
-            assert,
+            host: assert,
           });
       }
       case AssertWhat.state: {
@@ -75,11 +75,11 @@ export class Verify {
         }
 
         return fail
-          .conditionError({
+          .condition({
             actual: assert.no ? etalon : opposite(etalon),
             etalon,
             query,
-            assert,
+            host: assert,
           });
       }
       case AssertWhat.class: {
@@ -90,11 +90,11 @@ export class Verify {
         }
 
         return fail
-          .conditionError({
+          .condition({
             actual: classList.toString(),
             etalon,
             query,
-            assert,
+            host: assert,
           });
       }
       case AssertWhat.attribute:
@@ -114,11 +114,11 @@ export class Verify {
           }
 
           return fail
-            .conditionError({
+            .condition({
               actual,
               etalon,
               query,
-              assert,
+              host: assert,
             });
         }
 
@@ -134,11 +134,11 @@ export class Verify {
           }
 
           return fail
-            .conditionError({
+            .condition({
               actual,
               etalon,
               query,
-              assert,
+              host: assert,
             });
         }
 
@@ -166,11 +166,11 @@ export class Verify {
         }
 
         return fail
-          .conditionError({
+          .condition({
             actual,
             etalon,
             query,
-            assert,
+            host: assert,
           });
       }
       default: {

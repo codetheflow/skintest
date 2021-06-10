@@ -1,4 +1,4 @@
-import { I, perform, Recipe, recipe, wait } from '@skintest/sdk';
+import { fileDialog, handle, I, perform, Recipe, recipe } from '@skintest/sdk';
 import { grid } from '../components/grid';
 
 /**
@@ -9,9 +9,9 @@ import { grid } from '../components/grid';
  */
 export async function import_data_from(file_path: string): Promise<Recipe> {
   return recipe(
-    perform(`click \`Import file\``
+    perform('click `Import file`'
       , I.click(grid.action(`Import file`))
     ),
-    wait('file-chooser', x => x.open(file_path))
+    handle('file-dialog', fileDialog.open(file_path))
   );
 }

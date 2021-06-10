@@ -1,3 +1,4 @@
+
 export type Exception = Error;
 
 function error(name: string, message: string, inner?: Exception): Exception {
@@ -36,7 +37,7 @@ export const errors = {
   callerNotFound(site: string): Exception {
     return error('callerNotFound', `here ${site}`);
   },
-  timeout(source: string, ex: Error): Exception {
+  timeout(source: string, ex?: Error): Exception {
     return error('timeout', `${source} timeout exceed`, ex);
   },
   constraint(message: string): Exception {

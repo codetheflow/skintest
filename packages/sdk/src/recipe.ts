@@ -84,6 +84,45 @@ export function recipe<T, A, B, C, D, E, F, G, H, I>(
   op7: RecipeOperator<F, G>,
   op8: RecipeOperator<G, H>,
   op9: RecipeOperator<H, I>,
+): RecipeOperator<T, RecipeIterable>;
+export function recipe<T, A, B, C, D, E, F, G, H, I, J>(
+  op1: RecipeOperator<T, A>,
+  op2: RecipeOperator<A, B>,
+  op3: RecipeOperator<B, C>,
+  op4: RecipeOperator<C, D>,
+  op5: RecipeOperator<D, E>,
+  op6: RecipeOperator<E, F>,
+  op7: RecipeOperator<F, G>,
+  op8: RecipeOperator<G, H>,
+  op9: RecipeOperator<H, I>,
+  op10: RecipeOperator<I, J>,
+): RecipeOperator<T, RecipeIterable>;
+export function recipe<T, A, B, C, D, E, F, G, H, I, J, K>(
+  op1: RecipeOperator<T, A>,
+  op2: RecipeOperator<A, B>,
+  op3: RecipeOperator<B, C>,
+  op4: RecipeOperator<C, D>,
+  op5: RecipeOperator<D, E>,
+  op6: RecipeOperator<E, F>,
+  op7: RecipeOperator<F, G>,
+  op8: RecipeOperator<G, H>,
+  op9: RecipeOperator<H, I>,
+  op10: RecipeOperator<I, J>,
+  op11: RecipeOperator<J, K>,
+): RecipeOperator<T, RecipeIterable>;
+export function recipe<T, A, B, C, D, E, F, G, H, I, J, K, L>(
+  op1: RecipeOperator<T, A>,
+  op2: RecipeOperator<A, B>,
+  op3: RecipeOperator<B, C>,
+  op4: RecipeOperator<C, D>,
+  op5: RecipeOperator<D, E>,
+  op6: RecipeOperator<E, F>,
+  op7: RecipeOperator<F, G>,
+  op8: RecipeOperator<G, H>,
+  op9: RecipeOperator<H, I>,
+  op10: RecipeOperator<I, J>,
+  op11: RecipeOperator<J, K>,
+  op12: RecipeOperator<K, L>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...ops: RecipeOperator<any, any>[]
 ): RecipeOperator<T, RecipeIterable>;

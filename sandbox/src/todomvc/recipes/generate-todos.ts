@@ -1,4 +1,4 @@
-import { has, I, Recipe, recipe, repeat } from '@skintest/sdk';
+import { has, I, perform, Recipe, recipe, till } from '@skintest/sdk';
 import { todos } from '../components/todos';
 import { add_todo } from './add-todo';
 
@@ -12,10 +12,10 @@ export async function generate_todos(count: number): Promise<Recipe> {
   let id = 1;
 
   return recipe(
-    repeat(`until list has ${count} items`
-      , I.see(todos.list, has.no.length, count)
-      , I.say('adding a new item')
+    perform('add todo'
       , I.do(add_todo, `generated todo #${id++}`)
-    ),
+      , till(`until list has ${count} items`)
+      , I.see(todos.list, has.no.length, count)
+    )
   );
 }

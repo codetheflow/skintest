@@ -1,11 +1,11 @@
 import { Browser } from './browser';
 import { StepMeta } from './meta';
-import { ConditionSchema, StorySchema } from './schema';
 import { InspectInfo, TestResult } from './test-result';
 
 export type Command =
   ClientStep
   | AssertStep
+  | ControlStep
   | DevStep
   | DoStep
   | InfoStep
@@ -21,9 +21,8 @@ export type StepExecutionResult =
   | StepExecutionInspectResult
   | StepExecutionMethodResult
   | StepExecutionPerformResult
-  | StepExecutionRecipeResult
   | StepExecutionRepeatResult
-  | StepExecutionWaitResult;
+  | StepExecutionEventResult;
 
 export type StepExecutionInspectResult = {
   type: 'inspect',
@@ -39,30 +38,27 @@ export type StepExecutionMethodResult = {
   type: 'method',
 }
 
-export type StepExecutionRecipeResult = {
-  type: 'recipe',
+export type StepExecutionPerformResult = {
+  type: 'perform',
   plan: Command[],
 }
 
-export type StepExecutionPerformResult = {
-  type: 'perform',
-  plan: StorySchema,
-}
-
-export type StepExecutionWaitResult = {
-  type: 'wait',
-  waiter: Command,
-  trigger: StorySchema,
+export type StepExecutionEventResult = {
+  type: 'event',
+  handler: Command,
+  trigger: Command[],
 }
 
 export type StepExecutionRepeatResult = {
   type: 'repeat',
-  plan: ConditionSchema,
+  till: Command[],
+  plan: Command[],
 }
 
 export type StepExecutionConditionResult = {
   type: 'condition',
-  plan: ConditionSchema,
+  cause: Command[],
+  plan: Command[],
 }
 
 export interface CommandBody {
@@ -93,6 +89,10 @@ export interface InfoStep extends CommandBody {
 
 export interface DoStep extends CommandBody {
   type: 'do';
+}
+
+export interface ControlStep extends CommandBody {
+  type: 'control';
 }
 
 export async function methodResult(promise: Promise<void>): Promise<StepExecutionResult> {

@@ -2,7 +2,7 @@ import { Guard } from '@skintest/common';
 import { ControlStep, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
 
-export class IIfStep implements ControlStep {
+export class TillStep implements ControlStep {
   type: 'control' = 'control';
 
   constructor(
@@ -20,6 +20,6 @@ export class IIfStep implements ControlStep {
   }
 
   toString(): string {
-    return `if ${this.message}`;
+    return `till ${this.message}`;
   }
 }

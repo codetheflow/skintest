@@ -7,3 +7,5 @@ export interface NumberDictionary<T> {
 }
 
 export type KeyValue<T> = [key: string, value: T];
+export type Maybe<T> = T | undefined;
+export type Predicate<T> = (value: T) => boolean;

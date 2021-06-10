@@ -11,7 +11,7 @@ export class PlaywrightBrowser implements Browser {
 
   constructor(
     private browser: playwright.Browser,
-    private timeout: number
+    public timeout: number
   ) {
   }
 

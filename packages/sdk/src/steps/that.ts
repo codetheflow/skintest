@@ -18,7 +18,7 @@ export class ThatStep implements AssertStep {
   }
 
   async execute(): Promise<StepExecutionResult> {
-    const result = await this.recipe(this.args);
+    const result = await this.recipe(...this.args);
 
     return {
       type: 'assert',

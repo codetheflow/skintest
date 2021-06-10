@@ -7,7 +7,7 @@ import { todos } from '../components/todos';
  * @param name tile of the new todo
  * @returns recipe
  */
-export function add_todo(name: string): Promise<Recipe> {
+export async function add_todo(name: string): Promise<Recipe> {
   return recipe(
     perform(`add todo \`${name}\``
       , I.fill(todos.what, name)

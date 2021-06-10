@@ -2,7 +2,7 @@ import { Guard } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
 
-export class WaitStateStep implements ClientStep {
+export class WaitNavigationStep implements ClientStep {
   type: 'client' = 'client';
 
   constructor(

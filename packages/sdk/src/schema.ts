@@ -1,35 +1,25 @@
-import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
+import { AssertStep, ClientStep, ControlStep, DevStep, DoStep, InfoStep, TestStep } from './command';
 
 export type StoryStep = ClientStep | DoStep | DevStep | InfoStep;
 export type VerifyStep = AssertStep | DevStep;
+export type ControlFlowStep = ControlStep | DevStep;
 
 export type StorySchema = StoryStep[];
+export type VerifySchema = VerifyStep[];
 
-export type ScenarioSchema =
-  [...StorySchema, TestStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, TestStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep];
+type WithVerifySchema<AFTER> =
+  [...StorySchema, AFTER, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
+  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep];
 
-
-export type ConditionSchema =
-  [VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema]
-  | [VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, InfoStep, ...StorySchema];
+export type ScenarioSchema = WithVerifySchema<TestStep>;
+export type PerformSchema = [...StorySchema] | WithVerifySchema<ControlFlowStep>;

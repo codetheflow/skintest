@@ -32,8 +32,8 @@ export function pass(): TestPass {
 }
 
 export const fail = {
-  conditionError(body: {
-    assert: AssertHost,
+  condition(body: {
+    host: AssertHost,
     query: Query | QueryList,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     etalon: any,
@@ -44,10 +44,10 @@ export const fail = {
     const method = body.query.type === 'query' ? '$' : '$$';
 
     const description =
-      `${method}(${selector}).${body.assert.what}: ` +
+      `${method}(${selector}).${body.host.what}: ` +
       `expected \`${body.actual}\` to ` +
-      `${body.assert.no ? 'not' : ''} ` +
-      `${body.assert.how} \`${body.etalon}\``;
+      `${body.host.no ? 'not' : ''} ` +
+      `${body.host.how} \`${body.etalon}\``;
 
     return {
       status: 'fail',
@@ -56,7 +56,7 @@ export const fail = {
       body,
     };
   },
-  elementNotFound(body: {
+  element(body: {
     query: Query | QueryList,
   }): TestFail {
     const selector = formatSelector(body.query.toString());

@@ -1,5 +1,5 @@
 import { errors, reinterpret } from '@skintest/common';
-import { Browser, Command, pass, Script, StepExecutionResult, Suite } from '@skintest/sdk';
+import { Browser, Command, fail, pass, Script, StepExecutionResult, Suite } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { CommandScope, Staging } from './stage';
 
@@ -30,7 +30,7 @@ export class Scene {
 
     await beforeFeatureEffect(scope);
 
-    const ok = await this.runPlan(
+    const [ok] = await this.runPlan(
       'feature:before',
       script,
       NO_SCENARIO,
@@ -77,7 +77,7 @@ export class Scene {
 
     await beforeScenarioEffect(scope);
 
-    const ok = await this.runPlan(
+    const [ok] = await this.runPlan(
       'scenario:before',
       script,
       scenario,
@@ -122,7 +122,7 @@ export class Scene {
 
     await beforeStepEffect(scope);
 
-    let ok = await this.runPlan(
+    let [ok] = await this.runPlan(
       'step:before',
       script,
       scenario,
@@ -130,7 +130,7 @@ export class Scene {
     );
 
     if (ok) {
-      ok = await this.runPlan(
+      [ok] = await this.runPlan(
         'step',
         script,
         scenario,
@@ -140,12 +140,12 @@ export class Scene {
 
     await afterStepEffect(scope);
 
-    ok = await this.runPlan(
+    ok = (await this.runPlan(
       'step:after',
       script,
       scenario,
       script.afterStep
-    ) && ok;
+    ))[0] && ok;
 
     return ok;
   }
@@ -156,7 +156,7 @@ export class Scene {
     scenario: string,
     steps: ReadonlyArray<Command>,
     path: Array<StepExecutionResult['type']> = []
-  ): Promise<boolean> {
+  ): Promise<[boolean, string[]]> {
 
     const { browser, attempt } = this;
 
@@ -174,7 +174,7 @@ export class Scene {
     };
 
     let breakLoop = false;
-    const fails: string[] = [];
+    const failSink: string[] = [];
 
     for (const step of steps) {
       if (breakLoop) {
@@ -203,17 +203,15 @@ export class Scene {
           }
           case 'assert': {
             const { result } = run;
-
-            if (result.status === 'fail') {
-              const host = path[path.length - 1];
-              breakLoop = host === 'condition' || host === 'repeat';
-
-              fails.push(result.description);
-              await failEffect({ ...scope, step, reason: result, path });
-            } else {
+            if (result.status === 'pass') {
               await passEffect({ ...scope, step, result, path });
+              break;
             }
 
+            const host = path[path.length - 1];
+            breakLoop = host === 'condition' || host === 'repeat';
+            failSink.push(result.description);
+            await failEffect({ ...scope, step, reason: result, path });
             break;
           }
           case 'inspect': {
@@ -221,34 +219,101 @@ export class Scene {
             await passEffect({ ...scope, step, result: pass(), path });
             break;
           }
-          case 'perform':
-          case 'recipe': {
-            await runPlan(run.plan);
-            await passEffect({ ...scope, step, result: pass(), path });
+          case 'perform': {
+            const [ok, innerErrors] = await runPlan(run.plan);
+            if (ok) {
+              await passEffect({ ...scope, step, result: pass(), path });
+              break;
+            }
+
+            const error = {
+              description: innerErrors.join('\n'),
+              solution: 'debug'
+            };
+
+            breakLoop = true;
+            failSink.push(...innerErrors);
+            await failEffect({ ...scope, step, reason: fail.reason(error), path });
             break;
           }
           case 'condition': {
-            await runPlan(run.plan);
-            await passEffect({ ...scope, step, result: pass(), path });
+            const [yes] = await runPlan(run.cause);
+            if (!yes) {
+              await passEffect({ ...scope, step, result: pass(), path });
+              break;
+            }
+
+            const [ok, innerErrors] = await runPlan(run.plan);
+            if (ok) {
+              await passEffect({ ...scope, step, result: pass(), path });
+            } else {
+              const error = {
+                description: innerErrors.join('\n'),
+                solution: 'debug'
+              };
+
+              breakLoop = true;
+              failSink.push(...innerErrors);
+              await failEffect({ ...scope, step, reason: fail.reason(error), path });
+            }
+
             break;
           }
           case 'repeat': {
             // todo: add timeout exception or warning if loop runs too long
-            let next = true;
-            while (next) {
-              next = await runPlan(run.plan);
-            }
+            do {
+              const [next] = await runPlan(run.till);
+              if (!next) {
+                break;
+              }
+
+              const [ok, innerErrors] = await runPlan(run.plan);
+              if (!ok) {
+                const error = {
+                  description: innerErrors.join('\n'),
+                  solution: 'debug'
+                };
+
+                breakLoop = true;
+                failSink.push(...innerErrors);
+                await failEffect({ ...scope, step, reason: fail.reason(error), path });
+                break;
+              }
+              // eslint-disable-next-line no-constant-condition
+            } while (true);
 
             await passEffect({ ...scope, step, result: pass(), path });
             break;
           }
-          case 'wait': {
-            await Promise.all([
-              runPlan([run.waiter]),
+          case 'event': {
+            const [handlerOk, triggerOk] = await Promise.all([
+              runPlan([run.handler]),
               runPlan(run.trigger),
             ]);
 
-            await passEffect({ ...scope, step, result: pass(), path });
+            breakLoop = !(handlerOk[0] && triggerOk[0]);
+            if (breakLoop) {
+              const innerErrors: string[] = [];
+              if (!handlerOk[0]) {
+                innerErrors.push(...handlerOk[1]);
+              }
+
+              if (!triggerOk[0]) {
+                innerErrors.push(...triggerOk[1]);
+              }
+
+              breakLoop = true;
+              failSink.push(...innerErrors);
+
+              const error = {
+                description: innerErrors.join('\n'),
+                solution: 'debug'
+              };
+
+              await failEffect({ ...scope, step, reason: fail.reason(error), path });
+            } else {
+              await passEffect({ ...scope, step, result: pass(), path });
+            }
             break;
           }
           default: {
@@ -257,11 +322,11 @@ export class Scene {
         }
       } catch (ex) {
         await failEffect({ ...scope, step, reason: ex, path: path });
-        fails.push(ex.message);
+        failSink.push(ex.message);
         break;
       }
     }
 
-    return fails.length === 0;
+    return [failSink.length === 0, failSink];
   }
 }

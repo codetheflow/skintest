@@ -96,17 +96,17 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
-  async waitDownload(path: string): Promise<void> {
+  waitDownload(options: { saveAs: string }): Promise<void> {
     return this.page
       .waitForEvent('download')
-      .then(x => x.saveAs(path));
+      .then(x => x.saveAs(options.saveAs));
   }
 
   @PlaywrightAction()
-  async waitFileChooser(paths: string[]): Promise<void> {
+  async waitFileChooser(options: { files: string[] }): Promise<void> {
     return this.page
       .waitForEvent('filechooser')
-      .then(x => x.setFiles(paths));
+      .then(x => x.setFiles(options.files));
   }
 
   @PlaywrightAction()

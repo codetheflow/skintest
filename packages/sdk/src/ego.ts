@@ -16,7 +16,21 @@ export interface Ego {
   goto(url: string): ClientStep;
   navigate(direction: 'back' | 'forward'): ClientStep;
   reload(): ClientStep;
-  // wait(what: 'url', url: string | RegExp): ClientStep;
+  wait<F extends ThatFunction>(recipe: F, ...args: Parameters<F>): ClientStep;
+  wait<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): ClientStep;
+  wait<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): ClientStep;
+
+  // todo: make more explicit `E` types
+  mark<E extends HTMLInputElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep;
+  click<E extends DOMElement>(target: Query<E>): ClientStep;
+  dblclick<E extends DOMElement>(target: Query<E>): ClientStep;
+  fill<E extends HTMLInputElement | HTMLAreaElement>(target: Query<E>, value: string): ClientStep;
+  focus<E extends DOMElement>(target: Query<E>): ClientStep;
+  hover<E extends DOMElement>(target: Query<E>): ClientStep;
+  press(key: KeyboardKey): ClientStep;
+  say(message: string): InfoStep;
+  type<E extends HTMLInputElement | HTMLAreaElement>(target: Query<E>, value: string): ClientStep;
+  select<E extends DOMElement>(target: Query<E>): ClientStep;
 
   do<F extends RecipeFunction>(recipe: F, ...args: Parameters<F>): DoStep;
 
@@ -25,15 +39,4 @@ export interface Ego {
   see<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): AssertStep;
   see<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): AssertStep;
 
-  // todo: make more explicit `E` types
-  mark<E extends DOMElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep;
-  click<E extends DOMElement>(target: Query<E>): ClientStep;
-  dblclick<E extends DOMElement>(target: Query<E>): ClientStep;
-  fill<E extends DOMElement>(target: Query<E>, value: string): ClientStep;
-  focus<E extends DOMElement>(target: Query<E>): ClientStep;
-  hover<E extends DOMElement>(target: Query<E>): ClientStep;
-  press(key: KeyboardKey): ClientStep;
-  say(message: string): InfoStep;
-  type<E extends DOMElement>(target: Query<E>, value: string): ClientStep;
-  select<E extends DOMElement>(target: Query<E>): ClientStep;
 }

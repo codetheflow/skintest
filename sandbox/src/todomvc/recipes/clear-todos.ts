@@ -1,4 +1,4 @@
-import { has, I, Recipe, recipe, repeat } from '@skintest/sdk';
+import { has, I, perform, Recipe, recipe, till } from '@skintest/sdk';
 import { todos } from '../components/todos';
 
 /**
@@ -8,11 +8,11 @@ import { todos } from '../components/todos';
  */
 export async function clear_todos(): Promise<Recipe> {
   return recipe(
-    repeat(`until list has no items`
-      , I.see(todos.list, has.length.above, 0)
-      , I.say('than remove the first item')
+    perform('remove item'
       , I.hover(todos.item_label_at(0))
       , I.click(todos.item_remove_at(0))
+      , till('list has items')
+      , I.see(todos.list, has.length.above, 0)
     ),
   );
 }

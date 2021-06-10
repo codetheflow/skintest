@@ -6,7 +6,7 @@ import { I, perform, Query, Recipe, recipe } from '@skintest/sdk';
  * @param query target element selector
  * @returns recipe
  */
-export async function paste_to(query: Query<HTMLElement>): Promise<Recipe> {
+export async function paste_to(query: Query<HTMLInputElement | HTMLAreaElement>): Promise<Recipe> {
   return recipe(
     perform(`paste ${query.toString()}`
       // todo: investigate why focus doesn't work?
