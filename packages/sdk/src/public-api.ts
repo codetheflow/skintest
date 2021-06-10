@@ -24,4 +24,3 @@ export { fileDialog, FileDialog } from './steps/wait-file-dialog';
 export { newSuite, Suite, SuiteOperations } from './suite';
 export { fail, InspectInfo, pass, TestFail, TestPass, TestResult } from './test-result';
 export { ThatFunction } from './that';
-
