@@ -30,6 +30,6 @@ export class MarkStep implements ClientStep {
 
   toString(): string {
     const selector = this.query.toString();
-    return `I mark ${formatSelector(selector)} as ${this.value}`;
+    return `mark ${formatSelector(selector)} as ${this.value}`;
   }
 }

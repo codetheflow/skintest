@@ -37,6 +37,6 @@ export class WaitFileDialogStep implements ClientStep {
   }
 
   toString(): string {
-    return 'I wait file-chooser';
+    return 'wait file-chooser';
   }
 }

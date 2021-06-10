@@ -26,6 +26,6 @@ export class FillStep implements ClientStep {
 
   toString(): string {
     const selector = this.query.toString();
-    return `I fill ${formatSelector(selector)} with \`${this.value}\``;
+    return `fill ${formatSelector(selector)} with \`${this.value}\``;
   }
 }

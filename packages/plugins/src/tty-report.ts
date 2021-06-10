@@ -79,7 +79,9 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       const host = path[path.length - 1];
 
       // todo: make it better
-      if (step.type === 'do' || step.toString().startsWith('perform')) {
+      if (step.type === 'do'
+        || step.toString().startsWith('perform')
+        || step.toString().startsWith('event')) {
         // inner error was shown, there is no need to duplicate it here
         return;
       }

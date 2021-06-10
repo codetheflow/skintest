@@ -25,6 +25,6 @@ export class ClickStep implements ClientStep {
 
   toString(): string {
     const selector = this.query.toString();
-    return `I click ${formatSelector(selector)}`;
+    return `click ${formatSelector(selector)}`;
   }
 }

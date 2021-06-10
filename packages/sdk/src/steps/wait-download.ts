@@ -37,6 +37,6 @@ export class WaitDownloadStep implements ClientStep {
   }
 
   toString(): string {
-    return 'I wait download';
+    return 'wait download';
   }
 }

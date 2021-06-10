@@ -21,6 +21,6 @@ export class WaitNavigationStep implements ClientStep {
   }
 
   toString(): string {
-    return `I wait url ${this.url}`;
+    return `wait url ${this.url}`;
   }
 }

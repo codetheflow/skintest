@@ -25,6 +25,6 @@ export class FocusStep implements ClientStep {
 
   toString(): string {
     const selector = this.query.toString();
-    return `I focus ${formatSelector(selector)}`;
+    return `focus ${formatSelector(selector)}`;
   }
 }

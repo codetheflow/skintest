@@ -20,6 +20,6 @@ export class OpenStep implements ClientStep {
   }
 
   toString(): string {
-    return `I open ${this.name}`;
+    return `open ${this.name}`;
   }
 }

@@ -27,6 +27,6 @@ export class ThatStep implements AssertStep {
   }
 
   toString(): string {
-    return `I see that...`;
+    return 'that';
   }
 }

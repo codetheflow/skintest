@@ -24,6 +24,6 @@ export class EventStep implements ClientStep {
   }
 
   toString(): string {
-    return this.handler.toString();
+    return `event ${this.handler.toString()}`;
   }
 }

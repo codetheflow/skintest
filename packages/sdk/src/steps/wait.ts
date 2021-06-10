@@ -33,6 +33,6 @@ export class WaitStep implements ClientStep {
   }
 
   toString(): string {
-    return `I wait ${this.assert.toString()}`;
+    return `wait ${this.assert.toString()}`;
   }
 }

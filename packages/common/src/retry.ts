@@ -21,7 +21,7 @@ export function retry<T>(options: RetryOptions<T>): RetryAction<T> {
     function checkTimeout(reject: Reject): boolean {
       const stopTime = performance.now();
       if (stopTime - startTime > options.timeout) {
-        reject(errors.timeout('attempt'));
+        reject(errors.timeout('retry'));
         return false;
       }
 

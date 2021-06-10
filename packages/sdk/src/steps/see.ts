@@ -41,7 +41,7 @@ export class SeeStep implements AssertStep {
     const method = query.type === 'query' ? '$' : '$$';
 
     const text =
-      `I see ${method}(${selector}).${host.what}:` +
+      `see ${method}(${selector}).${host.what}:` +
       `${host.no ? 'not' : ''} ` +
       `${host.how} \`${value}\``;
 

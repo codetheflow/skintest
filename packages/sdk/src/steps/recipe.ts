@@ -27,6 +27,6 @@ export class RecipeStep implements DoStep {
   }
 
   toString(): string {
-    return `I do...`;
+    return 'recipe';
   }
 }

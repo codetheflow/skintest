@@ -25,6 +25,6 @@ export class DblClickStep implements ClientStep {
 
   toString(): string {
     const selector = this.query.toString();
-    return `I dblclick ${formatSelector(selector)}`;
+    return `dblclick ${formatSelector(selector)}`;
   }
 }

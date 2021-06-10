@@ -19,6 +19,6 @@ export class ReloadStep implements ClientStep {
   }
 
   toString(): string {
-    return `I reload`;
+    return 'reload';
   }
 }

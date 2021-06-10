@@ -24,6 +24,6 @@ export class TypeStep implements ClientStep {
   }
 
   toString(): string {
-    return `I type ${this.text}`;
+    return `type ${this.text}`;
   }
 }

@@ -19,6 +19,6 @@ export class NavigationForwardStep implements ClientStep {
   }
 
   toString(): string {
-    return `I go forward`;
+    return `go forward`;
   }
 }

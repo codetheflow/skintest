@@ -25,6 +25,6 @@ export class SelectTextStep implements ClientStep {
 
   toString(): string {
     const selector = this.query.toString();
-    return `I select ${formatSelector(selector)}`;
+    return `select ${formatSelector(selector)}`;
   }
 }

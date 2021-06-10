@@ -21,6 +21,6 @@ export class GotoStep implements ClientStep {
   }
 
   toString(): string {
-    return `I go to ${this.url}`;
+    return `go to ${this.url}`;
   }
 }

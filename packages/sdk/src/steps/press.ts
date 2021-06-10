@@ -22,6 +22,6 @@ export class PressStep implements ClientStep {
   }
 
   toString(): string {
-    return `I press ${this.key}`;
+    return `press ${this.key}`;
   }
 }

@@ -17,6 +17,6 @@ export class ExecuteStep implements TestStep {
   }
 
   toString(): string {
-    return `I test ${this.what}`;
+    return `test ${this.what}`;
   }
 }

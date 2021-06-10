@@ -17,6 +17,6 @@ export class SayStep implements InfoStep {
   }
 
   toString(): string {
-    return `I say ${this.message}`;
+    return `say ${this.message}`;
   }
 }
