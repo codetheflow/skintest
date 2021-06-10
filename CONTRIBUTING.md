@@ -64,9 +64,9 @@ Once that's done, run the release script:
 ```sh
 yarn lint
 yarn build
-yarn publish
+yarn release
 ```
 
-Use --canary flag for the `alpha` releases
+Use `--canary` flag for the `alpha` releases or `--preid` flag to setup prerelease identifier.
 
 https://github.com/lerna/lerna/blob/main/commands/publish/README.md#--canary
