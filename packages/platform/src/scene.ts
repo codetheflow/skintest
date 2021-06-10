@@ -174,7 +174,7 @@ export class Scene {
     };
 
     let breakLoop = false;
-    const failSink: string[] = [];
+    const errorSink: string[] = [];
 
     for (const step of steps) {
       if (breakLoop) {
@@ -210,7 +210,7 @@ export class Scene {
 
             const host = path[path.length - 1];
             breakLoop = host === 'condition' || host === 'repeat';
-            failSink.push(result.description);
+            errorSink.push(result.description);
             await failEffect({ ...scope, step, reason: result, path });
             break;
           }
@@ -232,7 +232,7 @@ export class Scene {
             };
 
             breakLoop = true;
-            failSink.push(...innerErrors);
+            errorSink.push(...innerErrors);
             await failEffect({ ...scope, step, reason: fail.reason(error), path });
             break;
           }
@@ -253,7 +253,7 @@ export class Scene {
               };
 
               breakLoop = true;
-              failSink.push(...innerErrors);
+              errorSink.push(...innerErrors);
               await failEffect({ ...scope, step, reason: fail.reason(error), path });
             }
 
@@ -275,7 +275,7 @@ export class Scene {
                 };
 
                 breakLoop = true;
-                failSink.push(...innerErrors);
+                errorSink.push(...innerErrors);
                 await failEffect({ ...scope, step, reason: fail.reason(error), path });
                 break;
               }
@@ -303,7 +303,7 @@ export class Scene {
               }
 
               breakLoop = true;
-              failSink.push(...innerErrors);
+              errorSink.push(...innerErrors);
 
               const error = {
                 description: innerErrors.join('\n'),
@@ -321,12 +321,12 @@ export class Scene {
           }
         }
       } catch (ex) {
-        await failEffect({ ...scope, step, reason: ex, path: path });
-        failSink.push(ex.message);
+        await failEffect({ ...scope, step, reason: ex, path });
+        errorSink.push(ex.message);
         break;
       }
     }
 
-    return [failSink.length === 0, failSink];
+    return [errorSink.length === 0, errorSink];
   }
 }
