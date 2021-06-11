@@ -208,9 +208,16 @@ export class Scene {
               break;
             }
 
-            const host = path[path.length - 1];
-            breakLoop = host === 'condition' || host === 'repeat';
             errorSink.push(result.description);
+
+            const host = path[path.length - 1];
+            const asPredicate = host === 'condition' || host === 'repeat';
+            if (asPredicate) {
+              breakLoop = true;
+              await passEffect({ ...scope, step, result: pass(), path });
+              break;
+            }
+
             await failEffect({ ...scope, step, reason: result, path });
             break;
           }

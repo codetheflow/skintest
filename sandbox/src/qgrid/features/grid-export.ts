@@ -11,7 +11,7 @@ feature('grid export')
     , I.goto(example_export.url)
   )
 
-  .scenario('#now check the export to csv button downloads the file'
+  .scenario('check the export to csv button downloads the file'
     , I.do(wait_until_grid_has_rows)
     , I.do(export_data_as, 'check-export-data.csv')
     , I.test('cvs file exists and contains data')

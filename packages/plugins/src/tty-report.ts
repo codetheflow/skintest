@@ -76,24 +76,12 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       }
     },
     'step:fail': async ({ reason, step, site, path }) => {
-      const host = path[path.length - 1];
-
       // todo: make it better
-      if (step.type === 'do'
+      if ('status' in reason 
+        && step.type === 'do'
         || step.toString().startsWith('perform')
         || step.toString().startsWith('event')) {
         // inner error was shown, there is no need to duplicate it here
-        return;
-      }
-
-      if (host === 'repeat' || host === 'condition') {
-        if (level > 0) {
-          const message = await getMessage(step);
-          const line = [tty.pass(tty.CROSS_MARK), ' ', tty.info(message)];
-          tty.newLine(stdout, ...line);
-        }
-
-        // it just condition failed, we don't need to show it
         return;
       }
 

@@ -94,7 +94,7 @@ export const tty = {
       const stackTrace = await prettyStack(reason.stack);
 
       stackTrace
-        .filter(x => x.file)
+        .filter(x => x.file && x.file.endsWith('.ts'))
         .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
         .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
         .map(x => `${x.function || 'at'} (${x.file}:${x.line}:${x.column})`)

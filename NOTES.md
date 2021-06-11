@@ -53,6 +53,7 @@
 * `__pause` is frozen sometimes
 
 next
+* multiple test data for particular scenario like in cucumber | | |
 * add script/feature error zone?
 * add max time that scenario could take (for `until` operations)
 * add playwright plugin to make things like pw(async p => await p.evaluate...);
