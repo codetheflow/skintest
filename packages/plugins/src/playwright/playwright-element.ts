@@ -13,6 +13,17 @@ export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
     Guard.notEmpty(selector, 'selector');
   }
 
+  async tagName(): Promise<string> {
+    const value = await this
+      .page
+      .$eval<string>(
+        this.selector,
+        x => x.tagName
+      );
+
+    return value;
+  }
+
   async attribute(name: string): Promise<string | null> {
     const value = await this.handle.getAttribute(name);
     return value;

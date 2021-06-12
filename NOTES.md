@@ -159,10 +159,13 @@ next
 ```typescript
 async function navigate(product: string, item: string): Promise<Recipe> {
   return recipe(
-    evaluate(`remove survey monkey`, (x = { name: 'id', value: 'smcx-sdk' }) => {
-      const { body } = document;
-      body.setAttribute(x.name, x.value);
-    }),
+    evaluate(`remove survey monkey`
+      , serialize({})
+      , function () {
+        const { body } = document;
+        body.setAttribute('id', 'test');
+      }
+    ),
 
     perform('do navigation'
       , I.click(hub.menu)

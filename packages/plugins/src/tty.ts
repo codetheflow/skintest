@@ -105,7 +105,7 @@ export const tty = {
   async writeInspect(stream: WriteStream, inspect: InspectInfo): Promise<void> {
     // eslint-disable-next-line prefer-const
     let { selector, target } = inspect;
-    
+
     // width - column-size? * column-number
     const maxWidth = Math.max(8, stream.columns - 15 * 3);
 
@@ -139,6 +139,7 @@ export const tty = {
       tty.newLine(stream, `$(\`${selector}\`) found 1 element`);
 
       const info: StringDictionary<unknown> = {
+        tagName: ellipsis(await elementRef.tagName(), maxWidth),
         id: ellipsis(await elementRef.attribute('id') || '', maxWidth),
         text: ellipsis(await elementRef.text(), maxWidth),
         classList: ellipsis((await elementRef.classList()).toString(), maxWidth),

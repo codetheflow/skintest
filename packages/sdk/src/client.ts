@@ -1,6 +1,5 @@
 import { errors, Guard, reinterpret } from '@skintest/common';
 import { DOMElement } from './dom';
-import { ElementClassList, ElementState } from './element';
 import { Page } from './page';
 import { Query, QueryList } from './query';
 
@@ -8,12 +7,6 @@ export abstract class ClientElement<T extends DOMElement = never> {
   // we need to keep something with type V, to turn on type checking
   // todo: investigate better solution
   private token?: T;
-
-  abstract attribute(name: string): Promise<string | null>;
-  abstract classList(): Promise<ElementClassList>;
-  abstract state(state: ElementState): Promise<boolean>;
-  abstract style(name: string): Promise<string | null>;
-  abstract text(): Promise<string>;
 }
 
 export type ClientElementList<T extends DOMElement = never> = ClientElement<T>[];

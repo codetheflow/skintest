@@ -4,13 +4,13 @@ import { DOMElement } from './dom';
 export type ElementState =
   'checked'
   | 'disabled'
-  | 'focused'
   | 'editable'
   | 'enabled'
+  | 'exists'
+  | 'focused'
   | 'hidden'
   | 'unchecked'
-  | 'visible'
-  | 'exists';
+  | 'visible';
 
 export interface ElementClassList {
   has(name: string): boolean;
@@ -22,6 +22,7 @@ export interface ElementRef<E extends DOMElement> extends ClientElement<E> {
   classList(): Promise<ElementClassList>;
   state(state: ElementState): Promise<boolean>;
   style(name: string): Promise<string | null>;
+  tagName(): Promise<string>;
   text(): Promise<string>;
 }
 
