@@ -6,6 +6,7 @@ export { AssertStep, ClientStep, Command, CommandBody, ControlStep, DevStep, DoS
 export { DOMElement } from './dom';
 export { Ego } from './ego';
 export { ElementClassList, ElementRef, ElementRefList, ElementState } from './element';
+export { evaluate, serialize } from './evaluate';
 export { Feature, feature, Scenario } from './feature';
 export { ClientPageEvents, handle } from './handle';
 export { has, Has, HasNo, ListHas, ListHasNo } from './has';

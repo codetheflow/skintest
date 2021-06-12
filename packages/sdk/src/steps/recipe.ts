@@ -8,9 +8,9 @@ export class RecipeStep implements DoStep {
 
   constructor(
     public getMeta: () => Promise<StepMeta>,
-    public recipe: RecipeFunction,
+    private recipe: RecipeFunction,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public args: any[]
+    private args: any[]
   ) {
     Guard.notNull(recipe, 'recipe');
     Guard.notNull(args, 'args');

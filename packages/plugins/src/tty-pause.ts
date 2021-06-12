@@ -13,14 +13,15 @@ export function ttyPause(): Plugin {
       if (step.type === 'dev' && step.toString() === '__pause') {
         tty.newLine(stdout, tty.dev(`- type a selector and hit ${tty.shortcut('ENTER')}`));
         tty.newLine(stdout, tty.dev(`- type ${tty.shortcut('CTRL+C')} to exit from pause`));
-        tty.newLine(stdout, tty.PROMPT);
+        tty.newLine(stdout);
 
         const rl = readline.createInterface({
           input: stdin,
           output: stdout,
           crlfDelay: Infinity,
           prompt: '',
-          tabSize: 2
+          tabSize: 2,
+          terminal: true
         });
 
         const inspect =
@@ -31,15 +32,17 @@ export function ttyPause(): Plugin {
               .then(page => page.immediateQueryList(selector))
               .then(target => tty.writeInspect(stdout, { selector, target }));
 
-        rl.on('line', selector => {
+        const answer = (selector: string) => {
           rl.pause();
           inspect(selector)
             .catch(ex => tty.writeError(stderr, ex))
             .finally(() => {
               rl.resume();
-              tty.newLine(stdout, tty.PROMPT);
+              rl.question('> ', answer);
             });
-        });
+        };
+
+        rl.question('> ', answer);
 
         rl.on('SIGINT', () => {
           rl.close();

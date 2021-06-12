@@ -77,10 +77,10 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
     },
     'step:fail': async ({ reason, step, site, path }) => {
       // todo: make it better
-      if ('status' in reason 
-        && step.type === 'do'
-        || step.toString().startsWith('perform')
-        || step.toString().startsWith('event')) {
+      if ('status' in reason
+        && (step.type === 'do'
+          || step.toString().startsWith('perform')
+          || step.toString().startsWith('event'))) {
         // inner error was shown, there is no need to duplicate it here
         return;
       }

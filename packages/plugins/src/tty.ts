@@ -139,6 +139,7 @@ export const tty = {
       tty.newLine(stream, `$(\`${selector}\`) found 1 element`);
 
       const info: StringDictionary<unknown> = {
+        id: ellipsis(await elementRef.attribute('id') || '', maxWidth),
         text: ellipsis(await elementRef.text(), maxWidth),
         classList: ellipsis((await elementRef.classList()).toString(), maxWidth),
       };

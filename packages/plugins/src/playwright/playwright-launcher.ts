@@ -8,7 +8,7 @@ const DEFAULT_OPTIONS: playwright.LaunchOptions = {
   timeout: 30000,
 };
 
-type LaunchOptions = Pick<playwright.LaunchOptions, 'timeout' | 'headless' | 'downloadsPath'>;
+type LaunchOptions = Pick<playwright.LaunchOptions, 'timeout' | 'headless'>;
 
 export function playwrightLauncher(options: Partial<LaunchOptions> = {}): Launcher {
   async function createBrowser() {

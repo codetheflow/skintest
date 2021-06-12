@@ -18,7 +18,7 @@ export class PressStep implements ClientStep {
     const { browser } = context;
 
     const page = browser.getCurrentPage();
-    return methodResult(page.keyPress(this.key));
+  return methodResult(page.keyPress(this.key));
   }
 
   toString(): string {

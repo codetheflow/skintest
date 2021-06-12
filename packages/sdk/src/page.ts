@@ -1,3 +1,4 @@
+import { Serializable } from '@skintest/common';
 import { DOMElement } from './dom';
 import { ElementRef, ElementRefList } from './element';
 import { KeyboardKey } from './keyboard';
@@ -30,4 +31,6 @@ export interface Page {
 
   immediateQuery<E extends DOMElement>(selector: string): Promise<ElementRef<E> | null>;
   immediateQueryList<E extends DOMElement>(selector: string): Promise<ElementRefList<E>>;
+
+  evaluate<V extends Serializable>(action: (arg: V) => void, arg: V): Promise<void>;
 }

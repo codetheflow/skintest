@@ -47,10 +47,13 @@
 * custom assert recipes - done
 * remove logs from the playwright errors - done
 * file download - done
-* file upload -
+* file upload - done
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
-* `__pause` is frozen sometimes
+* `__pause` is frozen sometimes ??
+* till, iif - done
+* wait - done
+* waitSelector doesn't take into account page's timeout - done
 
 next
 * multiple test data for particular scenario like in cucumber | | |
@@ -60,7 +63,6 @@ next
 * add fail\error hook in the scenario as a debug option
 * generate and use some name/text further? how it to implement? through the recipe?
 * maybe I.generate_name('my-name', 'basename');
-* page `until`
 * I.fill(input, uniq `my job`)
 * I.check(title, uniq `my job`)
 * feature name /scenario name uniq constraint
@@ -76,8 +78,6 @@ next
 * show fail/error solutions/links to solutions
 * slowMo settings in camelCase - lint warning
 * stubs/network intersection support
-
-* waitSelector doesn't take into account page's timeout
 * start writing unit tests
 * better reporting UX
 * CI
@@ -159,9 +159,9 @@ next
 ```typescript
 async function navigate(product: string, item: string): Promise<Recipe> {
   return recipe(
-    evaluate(`remove survey monkey`, async () => {
+    evaluate(`remove survey monkey`, (x = { name: 'id', value: 'smcx-sdk' }) => {
       const { body } = document;
-      body.setAttribute('id', 'smcx-sdk');
+      body.setAttribute(x.name, x.value);
     }),
 
     perform('do navigation'
