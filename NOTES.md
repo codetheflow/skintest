@@ -50,27 +50,37 @@
 * file upload - done
 * https://playwright.dev/docs/api/class-download
 * https://playwright.dev/docs/api/class-filechooser
-* `__pause` is frozen sometimes ??
 * till, iif - done
 * wait - done
 * waitSelector doesn't take into account page's timeout - done
+* propagate tagName - done
 
-next
-* multiple test data for particular scenario like in cucumber | | |
-* add script/feature error zone?
-* add max time that scenario could take (for `until` operations)
-* add playwright plugin to make things like pw(async p => await p.evaluate...);
-* add fail\error hook in the scenario as a debug option
+0.0.11
+* `__pause` is frozen sometimes ??
+* add fail\error hook in the scenario as a debug option, or add pause on fail
 * generate and use some name/text further? how it to implement? through the recipe?
 * maybe I.generate_name('my-name', 'basename');
 * I.fill(input, uniq `my job`)
 * I.check(title, uniq `my job`)
 * feature name /scenario name uniq constraint
+* drag and drop
+* and inspect to dbg in .debug, better debugging experience
+* playwright logs, verbose reporting, file logs, integration longs e. with allure
+* https://playwright.dev/docs/api/class-logger
+* dialog support, alert(), confirm(), prompt()
+* https://playwright.dev/docs/api/class-dialog
+* video and screenshots support
+* https://playwright.dev/docs/ci
+
+next
+* skintest.io
+* multiple test data for particular scenario like in cucumber | | |
+* add script/feature error zone?
+* add max time that scenario could take (for `till` operations)
+* add playwright plugin to make things like pw(async p => await p.evaluate...);
 * add `secret` function to show `***` instead of value
 * has.state doesn't trigger type checking, because string is extendable from the string
-* drag and drop
-* example of using value from the selector like `I.fill(todos.what, as.text.from, todos.user)` maybe it should be a recipe?
-* and inspect to dbg in .debug, better debugging experience
+* example of using value from the selector like `I.fill(todos.what, as.text.from, todos.user)* maybe it should be a recipe?
 * better code parsing in the `meta.ts`
 * add comments to the ego, selectors, recipes and keyboard keys
 * remove redundant new lines in tty-report and tty-pause
@@ -82,20 +92,13 @@ next
 * better reporting UX
 * CI
 * multiple selector strategy in $ and $$, data-test-id, search by the text
-* playwright logs, verbose reporting, file logs, integration longs e. with allure
-* https://playwright.dev/docs/api/class-logger
-* dialog support, alert(), confirm(), prompt()
-* https://playwright.dev/docs/api/class-dialog
-* video and screenshots support
-* https://playwright.dev/docs/ci
 
 ### questions
-* wait `visible/invisible`?
+* wait `visible/invisible`? - done through the `I.wait(some_condition)`
 * think about todos.item.at/label_at etc.
 * $$ should wait?
-* add `feature`, `component`, `recipe` postfixes?
+* add `feature`, `component`, `recipe` postfixes? - in experimental branch
 * recipe types `assert`, `query`?
-* skintest.io
 * cli tool
 * time 
 * own inspector
@@ -110,7 +113,8 @@ next
 * do we really need `test` step? - yes
 * schema concept? strict, not strict versions? 
 * websockets?
-* auth, session and local storages?
+* auth 
+* session and local storages? - through the evaluate function
 * https://playwright.dev/docs/auth
 * device emulation
 * browser console messages? error catching?
@@ -121,7 +125,7 @@ next
 * https://gist.github.com/vzaidman/ef6e4b772b311ffb98368da5f7a9582a#file-codecept-example-js
 * press vs hit? press target?
 * CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
-* install/uninstall setup/teardown
+* install/uninstall setup/teardown? - mount/unmount/ready
 
 ### code style
 

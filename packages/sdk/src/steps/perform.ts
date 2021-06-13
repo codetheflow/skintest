@@ -1,6 +1,7 @@
 import { errors, Guard } from '@skintest/common';
-import { ClientStep, StepExecutionResult } from '../command';
+import { ClientStep, DoStep, StepExecutionResult } from '../command';
 import { StepMeta } from '../meta';
+import { RepeatYield } from '../repeat';
 import { PerformSchema } from '../schema';
 import { IIfStep } from './iif';
 import { TillStep } from './till';
@@ -32,10 +33,20 @@ export class PerformStep implements ClientStep {
       }
 
       if (marker instanceof TillStep) {
+        const writes: RepeatYield[] = plan
+        .filter(x => x.type === 'do')
+        .map(x => (x as DoStep).args)
+        .reduce((xs, memo) => {
+          memo.push(...xs);
+          return memo;
+        }, [])
+        .filter(x => x instanceof RepeatYield);
+
         return {
           type: 'repeat',
           till: plan.slice(index, plan.length),
           plan: plan.slice(0, index),
+          writes
         };
       }
 

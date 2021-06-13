@@ -1,5 +1,7 @@
 import { Browser } from './browser';
 import { StepMeta } from './meta';
+import { RecipeFunction } from './recipe';
+import { RepeatWrite } from './repeat';
 import { InspectInfo, TestResult } from './test-result';
 
 export type Command =
@@ -16,13 +18,14 @@ export interface StepContext {
 }
 
 export type StepExecutionResult =
-  StepExecutionAssertResult
-  | StepExecutionConditionResult
+  StepExecutionConditionResult
+  | StepExecutionEventResult
   | StepExecutionInspectResult
   | StepExecutionMethodResult
   | StepExecutionPerformResult
+  | StepExecutionRecipeResult
   | StepExecutionRepeatResult
-  | StepExecutionEventResult;
+  | StepExecutionAssertResult;
 
 export type StepExecutionInspectResult = {
   type: 'inspect',
@@ -43,6 +46,11 @@ export type StepExecutionPerformResult = {
   plan: Command[],
 }
 
+export type StepExecutionRecipeResult = {
+  type: 'recipe',
+  plan: Command[],
+}
+
 export type StepExecutionEventResult = {
   type: 'event',
   handler: Command,
@@ -53,6 +61,7 @@ export type StepExecutionRepeatResult = {
   type: 'repeat',
   till: Command[],
   plan: Command[],
+  writes: RepeatWrite[],
 }
 
 export type StepExecutionConditionResult = {
@@ -89,6 +98,9 @@ export interface InfoStep extends CommandBody {
 
 export interface DoStep extends CommandBody {
   type: 'do';
+  recipe: RecipeFunction,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  args: any[],
 }
 
 export interface ControlStep extends CommandBody {

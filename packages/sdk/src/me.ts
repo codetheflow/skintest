@@ -1,6 +1,6 @@
 import { isFunction } from '@skintest/common';
 import { BinaryAssert, ListBinaryAssert } from './assert';
-import { AssertStep, ClientStep, ControlStep, DevStep, DoStep, InfoStep, TestStep } from './command';
+import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
 import { DOMElement } from './dom';
 import { Ego } from './ego';
 import { KeyboardKey } from './keyboard';
@@ -14,7 +14,6 @@ import { FillStep } from './steps/fill';
 import { FocusStep } from './steps/focus';
 import { GotoStep } from './steps/goto';
 import { HoverStep } from './steps/hover';
-import { IIfStep } from './steps/iif';
 import { InspectStep } from './steps/inspect';
 import { MarkStep } from './steps/mark';
 import { NavigationBackStep } from './steps/navigation-back';
@@ -29,20 +28,10 @@ import { SeeStep } from './steps/see';
 import { SelectTextStep } from './steps/select-text';
 import { ExecuteStep } from './steps/test';
 import { ThatStep } from './steps/that';
-import { TillStep } from './steps/till';
 import { TypeStep } from './steps/type';
 import { WaitStep } from './steps/wait';
 import { ThatFunction } from './that';
 
-export function till(message: string): ControlStep {
-  const caller = getCaller();
-  return new TillStep(() => getStepMeta(caller), message);
-}
-
-export function iif(message: string): ControlStep {
-  const caller = getCaller();
-  return new IIfStep(() => getStepMeta(caller), message);
-}
 
 class Me implements Ego {
   wait<F extends ThatFunction>(recipe: F, ...args: Parameters<F>): ClientStep;

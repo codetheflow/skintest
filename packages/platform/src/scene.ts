@@ -1,5 +1,5 @@
 import { errors, reinterpret } from '@skintest/common';
-import { Browser, Command, fail, pass, Script, StepExecutionResult, Suite } from '@skintest/sdk';
+import { Browser, Command, fail, pass, RepeatEntry, Script, StepExecutionResult, Suite } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { CommandScope, Staging } from './stage';
 
@@ -226,6 +226,7 @@ export class Scene {
             await passEffect({ ...scope, step, result: pass(), path });
             break;
           }
+          case 'recipe':
           case 'perform': {
             const [ok, innerErrors] = await runPlan(run.plan);
             if (ok) {
@@ -268,7 +269,21 @@ export class Scene {
           }
           case 'repeat': {
             // todo: add timeout exception or warning if loop runs too long
+            let index = 0;
+            let odd = false;
+            let even = true;
+            let first = true;
+
             do {
+              const entry: RepeatEntry = { first, index, odd, even, };
+
+              first = false;
+              index++;
+              odd = !odd;
+              even = !even;
+
+              run.writes.forEach(x => x.next(entry));
+
               const [next] = await runPlan(run.till);
               if (!next) {
                 break;
