@@ -70,7 +70,7 @@ class Me implements Ego {
     return new MarkStep(() => getStepMeta(caller), target, value);
   }
 
-  select<E extends DOMElement>(target: Query<E>): ClientStep {
+  select<E extends DOMElement>(what: 'text', target: Query<E>): ClientStep {
     const caller = getCaller();
     return new SelectTextStep(() => getStepMeta(caller), target);
   }

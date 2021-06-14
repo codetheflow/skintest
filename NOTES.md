@@ -54,14 +54,11 @@
 * wait - done
 * waitSelector doesn't take into account page's timeout - done
 * propagate tagName - done
+* I.fill(input, stamp `my job #e2e-${stamp.time}`) - done
 
 0.0.11
 * `__pause` is frozen sometimes ??
 * add fail\error hook in the scenario as a debug option, or add pause on fail
-* generate and use some name/text further? how it to implement? through the recipe?
-* maybe I.generate_name('my-name', 'basename');
-* I.fill(input, uniq `my job`)
-* I.check(title, uniq `my job`)
 * feature name /scenario name uniq constraint
 * drag and drop
 * and inspect to dbg in .debug, better debugging experience
@@ -80,7 +77,7 @@ next
 * add playwright plugin to make things like pw(async p => await p.evaluate...);
 * add `secret` function to show `***` instead of value
 * has.state doesn't trigger type checking, because string is extendable from the string
-* example of using value from the selector like `I.fill(todos.what, as.text.from, todos.user)* maybe it should be a recipe?
+* example of using value from the selector like `I.fill(todos.what, as, todos.user)* maybe it should be a recipe?
 * better code parsing in the `meta.ts`
 * add comments to the ego, selectors, recipes and keyboard keys
 * remove redundant new lines in tty-report and tty-pause

@@ -9,7 +9,7 @@ import { I, perform, Query, Recipe, recipe } from '@skintest/sdk';
 export async function copy_from(query: Query<HTMLElement>): Promise<Recipe> {
   return recipe(
     perform(`copy ${query.toString()}`
-      , I.select(query)
+      , I.select('text', query)
       , I.press('Control+C')
     )
   );

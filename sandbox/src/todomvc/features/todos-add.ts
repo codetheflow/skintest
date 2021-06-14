@@ -51,7 +51,7 @@ feature('todos add')
     , I.see(todos.item_label_at(0), has.text, 'pass the exams')
   )
 
-  .scenario('check the list supports many todos'
+  .scenario('#now check the list supports many todos'
     , I.do(generate_todos, 10)
     , I.test('list contains all the items')
     , I.see(todos.list, has.length, 10)

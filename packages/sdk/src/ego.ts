@@ -30,7 +30,7 @@ export interface Ego {
   press(key: KeyboardKey): ClientStep;
   say(message: string): InfoStep;
   type<E extends HTMLInputElement | HTMLAreaElement>(target: Query<E>, value: string): ClientStep;
-  select<E extends DOMElement>(target: Query<E>): ClientStep;
+  select<E extends DOMElement>(what: 'text', target: Query<E>): ClientStep;
 
   do<F extends RecipeFunction>(recipe: F, ...args: Parameters<F>): DoStep;
 
