@@ -16,6 +16,9 @@
     },
     {
       "path": "../packages/plugins"
+    },
+    {
+      "path": "../packages/enterprise"
     }
   ]
 }

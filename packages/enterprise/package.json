@@ -1,19 +1,19 @@
 {
-  "name": "@skintest/sandbox",
+  "name": "@skintest/enterprise",
   "version": "1.0.13-alpha.0",
-  "private": true,
-  "description": "skintest sandbox",
+  "description": "skintest enterprise",
+  "main": "dist/src/public-api.js",
+  "types": "dist/src/public-api.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
-  "engines": {
-    "node": ">=14"
-  },
   "scripts": {
     "build": "yarn clean && tsc --build",
     "build:watch": "yarn clean && tsc --build --watch",
-    "clean": "rimraf dist",
-    "start": "node ./dist/src/skintest.js"
+    "clean": "rimraf dist"
   },
   "repository": {
     "type": "git",
@@ -21,27 +21,24 @@
   },
   "keywords": [
     "skintest",
-    "sandbox",
+    "api",
     "e2e",
-    "end to end",
     "test",
-    "qa",
-    "quality"
+    "qa"
   ],
   "author": "codetheflow",
   "bugs": {
     "url": "https://github.com/codetheflow/skintest/issues"
   },
   "homepage": "https://github.com/codetheflow/skintest#readme",
+  "peerDependencies": {
+    "@skintest/common": "*",
+    "@skintest/platform": "*",
+    "@skintest/sdk": "*"
+  },
   "devDependencies": {
     "@types/node": "15.12.2",
     "rimraf": "3.0.2",
     "typescript": "4.3.2"
-  },
-  "dependencies": {
-    "@skintest/platform": "*",
-    "@skintest/plugins": "*",
-    "@skintest/sdk": "*",
-    "@skintest/enterprise": "*"
   }
 }

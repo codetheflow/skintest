@@ -1,11 +1,10 @@
+import { copy, paste } from '@skintest/enterprise';
 import { feature, has, I } from '@skintest/sdk';
 import { page } from '../components/page';
 import { todos } from '../components/todos';
 import { add_todo } from '../recipes/add-todo';
 import { clear_todos } from '../recipes/clear-todos';
-import { copy_from } from '../recipes/copy-from';
 import { generate_todos } from '../recipes/generate-todos';
-import { paste_to } from '../recipes/paste-to';
 
 feature('todos add')
   .before('scenario'
@@ -75,8 +74,8 @@ feature('todos add')
 
   .scenario('check that todo item can be copy pasted by using clipboard'
     , I.do(add_todo, 'feed dragon')
-    , I.do(copy_from, todos.item_label_at(0))
-    , I.do(paste_to, todos.what)
+    , I.do(copy, todos.item_label_at(0))
+    , I.do(paste, todos.what)
     , I.test('input has the same value as first todo')
     , I.see(todos.what, has.text, 'feed dragon')
   )

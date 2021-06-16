@@ -15,6 +15,7 @@ const STACK_FUNC_IGNORE = [
 const STACK_FILE_IGNORE = [
   path.join('platform', 'dist', 'src', 'attempt.js'),
   path.join('platform', 'src', 'attempt.ts'),
+  path.join('common', 'src', 'retry.ts'),
   path.join('common', 'src', 'errors.ts'),
   path.join('common', 'src', 'guard.ts'),
   // from playwright

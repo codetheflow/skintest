@@ -6,7 +6,7 @@ import { I, perform, Query, Recipe, recipe } from '@skintest/sdk';
    * @param query element selector, which text will be copied
    * @returns recipe
    */
-export async function copy_from(query: Query<HTMLElement>): Promise<Recipe> {
+export async function copy(query: Query<HTMLElement>): Promise<Recipe> {
   return recipe(
     perform(`copy ${query.toString()}`
       , I.select('text', query)

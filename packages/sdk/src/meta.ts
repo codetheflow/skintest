@@ -6,7 +6,8 @@ const PACKAGES = [
   'common',
   'sdk',
   'plugins',
-  'platform'
+  'platform',
+  'enterprise',
 ].map(x => path.sep + path.join(x, 'dist'));
 
 export type Meta = Omit<StackFrame, 'function'>;
