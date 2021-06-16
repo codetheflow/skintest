@@ -10,7 +10,6 @@ export class Attempt {
 
   async step(method: () => Promise<StepExecutionResult>): Promise<StepExecutionResult> {
     let attempts = this.retries;
-
     // todo: better type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let error = null;
