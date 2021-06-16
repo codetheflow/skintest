@@ -1,0 +1,25 @@
+<h2 class="column-chooser__header">
+  <st-icon class="column-chooser__icon">
+    column-chooser
+  </st-icon>
+  Add/remove columns
+</h2>
+<h3 class="column-chooser__subheader">
+  Use upto {{checkedColumns.length}} columns in this table
+</h3>
+<ul class="column-chooser__list">
+  <li *ngFor="let column of checkedColumns"
+      class="column-chooser__list-item">
+    <label class="column-chooser__list-item-label">
+      <input class="column-chooser__list-item-input"
+             type="checkbox"
+             [checked]="column.state"
+             [stCommand]="toggle"
+             [arg]="column"
+             trigger="change" />
+      <span class="column-chooser__list-item-text">
+        {{column.data}}
+      </span>
+    </label>
+  </li>
+</ul>

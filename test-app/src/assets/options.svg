@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="17px" height="5px" viewBox="0 0 17 5" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <g id="more-icon" transform="translate(0.5 0.5)">
+    <path d="M2 4C3.10457 4 4 3.10457 4 2C4 0.895431 3.10457 0 2 0C0.895431 0 0 0.895431 0 2C0 3.10457 0.895431 4 2 4Z" id="Oval" fill="#CCCCCC" fill-rule="evenodd" stroke="none" />
+    <path d="M2 4C3.10457 4 4 3.10457 4 2C4 0.895431 3.10457 0 2 0C0.895431 0 0 0.895431 0 2C0 3.10457 0.895431 4 2 4Z" transform="translate(6 0)" id="Oval-Copy" fill="#CCCCCC" fill-rule="evenodd" stroke="none" />
+    <path d="M2 4C3.10457 4 4 3.10457 4 2C4 0.895431 3.10457 0 2 0C0.895431 0 0 0.895431 0 2C0 3.10457 0.895431 4 2 4Z" transform="translate(12 0)" id="Oval-Copy-2" fill="#CCCCCC" fill-rule="evenodd" stroke="none" />
+  </g>
+</svg>

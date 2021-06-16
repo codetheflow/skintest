@@ -1,0 +1,15 @@
+@import "./variables.scss";
+
+.popup {
+  &__panel {
+    border-radius: 2px;
+    border:  1px dashed $border-color;
+    background: $white;
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px 40px;
+  }
+
+  &__backdrop {
+    background-color: transparent;
+  }
+}

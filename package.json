@@ -8,19 +8,20 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "sandbox"
+      "test-exercise",
+      "test-app"
     ]
   },
   "scripts": {
     "lerna": "lerna",
     "build": "lerna run build",
     "build:watch": "lerna run --parallel build:watch",
-    "sandbox": "node sandbox/dist/src/skintest.js",
-    "sandbox:watch": "nodemon --watch sandbox/dist --no-stdin --delay 1 sandbox/dist/src/skintest.js",
-    "lint": "yarn lint:packages & yarn lint:sandbox",
-    "lint:fix": "eslint packages -c packages/.eslintrc --fix & eslint sandbox -c sandbox/.eslintrc --fix",
+    "exercise": "node test-exercise/dist/src/skintest.js",
+    "exercise:watch": "nodemon --watch test-exercise/dist --no-stdin --delay 1 test-exercise/dist/src/skintest.js",
+    "lint": "yarn lint:packages & yarn lint:exercise",
+    "lint:fix": "eslint packages -c packages/.eslintrc --fix & eslint test-exercise -c test-exercise/.eslintrc --fix",
     "lint:packages": "eslint packages -c packages/.eslintrc",
-    "lint:sandbox": "eslint sandbox -c sandbox/.eslintrc",
+    "lint:exercise": "eslint test-exercise -c exercise/.eslintrc",
     "release": "lerna publish"
   },
   "devDependencies": {

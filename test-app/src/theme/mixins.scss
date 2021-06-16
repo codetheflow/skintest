@@ -1,0 +1,22 @@
+@mixin box-sizing($value) {
+  -moz-box-sizing: $value;
+  -webkit-box-sizing: $value;
+  box-sizing: $value;
+}
+
+@mixin width($value) {
+  width: $value;
+  min-width: $value;
+  max-width: $value;
+}
+
+@mixin height($value) {
+  height: $value;
+  min-height: $value;
+  max-height: $value;
+}
+
+@mixin borderReset {
+  outline: none;
+  border: none;
+}

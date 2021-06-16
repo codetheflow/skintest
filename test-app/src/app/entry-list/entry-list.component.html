@@ -1,0 +1,163 @@
+<table st-table
+       [rows]="items"
+       [columns]="visibleColumns$ | async"
+       class="entry-list__table">
+
+  <ng-container stColumn="date">
+    <!-- todo: make date format aligned with sketch -->
+    <td *stCell="let row">{{row.date | date: 'MMM d, y h:mm aa'}}</td>
+  </ng-container>
+
+  <ng-container stColumn="folder">
+    <td *stCell="let row">{{row.folder.title}}</td>
+  </ng-container>
+
+  <ng-container stColumn="user">
+    <td *stCell="let row">
+      <label class="entry-list__the-user-label">
+        <img class="entry-list__avatar"
+             src="{{row.user.avatar}}"
+             alt="" />
+        {{row.user.name}}
+      </label>
+    </td>
+  </ng-container>
+
+  <ng-container stColumn="status">
+    <th *stHeaderCell="let row"
+        class="entry-list__the-status">
+      Status
+    </th>
+    <td *stCell="let row"
+        class="entry-list__the-status">
+      <span [ngClass]="'entry-list__the-status-text--' + row.status"
+            class="entry-list__the-status-text">
+        {{row.status}}
+      </span>
+    </td>
+  </ng-container>
+
+  <ng-container stColumn="row-actions"
+                category="control">
+    <th *stHeaderCell
+        class="entry-list__the-row-actions">
+      <button [stPopupTrigger]="columnChooser"
+              class="entry-list__the-row-actions-button"
+              panelClass="column-chooser-panel"
+              aria-label="open column chooser">
+        <st-icon>options</st-icon>
+      </button>
+    </th>
+    <td *stCell="let row"
+        class="entry-list__the-row-actions">
+      <button [stPopupTrigger]="rowOptions"
+              [data]="row"
+              class="entry-list__the-row-actions-button"
+              panelClass="menu__panel"
+              aria-label="open row actions">
+        <st-icon>options</st-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-template stTableState="empty">
+    <st-upsell (requestAddData)="addData.prob()">
+    </st-upsell>
+  </ng-template>
+
+  <ng-template #columnChooser>
+    <st-column-chooser [columns]="columns"
+                      (selectionChange)="updateColumnsVisibility.prob($event)">
+    </st-column-chooser>
+  </ng-template>
+
+</table>
+
+<ng-template #rowOptions
+             let-trigger
+             let-row="data">
+
+  <!-- exercise comment: 
+    for simplicity we use css system instead of creating
+    angular components for the menu and buttons
+  -->
+
+  <ul class="menu entry-list__the-row-actions-menu">
+    <li class="menu__item">
+      <ng-container *ngTemplateOutlet="tweakStatus">
+      </ng-container>
+    </li>
+    <li class="menu__item">
+      <ng-container *stSteps="deleteCustomer">
+      </ng-container>
+    </li>
+    <li class="menu__item">
+      <ng-container *ngTemplateOutlet="help">
+      </ng-container>
+    </li>
+  </ul>
+
+  <ng-template #tweakStatus>
+    <button class="menu__button"
+            [stCommand]="toggleStatus"
+            [arg]="row"
+            (click)="trigger.close()"
+            aria-label="tweak status">
+      <h2 class="menu__header">
+        Change status to {{row.status === 'pending' ? 'complete': 'pending'}}
+      </h2>
+      <h3 class="menu__subheader">
+        Tweak status to fit your use case
+      </h3>
+    </button>
+  </ng-template>
+
+  <ng-template #deleteCustomer
+               let-steps>
+    <button class="menu__button"
+            (click)="steps.next(confirmDeleteCustomer)"
+            aria-label="delete customer">
+      <h2 class="menu__header">
+        Delete customer
+      </h2>
+      <h3 class="menu__subheader">
+        Delete all data for this customer. <br />
+        This action <strong>CANNOT</strong> be undone.
+      </h3>
+    </button>
+  </ng-template>
+
+  <ng-template #confirmDeleteCustomer
+               let-steps>
+    <h2 class="menu__header entry-list__warn-header">
+      Are you sure you want to permanently delete customer?
+    </h2>
+    <button class="entry-list__confirm-button button-stroked"
+            (click)="steps.next(deleteCustomer)"
+            aria-label="cancel delete customer">
+      Cancel
+    </button>
+    <button class="entry-list__confirm-button button-stroked button-stroked--warn"
+            [stCommand]="deleteRow"
+            [arg]="row"
+            (click)="trigger.close()"
+            aria-label="confirm delete customer">
+      Delete data
+    </button>
+  </ng-template>
+
+  <ng-template #help>
+    <button class="menu__button"
+            [stCommand]="support"
+            (click)="trigger.close()"
+            aria-label="help">
+      <h2 class="menu__header">
+        Help <st-icon>external-link</st-icon>
+      </h2>
+      <h3 class="menu__subheader">
+        Opens {{supportUrl}}
+      </h3>
+    </button>
+  </ng-template>
+
+</ng-template>

@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/cdk/overlay-prebuilt.css";
+@import "./theme/variables.scss";
+@import "./theme/table.scss";
+@import "./theme/popup.scss";
+@import "./theme/menu.scss";
+@import "./theme/button.scss";
+
+html,
+body {
+  font-family: $font-family;
+  font-size: $font-size;
+  height: 100%;
+  margin: 0;
+  overflow-x: hidden;
+  padding: 0;
+  width: 100%;
+}

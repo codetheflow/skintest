@@ -1,0 +1,43 @@
+<ng-container *ngTemplateOutlet="(state$ | async)[0] === 'empty' ? empty : hasRows">
+</ng-container>
+
+<ng-template #hasRows>
+  <thead>
+    <tr>
+      <ng-container *ngFor="let column of columns; trackBy: columnId">
+        <ng-container *ngTemplateOutlet="getHeaderCellTemplate(column); context: {$implicit: column}">
+        </ng-container>
+      </ng-container>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of rows; trackBy: rowId">
+      <ng-container *ngFor="let column of columns; trackBy: columnId">
+        <ng-container *ngTemplateOutlet="getCellTemplate(column); context: {$implicit: row, column: column}">
+        </ng-container>
+      </ng-container>
+    </tr>
+  </tbody>
+</ng-template>
+
+<ng-template #empty>
+  <tbody>
+    <tr>
+      <td>
+        <ng-template *ngTemplateOutlet="(state$ | async)[1]">
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</ng-template>
+
+<ng-container stColumn="$default">
+  <th *stHeaderCell="let column"
+      [ngClass]="'table__the-' + column">
+    {{column}}
+  </th>
+  <td *stCell="let row; let key = column"
+      [ngClass]="'table__the-' + key">
+    {{row[key]}}
+  </td>
+</ng-container>

@@ -1,0 +1,45 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
+$header-row-bg-color: #f2f2f2;
+$row-height: 60px;
+$cell-padding: 0 20px;
+
+.table {
+  &.table--empty {
+    td,
+    th {
+      padding: 0;
+    }
+  }
+
+  thead {
+    tr {
+      background-color: $header-row-bg-color;
+    }
+  }
+
+  tr {
+    height: $row-height;
+    border: 1px solid $border-color;
+  }
+
+  td,
+  th {
+    @include box-sizing(border-box);
+    line-height: 20px;
+    overflow: hidden;
+    padding: $cell-padding;
+    text-align: left;
+  }
+
+  th {
+    font-weight: bold;
+    color: #8e8e8e;
+    text-transform: capitalize;
+  }
+
+  td {
+    color: $dark-primary;
+  }
+}

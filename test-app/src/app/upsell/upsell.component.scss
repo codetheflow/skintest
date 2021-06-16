@@ -1,0 +1,50 @@
+@import "../../theme/variables.scss";
+@import "../../theme/mixins.scss";
+
+:host {
+  align-items: center;
+  background: $white;
+  border-radius: 2px;
+  border: 1px dashed #bac4cc;
+  display: flex;
+  flex-direction: column;
+  padding: 50px 0;
+  padding: 50px 0;
+}
+
+.upsell {
+  &__icon {
+    width: 280px;
+    height: 120px;
+  }
+  
+  &__header {
+    color: $dark-primary;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    text-align: center;
+  }
+
+  &__description {
+    color: $dark-primary;
+    font-weight: 400;
+    line-height: 20px;
+    max-width: 485px;
+    padding-bottom: 40px;
+    text-align: center;
+    width: 100%;
+  }
+
+  &__action {
+    @include borderReset();
+    background: #108291;
+    border-radius: 2px;
+    color: $white;
+    font-weight: 700;
+    height: 36px;
+    line-height: 24px;
+    padding: 0 44px;
+    white-space: nowrap;
+  }
+}

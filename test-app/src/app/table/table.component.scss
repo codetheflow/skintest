@@ -1,0 +1,10 @@
+@import "../../theme/variables.scss";
+
+:host {
+  background-color: $white;
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow: hidden;
+  position: relative;
+  table-layout: fixed;
+}

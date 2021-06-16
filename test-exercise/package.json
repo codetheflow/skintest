@@ -1,8 +1,8 @@
 {
-  "name": "@skintest/sandbox",
+  "name": "@skintest/exercise",
   "version": "1.0.13",
   "private": true,
-  "description": "skintest sandbox",
+  "description": "skintest exercise",
   "files": [
     "dist"
   ],
@@ -21,7 +21,7 @@
   },
   "keywords": [
     "skintest",
-    "sandbox",
+    "exercise",
     "e2e",
     "end to end",
     "test",

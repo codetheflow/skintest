@@ -1,0 +1,87 @@
+@import "../theme/variables.scss";
+@import "../theme/mixins.scss";
+
+$padding-x: 150px;
+$compact-padding-x: 20px;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  @include height(57px);
+  align-items: center;
+  background-color: #111010;
+  display: flex;
+  padding-left: $padding-x;
+}
+
+.page {
+  background: $white;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  &__header {
+    background: $white;
+    box-shadow: 0px 1px #f1f1f1;
+    box-sizing: border-box;
+    flex: none;
+    height: 144px;
+    padding: 46px $padding-x 0 $padding-x;
+  }
+
+  &__title {
+    color: $dark-primary;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    margin: 0;
+    padding-bottom: 6px;
+    white-space: nowrap;
+  }
+
+  &__subtitle {
+    color: $dark-secondary;
+    font-family: Helvetica;
+    font-size: $font-size;
+    font-weight: 400;
+    line-height: 20px;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  &__content {
+    background-color: $dark-highlight;
+    flex: 1;
+    overflow: auto;
+  }
+
+  // https://stackoverflow.com/questions/10054870/when-a-child-element-overflows-horizontally-why-is-the-right-padding-of-the-par
+  &__content-padding {
+    display: inline-block;
+    margin: 80px $padding-x 40px $padding-x;
+  }
+}
+
+@media only screen and (max-width: $compact-screen-width) {
+  .header {
+    padding-left: $compact-padding-x;
+  }
+
+  .page {
+    &__header {
+      padding-left: $compact-padding-x;
+      padding-right: $compact-padding-x;
+      height: 108px;
+    }
+
+    &__content-padding {
+      margin: 14px $compact-padding-x 14px $compact-padding-x;
+    }
+  }
+}

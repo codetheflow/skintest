@@ -35,7 +35,7 @@
 * github lint workflow - done
 * starter github repository - done
 * publish version 1.0.0.alpha - done
-* sandbox:watch command - done
+* exercise:watch command - done
 * copy/paste as recipe example - done
 * playwright in the plugins - done
 * https://github.com/microsoft/playwright/issues/2511

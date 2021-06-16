@@ -1,0 +1,115 @@
+@import "../../theme/variables.scss";
+@import "../../theme/mixins.scss";
+
+$color-pending: #ff952e;
+
+:host {
+  display: block;
+}
+
+.entry-list {
+  &__table {
+    width: 100%;
+  }
+
+  &__warn-header {
+    color: #c82506;
+  }
+
+  &__the-user-label {
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar {
+    // vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  &__the-row-actions {
+    @include width(70px);
+    box-sizing: border-box;
+    opacity: 0;
+
+    &-menu {
+      width: 285px;
+    }
+
+    &-button {
+      @include borderReset();
+      background-color: transparent;
+      clear: both;
+      cursor: pointer;
+      float: right;
+      height: 24px;
+      outline: none;
+    }
+  }
+
+  &__the-status {
+    @include width(100px);
+
+    &-text {
+      text-transform: capitalize;
+
+      &--pending {
+        color: $color-pending;
+      }
+    }
+  }
+
+  &__confirm-button {
+    margin-top: 8px;
+    margin-right: 4px;
+  }
+}
+
+// todo: get rid of ::ng-deep
+::ng-deep {
+  st-entry-list {
+    //tr:hover {
+      .table__row--hover {
+        .entry-list__the-row-actions {
+          opacity: 1;
+        }
+      }
+    //}
+  }
+}
+
+@media only screen and (max-width: $compact-screen-width) {
+  // to reduce table width on unselecting columns in the column-chooser
+  // we setup constant widths for the each column, if constant table width
+  // expected just set it up
+
+  .entry-list__table {
+    width: auto;
+
+    &.table--empty {
+      width: 100%;
+    }
+  }
+
+  // todo: get rid of ::ng-deep
+  ::ng-deep {
+    st-entry-list {
+      .table {
+        &__the-date {
+          @include width(180px);
+        }
+
+        &__the-name {
+          @include width(220px);
+        }
+
+        &__the-folder {
+          @include width(180px);
+        }
+
+        &__the-user {
+          @include width(180px);
+        }
+      }
+    }
+  }
+}

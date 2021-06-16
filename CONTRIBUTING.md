@@ -20,7 +20,7 @@ yarn build:watch
 ```
 In the second terminal:
 ```sh
-yarn sandbox
+yarn exercise
 ```
 
 # Debugging
@@ -36,7 +36,8 @@ Currently, the [source](https://github.com/codetheflow/skintest/tree/master) is 
 * [packages/platform](https://github.com/codetheflow/skintest/tree/master/packages/platfom): infrastructure to run scenarios and plugins.
 * [packages/plugins](https://github.com/codetheflow/skintest/tree/master/packages/plugins): browser launcher and lifecycle plugins.
 * [packages/enterprise](https://github.com/codetheflow/skintest/tree/master/packages/enterprise): recipes and utils under the commercial licence.
-* [sandbox](https://github.com/codetheflow/skintest/tree/master/sandbox): examples of test scenarios and recipes.
+* [test-exercise](https://github.com/codetheflow/skintest/tree/master/test-exercise): examples of test scenarios and recipes.
+* [test-app](https://github.com/codetheflow/skintest/tree/master/test-app): testing example app.
 
 ### Linting
 
