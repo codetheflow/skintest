@@ -55,10 +55,11 @@
 * waitSelector doesn't take into account page's timeout - done
 * propagate tagName - done
 * I.fill(input, stamp `my job #e2e-${stamp.time}`) - done
+* session and local storages through the evaluate function - done
 
 0.0.11
 * `__pause` is frozen sometimes ??
-* add fail\error hook in the scenario as a debug option, or add pause on fail
+* add fail\error hook in the scenario as a debug option, or add pause on fail plugin
 * feature name /scenario name uniq constraint
 * drag and drop
 * and inspect to dbg in .debug, better debugging experience
@@ -68,20 +69,19 @@
 * https://playwright.dev/docs/api/class-dialog
 * video and screenshots support
 * https://playwright.dev/docs/ci
+* multiple test data for particular scenario like in cucumber | | | with @test decorator?
+* define the final folder structure
+* add `feature`, `component`, `recipe` postfixes? - already in the experimental branch
+* better assert recipe
 
 next
 * skintest.io
-* multiple test data for particular scenario like in cucumber | | |
-* add script/feature error zone?
 * add max time that scenario could take (for `till` operations)
-* add playwright plugin to make things like pw(async p => await p.evaluate...);
 * add `secret` function to show `***` instead of value
 * has.state doesn't trigger type checking, because string is extendable from the string
-* example of using value from the selector like `I.fill(todos.what, as, todos.user)* maybe it should be a recipe?
 * better code parsing in the `meta.ts`
 * add comments to the ego, selectors, recipes and keyboard keys
 * remove redundant new lines in tty-report and tty-pause
-* add recipes package with copy/paste etc.
 * show fail/error solutions/links to solutions
 * slowMo settings in camelCase - lint warning
 * stubs/network intersection support
@@ -89,12 +89,13 @@ next
 * better reporting UX
 * CI
 * multiple selector strategy in $ and $$, data-test-id, search by the text
+* CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
 
 ### questions
-* wait `visible/invisible`? - done through the `I.wait(some_condition)`
-* think about todos.item.at/label_at etc.
-* $$ should wait?
-* add `feature`, `component`, `recipe` postfixes? - in experimental branch
+
+* add playwright plugin to make things like pw(async p => await p.evaluate...);
+* example of using value from the selector like `I.fill(todos.what, as, todos.user)* maybe it should be a recipe?
+* add script/feature error zone?
 * recipe types `assert`, `query`?
 * cli tool
 * time 
@@ -103,15 +104,13 @@ next
 * https://playwright.dev/docs/cli
 * how to store secrets?
 * propagate options to driver methods(like delay in dblcick)? through the global config?
-* recipe library (oauth, copy/paste etc.)
+* add recipes package? (oauth, copy/paste etc.)
 * deal with translations?
 * do we need special waiters for angular/react/view etc.
-* introduce roles for writing features/recipes
-* do we really need `test` step? - yes
+* introduce roles for writing features/recipes?
 * schema concept? strict, not strict versions? 
 * websockets?
-* auth 
-* session and local storages? - through the evaluate function
+* auth
 * https://playwright.dev/docs/auth
 * device emulation
 * browser console messages? error catching?
@@ -120,9 +119,6 @@ next
 * https://playwright.dev/docs/test-runners
 * browser and node runners?
 * https://gist.github.com/vzaidman/ef6e4b772b311ffb98368da5f7a9582a#file-codecept-example-js
-* press vs hit? press target?
-* CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
-* install/uninstall setup/teardown? - mount/unmount/ready
 
 ### code style
 
@@ -188,4 +184,14 @@ async function navigate(product: string, item: string): Promise<Recipe> {
     ),
   );
 }
+```
+
+```typescript
+  @test.data({ map: 'data.csv', to: my_model, })
+  @test.run({ timeout: 5000 })
+  .scenario('#now check the list supports many todos'
+    , I.do(generate_todos, my_model)
+    , I.test('list contains all the items')
+    , I.see(todos.list, has.length, 10)
+  )
 ```

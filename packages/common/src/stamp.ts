@@ -2,7 +2,7 @@ const map = new Map<string, string>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function stamp(keys: TemplateStringsArray, ...args: any[]): string {
-  const key = String.raw(keys, ...args);
+  const key = String.raw(keys, ...args.filter(x => x !== stamp.time));
   if (map.has(key)) {
     return map.get(key) || '';
   }
@@ -18,7 +18,7 @@ export function stamp(keys: TemplateStringsArray, ...args: any[]): string {
         arg = Date.now();
       }
 
-      return arg ? arg + chunk : chunk;
+      return arg ? chunk + arg : chunk;
     })
     .join('');
 
