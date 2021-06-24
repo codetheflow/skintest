@@ -1,6 +1,5 @@
-import { Guard, reinterpret } from '@skintest/common';
+import { Guard, Meta, reinterpret } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
 export interface Download {
   save(path: string): Download;
@@ -17,11 +16,11 @@ const DOWNLOAD_OPTIONS = {
 
 export const download = DOWNLOAD_OPTIONS as Download;
 
-export class WaitDownloadStep implements ClientStep {
+export class WaitDownloadStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private download: Download,
   ) {
     Guard.notNull(getMeta, 'getMeta');

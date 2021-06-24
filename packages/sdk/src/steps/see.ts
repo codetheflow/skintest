@@ -1,16 +1,15 @@
-import { Guard, reinterpret } from '@skintest/common';
+import { Guard, Meta, reinterpret } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
 import { AssertStep, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
-import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
 import { Verify } from '../verify';
 
-export class SeeStep implements AssertStep {
+export class SeeStep<D> implements AssertStep<D> {
   type: 'assert' = 'assert';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private query: Query | QueryList,
     private assert: BinaryAssert<unknown> | ListBinaryAssert<unknown>,
     private value: unknown

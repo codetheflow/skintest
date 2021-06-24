@@ -1,20 +1,19 @@
-import { reinterpret } from '@skintest/common';
+import { getCaller, getMeta, reinterpret } from '@skintest/common';
 import { ControlStep } from './command';
-import { getCaller, getStepMeta } from './meta';
 import { RepeatRead, RepeatYield } from './repeat';
 import { TillStep } from './steps/till';
 
 export interface Till {
-  (message: string): ControlStep;
-  yield: RepeatRead;
+  <D>(message: string): ControlStep<D>;
+  item: RepeatRead;
 }
 
-const repeatTill = (message: string): ControlStep => {
+function repeatTill<D>(message: string): ControlStep<D> {
   const caller = getCaller();
-  return new TillStep(() => getStepMeta(caller), message);
-};
+  return new TillStep(() => getMeta(caller), message);
+}
 
-Object.defineProperty(repeatTill, 'yield', {
+Object.defineProperty(repeatTill, 'item', {
   get() {
     return new RepeatYield();
   },

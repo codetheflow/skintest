@@ -1,13 +1,12 @@
-import { Guard, reinterpret, retry, RetryOptions } from '@skintest/common';
+import { Guard, Meta, reinterpret, retry, RetryOptions } from '@skintest/common';
 import { AssertStep, ClientStep, StepContext, StepExecutionAssertResult, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
-export class WaitStep implements ClientStep {
+export class WaitStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
-    private assert: AssertStep
+    public getMeta: () => Promise<Meta>,
+    private assert: AssertStep<D>
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(assert, 'assert');

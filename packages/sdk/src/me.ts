@@ -1,12 +1,11 @@
-import { isFunction } from '@skintest/common';
-import { BinaryAssert, ListBinaryAssert } from './assert';
-import { AssertStep, ClientStep, DevStep, DoStep, InfoStep, TestStep } from './command';
+import { getCaller, getMeta, isFunction } from '@skintest/common';
+import { AssertStep, CheckStep, ClientStep, DevStep, DoStep, InfoStep } from './command';
 import { DOMElement } from './dom';
 import { Ego } from './ego';
 import { KeyboardKey } from './keyboard';
-import { getCaller, getStepMeta } from './meta';
 import { Query, QueryList } from './query';
 import { RecipeFunction } from './recipe';
+import { CheckExecuteStep } from './steps/check';
 import { ClickStep } from './steps/click';
 import { DblClickStep } from './steps/dblclick';
 import { Breakpoint, DebugStep } from './steps/debug';
@@ -26,136 +25,127 @@ import { ReloadStep } from './steps/reload';
 import { SayStep } from './steps/say';
 import { SeeStep } from './steps/see';
 import { SelectTextStep } from './steps/select-text';
-import { ExecuteStep } from './steps/test';
 import { ThatStep } from './steps/that';
 import { TypeStep } from './steps/type';
 import { WaitStep } from './steps/wait';
-import { ThatFunction } from './that';
-
 
 class Me implements Ego {
-  wait<F extends ThatFunction>(recipe: F, ...args: Parameters<F>): ClientStep;
-  wait<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): ClientStep;
-  wait<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): ClientStep;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  wait(targetOrRecipe: any, ...args: any[]): ClientStep {
+  wait<D>(targetOrRecipe: any, ...args: any[]): ClientStep<D> {
     const caller = getCaller();
     const assert = isFunction(targetOrRecipe)
-      ? new ThatStep(() => getStepMeta(caller), targetOrRecipe, args)
-      : new SeeStep(() => getStepMeta(caller), targetOrRecipe, args[0], args[1]);
+      ? new ThatStep(() => getMeta(caller), targetOrRecipe, args)
+      : new SeeStep(() => getMeta(caller), targetOrRecipe, args[0], args[1]);
 
-    return new WaitStep(() => getStepMeta(caller), assert);
+    return new WaitStep(() => getMeta(caller), assert);
   }
 
-  do<F extends RecipeFunction>(recipe: F, ...args: Parameters<F>): DoStep {
+  do<D, F extends RecipeFunction>(recipe: F, ...args: Parameters<F>): DoStep<D> {
     const caller = getCaller();
-    return new RecipeStep(() => getStepMeta(caller), recipe, args);
+    return new RecipeStep(() => getMeta(caller), recipe, args);
   }
 
-  see<F extends ThatFunction>(recipe: F, ...args: Parameters<F>): AssertStep;
-  see<E extends DOMElement, V>(target: Query<E>, has: BinaryAssert<V>, value: V): AssertStep;
-  see<E extends DOMElement, V>(targets: QueryList<E>, has: ListBinaryAssert<V>, value: V): AssertStep;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  see(targetOrRecipe: any, ...args: any[]): AssertStep {
+  see<D>(targetOrRecipe: any, ...args: any[]): AssertStep<D> {
     const caller = getCaller();
     if (isFunction(targetOrRecipe)) {
-      return new ThatStep(() => getStepMeta(caller), targetOrRecipe, args);
+      return new ThatStep(() => getMeta(caller), targetOrRecipe, args);
     }
 
-    return new SeeStep(() => getStepMeta(caller), targetOrRecipe, args[0], args[1]);
+    return new SeeStep(() => getMeta(caller), targetOrRecipe, args[0], args[1]);
   }
 
-  mark<E extends DOMElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep {
+  mark<D, E extends DOMElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep<D> {
     const caller = getCaller();
-    return new MarkStep(() => getStepMeta(caller), target, value);
+    return new MarkStep(() => getMeta(caller), target, value);
   }
 
-  select<E extends DOMElement>(what: 'text', target: Query<E>): ClientStep {
+  select<D, E extends DOMElement>(what: 'text', target: Query<E>): ClientStep<D> {
     const caller = getCaller();
-    return new SelectTextStep(() => getStepMeta(caller), target);
+    return new SelectTextStep(() => getMeta(caller), target);
   }
 
-  open(name: string): ClientStep {
+  open<D>(name: string): ClientStep<D> {
     const caller = getCaller();
-    return new OpenStep(() => getStepMeta(caller), name);
+    return new OpenStep(() => getMeta(caller), name);
   }
 
-  dblclick<E extends DOMElement>(query: Query<E>): ClientStep {
+  dblclick<D, E extends DOMElement>(query: Query<E>): ClientStep<D> {
     const caller = getCaller();
-    return new DblClickStep(() => getStepMeta(caller), query);
+    return new DblClickStep(() => getMeta(caller), query);
   }
 
-  type<E extends DOMElement>(target: Query<E>, value: string): ClientStep {
+  type<D, E extends DOMElement>(target: Query<E>, value: string): ClientStep<D> {
     const caller = getCaller();
-    return new TypeStep(() => getStepMeta(caller), target, value);
+    return new TypeStep(() => getMeta(caller), target, value);
   }
 
-  navigate(direction: 'forward' | 'back'): ClientStep {
+  navigate<D>(direction: 'forward' | 'back'): ClientStep<D> {
     const caller = getCaller();
     switch (direction) {
-      case 'forward': return new NavigationForwardStep(() => getStepMeta(caller));
-      case 'back': return new NavigationBackStep(() => getStepMeta(caller));
+      case 'forward': return new NavigationForwardStep(() => getMeta(caller));
+      case 'back': return new NavigationBackStep(() => getMeta(caller));
     }
   }
 
-  reload(): ClientStep {
+  reload<D>(): ClientStep<D> {
     const caller = getCaller();
-    return new ReloadStep(() => getStepMeta(caller));
+    return new ReloadStep(() => getMeta(caller));
   }
 
-  test(message: string): TestStep {
+  check<D>(message: string): CheckStep<D> {
     const caller = getCaller();
-    return new ExecuteStep(() => getStepMeta(caller), message);
+    return new CheckExecuteStep(() => getMeta(caller), message);
   }
 
-  goto(url: string): ClientStep {
+  goto<D>(url: string): ClientStep<D> {
     const caller = getCaller();
-    return new GotoStep(() => getStepMeta(caller), url);
+    return new GotoStep(() => getMeta(caller), url);
   }
 
-  click<E extends DOMElement>(target: Query<E>): ClientStep {
+  click<D, E extends DOMElement>(target: Query<E>): ClientStep<D> {
     const caller = getCaller();
-    return new ClickStep(() => getStepMeta(caller), target);
+    return new ClickStep(() => getMeta(caller), target);
   }
 
-  hover<E extends DOMElement>(target: Query<E>): ClientStep {
+  hover<D, E extends DOMElement>(target: Query<E>): ClientStep<D> {
     const caller = getCaller();
-    return new HoverStep(() => getStepMeta(caller), target);
+    return new HoverStep(() => getMeta(caller), target);
   }
 
-  press(key: KeyboardKey): ClientStep {
+  press<D>(key: KeyboardKey): ClientStep<D> {
     const caller = getCaller();
-    return new PressStep(() => getStepMeta(caller), key);
+    return new PressStep(() => getMeta(caller), key);
   }
 
-  fill<E extends DOMElement>(target: Query<E>, value: string): ClientStep {
+  fill<D, E extends DOMElement>(target: Query<E>, value: string): ClientStep<D> {
     const caller = getCaller();
-    return new FillStep(() => getStepMeta(caller), target, value);
+    return new FillStep(() => getMeta(caller), target, value);
   }
 
-  focus<E extends DOMElement>(target: Query<E>): ClientStep {
+  focus<D, E extends DOMElement>(target: Query<E>): ClientStep<D> {
     const caller = getCaller();
-    return new FocusStep(() => getStepMeta(caller), target);
+    return new FocusStep(() => getMeta(caller), target);
   }
 
-  say(message: string): InfoStep {
+  say<D>(message: string): InfoStep<D> {
     const caller = getCaller();
-    return new SayStep(() => getStepMeta(caller), message);
+    return new SayStep(() => getMeta(caller), message);
   }
 
-  __debug(breakpoint: Breakpoint): DevStep {
+  __debug<D>(breakpoint: Breakpoint): DevStep<D> {
     const caller = getCaller();
-    return new DebugStep(() => getStepMeta(caller), breakpoint);
+    return new DebugStep(() => getMeta(caller), breakpoint);
   }
 
-  __inspect<T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep {
+  __inspect<D, T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep<D> {
     const caller = getCaller();
-    return new InspectStep(() => getStepMeta(caller), selector);
+    return new InspectStep(() => getMeta(caller), selector);
   }
 
-  __pause(): DevStep {
+  __pause<D>(): DevStep<D> {
     const caller = getCaller();
-    return new PauseStep(() => getStepMeta(caller),);
+    return new PauseStep(() => getMeta(caller),);
   }
 }
 

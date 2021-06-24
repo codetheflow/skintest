@@ -1,6 +1,5 @@
-import { Guard, reinterpret } from '@skintest/common';
+import { Guard, Meta, reinterpret } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
 export interface FileDialog {
   open(...files: string[]): FileDialog;
@@ -17,11 +16,11 @@ const FILE_DIALOG_OPTIONS = {
 
 export const fileDialog = FILE_DIALOG_OPTIONS as FileDialog;
 
-export class WaitFileDialogStep implements ClientStep {
+export class WaitFileDialogStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private options: FileDialog,
   ) {
     Guard.notNull(getMeta, 'getMeta');

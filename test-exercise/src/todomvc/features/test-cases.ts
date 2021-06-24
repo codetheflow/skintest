@@ -1,3 +1,4 @@
+import { test } from '@skintest/enterprise';
 import { feature, has, I } from '@skintest/sdk';
 import { page } from '../components/page';
 import { todos } from '../components/todos';
@@ -12,10 +13,14 @@ feature()
     , I.do(clear_todos)
   )
 
-  .scenario('check the remove button deletes items'
-    , I.do(add_todo, 'item to remove')
-    , I.hover(todos.item_label_at(0))
-    , I.click(todos.item_remove_at(0))
-    , I.check('todos list is empty after remove button clicked')
-    , I.see(todos.list, has.length, 0)
+  .scenario('#now test login'
+    , test.cases(
+      { label: 'todo1', n: 1 },
+      { label: 'todo2', n: 1 },
+      { label: 'todo3', n: 1 },
+    )
+
+    , I.do(add_todo, test.data('label'))
+    , I.check('todo was added')
+    , I.see(todos.item_label_at(0), has.text, test.data('label'))
   )

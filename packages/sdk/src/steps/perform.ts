@@ -1,18 +1,17 @@
-import { errors, Guard } from '@skintest/common';
+import { errors, Guard, Meta } from '@skintest/common';
 import { ClientStep, DoStep, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 import { RepeatYield } from '../repeat';
 import { PerformSchema } from '../schema';
 import { IIfStep } from './iif';
 import { TillStep } from './till';
 
-export class PerformStep implements ClientStep {
+export class PerformStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private message: string,
-    private plan: PerformSchema,
+    private plan: PerformSchema<D>,
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(plan, 'plan');
@@ -35,7 +34,7 @@ export class PerformStep implements ClientStep {
       if (marker instanceof TillStep) {
         const writes: RepeatYield[] = plan
         .filter(x => x.type === 'do')
-        .map(x => (x as DoStep).args)
+        .map(x => (x as DoStep<unknown>).args)
         .reduce((xs, memo) => {
           memo.push(...xs);
           return memo;

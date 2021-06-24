@@ -1,6 +1,7 @@
-import { capture, errors, StackFrame, withSourceMap } from '@skintest/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { errors } from './errors';
+import { capture, StackFrame, withSourceMap } from './stack-trace';
 
 const PACKAGES = [
   'common',
@@ -10,11 +11,10 @@ const PACKAGES = [
   'enterprise',
 ].map(x => path.sep + path.join(x, 'dist'));
 
-export type Meta = Omit<StackFrame, 'function'>;
-export type StepMeta = Meta & { rootage: string };
+export type Meta = Omit<StackFrame, 'function'> & { rootage: string };
 
-export async function getStepMeta(caller: StackFrame): Promise<StepMeta> {
-  const meta = await getMeta(caller);
+export async function getMeta(caller: StackFrame): Promise<Meta> {
+  const meta = await withSourceMap(caller);
   const originContent = fs.readFileSync(meta.file).toString();
   const lines = originContent.split('\n');
 
@@ -24,10 +24,6 @@ export async function getStepMeta(caller: StackFrame): Promise<StepMeta> {
     ...meta,
     rootage
   };
-}
-
-export function getMeta(caller: StackFrame): Promise<Meta> {
-  return withSourceMap(caller);
 }
 
 export function getCaller(): StackFrame {

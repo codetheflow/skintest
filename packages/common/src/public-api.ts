@@ -1,5 +1,6 @@
 export { errors } from './errors';
 export { Guard } from './guard';
+export { getCaller, getMeta, Meta } from './meta';
 export { retry, RetryOptions } from './retry';
 export { capture, prettyStack, StackFrame, withSourceMap } from './stack-trace';
 export { Boxed, KeyValue, NumberDictionary, Optional, Predicate, Serializable, StringDictionary } from './types';

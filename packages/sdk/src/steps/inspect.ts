@@ -1,13 +1,12 @@
-import { errors, Guard, isString, reinterpret } from '@skintest/common';
+import { errors, Guard, isString, Meta, reinterpret } from '@skintest/common';
 import { DevStep, StepContext, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 import { Query, QueryList } from '../query';
 
-export class InspectStep implements DevStep {
+export class InspectStep<D> implements DevStep<D> {
   type: 'dev' = 'dev';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private query: string | Query | QueryList
   ) {
     Guard.notNull(getMeta, 'getMeta');

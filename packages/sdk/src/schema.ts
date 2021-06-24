@@ -1,25 +1,24 @@
-import { AssertStep, ClientStep, ControlStep, DevStep, DoStep, InfoStep, TestStep } from './command';
+import { AssertStep, CheckStep, ClientStep, ControlStep, DevStep, DoStep, InfoStep } from './command';
 
-export type StoryStep = ClientStep | DoStep | DevStep | InfoStep;
-export type VerifyStep = AssertStep | DevStep;
-export type ControlFlowStep = ControlStep | DevStep;
+export type StoryStep<D> = ClientStep<D> | DoStep<D> | InfoStep<D> | DevStep<D>;
+export type VerifyStep<D> = AssertStep<D> | DevStep<D>;
+export type ControlFlowStep<D> = ControlStep<D> | DevStep<D>;
 
-export type StorySchema = StoryStep[];
-export type VerifySchema = VerifyStep[];
+export type StorySchema<D> = StoryStep<D>[];
 
-type WithVerifySchema<AFTER> =
-  [...StorySchema, AFTER, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep]
-  | [...StorySchema, AFTER, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep, VerifyStep];
+type FlowSchema<D, AFTER> =
+  [...StorySchema<D>, AFTER, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>]
+  | [...StorySchema<D>, AFTER, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>, VerifyStep<D>];
 
-export type ScenarioSchema = WithVerifySchema<TestStep>;
-export type PerformSchema = [...StorySchema] | WithVerifySchema<ControlFlowStep>;
+export type ScenarioSchema<D> = FlowSchema<D, CheckStep<D>>;
+export type PerformSchema<D> = [...StorySchema<D>] | FlowSchema<D, ControlFlowStep<D>>;

@@ -59,6 +59,7 @@
 
 0.0.11
 * `__pause` is frozen sometimes ??
+* error file path is incorrect
 * add fail\error hook in the scenario as a debug option, or add pause on fail plugin
 * feature name /scenario name uniq constraint
 * drag and drop
@@ -90,9 +91,14 @@ next
 * CI
 * multiple selector strategy in $ and $$, data-test-id, search by the text
 * CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
+* stripe integration
+* azure account
 
 ### questions
 
+* `live` instead `watch`
+* free for open source projects?
+* till.yield vs till.current?
 * add playwright plugin to make things like pw(async p => await p.evaluate...);
 * example of using value from the selector like `I.fill(todos.what, as, todos.user)* maybe it should be a recipe?
 * add script/feature error zone?

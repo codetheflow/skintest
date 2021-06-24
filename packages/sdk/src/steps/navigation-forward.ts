@@ -1,12 +1,11 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
-export class NavigationForwardStep implements ClientStep {
+export class NavigationForwardStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
   ) {
     Guard.notNull(getMeta, 'getMeta');
   }

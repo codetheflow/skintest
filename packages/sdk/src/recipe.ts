@@ -5,6 +5,12 @@ export type RecipeIterable = Iterable<Command>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Recipe = RecipeOperator<any, RecipeIterable>;
 
+export type RecipeFunction0 = () => Promise<Recipe>;
+export type RecipeFunction1<A> = (arg1: A) => Promise<Recipe>;
+export type RecipeFunction2<A, B> = (arg1: A, arg2: B) => Promise<Recipe>;
+export type RecipeFunction3<A, B, C> = (arg1: A, arg2: B, arg3: C) => Promise<Recipe>;
+export type RecipeFunction4<A, B, C, D> = (arg1: A, arg2: B, arg3: C, arg4: D) => Promise<Recipe>;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RecipeFunction = (...args: any[]) => Promise<Recipe>;
 

@@ -1,13 +1,12 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { KeyboardKey } from '../keyboard';
-import { StepMeta } from '../meta';
 
-export class PressStep implements ClientStep {
+export class PressStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private key: KeyboardKey
   ) {
     Guard.notNull(getMeta, 'getMeta');

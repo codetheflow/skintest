@@ -1,11 +1,12 @@
 import { Guard, Meta } from '@skintest/common';
-import { DevStep, methodResult, StepExecutionResult } from '../command';
+import { CheckStep, methodResult, StepExecutionResult } from '../command';
 
-export class PauseStep<D> implements DevStep<D> {
-  type: 'dev' = 'dev';
+export class CheckExecuteStep<D> implements CheckStep<D> {
+  type: 'check' = 'check';
 
   constructor(
     public getMeta: () => Promise<Meta>,
+    private what: string
   ) {
     Guard.notNull(getMeta, 'getMeta');
   }
@@ -15,6 +16,6 @@ export class PauseStep<D> implements DevStep<D> {
   }
 
   toString(): string {
-    return '__pause';
+    return `check ${this.what}`;
   }
 }

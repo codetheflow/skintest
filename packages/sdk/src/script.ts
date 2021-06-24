@@ -1,8 +1,7 @@
-import { errors } from '@skintest/common';
+import { errors, Meta } from '@skintest/common';
 import { Command } from './command';
 import { Feature, Scenario } from './feature';
-import { Meta } from './meta';
-import { ScenarioSchema, StorySchema } from './schema';
+import { StorySchema } from './schema';
 
 export interface Script {
   readonly name: string;
@@ -36,7 +35,7 @@ export class RuntimeScript implements Script, Feature, Scenario {
   ) {
   }
 
-  before(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema): Feature {
+  before(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema<unknown>): Feature {
     switch (what) {
       case 'feature':
         this.beforeFeature.push(...schema);
@@ -54,7 +53,7 @@ export class RuntimeScript implements Script, Feature, Scenario {
     return this;
   }
 
-  after(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema): Feature {
+  after(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema<unknown>): Feature {
     switch (what) {
       case 'feature':
         this.afterFeature.push(...schema);
@@ -72,8 +71,8 @@ export class RuntimeScript implements Script, Feature, Scenario {
     return this;
   }
 
-  scenario(name: string, ...schema: ScenarioSchema): Scenario {
-    this.scenarios.push([name, schema]);
+  scenario(name: string, ...steps: Command[]): Scenario {
+    this.scenarios.push([name, steps]);
     return this;
   }
 }

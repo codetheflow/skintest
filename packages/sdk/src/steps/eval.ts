@@ -1,12 +1,11 @@
-import { Guard, Serializable } from '@skintest/common';
+import { Guard, Meta, Serializable } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
-export class EvalStep implements ClientStep {
+export class EvalStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private message: string,
     private pageFunction: (arg: Serializable) => void,
     private arg: Serializable,

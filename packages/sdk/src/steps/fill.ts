@@ -1,14 +1,13 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
-import { StepMeta } from '../meta';
 import { Query } from '../query';
 
-export class FillStep implements ClientStep {
+export class FillStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private query: Query,
     private value: string,
   ) {

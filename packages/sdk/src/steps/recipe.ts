@@ -1,13 +1,12 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { DoStep, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 import { RecipeFunction } from '../recipe';
 
-export class RecipeStep implements DoStep {
+export class RecipeStep<D> implements DoStep<D> {
   type: 'do' = 'do';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     public recipe: RecipeFunction,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public args: any[]

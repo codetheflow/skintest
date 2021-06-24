@@ -1,5 +1,4 @@
-import { errors } from '@skintest/common';
-import { getCaller, getStepMeta } from './meta';
+import { errors, getCaller, getMeta } from '@skintest/common';
 import { RecipeIterable, RecipeOperator } from './recipe';
 import { EventStep } from './steps/event';
 import { Download, WaitDownloadStep } from './steps/wait-download';
@@ -14,22 +13,22 @@ export type ClientPageEvents = {
 
 export function handle<E extends keyof ClientPageEvents>(event: E, options: ClientPageEvents[E]): RecipeOperator<RecipeIterable, RecipeIterable> {
   const caller = getCaller();
-  const getMeta = () => getStepMeta(caller);
+  const getStepMeta = () => getMeta(caller);
 
   switch (event) {
     case 'download':
       return source => [
         new EventStep(
-          getMeta,
-          new WaitDownloadStep(getMeta, options as Download),
+          getStepMeta,
+          new WaitDownloadStep(getStepMeta, options as Download),
           Array.from(source),
         )
       ];
     case 'file-dialog':
       return source => [
         new EventStep(
-          getMeta,
-          new WaitFileDialogStep(getMeta, options as FileDialog),
+          getStepMeta,
+          new WaitFileDialogStep(getStepMeta, options as FileDialog),
           Array.from(source),
         )
       ];

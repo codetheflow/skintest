@@ -1,10 +1,10 @@
-import { Guard } from '@skintest/common';
-import { getCaller, getMeta } from './meta';
+import { getCaller, getMeta, Guard } from '@skintest/common';
+import { DataStep } from './command';
 import { ScenarioSchema, StorySchema } from './schema';
 import { RuntimeScript } from './script';
 import { getSuite } from './suite';
 
-export function feature(name: string): Feature {
+export function feature(): Feature {
   const suite = getSuite();
 
   // todo: make error from errors
@@ -14,18 +14,20 @@ export function feature(name: string): Feature {
   );
 
   const caller = getCaller();
-  const script = new RuntimeScript(name, () => getMeta(caller));
+  const script = new RuntimeScript(`feature-${Date.now()}`, () => getMeta(caller));
   suite.addScript(script);
   return script;
 }
 
 export interface Feature {
-  before(what: 'feature' | 'scenario' | 'step', ...step: StorySchema): Feature;
-  after(what: 'feature' | 'scenario' | 'step', ...step: StorySchema): Feature;
+  before(what: 'feature' | 'scenario' | 'step', ...step: StorySchema<undefined>): Feature;
+  after(what: 'feature' | 'scenario' | 'step', ...step: StorySchema<undefined>): Feature;
 
-  scenario(name: string, ...step: ScenarioSchema): Scenario;
+  scenario<T>(name: string, data: DataStep<T>, ...step: ScenarioSchema<T>): Scenario;
+  scenario(name: string, ...step: ScenarioSchema<undefined>): Scenario;
 }
 
 export interface Scenario {
-  scenario(name: string, ...step: ScenarioSchema): Scenario;
+  scenario<T>(name: string, data: DataStep<T>, ...step: ScenarioSchema<T>): Scenario;
+  scenario(name: string, ...step: ScenarioSchema<undefined>): Scenario;
 }

@@ -1,12 +1,11 @@
-import { Optional } from '@skintest/common';
-import { getCaller, getStepMeta } from './meta';
+import { getCaller, getMeta, Optional } from '@skintest/common';
 import { RecipeIterable, RecipeOperator } from './recipe';
 import { PerformSchema } from './schema';
 import { PerformStep } from './steps/perform';
 
-export function perform(message: string, ...step: PerformSchema): RecipeOperator<Optional<RecipeIterable>, RecipeIterable> {
+export function perform<D>(message: string, ...step: PerformSchema<D>): RecipeOperator<Optional<RecipeIterable>, RecipeIterable> {
   const caller = getCaller();
-  const getMeta = () => getStepMeta(caller);
+  const getStepMeta = () => getMeta(caller);
 
-  return source => [...(source || []), new PerformStep(getMeta, message, step)];
+  return source => [...(source || []), new PerformStep(getStepMeta, message, step)];
 }

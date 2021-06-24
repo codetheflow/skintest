@@ -1,12 +1,11 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { ControlStep, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
-export class IIfStep implements ControlStep {
+export class IIfStep<D> implements ControlStep<D> {
   type: 'control' = 'control';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private message: string,
   ) {
     Guard.notNull(getMeta, 'getMeta');

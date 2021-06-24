@@ -1,12 +1,11 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { ClientStep, Command, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
-export class EventStep implements ClientStep {
+export class EventStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private handler: Command,
     private trigger: Command[],
   ) {

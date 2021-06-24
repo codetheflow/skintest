@@ -1,8 +1,7 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { DevStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { DOMElement } from '../dom';
 import { ElementRef, ElementRefList } from '../element';
-import { StepMeta } from '../meta';
 import { Page } from '../page';
 import { Query, QueryList } from '../query';
 
@@ -28,11 +27,11 @@ class PageDebugger implements Debugger {
   }
 }
 
-export class DebugStep implements DevStep {
+export class DebugStep<D> implements DevStep<D> {
   type: 'dev' = 'dev';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private breakpoint: Breakpoint
   ) {
     Guard.notNull(getMeta, 'getMeta');

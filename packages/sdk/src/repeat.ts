@@ -12,22 +12,22 @@ export interface RepeatWrite {
 }
 
 export interface RepeatRead {
-  return(): RepeatEntry;
+  current(): RepeatEntry;
 }
 
 export class RepeatYield implements RepeatRead, RepeatWrite {
-  private current: RepeatEntry | null = null;
+  private entry: RepeatEntry | null = null;
 
   next(entry: RepeatEntry): void {
     Guard.notNull(entry, 'entry');
-    this.current = entry;
+    this.entry = entry;
   }
 
-  return(): RepeatEntry {
-    if(!this.current ) {
+  current(): RepeatEntry {
+    if (!this.entry) {
       throw errors.constraint('till.yield can be used only in conjunction with till(`message`) step');
     }
-    
-    return this.current as RepeatEntry;
+
+    return this.entry as RepeatEntry;
   }
 }

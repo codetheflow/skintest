@@ -1,12 +1,11 @@
-import { Guard } from '@skintest/common';
+import { Guard, Meta } from '@skintest/common';
 import { InfoStep, methodResult, StepExecutionResult } from '../command';
-import { StepMeta } from '../meta';
 
-export class SayStep implements InfoStep {
+export class SayStep<D> implements InfoStep<D> {
   type: 'info' = 'info';
 
   constructor(
-    public getMeta: () => Promise<StepMeta>,
+    public getMeta: () => Promise<Meta>,
     private message: string
   ) {
     Guard.notNull(getMeta, 'getMeta');
