@@ -9,7 +9,8 @@
     "packages": [
       "packages/*",
       "test-exercise",
-      "test-app"
+      "test-app",
+      "skintest.io"
     ]
   },
   "scripts": {
