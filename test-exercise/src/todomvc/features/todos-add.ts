@@ -74,7 +74,7 @@ feature()
     , I.see(todos.item_label_at(0), has.text, 'walk the dog')
   )
 
-  .scenario('check that todo item can be copy pasted by using clipboard'
+  .scenario('#now check that todo item can be copy pasted by using clipboard'
     , I.do(add_todo, 'feed dragon')
     , I.do(copy, todos.item_label_at(0))
     , I.do(paste, todos.what)
