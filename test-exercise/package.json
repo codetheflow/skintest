@@ -1,6 +1,6 @@
 {
   "name": "@skintest/exercise",
-  "version": "1.0.15-alpha.0",
+  "version": "1.0.16-alpha.0",
   "private": true,
   "description": "skintest exercise",
   "files": [
@@ -39,9 +39,9 @@
     "typescript": "4.3.2"
   },
   "dependencies": {
-    "@skintest/enterprise": "*",
+    "@skintest/enterprise": "^1.0.16-alpha.0",
     "@skintest/platform": "*",
-    "@skintest/plugins": "*",
-    "@skintest/sdk": "*"
+    "@skintest/plugins": "^1.0.16-alpha.0",
+    "@skintest/sdk": "^1.0.16-alpha.0"
   }
 }
