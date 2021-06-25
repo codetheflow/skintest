@@ -17,8 +17,12 @@ export type ProjectReadyScope = ProjectStartScope;
 export type ProjectErrorScope = ProjectStartScope & { reason: Error };
 
 export type FeatureScope = ProjectStartScope & { script: Script, browser: Browser };
+
 export type ScenarioScope = FeatureScope & { scenario: Scenario };
-export type StepScope = ScenarioScope & { step: Command };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ScenarioDataScope = ScenarioScope & { datum: any };
+
+export type StepScope = ScenarioDataScope & { step: Command };
 
 export type CommandScope = StepScope & { site: StageSite, path: Array<StepExecutionResult['type']> };
 export type CommandPassScope = CommandScope & { result: TestPass };
@@ -38,6 +42,7 @@ export type Stages = {
 
   'scenario:before': Stage<'scenario:before', ScenarioScope>;
   'scenario:after': Stage<'scenario:after', ScenarioScope>;
+  'scenario:data': Stage<'scenario:data', ScenarioDataScope>;
 
   'step:before': Stage<'step:before', StepScope>;
   'step:after': Stage<'step:after', StepScope>;

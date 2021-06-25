@@ -1,6 +1,6 @@
 import { errors, escapeRE, StringDictionary } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
-import { Suite } from '@skintest/sdk';
+import { Scenario, Suite } from '@skintest/sdk';
 
 type TagFilterOptions = {
   include: string[],
@@ -23,9 +23,9 @@ export function tagFilter(options: TagFilterOptions): Plugin {
           stat[feature].featureMatch ||
           stat[feature].scenarioMatches.size > 0;
 
-        suite.operations.filterScenario = (feature: string, scenario: string) =>
+        suite.operations.filterScenario = (feature: string, scenario: Scenario) =>
           stat[feature].featureMatch ||
-          stat[feature].scenarioMatches.has(scenario);
+          stat[feature].scenarioMatches.has(scenario.name);
       };
 
       switch (method) {

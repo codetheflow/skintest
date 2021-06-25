@@ -48,7 +48,10 @@ export class Scene {
 
       const scenarios = script
         .scenarios
-        .filter(({ name }) => operations.filterScenario(script.name, name));
+        .filter(scenario =>
+          operations
+            .filterScenario(script.name, scenario)
+        );
 
       for (const scenario of scenarios) {
         await this.scenario(script, scenario);
@@ -72,6 +75,7 @@ export class Scene {
 
     const beforeScenarioEffect = this.effect('scenario:before');
     const afterScenarioEffect = this.effect('scenario:after');
+    const dataScenarioEffect = this.effect('scenario:data');
 
     const scope = {
       suite: this.suite,
@@ -92,6 +96,8 @@ export class Scene {
     if (ok) {
       const { steps, attributes } = scenario;
       for (const datum of (attributes.data ?? [null])) {
+        await dataScenarioEffect({ ...scope, datum });
+
         for (const step of steps) {
           const result = await this.step(script, scenario, step, datum);
           if (!result) {
@@ -127,6 +133,7 @@ export class Scene {
       script,
       scenario,
       step,
+      datum
     };
 
     await beforeStepEffect(scope);
@@ -183,6 +190,7 @@ export class Scene {
       site,
       script,
       scenario,
+      datum
     };
 
     let breakLoop = false;

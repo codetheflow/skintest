@@ -1,5 +1,5 @@
 import { yes } from '@skintest/common';
-import { Script } from './script';
+import { Scenario, Script } from './script';
 
 export interface Suite {
   readonly uri: string;
@@ -11,7 +11,7 @@ export interface Suite {
 
 export interface SuiteOperations {
   filterFeature: (feature: string) => boolean;
-  filterScenario: (feature: string, scenario: string) => boolean;
+  filterScenario: (feature: string, scenario: Scenario) => boolean;
 }
 
 class ProjectSuite implements Suite {

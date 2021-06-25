@@ -50,6 +50,11 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       const label = scenario.name.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
       tty.newLine(stdout, tty.h2(label));
     },
+    'scenario:data': async ({ datum }) => {
+      if (datum) {
+        tty.newLine(stdout, tty.dev(JSON.stringify(datum)));
+      }
+    },
     'step': async ({ site, step, path }) => {
       if (step.type === 'dev') {
         const message = await getMessage(step);

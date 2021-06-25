@@ -28,10 +28,10 @@ feature()
     , { label: 'learn testing' }
     , { label: 'be cool' }
   )
-  .scenario('#now check the list has all added items'
+  .scenario('check the list has all added items'
     , I.do(add_todo, data('label'))
     , I.check('todo item is added')
-    , I.see(todos.item_label_at(0), has.text, data('label'))
+    , I.see(todos.item_label_last, has.text, data('label'))
   )
 
   .scenario('check the input field should contain entered text'
@@ -52,7 +52,7 @@ feature()
     , I.see(todos.item_label_at(0), has.text, 'pass the exams')
   )
 
-  .scenario('#now check the list supports many todos'
+  .scenario('check the list supports many todos'
     , I.do(generate_todos, 10)
     , I.check('list contains all the items')
     , I.see(todos.list, has.length, 10)
