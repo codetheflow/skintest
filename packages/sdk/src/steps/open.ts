@@ -1,24 +1,26 @@
 import { Guard, Meta } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
+import { stringify, Value } from '../value';
 
 export class OpenStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
     public getMeta: () => Promise<Meta>,
-    private name: string
+    private name: Value<string, D>
   ) {
     Guard.notNull(getMeta, 'getMeta');
-    Guard.notEmpty(name, 'name');
+    Guard.notNull(name, 'name');
   }
 
   execute(context: StepContext): Promise<StepExecutionResult> {
-    const { browser } = context;
+    const { browser, materialize } = context;
 
-    return methodResult(browser.openPage(this.name));
+    const name = materialize(this.name);
+    return methodResult(browser.openPage(name));
   }
 
   toString(): string {
-    return `open ${this.name}`;
+    return `open ${stringify(this.name)}`;
   }
 }

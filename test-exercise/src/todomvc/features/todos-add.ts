@@ -1,5 +1,5 @@
-import { copy, paste, test } from '@skintest/enterprise';
-import { feature, has, I } from '@skintest/sdk';
+import { copy, paste } from '@skintest/enterprise';
+import { data, feature, has, I } from '@skintest/sdk';
 import { page } from '../components/page';
 import { todos } from '../components/todos';
 import { add_todo } from '../recipes/add-todo';
@@ -24,15 +24,14 @@ feature()
     , I.see(todos.what, has.attribute, ['placeholder', 'What needs to be done?'])
   )
 
-  .scenario('check the list has all added items'
-    , test.cases(
-      { label: 'learn testing' },
-      { label: 'be cool' }
-    )
-
-    , I.do(add_todo, test.data('label'))
+  .test('data'
+    , { label: 'learn testing' }
+    , { label: 'be cool' }
+  )
+  .scenario('#now check the list has all added items'
+    , I.do(add_todo, data('label'))
     , I.check('todo item is added')
-    , I.see(todos.item_label_at(0), has.text, test.data('label'))
+    , I.see(todos.item_label_at(0), has.text, data('label'))
   )
 
   .scenario('check the input field should contain entered text'

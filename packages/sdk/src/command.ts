@@ -3,19 +3,20 @@ import { Browser } from './browser';
 import { RecipeFunction } from './recipe';
 import { RepeatWrite } from './repeat';
 import { InspectInfo, TestResult } from './test-result';
+import { Value } from './value';
 
-export type Command =
-  AssertStep<unknown>
-  | ControlStep<unknown>
-  | DataStep<unknown>
-  | DevStep<unknown>
-  | DoStep<unknown>
-  | InfoStep<unknown>
-  | CheckStep<unknown>
-  | ClientStep<unknown>;
+export type Command<T = unknown> =
+  AssertStep<T>
+  | ControlStep<T>
+  | DevStep<T>
+  | DoStep<T>
+  | InfoStep<T>
+  | CheckStep<T>
+  | ClientStep<T>;
 
 export interface StepContext {
   browser: Browser;
+  materialize<V, D>(value: Value<V, D>): V;
 }
 
 export type StepExecutionResult =
@@ -108,10 +109,6 @@ export interface DoStep<D> extends CommandBody<D> {
 
 export interface ControlStep<D> extends CommandBody<D> {
   type: 'control';
-}
-
-export interface DataStep<D> extends CommandBody<D> {
-  type: 'data';
 }
 
 export async function methodResult(promise: Promise<void>): Promise<StepExecutionResult> {

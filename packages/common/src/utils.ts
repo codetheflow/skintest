@@ -18,6 +18,14 @@ export function isFunction<T>(test: T): boolean {
   return typeof test === 'function';
 }
 
+export function isObject<T>(test: T): boolean {
+  if (test === null) {
+    return false;
+  }
+
+  return (typeof test === 'function') || (typeof test === 'object');
+}
+
 export function escapeRE(text: string): string {
   if (!text) {
     return text;

@@ -2,26 +2,30 @@ import { Guard, Meta } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { stringify, Value } from '../value';
 
-export class GotoStep<D> implements ClientStep<D> {
+export class NavigationStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
     public getMeta: () => Promise<Meta>,
-    private url: Value<string, D>
+    private direction: Value<'forward' | 'back', D>
   ) {
     Guard.notNull(getMeta, 'getMeta');
-    Guard.notNull(url, 'url');
+    Guard.notNull(direction, 'direction');
   }
 
   execute(context: StepContext): Promise<StepExecutionResult> {
     const { browser, materialize } = context;
 
     const page = browser.getCurrentPage();
-    const url = materialize(this.url);
-    return methodResult(page.goto(url));
+    const direction = materialize(this.direction);
+    return methodResult(
+      direction === 'back'
+        ? page.goBack()
+        : page.goForward()
+    );
   }
 
   toString(): string {
-    return `go to ${stringify(this.url)}`;
+    return `go ${stringify(this.direction)}`;
   }
 }

@@ -70,7 +70,7 @@ function getStat(suite: Suite, include: string[]): Statistics {
       scenarioMatches: new Set(
         script
           .scenarios
-          .map(([name]) => name)
+          .map(({ name }) => name)
           .filter(name => include.some(matchHashTag(name)))
       )
     };

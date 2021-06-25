@@ -1,12 +1,13 @@
 import { Guard, Meta } from '@skintest/common';
 import { InfoStep, methodResult, StepExecutionResult } from '../command';
+import { stringify, Value } from '../value';
 
 export class SayStep<D> implements InfoStep<D> {
   type: 'info' = 'info';
 
   constructor(
     public getMeta: () => Promise<Meta>,
-    private message: string
+    private message: Value<string, D>
   ) {
     Guard.notNull(getMeta, 'getMeta');
   }
@@ -16,6 +17,6 @@ export class SayStep<D> implements InfoStep<D> {
   }
 
   toString(): string {
-    return `say ${this.message}`;
+    return `say ${stringify(this.message)}`;
   }
 }

@@ -47,7 +47,7 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       tty.newLine(stdout, tty.h1(info.file + `:${info.line}:${info.column}`));
     },
     'scenario:before': async ({ scenario }) => {
-      const label = scenario.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
+      const label = scenario.name.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
       tty.newLine(stdout, tty.h2(label));
     },
     'step': async ({ site, step, path }) => {

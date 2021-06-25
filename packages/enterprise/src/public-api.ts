@@ -1,4 +1,4 @@
 export { copy } from './copy';
+export { my } from './my';
 export { paste } from './paste';
-export { stamp } from './stamp';
-export { test } from './test';
+
