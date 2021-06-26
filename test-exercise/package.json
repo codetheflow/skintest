@@ -42,6 +42,7 @@
     "@skintest/enterprise": "^1.0.16-alpha.0",
     "@skintest/platform": "^1.0.16-alpha.0",
     "@skintest/plugins": "^1.0.16-alpha.0",
-    "@skintest/sdk": "^1.0.16-alpha.0"
+    "@skintest/sdk": "^1.0.16-alpha.0",
+    "@skintest/common": "^1.0.16-alpha.0"
   }
 }

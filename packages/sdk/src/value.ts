@@ -1,3 +1,5 @@
+import { isObject, reinterpret } from '@skintest/common';
+
 export const VALUE_KEY = Symbol('@skintest/sdk/value-key');
 
 export type Value<Type, Data> = Type | {
@@ -5,8 +7,9 @@ export type Value<Type, Data> = Type | {
 };
 
 export function stringify<T, D>(value: Value<T, D>): string {
-  if ('key' in value) {
-    const key = value[VALUE_KEY];
+  if (isObject(value) && VALUE_KEY in value) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const key = reinterpret<any>(value) [VALUE_KEY];
     return `value from \`${key}\``;
   }
 

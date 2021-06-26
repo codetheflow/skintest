@@ -70,7 +70,7 @@
 * https://playwright.dev/docs/api/class-dialog
 * video and screenshots support
 * https://playwright.dev/docs/ci
-* multiple test data for particular scenario like in cucumber | | | with @test decorator?
+* multiple test data for particular scenario like in cucumber | | | - done
 * define the final folder structure
 * add `feature`, `component`, `recipe` postfixes? - already in the experimental branch
 * better assert recipe
@@ -96,6 +96,7 @@ next
 
 ### questions
 
+* in pause access to the components
 * `live` instead `watch`
 * free for open source projects?
 * till.yield vs till.current?

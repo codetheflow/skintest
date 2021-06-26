@@ -1,6 +1,5 @@
-import { ticksToTime } from '@skintest/common';
+import { isObject, ticksToTime } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
-import { TestFail } from '@skintest/sdk';
 import { performance } from 'perf_hooks';
 import { tty } from './tty';
 
@@ -11,8 +10,8 @@ export function ttySummaryReport(): Plugin {
 
   let startTime: number;
 
-  const errors: Error[] = [];
-  const fails: TestFail[] = [];
+  const errors: unknown[] = [];
+  const fails: unknown[] = [];
 
   const statistics = {
     features: 0,
@@ -45,7 +44,7 @@ export function ttySummaryReport(): Plugin {
         return;
       }
 
-      if ('status' in reason) {
+      if (isObject(reason) && 'status' in reason) {
         statistics.fails++;
         fails.push(reason);
       } else {

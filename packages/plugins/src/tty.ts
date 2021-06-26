@@ -93,9 +93,10 @@ export const tty = {
 
     if (!KNOWN_ERRORS.has(reason.name) && reason.stack) {
       const stackTrace = await prettyStack(reason.stack);
+      const tsFiles = stackTrace.filter(x => x.file && x.file.endsWith('.ts'));
+      const jsFiles = stackTrace.filter(x => x.file && x.file.endsWith('.js'));
 
-      stackTrace
-        .filter(x => x.file && x.file.endsWith('.ts'))
+      (tsFiles.length ? tsFiles : jsFiles)
         .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
         .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
         .map(x => `${x.function || 'at'} (${x.file}:${x.line}:${x.column})`)

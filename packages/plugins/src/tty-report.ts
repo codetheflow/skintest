@@ -1,3 +1,4 @@
+import { isObject } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command } from '@skintest/sdk';
 import { tty } from './tty';
@@ -82,7 +83,7 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
     },
     'step:fail': async ({ reason, step, site, path }) => {
       // todo: make it better
-      if ('status' in reason
+      if (isObject(reason) && 'status' in reason
         && (step.type === 'do'
           || step.toString().startsWith('perform')
           || step.toString().startsWith('event'))) {
@@ -98,10 +99,14 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
         tty.newLine(stderr, ...line);
       }
 
-      if ('status' in reason) {
+      if (isObject(reason) && 'status' in reason) {
         tty.writeFail(stderr, reason);
       } else {
-        await tty.writeError(stderr, reason);
+        if (reason instanceof Error) {
+          await tty.writeError(stderr, reason);
+        } else {
+          await tty.writeError(stderr, new Error('' + reason));
+        }
       }
     },
     'project:error': async ({ reason }) => {
