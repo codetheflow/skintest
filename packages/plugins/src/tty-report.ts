@@ -53,7 +53,7 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
     },
     'scenario:data': async ({ datum }) => {
       if (datum) {
-        tty.newLine(stdout, tty.dev(JSON.stringify(datum)));
+        tty.newLine(stdout, tty.h2('-- ' + JSON.stringify(datum)));
       }
     },
     'step': async ({ site, step, path }) => {

@@ -24,7 +24,7 @@ export { Breakpoint, Debugger } from './steps/debug';
 export { download, Download } from './steps/wait-download';
 export { fileDialog, FileDialog } from './steps/wait-file-dialog';
 export { newSuite, Suite, SuiteOperations } from './suite';
-export { fail, InspectInfo, pass, TestFail, TestPass, TestResult } from './test-result';
+export { fail, InspectInfo, pass, TestEffect, TestFail, TestPass, TestResult } from './test-result';
 export { ThatFunction } from './that';
 export { till, Till } from './till';
 export { Value, VALUE_KEY } from './value';

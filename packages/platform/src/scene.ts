@@ -241,12 +241,14 @@ export class Scene {
               break;
             }
 
-            errorSink.push(result.description);
-
             const host = path[path.length - 1];
-            const asPredicate = host === 'condition' || host === 'repeat';
-            if (asPredicate) {
+            const controlFlow = host === 'condition' || host === 'repeat';
+            if (result.effect === 'break' || controlFlow) {
+              errorSink.push(result.description);
               breakLoop = true;
+            }
+
+            if (controlFlow) {
               await passEffect({ ...scope, step, result: pass(), path });
               break;
             }

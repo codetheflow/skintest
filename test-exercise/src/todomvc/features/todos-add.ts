@@ -16,7 +16,8 @@ feature()
 
   .scenario('check the input field should be in focus on initial load'
     , I.check('focus in the input field')
-    , I.see(todos.what, has.state, 'focused')
+    , I.see(todos.what, has.no.state, 'focused')
+    , I.see(todos.list, has.length.above, 0)
   )
 
   .scenario('check the input field should have placeholder'
@@ -74,7 +75,7 @@ feature()
     , I.see(todos.item_label_at(0), has.text, 'walk the dog')
   )
 
-  .scenario('#now check that todo item can be copy pasted by using clipboard'
+  .scenario('check that todo item can be copy pasted by using clipboard'
     , I.do(add_todo, 'feed dragon')
     , I.do(copy, todos.item_label_at(0))
     , I.do(paste, todos.what)
