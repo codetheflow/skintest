@@ -1,5 +1,34 @@
 ### todo 
 
+# cli
+
+* yarn st
+
+build --env-name?
+update
+add project
+add feature
+add component
+add recipe
+
+edit project
+
+run once
+run live
+
+lint ?
+
+* - action?: add | edit
+* -- add:
+* --- name?: project4
+* --- deps?: [project1, project2, project3]
+* -- edit:
+* --- name?: [project1, project2, project3]
+* --- deps?: [project1, project2, project3]
+
+* yarn cli feature:
+* -- project: [project1, project2, project3]
+
 # m.1
 * skintest runner, cli, bin, ts-node support(debugging)?
 * feature name /scenario name uniq constraint
