@@ -28,4 +28,3 @@ export { fail, InspectInfo, pass, TestEffect, TestFail, TestPass, TestResult } f
 export { ThatFunction } from './that';
 export { till, Till } from './till';
 export { Value, VALUE_KEY } from './value';
-
