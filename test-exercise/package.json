@@ -1,6 +1,6 @@
 {
   "name": "@skintest/exercise",
-  "version": "1.0.17-alpha.0",
+  "version": "1.0.18-alpha.0",
   "private": true,
   "description": "skintest exercise",
   "files": [
@@ -39,10 +39,10 @@
     "typescript": "4.3.2"
   },
   "dependencies": {
-    "@skintest/common": "^1.0.17-alpha.0",
-    "@skintest/enterprise": "^1.0.16-alpha.0",
-    "@skintest/platform": "^1.0.16-alpha.0",
-    "@skintest/plugins": "^1.0.17-alpha.0",
-    "@skintest/sdk": "^1.0.17-alpha.0"
+    "@skintest/common": "^1.0.18-alpha.0",
+    "@skintest/enterprise": "^1.0.18-alpha.0",
+    "@skintest/platform": "^1.0.18-alpha.0",
+    "@skintest/plugins": "^1.0.18-alpha.0",
+    "@skintest/sdk": "^1.0.18-alpha.0"
   }
 }
