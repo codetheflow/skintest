@@ -20,7 +20,7 @@ yarn build:watch
 ```
 In the second terminal:
 ```sh
-yarn exercise
+yarn drill:watch
 ```
 
 # Debugging

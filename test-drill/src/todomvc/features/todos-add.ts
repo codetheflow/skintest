@@ -14,7 +14,7 @@ feature()
     , I.do(clear_todos)
   )
 
-  .scenario('check the input field should be in focus on initial load'
+  .scenario('#now check the input field should be in focus on initial load'
     , I.check('focus in the input field')
     , I.see(todos.what, has.state, 'focused')
   )

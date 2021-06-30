@@ -1,5 +1,5 @@
 {
-  "name": "@skintest/exercise",
+  "name": "@skintest/drill",
   "version": "1.0.18-alpha.0",
   "private": true,
   "description": "skintest exercise",
@@ -13,7 +13,8 @@
     "build": "yarn clean && tsc --build",
     "build:watch": "yarn clean && tsc --build --watch",
     "clean": "rimraf dist",
-    "start": "node ./dist/src/skintest.js"
+    "drill:watch": "nodemon --watch test-exercise/dist --no-stdin --delay 1 dist/src/skintest.js",
+    "drill": "node dist/src/skintest.js"
   },
   "repository": {
     "type": "git",
@@ -36,13 +37,14 @@
   "devDependencies": {
     "@types/node": "15.12.2",
     "rimraf": "3.0.2",
-    "typescript": "4.3.2"
+    "typescript": "4.3.2",
+    "nodemon": "^2.0.7"
   },
   "dependencies": {
-    "@skintest/common": "^1.0.18-alpha.0",
-    "@skintest/enterprise": "^1.0.18-alpha.0",
-    "@skintest/platform": "^1.0.18-alpha.0",
-    "@skintest/plugins": "^1.0.18-alpha.0",
-    "@skintest/sdk": "^1.0.18-alpha.0"
+    "@skintest/common": "*",
+    "@skintest/enterprise": "*",
+    "@skintest/platform": "*",
+    "@skintest/plugins": "*",
+    "@skintest/sdk": "*"
   }
 }
