@@ -33,6 +33,7 @@ export const tty = {
   logo: chalk.grey,
   dev: chalk.yellow,
   error: chalk.bgRedBright.white,
+  warn: chalk.yellow,
   fail: chalk.red,
   h1: chalk.cyan,
   h2: chalk.white,
