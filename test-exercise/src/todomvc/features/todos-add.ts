@@ -16,8 +16,7 @@ feature()
 
   .scenario('check the input field should be in focus on initial load'
     , I.check('focus in the input field')
-    , I.see(todos.what, has.no.state, 'focused')
-    , I.see(todos.list, has.length.above, 0)
+    , I.see(todos.what, has.state, 'focused')
   )
 
   .scenario('check the input field should have placeholder'

@@ -1,4 +1,4 @@
-export { BrowserFactory, Launcher, LauncherOptions } from './launcher';
+export { BrowserFactory, Launcher, LaunchOptions } from './launcher';
 export { nodePlatform, Platform } from './platform';
 export { Plugin } from './plugin';
 export { Project } from './project';

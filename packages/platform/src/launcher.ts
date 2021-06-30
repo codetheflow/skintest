@@ -2,11 +2,12 @@ import { Browser } from '@skintest/sdk';
 
 export type BrowserFactory = () => Promise<Browser>;
 
-export type LauncherOptions = {
-  retries: number;
+export type LaunchOptions = {
+  headless: boolean,
+  timeout: number
 };
 
 export interface Launcher {
   createBrowser: BrowserFactory;
-  options: LauncherOptions;
+  options: LaunchOptions;
 }

@@ -10,7 +10,10 @@ export class NodeProject implements Project {
 
   async run(launch: Launcher): Promise<void> {
     const { suite, effect } = this;
-    const attempt = new Attempt(launch.options.retries);
+
+    // todo: make it as a settings
+    const retries = 1;
+    const attempt = new Attempt(retries);
 
     const mount = effect('project:mount');
     const unmount = effect('project:unmount');
