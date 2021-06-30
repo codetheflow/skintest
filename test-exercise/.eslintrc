@@ -11,7 +11,7 @@
         "selector": ["property", "variable", "function"],
         "format": [
           "snake_case",
-          "UPPER_CASE",
+          "UPPER_CASE"
         ]
       }
     ]
