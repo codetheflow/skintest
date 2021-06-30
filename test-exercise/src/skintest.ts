@@ -20,9 +20,10 @@ const plugins = [
   })
 ];
 
-const platform = nodePlatform(...plugins);
-
-exploreNodeProjects(PROJECTS_FOLDER)
-  .filter(uri => /todo/.test(uri))
-  .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
-  .finally(() => platform.destroy());
+nodePlatform(...plugins)
+  .then(platform =>
+    exploreNodeProjects(PROJECTS_FOLDER)
+      .filter(uri => /todo/.test(uri))
+      .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
+      .finally(() => platform.destroy())
+  )

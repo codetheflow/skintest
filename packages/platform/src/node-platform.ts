@@ -12,8 +12,11 @@ export class NodePlatform implements Platform {
   ]);
 
   constructor(private plugins: Plugin[]) {
+  }
+
+  async init(): Promise<void> {
     const mount = this.effect('platform:mount');
-    mount();
+    await mount();
   }
 
   newProject(uri: string, build: (project: Project) => Promise<void>): Promise<void> {
@@ -22,8 +25,8 @@ export class NodePlatform implements Platform {
     return build(project);
   }
 
-  destroy(): void {
+  async destroy(): Promise<void> {
     const unmount = this.effect('platform:unmount');
-    unmount();
+    await unmount();
   }
 }
