@@ -1,6 +1,6 @@
 {
   "name": "@skintest/drill",
-  "version": "1.0.18-alpha.0",
+  "version": "1.0.19-alpha.0",
   "private": true,
   "description": "skintest exercise",
   "files": [
@@ -36,9 +36,9 @@
   "homepage": "https://github.com/codetheflow/skintest#readme",
   "devDependencies": {
     "@types/node": "15.12.2",
+    "nodemon": "^2.0.7",
     "rimraf": "3.0.2",
-    "typescript": "4.3.2",
-    "nodemon": "^2.0.7"
+    "typescript": "4.3.2"
   },
   "dependencies": {
     "@skintest/common": "*",
