@@ -46,6 +46,7 @@ export const tty = {
 
   test(stream: WriteStream): void {
     if (!stream.isTTY) {
+      // tty.warn('tty is disabled');
       throw errors.invalidArgument(
         'stream',
         'tty is not supported, try to use terminal where tty is on'

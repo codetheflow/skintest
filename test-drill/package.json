@@ -13,7 +13,7 @@
     "build": "yarn clean && tsc --build",
     "build:watch": "yarn clean && tsc --build --watch",
     "clean": "rimraf dist",
-    "drill:watch": "nodemon --watch test-exercise/dist --no-stdin --delay 1 dist/src/skintest.js",
+    "drill:watch": "nodemon --watch dist --no-stdin --delay 1 dist/src/skintest.js",
     "drill": "node dist/src/skintest.js"
   },
   "repository": {
