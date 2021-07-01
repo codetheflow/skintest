@@ -1,0 +1,508 @@
+@media only screen and (max-width: 1280px) {
+  section {
+    margin-bottom: 160px;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0 40px;
+
+    &-header {
+      padding-top: 30px;
+    }
+  }
+
+  .wrapper {
+    &-steps {
+      padding: 0;
+    }
+
+    &-helper {
+      flex-direction: column-reverse;
+      padding: 0;
+    }
+  }
+
+  .wrapper-title {
+    margin: 98px auto 128px auto;
+
+    &::before {
+      @include square(97px);
+      top: -55px;
+    }
+
+    &::after {
+      @include square(85px);
+      top: -56px;
+    }
+  }
+
+  .title {
+    &-main {
+      font-size: 60px;
+    }
+
+    &-third,
+    &-secondary {
+      font-size: 36px;
+      line-height: 36px;
+    }
+
+    &-helper {
+      margin-bottom: 52px;
+    }
+  }
+
+  .features {
+    &__item {
+      padding: 0 20px;
+
+      &:first-child {
+        padding-left: 23px;
+      }
+  
+      &:last-child {
+        padding-right: 23px;
+      }
+    }
+
+    &__title {
+      font-size: 22px;
+      line-height: 26px;
+      margin-bottom: 28px;
+    }
+
+    &__text {
+      font-size: 17px;
+      line-height: 22px;
+    }
+  }
+
+  .setup {
+    &__steps {
+      width: 449px;
+      height: 427px;
+    }
+  }
+
+  .example {
+    video {
+      width: 688px;
+      height: 512px;
+    }
+  }
+
+  .helper {
+    &__list {
+      display: flex;
+      padding-top: 0;
+    }
+
+    &__point {
+      margin-bottom: 32px;
+    }
+
+    &__list,
+    &__code {
+      margin-right: auto;
+      margin-left: auto; 
+    }
+  }
+
+  .support {
+    &__cards {
+      flex-direction: column;
+    }
+  }
+
+  .card {
+    display: flex;
+    margin: 0 0 32px 0;
+    padding: 32px 50px;
+    width: 100%;
+
+    &__title {
+      margin: 0;
+      padding: 0 50px 40px 0;
+
+      &::after {
+        right: 0;
+        left: auto;
+        top: 0;
+        height: 100%;
+        width: 1px;
+      }
+    }
+
+    &__sale,
+    sup {
+      display: none;
+    }
+
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding-left: 50px;
+      margin-bottom: 12px;
+    }
+
+    &__btn {
+      margin-left: 50px;
+      padding: 19px 13px;
+    }
+
+    &__point {
+      width: 188px;
+      margin-bottom: 20px;
+
+      &::before {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .additional {
+    &__point {
+      font-size: 17px;
+    }
+
+    &__point-support::before {
+      margin-bottom: 7px;
+    }
+
+    &__list {
+      width: 100%;
+      padding: 0 15px;
+    }
+  }
+
+  .contact {
+    &__subtitle {
+      font-size: 22px;
+      line-height: 27px;
+    }
+  }
+}
+
+.contact {
+  margin-bottom: 120px;
+  &__subtitle {
+    margin-bottom: 52px;
+  }
+
+  &__link {
+    &::before {
+      @include square(100px);
+      margin-right: 40px;
+      background-size: 51px 26px, 100%;
+    }
+  }
+}
+
+.footer {
+  &__nav {
+    padding-bottom: 24px;
+  }
+
+  &__links a:not(:last-child) {
+    margin-right: 23px;
+  }
+
+  &__copyright {
+    margin: 24px 0 40px 0;
+  }
+}
+
+.social {
+  &__item:not(:last-child) {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .btn {
+    font-size: 12px;
+  }
+
+  a:not(.btn).link-secondary {
+    font-size: 14px;
+    line-height: 17px;
+  }
+
+  section {
+    margin-bottom: 90px;
+  }
+
+  .header {
+    &__nav {
+      display: none;
+    }
+  }
+
+  .mobile {
+    &__burger {
+      padding: 0;
+      display: block;
+    }
+  }
+
+  .container {
+    padding: 0 10px;
+
+    &-header {
+      padding-top: 16px;
+    }
+  }
+
+  .wrapper {
+    justify-content: space-between;
+    flex-direction: column;
+
+    &-header {
+      flex-direction: row;
+    }
+
+    &-helper {
+      flex-direction: column-reverse;
+    }
+
+    &-title {
+      margin: 60px auto;
+      
+      &::before {
+        @include square(60px);
+        transform: rotate(90deg);
+        left: -6px;
+        top: -40px;
+      }
+  
+      &::after {
+        @include square(60px);
+        right: -6px;
+        top: auto;
+        bottom: -31px;
+      }
+    }
+  }
+
+  .title {
+    &-main {
+      font-size: 32px;
+      line-height: 1.5;
+      max-width: 267px;
+      padding: 0 16px;
+    }
+
+    &-secondary {
+      font-size: 24px;
+      margin-bottom: 32px;
+    }
+
+    &-third {
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+  }
+
+  .features {
+    &__item {
+      padding: 0;
+      margin-bottom: 32px;
+      max-width: 100%;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+
+    &__title {
+      font-size: 18px;
+      line-height: 20px;
+      margin-bottom: 16px;
+    }
+
+    &__text {
+      font-size: 14px;
+    }
+  }
+
+  .setup {
+    &__list {
+      margin: 0 auto 24px auto;
+    }
+
+    &__point {
+      margin-bottom: 39px;
+    }
+
+    &__num {
+      @include square(40px);
+      margin-right: 24px;
+    }
+
+    &__steps {
+      width: 100%;
+      height: 379px;
+    }
+  }
+
+  .example {
+    video {
+      width: 100%;
+      height: 320px;
+    }
+
+    &__play#start::before {
+      width: 83px;
+      height: 68px;
+    }
+  }
+
+  .helper {
+    &__point {
+      font-size: 15px;
+      line-height: 26px;
+      width: 98px;
+    }
+
+    &__point-execution::before {
+      @include square(40px);
+      margin-bottom: 8px;
+    }
+
+    &__point-safty::before {
+      width: 33px;
+      height: 40px;
+      margin-bottom: 8px;
+    }
+
+    &__point-api::before {
+      @include square(40px);
+      margin-bottom: 8px;
+    }
+
+    &__code {
+      width: 100%;
+      height: 430px;
+    }
+  }
+
+  .support {
+    &__checkbox span {
+      font-size: 14px;
+    }
+
+    &__billtype {
+      margin-bottom: 24px;
+    }
+  }
+
+  .card {
+    flex-direction: column;
+    padding: 32px 32px 12px 32px;
+
+    &__title {
+      padding: 0 0 24px 0;
+      margin-bottom: 24px;
+      &::after {
+        width: 100%;
+        height: 1px;
+        top: unset;
+        bottom: 0;
+      }
+    }
+
+    &__sup {
+      margin-bottom: 9px;
+    }
+
+    &__list {
+      padding: 0;
+      margin: 0;
+    }
+
+    &__point {
+      width: 100%;
+    }
+  }
+
+  .additional {
+    &__point {
+      margin-bottom: 57px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .contact {
+    &__subtitle {
+      font-size: 15px;
+      line-height: 22px;
+      max-width: 218px;
+      margin: 0 auto 24px auto;
+    }
+
+    &__link {
+      font-size: 24px;
+      &::before {
+        @include square(48px);
+        margin-right: 13px;
+        background-size: 24px 12px, 100%;
+      }
+    }
+  }
+
+  .footer {
+    &__links {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: 24px;
+
+      a {
+        margin: 0;
+        font-size: 12px;
+
+        &:first-child {
+          margin-bottom: 16px;
+        }
+
+        &:not(:last-child) {
+          margin-right: 0;
+        }
+      }
+    }
+
+    &__nav {
+      picture {
+        margin-bottom: 24px;
+      }
+    }
+  }
+
+  .social {
+    &.wrapper {
+      flex-direction: row;
+    } 
+  }
+
+  .contact {
+    margin-bottom: 90px;
+  }
+
+  &__copyright {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}

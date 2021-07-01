@@ -1,7 +1,56 @@
-HEADER
+<div class="wrapper wrapper-header">
+  <div class="header__logo">
+    <picture>
+      <source srcset="<%- url_for('/assets/images/logo_mobile.svg') %>" media="only screen and (max-width: 768px)">
+        <img src="<%- url_for('/assets/images/logo.svg') %>" alt="Skintest logo">
+     </picture>
+   </div>
+   
+   <nav class="header__nav">
+     <a href="<%- url_for('guide') %>">
+       Documentation
+     </a>
+     <a href="#element1" class="btn btn-primary btn-request">REQUEST SUPPORT</a>
+   </nav>
 
-<img src="<%- url_for('/assets/images/logo.svg') %>" />
-
-<a href="<%- url_for('guide') %>">
-  Documentation
-</a>
+   <nav class="header__mobile mobile">
+    <button class="mobile__burger"><span></span></button>
+    <div class="mobile__wraper">
+      <ul class="mobile__list">
+        <li class="mobile__item mobile__item-documentation"><span>Documentation</span>
+          <ul class="mobile__secondary-list">
+            <li><a href="#">Architecture</a></li>
+            <li><a href="#">Features and scenarios</a></li>
+            <li><a href="#">Component's eyes and selectors</a></li>
+            <li><a href="#">Multi page support</a></li>
+            <li><a href="#">Fluent asserts</a></li>
+            <li><a href="#">Cooking recipes</a></li>
+            <li><a href="#">The runner - skintest.ts</a></li>
+            <li><a href="#">Debugging</a></li>
+            <li><a href="#">Tag-filter</a></li>
+            <li><a href="#">Custom plugins</a></li>
+            <li><a href="#">Test data</a></li>
+            <li><a href="#">Secrets and environment</a></li>
+            <li><a href="#">Reporting</a></li>
+            <li><a href="#">Iframes</a></li>
+            <li><a href="#">Shadow dom</a></li>
+            <li><a href="#">Parallel execution</a></li>
+            <li><a href="#">Browser support</a></li>
+            <li><a href="#">CI\CD</a></li>
+          </ul>
+        </li>
+        <li class="mobile__item"><a href="#">Email us</a></li>
+      </ul>
+      <ul class="mobile__social social">
+        <li class="social__item social__item-playwright"><a href="#">Playwright</a></li>
+        <li class="social__item social__item-npm"><a href="#">npm</a></li>
+        <li class="social__item social__item-github"><a href="#">github</a></li>
+        <li class="social__item social__item-telegram"><a href="#">telegram</a></li>
+        <li class="social__item social__item-youtube"><a href="#">youtube</a></li>
+        </ul>
+        <a class="mobile__btn btn btn-primary" href="#">
+          <span>Sing in with GITHUB</span>
+        </a>
+      </div>
+  </nav>
+</div>
