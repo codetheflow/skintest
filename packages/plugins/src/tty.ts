@@ -18,6 +18,8 @@ const STACK_FILE_IGNORE = [
   path.join('common', 'src', 'retry.ts'),
   path.join('common', 'src', 'errors.ts'),
   path.join('common', 'src', 'guard.ts'),
+  path.join('common', 'src', 'transaction.ts'),
+
   // from playwright
   // todo: propagate it here for the launcher options
   path.join('lib', 'utils', 'stackTrace.js')
@@ -32,7 +34,7 @@ export const tty = {
 
   logo: chalk.grey,
   dev: chalk.yellow,
-  error: chalk.bgRedBright.white,
+  error: chalk.bgRed.yellow,
   warn: chalk.yellow,
   fail: chalk.red,
   h1: chalk.cyan,

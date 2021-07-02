@@ -8,14 +8,14 @@ export class TransactionSink implements Transaction {
   constructor(private items: Transaction[]) {}
 
   async begin(): Promise<void> {
-    for await (const item of this.items) {
-      item.begin();
+    for (const item of this.items) {
+      await item.begin();
     }
   }
 
   async commit(): Promise<void> {
-    for await (const item of this.items) {
-      item.commit();
+    for (const item of this.items) {
+      await item.commit();
     }
   }
 }

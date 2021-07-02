@@ -83,7 +83,7 @@ class UniqScenarioNameConstraint implements Transaction {
       const set = new Set<string>();
       for (const scenario of feature.scenarios) {
         if (set.has(scenario.name)) {
-          throw errors.constraint(`${path} expected exclusive scenario names, got not unique ${qte(scenario.name)}`);
+          throw errors.constraint(`${this.path} contains not exclusive scenario name ${qte(scenario.name)}`);
         }
 
         set.add(scenario.name);
