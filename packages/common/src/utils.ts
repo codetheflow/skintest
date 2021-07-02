@@ -76,3 +76,7 @@ export function ticksToTime(ms: number): string {
 
   return pad2(hour) + ':' + pad2(minute) + ':' + pad2(second);
 }
+
+export function qte(text: string): string {
+  return '`' + text + '`';
+}

@@ -10,7 +10,9 @@ export function ttyPause(): Plugin {
 
   return async (stage: OnStage) => stage({
     'step:pass': async ({ step, browser }) => {
-      if (step.type === 'dev' && step.toString() === '__pause') {
+      const [_, command] = step;
+
+      if (command.type === 'dev' && step.toString() === '__pause') {
         tty.newLine(stdout, tty.dev(`- type a selector and hit ${tty.shortcut('ENTER')}`));
         tty.newLine(stdout, tty.dev(`- type ${tty.shortcut('CTRL+C')} to exit from pause`));
         tty.newLine(stdout);

@@ -1,12 +1,12 @@
 import { errors, Guard, isObject, reinterpret, Serializable } from '@skintest/common';
 import { Browser, Command, fail, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Suite, Value, VALUE_KEY } from '@skintest/sdk';
 import { Attempt } from './attempt';
-import { CommandScope, Staging } from './stage';
+import { CommandScope, Datum, Staging, Step } from './stage';
 
 function noScenario(): Scenario {
   return {
     name: '',
-    steps: [],
+    commands: [],
     attributes: {}
   };
 }
@@ -36,11 +36,11 @@ export class Scene {
 
     await beforeFeatureEffect(scope);
 
-    const [ok] = await this.runPlan(
+    const [ok] = await this.plan(
       'feature:before',
       script,
       noScenario(),
-      script.beforeFeature
+      toSteps(script.beforeFeature)
     );
 
     if (ok) {
@@ -60,11 +60,11 @@ export class Scene {
 
     await afterFeatureEffect(scope);
 
-    await this.runPlan(
+    await this.plan(
       'feature:after',
       script,
       noScenario(),
-      script.afterFeature
+      toSteps(script.afterFeature)
     );
   }
 
@@ -75,8 +75,6 @@ export class Scene {
 
     const beforeScenarioEffect = this.effect('scenario:before');
     const afterScenarioEffect = this.effect('scenario:after');
-    const dataScenarioEffect = this.effect('scenario:data');
-
     const scope = {
       suite: this.suite,
       browser: this.browser,
@@ -86,95 +84,98 @@ export class Scene {
 
     await beforeScenarioEffect(scope);
 
-    const [ok] = await this.runPlan(
+    const [ok] = await this.plan(
       'scenario:before',
       script,
       scenario,
-      script.beforeScenario
+      toSteps(script.beforeScenario)
     );
 
     if (ok) {
-      const { steps, attributes } = scenario;
-      for (const datum of (attributes.data ?? [null])) {
-        await dataScenarioEffect({ ...scope, datum });
-
-        for (const step of steps) {
-          const result = await this.step(script, scenario, step, datum);
-          if (!result) {
-            break;
-          }
-        }
+      const { attributes } = scenario;
+      const data = attributes.data ?? [undefined];
+      for (let i = 0; i < data.length; i++) {
+        const datum: Datum = [i, data[i]];
+        await this.steps(script, scenario, datum);
       }
     }
 
     await afterScenarioEffect(scope);
 
-    await this.runPlan(
+    await this.plan(
       'scenario:after',
       script,
       scenario,
-      script.afterScenario
+      toSteps(script.afterScenario)
     );
   }
 
-  private async step(
+  private async steps(
     script: Script,
     scenario: Scenario,
-    step: Command,
-    datum: Serializable | null = null
+    datum: Datum,
   ): Promise<boolean> {
 
     const beforeStepEffect = this.effect('step:before');
     const afterStepEffect = this.effect('step:after');
+    const { commands: steps } = scenario;
 
-    const scope = {
-      suite: this.suite,
-      browser: this.browser,
-      script,
-      scenario,
-      step,
-      datum
-    };
+    for (let i = 0; i < steps.length; i++) {
+      const step: Step = [i, steps[i]];
 
-    await beforeStepEffect(scope);
-
-    let [ok] = await this.runPlan(
-      'step:before',
-      script,
-      scenario,
-      script.beforeStep
-    );
-
-    if (ok) {
-      [ok] = await this.runPlan(
-        'step',
+      const scope = {
+        suite: this.suite,
+        browser: this.browser,
         script,
         scenario,
-        [step],
-        [],
+        step,
         datum
+      };
+
+      await beforeStepEffect(scope);
+
+      let [ok] = await this.plan(
+        'step:before',
+        script,
+        scenario,
+        toSteps(script.beforeStep)
       );
+
+      if (ok) {
+        [ok] = await this.plan(
+          'step',
+          script,
+          scenario,
+          [step],
+          [],
+          datum
+        );
+      }
+
+      await afterStepEffect(scope);
+
+      ok = (await this.plan(
+        'step:after',
+        script,
+        scenario,
+        script.afterStep.map((x, i) => [i, x])
+      ))[0] && ok;
+
+      if (!ok) {
+        return false;
+      }
     }
 
-    await afterStepEffect(scope);
-
-    ok = (await this.runPlan(
-      'step:after',
-      script,
-      scenario,
-      script.afterStep
-    ))[0] && ok;
-
-    return ok;
+    return true;
   }
 
-  private async runPlan(
+  private async plan(
     site: CommandScope['site'],
     script: Script,
     scenario: Scenario,
-    steps: ReadonlyArray<Command>,
+    steps: Step[],
     path: Array<StepExecutionResult['type']> = [],
-    datum: Serializable | null = null,
+    datum: Datum = [0, undefined],
   ): Promise<[boolean, string[]]> {
 
     const { browser, attempt } = this;
@@ -207,24 +208,28 @@ export class Scene {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const materialize = (value: Value<any, Serializable>): any => {
           if (isObject(value) && VALUE_KEY in value) {
-            Guard.notNull(datum, 'datum');
+            const [_, data] = datum;
+            Guard.notNull(data, 'data');
 
             const key = value[VALUE_KEY];
-            return datum?.[key];
+            return data?.[key];
           }
 
           return value;
         };
 
-        const run = await attempt.step(() => step.execute({ browser, materialize }));
+        const run = await attempt.step(() => {
+          const [_, command] = step;
+          return command.execute({ browser, materialize });
+        });
 
         const runPlan =
           (commands: Command[]) =>
-            this.runPlan(
+            this.plan(
               site,
               script,
               scenario,
-              commands,
+              toSteps(commands),
               path.concat(run.type),
               datum
             );
@@ -386,4 +391,8 @@ export class Scene {
 
     return [errorSink.length === 0, errorSink];
   }
+}
+
+function toSteps(commands: ReadonlyArray<Command> | Command[]): Step[] {
+  return commands.map((cmd, i) => [i, cmd]);
 }

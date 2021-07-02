@@ -55,6 +55,10 @@ export function ttySummaryReport(): Plugin {
     'project:error': async ({ reason }) => {
       statistics.errors++;
       errors.push(reason);
+    },
+    'platform:error': async ({ reason }) => {
+      statistics.errors++;
+      errors.push(reason);
     }
   });
 }

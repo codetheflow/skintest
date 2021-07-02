@@ -2114,7 +2114,7 @@
   integrity sha512-IQW5b1z1urpfFzMzQnnFlpjcwGbeznJF6rcKGBQSiidK9qcMGpDCgXgZy5LbDRNlYJBDVm1jjT3CqfmBora/7w==
 
 "@skintest/platform@*":
-  version "1.0.18-alpha.0"
+  version "1.0.19-alpha.0"
 
 "@skintest/plugins@*":
   version "1.0.13"

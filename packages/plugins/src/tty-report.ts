@@ -1,4 +1,4 @@
-import { isObject } from '@skintest/common';
+import { isObject, isUndefined } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command } from '@skintest/sdk';
 import { tty } from './tty';
@@ -51,20 +51,23 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       const label = scenario.name.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
       tty.newLine(stdout, tty.h2(label));
     },
-    'scenario:data': async ({ datum }) => {
-      if (datum) {
-        tty.newLine(stdout, tty.h2('-- ' + JSON.stringify(datum)));
-      }
+    'scenario:after': async () => {
+      tty.newLine(stdout);
     },
-    'step': async ({ site, step, path }) => {
-      if (step.type === 'dev') {
-        const message = await getMessage(step);
+    'step': async ({ site, step, datum, path }) => {
+      const [index, command] = step;
+      if (index === 0 && !isUndefined(datum[1]) && path.length === 0) {
+        tty.newLine(stdout, '  ', tty.h2(datum[0] + 1), tty.h2('. '), tty.h2(stringify(datum[1])));
+      }
+
+      if (command.type === 'dev') {
+        const message = await getMessage(command);
         tty.newLine(stdout, tty.dev(message));
         return;
       }
 
       if ((site === 'step' && path.length === 0) || level > 0) {
-        const message = await getMessage(step);
+        const message = await getMessage(command);
         tty.newLine(stdout, tty.hidden(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
@@ -72,26 +75,28 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       await tty.writeInspect(stdout, inspect);
     },
     'step:pass': async ({ site, step, path }) => {
-      if (step.type === 'dev') {
+      const [_, command] = step;
+      if (command.type === 'dev') {
         return;
       }
 
       if ((site === 'step' && path.length === 0) || level > 0) {
-        const message = await getMessage(step);
-        tty.replaceLine(stdout, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
+        const message = await getMessage(command);
+        tty.replaceLine(stdout, '  ', tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
     'step:fail': async ({ reason, step, site, path }) => {
+      const [_, command] = step;
       // todo: make it better
       if (isObject(reason) && 'status' in reason
-        && (step.type === 'do'
+        && (command.type === 'do'
           || step.toString().startsWith('perform')
           || step.toString().startsWith('event'))) {
         // inner error was shown, there is no need to duplicate it here
         return;
       }
 
-      const message = await getMessage(step);
+      const message = await getMessage(command);
       const line = [tty.fail(tty.CROSS_MARK), ' ', tty.info(message)];
       if (site === 'step' && path.length === 0) {
         tty.replaceLine(stderr, ...line);
@@ -111,6 +116,14 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
     },
     'project:error': async ({ reason }) => {
       await tty.writeError(stderr, reason);
+    },
+    'platform:error': async ({ reason }) => {
+      await tty.writeError(stderr, reason);
     }
   });
+}
+
+function stringify<T>(value: T): string {
+  const text = JSON.stringify(value);
+  return text;
 }

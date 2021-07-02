@@ -23,7 +23,7 @@ export class NodeProject implements Project {
     try {
       await mount({ suite });
       await ready({ suite });
-
+      
       const scripts = suite
         .getScripts()
         .filter(x => suite.operations.filterFeature(x.name));

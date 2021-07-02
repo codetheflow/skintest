@@ -1,4 +1,4 @@
-import { ellipsis, errors, padRight, prettyStack, StringDictionary } from '@skintest/common';
+import { ellipsis, errors, padRight, prettyStack, qte, StringDictionary } from '@skintest/common';
 import { AssertHost, DOMElement, ElementRef, ElementState, InspectInfo, TestFail } from '@skintest/sdk';
 import * as chalk from 'chalk';
 import * as path from 'path';
@@ -120,12 +120,12 @@ export const tty = {
       : target;
 
     if (!target) {
-      tty.newLine(stream, tty.error(`$(\`${selector}\`) didn't find any elements`));
+      tty.newLine(stream, tty.error(`$(${qte(selector)}) didn't find any elements`));
       return;
     }
 
     if (Array.isArray(target)) {
-      tty.newLine(stream, `$(\`${selector}\`) found ${target.length} elements`);
+      tty.newLine(stream, `$(${qte(selector)}) found ${target.length} elements`);
 
       const list: Array<StringDictionary<unknown>> = [];
       for (const element of target) {
@@ -140,7 +140,7 @@ export const tty = {
       console.table(list);
     } else {
       const elementRef = target as ElementRef<DOMElement>;
-      tty.newLine(stream, `$(\`${selector}\`) found 1 element`);
+      tty.newLine(stream, `$(${qte(selector)}) found 1 element`);
 
       const info: StringDictionary<unknown> = {
         tagName: ellipsis(await elementRef.tagName(), maxWidth),

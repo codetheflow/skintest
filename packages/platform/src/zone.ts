@@ -1,6 +1,8 @@
 export type PlatformZone =
   'platform:mount'
-  | 'platform:unmount';
+  | 'platform:unmount'
+  | 'platform:ready'
+  | 'platform:error';
 
 export type ProjectZone =
   | 'project:mount'
@@ -13,7 +15,6 @@ export type ScriptZone =
   | 'feature:after'
   | 'scenario:before'
   | 'scenario:after'
-  | 'scenario:data'
   | 'step:before'
   | 'step:after'
   | 'step'

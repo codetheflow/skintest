@@ -1,4 +1,4 @@
-import { Guard, Meta } from '@skintest/common';
+import { Guard, Meta, qte } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
 import { Query } from '../query';
@@ -27,6 +27,6 @@ export class FillStep<D> implements ClientStep<D> {
 
   toString(): string {
     const selector = this.query.toString();
-    return `fill ${formatSelector(selector)} with \`${stringify(this.value)}\``;
+    return `fill ${formatSelector(selector)} with ${qte(stringify(this.value))}`;
   }
 }

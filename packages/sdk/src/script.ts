@@ -4,10 +4,10 @@ import { Feature, OnlyScenario, TestScenario } from './schema';
 
 export interface Scenario {
   name: string;
-  steps: Command[];
+  commands: Command[];
   attributes: Partial<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: Array<any>
+    data: Array<Serializable>
   }>;
 }
 
@@ -90,7 +90,7 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   scenario(name: string, ...steps: Command[]): TestScenario {
     this.scenarios.push({
       name,
-      steps,
+      commands: steps,
       attributes: this.testAttributes,
     });
 

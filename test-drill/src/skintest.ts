@@ -1,5 +1,5 @@
 import { nodePlatform } from '@skintest/platform';
-import { exploreNodeProjects, nodeFeatureExplorer, playwrightLauncher, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { exploreNodeFeatures, exploreNodeProjects, playwrightLauncher, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
 
 const PROJECTS_FOLDER = path.resolve(__dirname, '../..');
@@ -10,7 +10,7 @@ const launcher = playwrightLauncher({
 });
 
 const plugins = [
-  nodeFeatureExplorer()
+  exploreNodeFeatures()
   , ttyLogo()
   , ttyReport()
   , ttySummaryReport()

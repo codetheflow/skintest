@@ -1,4 +1,4 @@
-import { StringDictionary } from '@skintest/common';
+import { qte, StringDictionary } from '@skintest/common';
 import { AssertHost } from './assert';
 import { DOMElement } from './dom';
 import { ElementRef } from './element';
@@ -53,9 +53,9 @@ export const fail = {
 
     const description =
       `${method}(${selector}).${body.host.what}: ` +
-      `expected \`${body.actual}\` to ` +
+      `expected ${qte(body.actual)} to ` +
       `${body.host.no ? 'not' : ''} ` +
-      `${body.host.how} \`${body.etalon}\``;
+      `${body.host.how} ${qte(body.etalon)}`;
 
     return {
       body,

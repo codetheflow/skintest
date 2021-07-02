@@ -28,12 +28,9 @@ export function exploreNodeProjects(...paths: string[]): NodeProjectVisitor {
   const visitor: NodeProjectVisitor = {
     filter: predicate => {
       matchedProjectFolders = matchedProjectFolders.filter(predicate);
-
-
       return visitor;
     },
     forEach: visit => {
-
       projectFolders.forEach(folder =>
         matchedProjectFolders.includes(folder)
           ? tty.newLine(stdout, tty.h2(folder))

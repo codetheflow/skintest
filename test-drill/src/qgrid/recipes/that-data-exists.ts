@@ -1,3 +1,4 @@
+import { qte } from '@skintest/common';
 import { fail, pass, TestResult } from '@skintest/sdk';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -19,14 +20,14 @@ export async function that_data_exists(file_name: string): Promise<TestResult> {
     }
 
     return fail.reason({
-      description: `\`${file_path}\` doesn't contain data`,
+      description: `${qte(file_path)} doesn't contain data`,
       solution: 'make sure that data source is correct'
     });
   }
 
   // todo: use levenshtein distance to suggest file paths
   return fail.reason({
-    description: `\`${file_path}\` doesn't exist`,
+    description: `${qte(file_path)} doesn't exist`,
     solution: 'make sure that file path is correct'
   });
 }

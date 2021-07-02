@@ -9,12 +9,19 @@ export class NodePlatform implements Platform {
     ...this.plugins
   ]);
 
-  constructor(private plugins: Plugin[]) {
-  }
+  constructor(private plugins: Plugin[]) { }
 
   async init(): Promise<void> {
     const mount = this.effect('platform:mount');
-    await mount();
+    const ready = this.effect('platform:ready');
+    const error = this.effect('platform:error');
+    try {
+      await mount();
+      await ready();
+    } catch (ex) {
+      await error({ reason: ex });
+      throw ex;
+    }
   }
 
   newProject(uri: string, build: (project: Project) => Promise<void>): Promise<void> {

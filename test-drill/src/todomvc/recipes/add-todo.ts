@@ -1,3 +1,4 @@
+import { qte } from '@skintest/common';
 import { I, perform, recipe, Recipe } from '@skintest/sdk';
 import { todos } from '../components/todos';
 
@@ -9,7 +10,7 @@ import { todos } from '../components/todos';
  */
 export async function add_todo(name: string): Promise<Recipe> {
   return recipe(
-    perform(`add todo \`${name}\``
+    perform(`add todo ${qte(name)}`
       , I.fill(todos.what, name)
       , I.press('Enter')
     )

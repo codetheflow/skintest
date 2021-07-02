@@ -1,3 +1,4 @@
+import { Serializable } from '@skintest/common';
 import { Browser, Command, InspectInfo, Scenario, Script, StepExecutionResult, Suite, TestFail, TestPass } from '@skintest/sdk';
 import { ScriptZone, Zone } from './zone';
 
@@ -8,8 +9,10 @@ export interface Stage<Z extends Zone, S> {
 
 export type StageSite = Exclude<ScriptZone, 'step:fail' | 'step:pass' | 'step:inspect'>;
 
-export type PlatformMount = void;
-export type PlatformUnmount = void;
+export type PlatformMountScope = void;
+export type PlatformUnmountScope = void;
+export type PlatformReadyScope = void;
+export type PlatformErrorScope = { reason: Error };
 
 export type ProjectStartScope = { suite: Suite };
 export type ProjectStopScope = ProjectStartScope;
@@ -19,10 +22,10 @@ export type ProjectErrorScope = ProjectStartScope & { reason: Error };
 export type FeatureScope = ProjectStartScope & { script: Script, browser: Browser };
 
 export type ScenarioScope = FeatureScope & { scenario: Scenario };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ScenarioDataScope = ScenarioScope & { datum: any };
 
-export type StepScope = ScenarioDataScope & { step: Command };
+export type Step = [number, Command];
+export type Datum = [number, Serializable | undefined];
+export type StepScope = ScenarioScope & { step: Step, datum: Datum };
 
 export type CommandScope = StepScope & { site: StageSite, path: Array<StepExecutionResult['type']> };
 export type CommandPassScope = CommandScope & { result: TestPass };
@@ -30,8 +33,11 @@ export type CommandFailScope = CommandScope & { reason: TestFail | Error };
 export type CommandInspectScope = CommandScope & { inspect: InspectInfo };
 
 export type Stages = {
-  'platform:mount': Stage<'platform:mount', PlatformMount>;
-  'platform:unmount': Stage<'platform:unmount', PlatformUnmount>;
+  'platform:mount': Stage<'platform:mount', PlatformMountScope>;
+  'platform:unmount': Stage<'platform:unmount', PlatformUnmountScope>;
+  'platform:ready': Stage<'platform:ready', PlatformReadyScope>;
+  'platform:error': Stage<'platform:error', PlatformErrorScope>
+
   'project:mount': Stage<'project:mount', ProjectStartScope>;
   'project:unmount': Stage<'project:unmount', ProjectStopScope>;
   'project:ready': Stage<'project:ready', ProjectReadyScope>;
@@ -42,7 +48,6 @@ export type Stages = {
 
   'scenario:before': Stage<'scenario:before', ScenarioScope>;
   'scenario:after': Stage<'scenario:after', ScenarioScope>;
-  'scenario:data': Stage<'scenario:data', ScenarioDataScope>;
 
   'step:before': Stage<'step:before', StepScope>;
   'step:after': Stage<'step:after', StepScope>;

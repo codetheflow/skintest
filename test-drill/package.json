@@ -13,7 +13,7 @@
     "build": "yarn clean && tsc --build",
     "build:watch": "yarn clean && tsc --build --watch",
     "clean": "rimraf dist",
-    "drill:watch": "nodemon --watch dist --no-stdin --delay 1 dist/src/skintest.js",
+    "drill:watch": "nodemon --watch ../ --ext .js --no-stdin --delay 1 dist/src/skintest.js",
     "drill": "node dist/src/skintest.js"
   },
   "repository": {
@@ -40,7 +40,7 @@
     "rimraf": "3.0.2",
     "typescript": "4.3.2"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@skintest/common": "*",
     "@skintest/enterprise": "*",
     "@skintest/platform": "*",
