@@ -19,11 +19,6 @@ feature()
     , I.see(todos.what, has.state, 'focused')
   )
 
-  .scenario('check the input field should be in focus on initial load'
-    , I.check('focus in the input field')
-    , I.see(todos.what, has.state, 'focused')
-  )
-
   .scenario('check the input field should have placeholder'
     , I.check('placeholder in the input field')
     , I.see(todos.what, has.attribute, ['placeholder', 'What needs to be done?'])

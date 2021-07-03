@@ -5,6 +5,7 @@ import { tty } from './tty';
 
 const { stdout, stderr } = process;
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
+const IDENT = '  ';
 
 async function getMessage(command: Command): Promise<string> {
   try {
@@ -57,7 +58,7 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
     'step': async ({ site, step, datum, path }) => {
       const [index, command] = step;
       if (index === 0 && !isUndefined(datum[1]) && path.length === 0) {
-        tty.newLine(stdout, '  ', tty.h2(datum[0] + 1), tty.h2('. '), tty.h2(stringify(datum[1])));
+        tty.newLine(stdout, IDENT, tty.h2(datum[0] + 1), tty.h2('. '), tty.h2(stringify(datum[1])));
       }
 
       if (command.type === 'dev') {
@@ -68,7 +69,7 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
 
       if ((site === 'step' && path.length === 0) || level > 0) {
         const message = await getMessage(command);
-        tty.newLine(stdout, tty.hidden(tty.CHECK_MARK), ' ', tty.info(message));
+        tty.newLine(stdout, IDENT, tty.hidden(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
     'step:inspect': async ({ inspect }) => {
@@ -82,7 +83,7 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
 
       if ((site === 'step' && path.length === 0) || level > 0) {
         const message = await getMessage(command);
-        tty.replaceLine(stdout, '  ', tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
+        tty.replaceLine(stdout, IDENT, tty.pass(tty.CHECK_MARK), ' ', tty.info(message));
       }
     },
     'step:fail': async ({ reason, step, site, path }) => {
@@ -97,7 +98,7 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       }
 
       const message = await getMessage(command);
-      const line = [tty.fail(tty.CROSS_MARK), ' ', tty.info(message)];
+      const line = [IDENT, tty.fail(tty.CROSS_MARK), ' ', tty.info(message)];
       if (site === 'step' && path.length === 0) {
         tty.replaceLine(stderr, ...line);
       } else {

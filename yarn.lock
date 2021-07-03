@@ -2100,36 +2100,6 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@skintest/common@*":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@skintest/common/-/common-1.0.13.tgz#36de3c355ba62e8792c86437e8e340c7b37f23bf"
-  integrity sha512-Tks2vz6yRGoTsOtjiIoFFG9KtOb6jciLN+3uwIJ7iIBsyz7x1uCTX6b3JDQGXRWmmebmeuawXxbIkSE85aDV7A==
-  dependencies:
-    source-map "0.7.3"
-    stack-utils "2.0.3"
-
-"@skintest/enterprise@*":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@skintest/enterprise/-/enterprise-1.0.13.tgz#cfff3a865c86cd8aaddbb6fd400499e7e30a554c"
-  integrity sha512-IQW5b1z1urpfFzMzQnnFlpjcwGbeznJF6rcKGBQSiidK9qcMGpDCgXgZy5LbDRNlYJBDVm1jjT3CqfmBora/7w==
-
-"@skintest/platform@*":
-  version "1.0.19-alpha.0"
-
-"@skintest/plugins@*":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@skintest/plugins/-/plugins-1.0.13.tgz#cbc9024432407a0d430e824c80212373c469ac06"
-  integrity sha512-sn3hW2ewHWMZg+URrZ9x6Mgjx1/iKA24d2Dh5NlifpJEHuWwHl4tErAuXCOzU+uJT50+UDS26bwItJUoSYOGpw==
-  dependencies:
-    chalk "4.1.1"
-    glob "7.1.7"
-    playwright "1.12.1"
-
-"@skintest/sdk@*":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@skintest/sdk/-/sdk-1.0.13.tgz#83a5af16577e67daff9c87acb2729f667943e807"
-  integrity sha512-bCBPAJW18PjJFl18nfz5DmYpBu+Bg1diBf8GBCQTfosx7JMaptvjWtpM8qzD8e4XDq3y/983GL4upRtoEb6jBA==
-
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -2282,6 +2252,13 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.0.tgz#7036640b4e21cc2f259ae826ce843d277dad8cff"
   integrity sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
+
+"@types/table@^6.3.2":
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/@types/table/-/table-6.3.2.tgz#e18ad2594400d81c3da28c31b342eb5a0d87a8e7"
+  integrity sha512-GJ82z3vQbx2BhiUo12w2A3lyBpXPJrGHjQ7iS5aH925098w8ojqiWBhgOUy97JS2PKLmRCTLT0sI+gJI4futig==
+  dependencies:
+    table "*"
 
 "@types/webpack-sources@^0.1.5":
   version "0.1.8"
@@ -11444,7 +11421,7 @@ symbol-observable@4.0.0:
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-4.0.0.tgz#5b425f192279e87f2f9b937ac8540d1984b39205"
   integrity sha512-b19dMThMV4HVFynSAM1++gBHAbk2Tc/osgLIBZMKsyqh34jb2e8Os7T6ZW/Bt3pJFdBTd2JwAnAAEQV7rSNvcQ==
 
-table@^6.0.9:
+table@*, table@^6.0.9, table@^6.7.1:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/table/-/table-6.7.1.tgz#ee05592b7143831a8c94f3cee6aae4c1ccef33e2"
   integrity sha512-ZGum47Yi6KOOFDE8m223td53ath2enHcYLgOCjGr5ngu8bdIARQk6mN/wRMv4yMRcHnCSnHbCEha4sobQx5yWg==

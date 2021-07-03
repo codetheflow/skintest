@@ -1,5 +1,5 @@
+import { my } from '@skintest/enterprise';
 import { feature, I } from '@skintest/sdk';
-import { my } from 'packages/enterprise/src/my';
 import { example_export } from '../components/example-export';
 import { page } from '../components/page';
 import { export_data_as } from '../recipes/export-data-as';
