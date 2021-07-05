@@ -8,8 +8,8 @@ import { tty } from './tty';
 const { stdout } = process;
 
 const FEATURES_COL = 0;
-const SCENARIOS_COL = 1;
-const FAILED_COL = 2;
+const TESTS_COL = 1;
+const FAILS_COL = 2;
 const TIME_COL = 3;
 
 type Row = [string, number | string, number | string, number | string];
@@ -32,10 +32,10 @@ export function ttySummaryReport(): Plugin {
   }> = [];
 
   const header = newRow();
-  header[FEATURES_COL] = 'features';
-  header[SCENARIOS_COL] = 'scenarios';
-  header[FAILED_COL] = 'failed';
-  header[TIME_COL] = 'time';
+  header[FEATURES_COL] = tty.info('features');
+  header[TESTS_COL] = tty.info('tests');
+  header[FAILS_COL] = tty.info('fails');
+  header[TIME_COL] = tty.info('time');
 
   const statistics: Array<Row> = [header];
 
@@ -52,14 +52,14 @@ export function ttySummaryReport(): Plugin {
 
       const headerStyle = issues.length ? tty.error : tty.pass;
       const config: TableUserConfig = {
-        border: getBorderCharacters('ramac'), // norc
+        border: getBorderCharacters('norc'), // norc
         header: {
           content: headerStyle(`executed in ${ticksToTime(stopTime - startTime)}`),
         },
         columns: {
           [FEATURES_COL]: { wrapWord: true },
-          [SCENARIOS_COL]: { alignment: 'right' },
-          [FAILED_COL]: { alignment: 'right' },
+          [TESTS_COL]: { alignment: 'right' },
+          [FAILS_COL]: { alignment: 'right' },
           [TIME_COL]: { paddingLeft: 2, paddingRight: 2, alignment: 'center' },
         }
       };
@@ -70,9 +70,13 @@ export function ttySummaryReport(): Plugin {
           return;
         }
 
-        const fails = row[FAILED_COL] as number;
+        const fails = row[FAILS_COL] as number;
         if (fails) {
-          row[FAILED_COL] = tty.fail(fails);
+          row[FEATURES_COL] = tty.fail(tty.CROSS_MARK) + ' ' + row[FEATURES_COL];
+          row[FAILS_COL] = tty.fail(fails);
+        } else {
+          row[FEATURES_COL] = tty.pass(tty.CHECK_MARK) + ' ' + row[FEATURES_COL];
+          row[FAILS_COL] = tty.info('-');
         }
       });
 
@@ -94,14 +98,14 @@ export function ttySummaryReport(): Plugin {
     'feature:before': async ({ script }) => {
       const row = newRow();
       row[FEATURES_COL] = script.name;
-      row[SCENARIOS_COL] = script.scenarios.length;
+      row[TESTS_COL] = script.scenarios.length;
       row[TIME_COL] = performance.now();
 
       statistics.push(row);
     },
     'feature:after': async () => {
       const row = currentRow();
-      row[TIME_COL] = ticksToTime(performance.now() - (row[TIME_COL] as number));
+      row[TIME_COL] = tty.info(ticksToTime(performance.now() - (row[TIME_COL] as number)));
     },
     'step:fail': async ({ reason, script, scenario, step }) => {
       const [_, command] = step;
@@ -117,7 +121,7 @@ export function ttySummaryReport(): Plugin {
       const credited = issues.findIndex(x => x.feature === script.name && x.scenario === scenario.name);
       if (!credited) {
         const row = currentRow();
-        row[FAILED_COL] = (row[FAILED_COL] as number) + 1;
+        row[FAILS_COL] = (row[FAILS_COL] as number) + 1;
       }
     },
     'project:error': async ({ reason }) => {

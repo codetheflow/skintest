@@ -1,4 +1,5 @@
 
+export { I } from './actor';
 export { AssertHost, BinaryAssert, ListBinaryAssert, ListNumberAssert, NumberAssert, StringAssert } from './assert';
 export { Browser } from './browser';
 export { Client, ClientElement, ClientElementList, ClientPage } from './client';
@@ -13,7 +14,6 @@ export { ClientPageEvents, handle } from './handle';
 export { has, Has, HasNo, ListHas, ListHasNo } from './has';
 export { iif } from './iif';
 export { KeyboardKey } from './keyboard';
-export { I } from './me';
 export { Page } from './page';
 export { perform } from './perform';
 export { $, $$, Query, QueryList } from './query';
@@ -27,4 +27,5 @@ export { newSuite, Suite, SuiteOperations } from './suite';
 export { fail, InspectInfo, pass, TestEffect, TestFail, TestPass, TestResult } from './test-result';
 export { ThatFunction } from './that';
 export { till, Till } from './till';
-export { Value, VALUE_KEY } from './value';
+export { Value, ValueRef, VALUE_REF } from './value';
+

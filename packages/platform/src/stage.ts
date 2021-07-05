@@ -1,4 +1,4 @@
-import { Serializable } from '@skintest/common';
+import { Data } from '@skintest/common';
 import { Browser, Command, InspectInfo, Scenario, Script, StepExecutionResult, Suite, TestFail, TestPass } from '@skintest/sdk';
 import { ScriptZone, Zone } from './zone';
 
@@ -24,7 +24,7 @@ export type FeatureScope = ProjectStartScope & { script: Script, browser: Browse
 export type ScenarioScope = FeatureScope & { scenario: Scenario };
 
 export type Step = [number, Command];
-export type Datum = [number, Serializable | undefined];
+export type Datum = [number, Data | undefined];
 export type StepScope = ScenarioScope & { step: Step, datum: Datum };
 
 export type CommandScope = StepScope & { site: StageSite, path: Array<StepExecutionResult['type']> };

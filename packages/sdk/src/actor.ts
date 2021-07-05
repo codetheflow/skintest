@@ -29,7 +29,7 @@ import { TypeStep } from './steps/type';
 import { WaitStep } from './steps/wait';
 import { Value } from './value';
 
-class Me implements Ego {
+class Actor implements Ego {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wait<D>(targetOrRecipe: any, ...args: any[]): ClientStep<D> {
     const caller = getCaller();
@@ -146,4 +146,4 @@ class Me implements Ego {
   }
 }
 
-export const I: Ego = new Me();
+export const I: Ego = new Actor();

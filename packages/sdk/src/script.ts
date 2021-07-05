@@ -1,4 +1,4 @@
-import { errors, Meta, Serializable } from '@skintest/common';
+import { Data, errors, Meta } from '@skintest/common';
 import { Command } from './command';
 import { Feature, OnlyScenario, TestScenario } from './schema';
 
@@ -7,7 +7,7 @@ export interface Scenario {
   commands: Command[];
   attributes: Partial<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: Array<Serializable>
+    data: Array<Data>
   }>;
 }
 
@@ -46,7 +46,7 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   ) {
   }
 
-  test<T extends Serializable>(frame: 'data', ...data: T[]): OnlyScenario<T> {
+  test<T extends Data>(frame: 'data', ...data: T[]): OnlyScenario<T> {
     this.testAttributes = { [frame]: data };
     return this;
   }

@@ -1,5 +1,5 @@
-import { errors, Guard, isObject, reinterpret, Serializable } from '@skintest/common';
-import { Browser, Command, fail, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Suite, Value, VALUE_KEY } from '@skintest/sdk';
+import { Data, errors, Guard, isObject, reinterpret } from '@skintest/common';
+import { Browser, Command, fail, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Suite, Value, VALUE_REF } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { CommandScope, Datum, Staging, Step } from './stage';
 
@@ -206,12 +206,12 @@ export class Scene {
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const materialize = (value: Value<any, Serializable>): any => {
-          if (isObject(value) && VALUE_KEY in value) {
+        const materialize = (value: Value<any, Data>): any => {
+          if (isObject(value) && VALUE_REF in value) {
             const [_, data] = datum;
             Guard.notNull(data, 'data');
 
-            const key = value[VALUE_KEY];
+            const key = value[VALUE_REF];
             return data?.[key];
           }
 

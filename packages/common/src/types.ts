@@ -10,7 +10,7 @@ export type KeyValue<T> = [key: string, value: T];
 export type Optional<T> = T | undefined;
 export type Predicate<T> = (value: T) => boolean;
 
-export type Serializable = Record<string, unknown>;
-export interface Boxed<V extends Serializable> {
+export type Data = Record<string, unknown>;
+export interface Boxed<V> {
   value: V
 }
