@@ -1,8 +1,8 @@
 import { errors, getCaller, getMeta } from '@skintest/common';
-import { RecipeIterable, RecipeOperator } from './recipe';
 import { EventStep } from './steps/event';
 import { Download, WaitDownloadStep } from './steps/wait-download';
 import { FileDialog, WaitFileDialogStep } from './steps/wait-file-dialog';
+import { TaskIterable, TaskOperator } from './task';
 
 export type ClientPageEvents = {
   'download': Download,
@@ -11,7 +11,7 @@ export type ClientPageEvents = {
   // 'state': 'load' | 'domcontentloaded' | 'networkiddle'
 };
 
-export function handle<E extends keyof ClientPageEvents>(event: E, options: ClientPageEvents[E]): RecipeOperator<RecipeIterable, RecipeIterable> {
+export function handle<E extends keyof ClientPageEvents>(event: E, options: ClientPageEvents[E]): TaskOperator<TaskIterable, TaskIterable> {
   const caller = getCaller();
   const getStepMeta = () => getMeta(caller);
 

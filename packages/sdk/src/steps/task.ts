@@ -1,31 +1,31 @@
 import { Guard, Meta } from '@skintest/common';
 import { DoStep, StepExecutionResult } from '../command';
-import { RecipeFunction } from '../recipe';
+import { TaskFunction } from '../task';
 
-export class RecipeStep<D> implements DoStep<D> {
+export class TaskStep<D> implements DoStep<D> {
   type: 'do' = 'do';
 
   constructor(
     public getMeta: () => Promise<Meta>,
-    public recipe: RecipeFunction,
+    public task: TaskFunction,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public args: any[]
   ) {
-    Guard.notNull(recipe, 'recipe');
+    Guard.notNull(task, 'task');
     Guard.notNull(args, 'args');
   }
 
   async execute(): Promise<StepExecutionResult> {
-    const op = await this.recipe(...this.args);
+    const op = await this.task(...this.args);
     const plan = op(undefined);
 
     return {
-      type: 'recipe',
+      type: 'task',
       plan: Array.from(plan),
     };
   }
 
   toString(): string {
-    return 'recipe';
+    return 'task';
   }
 }

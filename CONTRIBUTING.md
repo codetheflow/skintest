@@ -32,11 +32,11 @@ https://code.visualstudio.com/docs/nodejs/nodejs-debugging
 Currently, the [source](https://github.com/codetheflow/skintest/tree/master) is split up into a few categories:
 
 * [packages/common](https://github.com/codetheflow/skintest/tree/master/packages/common): shared utils, guards and errors.
-* [packages/sdk](https://github.com/codetheflow/skintest/tree/master/packages/sdk): end user api to write test scenarios, recipes and selectors.
+* [packages/sdk](https://github.com/codetheflow/skintest/tree/master/packages/sdk): end user api to write test scenarios, tasks and selectors.
 * [packages/platform](https://github.com/codetheflow/skintest/tree/master/packages/platfom): infrastructure to run scenarios and plugins.
 * [packages/plugins](https://github.com/codetheflow/skintest/tree/master/packages/plugins): browser launcher and lifecycle plugins.
-* [packages/enterprise](https://github.com/codetheflow/skintest/tree/master/packages/enterprise): recipes and utils under the commercial licence.
-* [test-exercise](https://github.com/codetheflow/skintest/tree/master/test-exercise): examples of test scenarios and recipes.
+* [packages/enterprise](https://github.com/codetheflow/skintest/tree/master/packages/enterprise): tasks and utils under the commercial licence.
+* [test-exercise](https://github.com/codetheflow/skintest/tree/master/test-exercise): examples of test scenarios and tasks.
 * [test-app](https://github.com/codetheflow/skintest/tree/master/test-app): testing example app.
 
 ### Linting

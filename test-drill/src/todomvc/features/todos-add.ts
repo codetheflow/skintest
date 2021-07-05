@@ -2,9 +2,9 @@ import { copy, paste } from '@skintest/enterprise';
 import { data, feature, has, I } from '@skintest/sdk';
 import { page } from '../components/page';
 import { todos } from '../components/todos';
-import { add_todo } from '../recipes/add-todo';
-import { clear_todos } from '../recipes/clear-todos';
-import { generate_todos } from '../recipes/generate-todos';
+import { add_todo } from '../tasks/add-todo';
+import { clear_todos } from '../tasks/clear-todos';
+import { generate_todos } from '../tasks/generate-todos';
 
 feature()
 

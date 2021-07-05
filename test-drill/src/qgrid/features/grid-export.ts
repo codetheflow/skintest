@@ -2,9 +2,9 @@ import { my } from '@skintest/enterprise';
 import { feature, I } from '@skintest/sdk';
 import { example_export } from '../components/example-export';
 import { page } from '../components/page';
-import { export_data_as } from '../recipes/export-data-as';
-import { that_data_exists } from '../recipes/that-data-exists';
-import { wait_until_grid_has_rows } from '../recipes/wait-until-grid-has-rows';
+import { export_data_as } from '../tasks/export-data-as';
+import { that_data_exists } from '../tasks/that-data-exists';
+import { wait_until_grid_has_rows } from '../tasks/wait-until-grid-has-rows';
 
 feature()
 

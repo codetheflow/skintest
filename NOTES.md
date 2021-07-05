@@ -9,7 +9,7 @@ update
 add project
 add feature
 add component
-add recipe
+add task
 
 edit project
 
@@ -33,8 +33,8 @@ lint ?
 * skintest runner, cli, bin, ts-node support(debugging)?
 * feature name /scenario name uniq constraint
 * define the final folder structure
-* add `feature`, `component`, `recipe` postfixes? - already in the experimental branch
-* better assert recipe, test effect - 'break', 'continue', 'exit'?
+* add `feature`, `component`, `task` postfixes? - already in the experimental branch
+* better assert task, test effect - 'break', 'continue', 'exit'?
 * default launch.json
 * define final data, till and iif APIs, index in `data`, `till` fn?
 * add skintest.dev.ts to modify volatile data, add it to git ignore?
@@ -44,7 +44,7 @@ lint ?
 
 # m.2
 * better reporting UX
-* add comments to the ego, selectors, recipes and keyboard keys
+* add comments to the ego, selectors, tasks and keyboard keys
 * skintest.io
 * stripe integration
 * azure account
@@ -94,9 +94,9 @@ lint ?
 * CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
 * in pause access to the components
 * add playwright plugin to make things like pw(async p => await p.evaluate...);
-* example of using value from the selector like `I.fill(todos.what, as, todos.user)* maybe it should be a recipe?
+* example of using value from the selector like `I.fill(todos.what, as, todos.user)* maybe it should be a task?
 * add script/feature error zone?
-* recipe type  `query`?
+* task type  `query`?
 * cli tool
 * time 
 * own inspector
@@ -106,7 +106,7 @@ lint ?
 * propagate options to driver methods(like delay in dblcick)? through the global config?
 * deal with translations?
 * do we need special waiters for angular/react/view etc.
-* introduce roles for writing features/recipes?
+* introduce roles for writing features/task?
 * websockets?
 * auth
 * https://playwright.dev/docs/auth

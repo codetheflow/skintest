@@ -266,7 +266,7 @@ export class Scene {
             await passEffect({ ...scope, step, result: pass(), path });
             break;
           }
-          case 'recipe':
+          case 'task':
           case 'perform': {
             const [ok, innerErrors] = await runPlan(run.plan);
             if (ok) {

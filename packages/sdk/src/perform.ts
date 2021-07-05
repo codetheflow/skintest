@@ -1,9 +1,9 @@
 import { getCaller, getMeta, Optional } from '@skintest/common';
-import { RecipeIterable, RecipeOperator } from './recipe';
 import { PerformSchema } from './schema';
 import { PerformStep } from './steps/perform';
+import { TaskIterable, TaskOperator } from './task';
 
-export function perform<D>(message: string, ...step: PerformSchema<D>): RecipeOperator<Optional<RecipeIterable>, RecipeIterable> {
+export function perform<D>(message: string, ...step: PerformSchema<D>): TaskOperator<Optional<TaskIterable>, TaskIterable> {
   const caller = getCaller();
   const getStepMeta = () => getMeta(caller);
 
