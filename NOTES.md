@@ -1,5 +1,6 @@
 ### todo 
 
+
 # cli
 
 * yarn st
@@ -29,9 +30,16 @@ lint ?
 * yarn cli feature:
 * -- project: [project1, project2, project3]
 
+# m.new
+* multiple file download support
+* better exception handling 
+* global timeout
+* run and start from the debug place, incremental debugging, hot reload
+* set window size
+
 # m.1
 * skintest runner, cli, bin, ts-node support(debugging)?
-* feature name /scenario name uniq constraint
+* feature name /scenario name uniq constraint - done
 * define the final folder structure
 * add `feature`, `component`, `task` postfixes? - already in the experimental branch
 * better assert task, test effect - 'break', 'continue', 'exit'?

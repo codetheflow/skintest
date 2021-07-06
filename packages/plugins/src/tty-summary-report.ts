@@ -83,7 +83,7 @@ export function ttySummaryReport(): Plugin {
       stdout.write(table(statistics, config));
 
       if (issues.length) {
-        tty.newLine(stdout, tty.fail('ERRORS:'));
+        tty.newLine(stdout, tty.fail('FAILURES:'));
         for (const issue of issues) {
           if (issue.meta) {
             const { scenario, meta } = issue;
