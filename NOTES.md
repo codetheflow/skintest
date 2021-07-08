@@ -32,10 +32,9 @@ lint ?
 
 # m.new
 * multiple file download support
-* better exception handling 
-* global timeout
 * run and start from the debug place, incremental debugging, hot reload
 * set window size
+* in multi-page scenarios show the tab near the step in tty-report
 
 # m.1
 * skintest runner, cli, bin, ts-node support(debugging)?

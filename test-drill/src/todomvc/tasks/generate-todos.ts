@@ -1,5 +1,5 @@
 import { has, I, perform, RepeatRead, Task, task, till } from '@skintest/sdk';
-import { todos } from '../components/todos';
+import { $todos } from '../components/$todos';
 import { add_todo } from './add-todo';
 
 function add_next_todo(read: RepeatRead): Promise<Task> {
@@ -18,7 +18,7 @@ export async function generate_todos(count: number): Promise<Task> {
     perform(`generate ${count} todos`
       , I.do(add_next_todo, till.item)
       , till(`list has no ${count} items`)
-      , I.see(todos.list, has.no.length, count)
+      , I.see($todos.list, has.no.length, count)
     )
   );
 }

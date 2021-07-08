@@ -1,4 +1,4 @@
-export const page = {
+export const $page = {
   start: `start page`
 
   , one: `page one`

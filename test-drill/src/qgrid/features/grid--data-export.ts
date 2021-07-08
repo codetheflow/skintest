@@ -1,7 +1,7 @@
 import { my } from '@skintest/enterprise';
 import { feature, I } from '@skintest/sdk';
-import { example_export } from '../components/example-export';
-import { page } from '../components/page';
+import { $example_data_export } from '../components/$example-data-export';
+import { $page } from '../components/$page';
 import { export_data_as } from '../tasks/export-data-as';
 import { that_data_exists } from '../tasks/that-data-exists';
 import { wait_until_grid_has_rows } from '../tasks/wait-until-grid-has-rows';
@@ -9,8 +9,8 @@ import { wait_until_grid_has_rows } from '../tasks/wait-until-grid-has-rows';
 feature()
 
   .before('scenario'
-    , I.open(page.start)
-    , I.goto(example_export.url)
+    , I.open($page.start)
+    , I.goto($example_data_export.url)
   )
 
   .scenario('check the export to csv button downloads the file'
