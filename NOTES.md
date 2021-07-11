@@ -1,7 +1,35 @@
-### todo 
+# NOTES
+
+### hmr
+
+* use #hmr/#now tag in particular scenario to stop and continue
+* `stop` is an end of the scenario or error in the scenario, browser and page are not closing
+* only one #hmr/#now tag can be in the suite
+* save `stop` location in memory
+* watch file change in the scenario file and all it's imports
+* on file change:
+1. if not scenario file was changed(one of the imports) - hard rerun whole scenario
+2. if scenario file was changed calculate scenario diff:
+3. if `diff` is green(previous `stop` is bellow diff) - run diff steps
+4. if `diff` is red(previous `stop` is above diff) - hard rerun whole scenario
+5. if `no diff` - do nothing 
+* if scenario name was changed - hard rerun whole suite
 
 
-# cli
+```typescript
+начальное состояние
+my-file.js >>>
+require('file1');
+
+console.log('hello world')
+
+hmr('my-file.js', ({modified, added, deleted}) => {
+   
+
+
+});
+
+### cli
 
 * yarn st
 
@@ -29,98 +57,3 @@ lint ?
 
 * yarn cli feature:
 * -- project: [project1, project2, project3]
-
-# m.new
-* multiple file download support
-* run and start from the debug place, incremental debugging, hot reload
-* set window size
-* in multi-page scenarios show the tab near the step in tty-report
-
-# m.1
-* skintest runner, cli, bin, ts-node support(debugging)?
-* feature name /scenario name uniq constraint - done
-* define the final folder structure
-* add `feature`, `component`, `task` postfixes? - already in the experimental branch
-* better assert task, test effect - 'break', 'continue', 'exit'?
-* default launch.json
-* define final data, till and iif APIs, index in `data`, `till` fn?
-* add skintest.dev.ts to modify volatile data, add it to git ignore?
-* experiment with route intersection api, test data in ops and global navigation events
-* config to define multi-browsers
-* one project or multiple projects?
-
-# m.2
-* better reporting UX
-* add comments to the ego, selectors, tasks and keyboard keys
-* skintest.io
-* stripe integration
-* azure account
-* CI/CD integration
-* LICENSE
-* CODE_OF_CONDUCT
-* CONTRIBUTING
-* BUG REPORTING
-* CODE_STYLE
-
-# m.next
-* `__pause` is frozen sometimes ??
-* check stack trace file path on error
-* better code parsing in the `meta.ts`
-* add `secret` function to show `***` instead of value
-* dialog support, alert(), confirm(), prompt()
-* https://playwright.dev/docs/api/class-dialog
-* multi browsers launch options
-* global navigation event
-* read csv\excel\json\yml
-* file system predicates
-* email reporting
-* test data in operators
-* drag and drop
-* telegram, slack reporting
-* wrike, jira integration
-* cancel run on fail
-* run failed specs first
-* pauseOnFail
-* retryFailed
-* screenshot\video on fail
-* oauth logins
-* custom timeout?
-* playwright logs, verbose reporting, file logs, integration longs e. with allure
-* https://playwright.dev/docs/api/class-logger
-* video and screenshots support
-* https://playwright.dev/docs/ci
-* multiple selector strategy in $ and $$, data-test-id, search by the text
-* add fail\error hook in the scenario as a debug option, or add pause on fail plugin
-* and inspect to dbg in .debug, better debugging experience* add max time that scenario could take (for `till` operations)
-* has.state doesn't trigger type checking, because string is extendable from the string
-* remove redundant new lines in tty-report and tty-pause
-* show fail/error solutions/links to solutions
-* slowMo settings in camelCase - lint warning
-* stubs/network intersection support
-* start writing unit tests
-* CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
-* in pause access to the components
-* add playwright plugin to make things like pw(async p => await p.evaluate...);
-* example of using value from the selector like `I.fill(todos.what, as, todos.user)* maybe it should be a task?
-* add script/feature error zone?
-* task type  `query`?
-* cli tool
-* time 
-* own inspector
-* own chrome extension for codegen?, look for the extensions
-* https://playwright.dev/docs/cli
-* how to store secrets?
-* propagate options to driver methods(like delay in dblcick)? through the global config?
-* deal with translations?
-* do we need special waiters for angular/react/view etc.
-* introduce roles for writing features/task?
-* websockets?
-* auth
-* https://playwright.dev/docs/auth
-* device emulation
-* browser console messages? error catching?
-* https://playwright.dev/docs/verification
-* own browser instance for each feature/scenario/before.scenario?
-* https://playwright.dev/docs/test-runners
-* browser and node runners?
-* https://gist.github.com/vzaidman/ef6e4b772b311ffb98368da5f7a9582a#file-codecept-example-js
