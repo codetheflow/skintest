@@ -22,6 +22,7 @@ function toggleMobileMenu() {
 
   const toggleMenu = function() {
     mobilePopupBtn.classList.toggle('button-open');
+    document.querySelector('.mobile__item-documentation').classList.remove('opened');
   }
 
   mobilePopupBtn.addEventListener('click', function (e) {
@@ -32,7 +33,7 @@ function toggleMobileMenu() {
   document.addEventListener('click', function (e) {
     const target = e.target;
     const isMenu = target == mobilePopup || mobilePopup.contains(target);
-    const isBtnMenu = target == mobileMenu;
+    const isBtnMenu = target == mobilePopupBtn;
     const isMenuActive = mobilePopupBtn.classList.contains('button-open');
     
     if (!isMenu && !isBtnMenu && isMenuActive) {
@@ -48,4 +49,3 @@ function toggleMobileMenuList() {
     mobileListMenuBtn.classList.toggle('opened');
   });
 }
-

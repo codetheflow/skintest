@@ -40,6 +40,7 @@
   .title {
     &-main {
       font-size: 60px;
+      max-width: 613px;
     }
 
     &-third,
@@ -250,7 +251,8 @@
   a:not(.btn).link-secondary {
     @include fontStylingSet(14px, 17px, 400);
   }
-
+  
+  .additional,
   section {
     margin-bottom: 90px;
   }

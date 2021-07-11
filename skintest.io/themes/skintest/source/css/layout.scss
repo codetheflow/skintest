@@ -124,7 +124,7 @@ a:not(.btn) {
 
   &-steps {
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 32px 0 172px;
   }
 
@@ -204,6 +204,10 @@ a:not(.btn) {
     width: 551px;
     height: 383px;
     background-color: $white;
+  }
+
+  &__list {
+    margin-right: 60px;
   }
   
   &__point {
@@ -671,6 +675,7 @@ a:not(.btn) {
 
 .social {
   display: inline-flex;
+  padding: 0 25px;
 
   &__item {
     cursor: pointer;
