@@ -13,13 +13,13 @@
   }
 
   .wrapper {
+    &-helper,
     &-steps {
       padding: 0;
     }
 
     &-helper {
       flex-direction: column-reverse;
-      padding: 0;
     }
   }
 
@@ -44,8 +44,7 @@
 
     &-third,
     &-secondary {
-      font-size: 36px;
-      line-height: 36px;
+      @include fontStylingSet(36px, 36px, 500);
     }
 
     &-helper {
@@ -67,14 +66,12 @@
     }
 
     &__title {
-      font-size: 22px;
-      line-height: 26px;
+      @include fontStylingSet(22px, 26px, 500);
       margin-bottom: 28px;
     }
 
     &__text {
-      font-size: 17px;
-      line-height: 22px;
+      @include fontStylingSet(17px, 22px, 400);
     }
   }
 
@@ -113,6 +110,10 @@
     &__cards {
       flex-direction: column;
     }
+
+    &__billtype {
+      margin-bottom: 40px;
+    }
   }
 
   .card {
@@ -145,9 +146,8 @@
     }
 
     &__list {
-      display: flex;
+      @include flexStylingSet(flex, center, space-between);
       flex-wrap: wrap;
-      justify-content: space-between;
       padding-left: 50px;
       margin-bottom: 12px;
     }
@@ -184,43 +184,60 @@
 
   .contact {
     &__subtitle {
-      font-size: 22px;
-      line-height: 27px;
+      @include fontStylingSet(22px, 27px, 400);
     }
   }
-}
 
-.contact {
-  margin-bottom: 120px;
-  &__subtitle {
-    margin-bottom: 52px;
-  }
+  .guide {
+    margin-bottom: 120px;
 
-  &__link {
-    &::before {
-      @include square(100px);
-      margin-right: 40px;
-      background-size: 51px 26px, 100%;
+    &__article {
+      padding-left: 40px;
+    }
+
+    &__aside {
+      min-width: 232px;
+    }
+
+    &__item {
+      @include fontStylingSet(15px, 24px, 400);
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin: 80px 0 24px 0;
+    }
+
+    .highlight.jsx span {
+      @include fontStylingSet(12px, 13px, 400);
     }
   }
-}
 
-.footer {
-  &__nav {
-    padding-bottom: 24px;
+  .contact {
+    &__subtitle {
+      margin-bottom: 43px;
+    }
+
+    &__link {
+      &::before {
+        @include square(100px);
+        margin-right: 40px;
+        background-size: 51px 26px, 100%;
+      }
+    }
   }
-
-  &__links a:not(:last-child) {
-    margin-right: 23px;
+  
+  .footer {
+    &__links a:not(:last-child) {
+      margin-right: 23px;
+    }
+  
+    &__copyright {
+      margin: 24px 0 40px 0;
+    }
   }
-
-  &__copyright {
-    margin: 24px 0 40px 0;
-  }
-}
-
-.social {
-  &__item:not(:last-child) {
+  
+  .social__item:not(:last-child) {
     font-size: 14px;
   }
 }
@@ -231,8 +248,7 @@
   }
 
   a:not(.btn).link-secondary {
-    font-size: 14px;
-    line-height: 17px;
+    @include fontStylingSet(14px, 17px, 400);
   }
 
   section {
@@ -293,8 +309,7 @@
 
   .title {
     &-main {
-      font-size: 32px;
-      line-height: 1.5;
+      @include fontStylingSet(32px, 1.5, 700);
       max-width: 267px;
       padding: 0 16px;
     }
@@ -326,8 +341,7 @@
     }
 
     &__title {
-      font-size: 18px;
-      line-height: 20px;
+      @include fontStylingSet(18px, 20px, 500);
       margin-bottom: 16px;
     }
 
@@ -370,25 +384,24 @@
 
   .helper {
     &__point {
-      font-size: 15px;
-      line-height: 26px;
+      @include fontStylingSet(15px, 26px, 400);
       width: 98px;
+
+      &-execution::before,
+      &-safty::before,
+      &-api::before {
+        margin-bottom: 8px;
+      }
     }
 
+    &__point-api::before,
     &__point-execution::before {
       @include square(40px);
-      margin-bottom: 8px;
     }
 
     &__point-safty::before {
       width: 33px;
       height: 40px;
-      margin-bottom: 8px;
-    }
-
-    &__point-api::before {
-      @include square(40px);
-      margin-bottom: 8px;
     }
 
     &__code {
@@ -404,6 +417,10 @@
 
     &__billtype {
       margin-bottom: 24px;
+    }
+
+    input:checked + span::before {
+      left: 98px;
     }
   }
 
@@ -434,6 +451,12 @@
     &__point {
       width: 100%;
     }
+
+    &__btn {
+      max-width: 100%;
+      margin-left: 0;
+      text-align: center;
+    }
   }
 
   .additional {
@@ -447,8 +470,7 @@
 
   .contact {
     &__subtitle {
-      font-size: 15px;
-      line-height: 22px;
+      @include fontStylingSet(15px, 22px, 400);
       max-width: 218px;
       margin: 0 auto 24px auto;
     }
@@ -465,10 +487,10 @@
 
   .footer {
     &__links {
-      display: flex;
+      @include flexStylingSet(flex, center, inherit);
       flex-direction: column;
-      text-align: center;
       margin-bottom: 24px;
+      margin-left: 0;
 
       a {
         margin: 0;
@@ -484,17 +506,14 @@
       }
     }
 
-    &__nav {
-      picture {
-        margin-bottom: 24px;
-      }
+    &__nav picture {
+      margin-bottom: 24px;
+      text-align: center;
     }
   }
 
-  .social {
-    &.wrapper {
-      flex-direction: row;
-    } 
+  .social.wrapper {
+    flex-direction: row;
   }
 
   .contact {
@@ -502,7 +521,29 @@
   }
 
   &__copyright {
-    font-size: 12px;
-    line-height: 15px;
+    @include fontStylingSet(12px, 15px, 400);
+  }
+
+  .guide {
+    &__article {
+      padding-left: 0;
+    }
+
+    &__aside {
+      display: none;
+    }
+
+    h2 {
+      @include fontStylingSet(24px, 29px, 500);
+    }
+
+    p {
+      @include fontStylingSet(15px, 20px, 400);
+      margin: 0 0 20px 0;
+    }
+
+    .highlight.jsx span {
+      white-space: break-spaces;
+    }
   }
 }
