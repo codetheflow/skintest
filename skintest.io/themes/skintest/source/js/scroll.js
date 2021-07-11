@@ -17,26 +17,26 @@ function setScroll() {
 }
 
 function toggleMobileMenu() {
-  const mobileMenu = document.querySelector('.mobile__burger');
-  const mobilePoup = document.querySelector('.mobile');
+  const mobilePopupBtn = document.querySelector('.mobile__burger');
+  const mobilePopup = document.querySelector('.mobile');
 
   const toggleMenu = function() {
-    mobileMenu.classList.toggle('button-open');
+    mobilePopupBtn.classList.toggle('button-open');
   }
 
-  mobileMenu.addEventListener('click', function (e) {
+  mobilePopupBtn.addEventListener('click', function (e) {
     e.stopPropagation();
     toggleMenu();
   })
 
   document.addEventListener('click', function (e) {
     const target = e.target;
-    const isMenu = target == mobilePoup || mobilePoup.contains(target);
+    const isMenu = target == mobilePopup || mobilePopup.contains(target);
     const isBtnMenu = target == mobileMenu;
-    const isMenuActive = mobileMenu.classList.contains('button-open');
+    const isMenuActive = mobilePopupBtn.classList.contains('button-open');
     
     if (!isMenu && !isBtnMenu && isMenuActive) {
-        toggleMenu();
+      toggleMenu();
     }
   });
 }
