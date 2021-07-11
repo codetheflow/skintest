@@ -21,8 +21,7 @@ a:not(.btn) {
   }
 
   &.link-secondary {
-    font-size: 17px;
-    line-height: 20px;
+    @include fontStylingSet(17px, 20px, 400);
     position: relative;
 
     &::after {
@@ -36,9 +35,7 @@ a:not(.btn) {
     }
 
     &:hover {
-      background: linear-gradient($secondary, $primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      @include gradientText;
 
       &::after {
         background-color: $primary;
@@ -57,19 +54,17 @@ a:not(.btn) {
 }
 
 .btn {
+  @include fontStylingSet(14px, 17px, 600);
   background-color: $white;
   padding: 14px 20px;
   color: $btn-color;
   border-radius: 8px;
   text-transform: uppercase;
   transition: $btn-transition;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 17px;
   letter-spacing: 0.02em;
 
   &:hover {
-    background: linear-gradient(149.9deg, $primary 36.55%, $secondary 109.5%);
+    background: $linear-gradient;
     color: $white;
   }
 
@@ -90,7 +85,7 @@ a:not(.btn) {
   margin: 0 auto;
 
   &-header {
-    padding-top: 30px;
+    padding-top: 32px;
   }
 }
 
@@ -100,17 +95,21 @@ a:not(.btn) {
 
   &-title {
     position: relative;
-    margin: 103px auto;
+    margin: 103px auto 150px auto;
 
-    &::before {
+    &::before,
+    &::after {
       content: '';
-      @include square(116px);
-      background-image: url('../assets/images/skintest_1.svg');
       background-repeat: no-repeat;
       background-size: contain;
       display: block;
       position: absolute;
-      top: -26px;
+    }
+
+    &::before {
+      @include square(116px);
+      background-image: url('../assets/images/skintest_1.svg');
+      top: -17px;
       left: 0;
     }
 
@@ -118,18 +117,14 @@ a:not(.btn) {
       content: '';
       @include square(112px);
       background-image: url('../assets/images/skintest_2.svg');
-      background-repeat: no-repeat;
-      background-size: contain;
-      display: block;
-      position: absolute;
       right: 0;
-      bottom: -28px;
+      bottom: -17px;
     }
   }
 
   &-steps {
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 32px 0 172px;
   }
 
@@ -141,36 +136,27 @@ a:not(.btn) {
 
 .header {
   &__nav {
-    display: flex;
+    @include flexStylingSet(flex, center, space-between);
     width: 100%;
-    align-items: center;
-    justify-content: space-between;
     margin-left: 48px;
     
     a:not(.btn) {
-      font-size: 16px;
-      line-height: 19px;
+      @include fontStylingSet(16px, 19px, 400);
     }
   }
 }
 
 .title {
   &-main {
-    font-size: 72px;
-    line-height: 74px;
-    font-weight: 700;
-    background: linear-gradient($secondary, $primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    @include fontStylingSet(72px, 74px, 700);
+    @include gradientText;
     text-align: center;
     margin: 0 auto;
     max-width: 813px;
   }
 
   &-secondary {
-    font-size: 52px;
-    line-height: 62px;
-    font-weight: 500;
+    @include fontStylingSet(52px, 62px, 500);
     text-align: center;
     margin: 0 0 52px 0;
   }
@@ -180,9 +166,7 @@ a:not(.btn) {
   }
 
   &-third {
-    font-size: 42px;
-    line-height: 52px;
-    font-weight: 500;
+    @include fontStylingSet(42px, 52px, 500);
     margin: 0 0 40px 0;
   } 
 }
@@ -204,16 +188,13 @@ a:not(.btn) {
   }
 
   &__title {
+    @include fontStylingSet(24px, 30px, 500);
     display: block;
-    font-size: 24px;
-    line-height: 30px;
-    font-weight: 500;
     margin-bottom: 32px;
   }
 
   &__text {
-    font-size: 17px;
-    line-height: 26px;
+    @include fontStylingSet(17px, 26px, 400);
     margin: 0;
   }
 }
@@ -224,28 +205,27 @@ a:not(.btn) {
     height: 383px;
     background-color: $white;
   }
+
+  &__list {
+    margin-right: 60px;
+  }
   
   &__point {
     margin-bottom: 52px;
 
     span:not(.setup__num) {
-      font-size: 17px;
-      line-height: 24px;
+      @include fontStylingSet(17px, 24px, 400);
     }
 
     .setup__num {
       @include square(54px);
+      @include fontStylingSet(18px, 27px, 700);
+      @include flexStylingSet(inline-flex, center, center);
       position: relative;
       color: $white;
-      font-size: 18px;
-      line-height: 27px;
-      font-weight: 700;
       margin-right: 16px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
       border-radius: 100%;
-      background:  linear-gradient(149.9deg, $primary 36.55%, $secondary 109.5%);
+      background: $linear-gradient;
 
       &::after {
         content: '';
@@ -278,31 +258,31 @@ a:not(.btn) {
 
     video {
       width: 1024px;
-      height: 715px;
+      height: 600px;
     }
 
     .example__play {
       @include square(100%);
+      @include centeringSet;
       cursor: pointer;
       position: absolute;
       background-color: $transparent;
-      top: 50%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
+
+      &#start,
+      &#pause {
+        @include centeringSet;
+        position: absolute;
+        content: '';
+        display: block;
+        background-repeat: no-repeat;
+      }
 
       &#start {
         &::before {
           @include square(94px);
-          position: absolute;
-          content: '';
-          display: block;
           background-image: url('../assets/images/video_play.svg');
-          background-repeat: no-repeat;
           background-size: 116px 94px;
           transition: $transition;
-          top: 50%;
-          left: 50%;
-          transform: translateX(-50%) translateY(-50%);
         }
   
         &:hover {
@@ -314,19 +294,12 @@ a:not(.btn) {
 
       &#pause {
         &::before {
-          content: '';
-          position: absolute;
-          display: block;
           width: 116px;
           height: 94px;
           background-image: url('../assets/images/video_pause.svg');
-          background-repeat: no-repeat;
           background-size: contain;
           transition: $transition;
-          top: 50%;
           background-position: center;
-          left: 50%;
-          transform: translateX(-50%) translateY(-50%);
           opacity: 0;
         }
 
@@ -335,12 +308,12 @@ a:not(.btn) {
         }
       }
 
-
       &#pause:disabled,
       &#start:disabled {
           display: none;
       }
     }
+
     &:hover .example__play::before {
       background-image: url('../assets/images/video_play_hover.svg');
     }
@@ -352,50 +325,44 @@ a:not(.btn) {
     width: 514px;
     height: 468px;
     background-color: $white;
-    margin-right: 40px;
+    margin-right: 48px;
   }
 
   &__list {
-    padding-top: 30px;
+    padding-top: 46px;
   }
 
   &__point {
-    font-size: 17px;
-    line-height: 20px;
+    @include fontStylingSet(17px, 20px, 400);
     width: 141px;
     text-align: center;
     margin-bottom: 64px;
 
-    &-execution::before {
+    &-execution::before,
+    &-safty::before,
+    &-api::before {
       content: '';
       display: block;
-      width: 48px;
-      height: 42px;
-      margin: 0 auto 10px auto;
-      background-image: url('../assets/images/skintest_transparent.svg');
+      margin:  0 auto 10px auto;
       background-size: contain;
       background-repeat: no-repeat;
     }
 
+    &-execution::before {
+      width: 48px;
+      height: 42px;
+      background-image: url('../assets/images/skintest_transparent.svg');
+    }
+
     &-safty::before {
-      content: '';
-      display: block;
       width: 42px;
       height: 51px;
-      margin:  0 auto 10px auto;
       background-image: url('../assets/images/skintest_safety.svg');
-      background-size: contain;
-      background-repeat: no-repeat;
     }
     
     &-api::before {
       @include square(48px);
-      content: '';
-      display: block;
-      margin:  0 auto 10px auto;
       background-image: url('../assets/images/skintest_api.svg');
-      background-size: contain;
-      background-repeat: no-repeat;
     }
   }
 }
@@ -404,7 +371,6 @@ a:not(.btn) {
   &__billtype {
     display: flex;
     justify-content: center;
-    margin-bottom: 40px;
   }
 
   &__checkbox {
@@ -449,7 +415,7 @@ a:not(.btn) {
       display: block;
       width: 56px;
       height: 32px;
-      background-color: $gray;
+      background-color: $primary;
       border-radius: 16px;
       margin-left: 16px;
       cursor: pointer;
@@ -463,20 +429,16 @@ a:not(.btn) {
 
   input:checked + span {
     color: $primary;
+
     &::before {
       @include square(24px);
       left: 108px;
-    }
-
-    &::after {
-      background-color: $primary;
     }
             
     + span {
       color: $white;
     }
   }
-  
 
   &__type-annually {
     margin-left: 16px;
@@ -484,6 +446,7 @@ a:not(.btn) {
 
   &__cards {
     justify-content: space-between;
+    align-items: end;
   }
 }
 
@@ -493,14 +456,12 @@ a:not(.btn) {
   width: 325px;
   box-sizing: border-box;
   border-radius: 14px;
-  margin-top: 72px;
+  margin-top: 108px;
 
   &__title {
-    font-size: 48px;
-    line-height: 57px;
-    font-weight: 600;
+    @include fontStylingSet(48px, 57px, 600);
     margin: 0 0 40px 0;
-    padding: 0 17px 40px 17px;
+    padding: 0 0 44px 4px;
     position: relative;
 
     &-sale {
@@ -521,18 +482,15 @@ a:not(.btn) {
     }
 
     sup {
+      @include fontStylingSet(24px, 29px, 600);
       display: inline-flex;
       align-items: flex-start;
-      font-size: 24px;
-      line-height: 29px;
-      font-weight: 600;
       color: $sup-color;
       position: relative;
       margin-left: 8px;
 
       span {
-        font-size: 15px;
-        line-height: 19px;
+        @include fontStylingSet(15px, 19px, 400);
         margin-top: 5px;
       }
 
@@ -551,38 +509,36 @@ a:not(.btn) {
   }
 
   &__sup {
+    @include fontStylingSet(16px, 28px, 600);
     display: block;
     color: $gray;
     text-transform: uppercase;
-    font-size: 16px;
-    line-height: 28px;
-    font-weight: 600;
     margin-bottom: 11px;
   }
 
   &__list {
     display: block;
-    padding: 0 17px;
+    padding: 0;
     margin-bottom: 40px;
   }
 
   &__sale {
-    font-size: 12px;
-    line-height: 15px;
+    @include fontStylingSet(12px, 15px, 400);
     display: block;
     margin-top: 8px;
   }
 
   &__point {
+    @include fontStylingSet(14px, 21px, 400);
     display: flex;
-    font-size: 14px;
-    line-height: 21px;
     letter-spacing: -0.01em;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
+    max-width: 265px;
     
     &::before {
       content: '';
       @include square(21px);
+      min-width: 21px;
       display: inline-block;
       margin-right: 11px;
       background-image: url('../assets/images/skintest_checkmarks.svg');
@@ -594,7 +550,6 @@ a:not(.btn) {
     display: block;
     box-sizing: border-box;
     max-width: 230px;
-    margin: 0 auto;
     padding: 20px 16px;
 
     span::after {
@@ -610,8 +565,8 @@ a:not(.btn) {
   }
 
   &-active {
-    margin-top: 0;
-    background:  linear-gradient(149.9deg, $primary 36.55%, $secondary 109.5%);
+    margin-top: 39px;
+    background: $linear-gradient;
 
     .card__point::before {
       background-image: url('../assets/images/skintest-checkmark-dark.svg');
@@ -628,72 +583,64 @@ a:not(.btn) {
 }
 
 .additional {
+  margin-bottom: 132px;
+
   &__list {
     justify-content: space-between;
     flex-wrap: wrap;
-    width: 753px;
+    width: 793px;
     margin: 0 auto;
   }
 
   &__point {
+    @include fontStylingSet(17px, 26px, 400);
     position: relative;
-    font-size: 18px;
-    line-height: 26px;
-    margin: 0 30px 67px 30px;
+    width: 33%;
+    text-align: center;
+    margin-bottom: 66px;
 
-    &-support::before {
+    &-support::before,
+    &-execution::before,
+    &-ready::before,
+    &-architecture::before,
+    &-playright::before,
+    &-opensource::before {
       content: '';
-      background-image: url('../assets/images/skintest_support.svg');
       background-repeat: no-repeat;
       display: block;
+      margin: 0 auto 8px auto;
+    }
+
+    &-support::before {
+      background-image: url('../assets/images/skintest_support.svg');
       width: 40px;
       height: 51px;
-      margin: 0 auto 8px auto;
     }
 
     &-execution::before {
       @include square(40px);
-      content: '';
       background-image: url('../assets/images/skintest_execution.svg');
-      background-repeat: no-repeat;
-      display: block;
-      margin: 0 auto 8px auto;
     }
 
     &-ready::before {
-      content: '';
       background-image: url('../assets/images/skintest_ready.svg');
-      background-repeat: no-repeat;
-      display: block;
       width: 50px;
       height: 39px;
-      margin: 0 auto 8px auto;
     }
 
     &-architecture::before {
       @include square(46px);
-      content: '';
       background-image: url('../assets/images/skintest_architecture.svg');
-      background-repeat: no-repeat;
-      display: block;
-      margin: 0 auto 8px auto;
     }
 
     &-playright::before {
       @include square(48px);
-      content: '';
       background-image: url('../assets/images/skintest_playright.svg');
-      background-repeat: no-repeat;
-      display: block;
-      margin: 0 auto 8px auto;
     }
+
     &-opensource::before {
       @include square(45px);
-      content: '';
       background-image: url('../assets/images/skintest_opensource.svg');
-      background-repeat: no-repeat;
-      display: block;
-      margin: 0 auto 8px auto;
     }
   }
 }
@@ -703,18 +650,14 @@ a:not(.btn) {
   margin-bottom: 150px;
 
   &__subtitle {
+    @include fontStylingSet(24px, 35px, 400);
     display: block;
-    font-size: 24px;
-    line-height: 35px;
     margin-bottom: 40px;
   }
 
   &__link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    font-weight: 500;
+    @include fontStylingSet(26px, 26px, 500);
+    @include flexStylingSet(flex, center, center);
 
     &::before {
       content: '';
@@ -732,6 +675,7 @@ a:not(.btn) {
 
 .social {
   display: inline-flex;
+  padding: 0 25px;
 
   &__item {
     cursor: pointer;
@@ -739,16 +683,20 @@ a:not(.btn) {
     font-weight: 500;
   }
 
-  &__item-npm a,
-  &__item-github a,
-  &__item-telegram a,
-  &__item-youtube a {
-    font-size: 0;
+  &__item-npm,
+  &__item-github,
+  &__item-telegram,
+  &__item-youtube {
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    a {
+      font-size: 0;
+    }
   }
 
   &__item:not(:last-child) {
-    font-size: 16px;
-    line-height: 19px;
+    @include fontStylingSet(16px, 19px, 400);
     margin-right: 20px;
 
     &:last-child {
@@ -760,8 +708,6 @@ a:not(.btn) {
     width: 52px;
     height: 20px;
     background-image: url('../assets/images/npm.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
 
     &:hover {
       background-image: url('../assets/images/npm-violet.svg');
@@ -771,8 +717,6 @@ a:not(.btn) {
   &__item-github {
     @include square(17px);
     background-image: url('../assets/images/git.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
 
     &:hover {
       background-image: url('../assets/images/git-violet.svg');
@@ -782,10 +726,7 @@ a:not(.btn) {
   &__item-telegram {
     @include square(17px);
     background-image: url('../assets/images/telegram.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
 
-    
     &:hover {
       background-image: url('../assets/images/telegram-violet.svg');
     }
@@ -795,8 +736,6 @@ a:not(.btn) {
     width: 20px;
     height: 14px;
     background-image: url('../assets/images/youtube.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
 
     &:hover {
       background-image: url('../assets/images/youtube-violet.svg');
@@ -806,9 +745,10 @@ a:not(.btn) {
 
 .footer {
   &__nav {
-    padding-bottom: 30px;
+    padding-bottom: 20px;
     justify-content: space-between;
     position: relative;
+    align-items: inherit;
 
     &::after {
       content: '';
@@ -818,15 +758,17 @@ a:not(.btn) {
       left: 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(149.9deg, $primary 36.55%, $secondary 109.5%);
+      background: $linear-gradient;
     }
   }
 
-  &__links a {
-    font-size: 14px;
-    font-weight: 500;
-    &:not(:last-child) {
-      margin-right: 40px;
+  &__links {
+    margin-left: 118px;
+    a {
+      @include fontStylingSet(14px, 14px, 500);
+      &:not(:last-child) {
+        margin-right: 40px;
+      }
     }
   }
 
@@ -844,35 +786,36 @@ a:not(.btn) {
   position: relative;
   
   &__burger {
+    @include square(18px);
     display: none;
-    width: 18px;
-    height: 10px;
     background-color: $transparent;
-  
-    span {
+    cursor: pointer;
+
+    span,
+    span::before,
+    span::after {
+      content: '';
       width: 18px;
       height: 1px;
+    }
+  
+    span {
       background-color: $white;
       display: block;
       position: relative;
-  
-      &::before {
-        content: '';
-        width: 18px;
-        height: 1px;
+
+      &::before,
+      &::after {
         background-color: $white;
         position: absolute;
         left: 0;
+      }
+  
+      &::before {
         top: -5px
       }
   
       &::after {
-        content: '';
-        width: 18px;
-        height: 1px;
-        background-color: $white;
-        position: absolute;
-        left: 0;
         bottom: -5px
       }
     }
@@ -919,24 +862,23 @@ a:not(.btn) {
   }
 
   &__item {
+    @include fontStylingSet(14px, 14px, 500);
     margin-bottom: 24px;
     text-align: center;
-    font-size: 14px;
-    font-weight: 500;
 
     &-documentation {
       position: relative;
       font-weight: 600;
+      cursor: pointer;
 
       span {
         position: relative;
 
         &::after {
+          @include square(8px);
           content: '';
           background-image: url('../assets/images/dropdown-arrow.svg');
           background-repeat: no-repeat;
-          width: 8px;
-          height: 8px;
           display: inline-block;
           margin-left: 8px;
           background-size: contain;
@@ -946,11 +888,10 @@ a:not(.btn) {
   }
 
   &__social {
+    @include flexStylingSet(flex, center, space-between);
     width: 100%;
-    display: flex;
     padding: 26px 0 22px 0;
     position: relative;
-    justify-content: space-between;
     max-width: 320px;
     margin: 0 auto;
 
@@ -961,7 +902,7 @@ a:not(.btn) {
       left: 0;
       width: 100%;
       height: 1px;
-      background:  linear-gradient(149.9deg, $primary, $secondary);
+      background: $linear-gradient;
     }
   }
   
@@ -975,10 +916,9 @@ a:not(.btn) {
 
     li {
       margin-bottom: 12px;
+
       a {
-        font-size: 15px;
-        line-height: 24px;
-        font-weight: 400;
+        @include fontStylingSet(15px, 24px, 400);
       }
     }
   }
@@ -1001,14 +941,14 @@ a:not(.btn) {
 .guide {
   display: flex;
   padding-top: 80px;
+  margin-bottom: 140px;
 
   &__list {
     margin-top: 80px;
   }
 
   &__item {
-    font-size: 17px;
-    line-height: 24px;
+    @include fontStylingSet(17px, 24px, 400);
     margin-bottom: 12px;
 
     &:hover {
@@ -1017,9 +957,7 @@ a:not(.btn) {
 
     &-active:hover,
     &-active {
-      background: linear-gradient($secondary, $primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      @include gradientText;
     }
   }
   
@@ -1029,5 +967,65 @@ a:not(.btn) {
 
   &__aside {
     min-width: 262px;
+  }
+
+  h2 {
+    @include fontStylingSet(32px, 32px, 500);
+    margin: 140px 0 24px 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    @include fontStylingSet(17px, 24px, 400);
+    margin: 0 0 30px 0;
+  }
+
+  pre {
+    margin: 0;
+  }
+}
+
+.highlight.jsx {
+  border-radius: 8px;
+  background-color: $card-color;
+  margin: 0;
+  padding: 16px;
+  border-top: 40px solid $btn-color;
+  position: relative;
+
+  &::after {
+    @include fontStylingSet(12px, 15px, 400);
+    content: 'skintest.jsx';
+    color: $white;
+    border-radius: 6px 6px 0px 0px;
+    background-color: $card-color;
+    position: absolute;
+    top: -33px;
+    left: 74px;
+    padding: 9px 16px;
+  }
+
+  &::before {
+    content: '';
+    background-image: url('../assets/images/skintest_points.svg');
+    background-repeat: no-repeat;
+    width: 42px;
+    height: 10px;
+    position: absolute;
+    top: -26px;
+    left: 16px;
+  }
+
+  .gutter {
+    display: none;
+  }
+
+  span {
+    display: inline-block;
+    font-size: 15px;
+    margin-bottom: 8px;
   }
 }

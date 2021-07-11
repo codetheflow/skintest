@@ -1,6 +1,8 @@
-document.addEventListener("DOMContentLoaded", setScroll, false);
-document.addEventListener("DOMContentLoaded", toggleMobileMenu, false);
-document.addEventListener("DOMContentLoaded", toggleMobileMenuList, false);
+document.addEventListener('click', function () {
+  setScroll();
+  toggleMobileMenu();
+  toggleMobileMenuList();
+})
 
 function setScroll() {
   const requestBtn = document.querySelector('.btn-request');
@@ -15,24 +17,35 @@ function setScroll() {
 }
 
 function toggleMobileMenu() {
-  const mobileMenu = document.querySelector('.mobile__burger');
-  mobileMenu.addEventListener('click', function (e) {
-    if(mobileMenu.classList.contains('button-open')) {
-      mobileMenu.classList.remove('button-open');
-    } else {
-      mobileMenu.classList.add('button-open');
-    }
+  const mobilePopupBtn = document.querySelector('.mobile__burger');
+  const mobilePopup = document.querySelector('.mobile');
+
+  const toggleMenu = function() {
+    mobilePopupBtn.classList.toggle('button-open');
+    document.querySelector('.mobile__item-documentation').classList.remove('opened');
+  }
+
+  mobilePopupBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    toggleMenu();
   })
+
+  document.addEventListener('click', function (e) {
+    const target = e.target;
+    const isMenu = target == mobilePopup || mobilePopup.contains(target);
+    const isBtnMenu = target == mobilePopupBtn;
+    const isMenuActive = mobilePopupBtn.classList.contains('button-open');
+    
+    if (!isMenu && !isBtnMenu && isMenuActive) {
+      toggleMenu();
+    }
+  });
 }
 
 function toggleMobileMenuList() {
-  const mobileListMenu = document.querySelector('.mobile__item-documentation');
-  mobileListMenu.addEventListener('click', function (e) {
-    if(mobileListMenu.classList.contains('opened')) {
-      mobileListMenu.classList.remove('opened');
-    } else {
-      mobileListMenu.classList.add('opened');
-    }
-  })
-}
+  const mobileListMenuBtn = document.querySelector('.mobile__item-documentation');
 
+  mobileListMenuBtn.addEventListener('click', function (e) {
+    mobileListMenuBtn.classList.toggle('opened');
+  });
+}

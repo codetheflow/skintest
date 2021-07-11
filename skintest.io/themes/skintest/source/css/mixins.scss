@@ -2,3 +2,27 @@
   width: $size;
   height: $size;
 }
+
+@mixin fontStylingSet($font-size, $line-height, $font-weight) {
+  font-size: $font-size;
+  line-height: $line-height;
+  font-weight: $font-weight;
+}
+
+@mixin gradientText {
+  background: linear-gradient($secondary, $primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@mixin centeringSet {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+@mixin flexStylingSet($flex, $flex-ai, $flex-jc) {
+  display: $flex;
+  align-items: $flex-ai;
+  justify-content: $flex-jc;
+}
