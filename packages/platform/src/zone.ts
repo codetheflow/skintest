@@ -13,6 +13,7 @@ export type ScriptZone =
   | 'feature:after'
   | 'scenario:before'
   | 'scenario:after'
+  | 'scenario:data'
   | 'step:before'
   | 'step:after'
   | 'step'

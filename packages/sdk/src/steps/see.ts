@@ -3,6 +3,7 @@ import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
 import { AssertStep, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
 import { Query, QueryList } from '../query';
+import { stringify, Value } from '../value';
 import { Verify } from '../verify';
 
 export class SeeStep<D> implements AssertStep<D> {
@@ -12,7 +13,7 @@ export class SeeStep<D> implements AssertStep<D> {
     public getMeta: () => Promise<Meta>,
     private query: Query | QueryList,
     private assert: BinaryAssert<unknown> | ListBinaryAssert<unknown>,
-    private value: unknown
+    private value: Value<unknown, D>
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
@@ -20,12 +21,13 @@ export class SeeStep<D> implements AssertStep<D> {
   }
 
   async execute(context: StepContext): Promise<StepExecutionResult> {
-    const { browser } = context;
+    const { browser, materialize } = context;
 
     const page = browser.getCurrentPage();
     const verify = new Verify(page);
     const host = reinterpret<AssertHost>(this.assert);
-    const result = await verify.theCondition(this.query, host, this.value);
+    const value = materialize(this.value);
+    const result = await verify.theCondition(this.query, host, value);
 
     return {
       type: 'assert',
@@ -42,7 +44,7 @@ export class SeeStep<D> implements AssertStep<D> {
     const text =
       `see ${method}(${selector}).${host.what}:` +
       `${host.no ? 'not' : ''} ` +
-      `${host.how} \`${value}\``;
+      `${host.how} \`${stringify(value)}\``;
 
     return text;
   }

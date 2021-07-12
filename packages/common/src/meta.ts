@@ -8,7 +8,6 @@ const PACKAGES = [
   'sdk',
   'plugins',
   'platform',
-  'enterprise',
 ].map(x => path.sep + path.join(x, 'dist'));
 
 export type Meta = Omit<StackFrame, 'function'> & { rootage: string };

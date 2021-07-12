@@ -1,5 +1,5 @@
-import { copy, paste, test } from '@skintest/enterprise';
-import { feature, has, I } from '@skintest/sdk';
+import { copy, paste } from '@skintest/enterprise';
+import { data, feature, has, I } from '@skintest/sdk';
 import { page } from '../components/page';
 import { todos } from '../components/todos';
 import { add_todo } from '../recipes/add-todo';
@@ -24,15 +24,14 @@ feature()
     , I.see(todos.what, has.attribute, ['placeholder', 'What needs to be done?'])
   )
 
+  .test('data'
+    , { label: 'learn testing' }
+    , { label: 'be cool' }
+  )
   .scenario('check the list has all added items'
-    , test.cases(
-      { label: 'learn testing' },
-      { label: 'be cool' }
-    )
-
-    , I.do(add_todo, test.data('label'))
+    , I.do(add_todo, data('label'))
     , I.check('todo item is added')
-    , I.see(todos.item_label_at(0), has.text, test.data('label'))
+    , I.see(todos.item_label_last, has.text, data('label'))
   )
 
   .scenario('check the input field should contain entered text'
@@ -53,7 +52,7 @@ feature()
     , I.see(todos.item_label_at(0), has.text, 'pass the exams')
   )
 
-  .scenario('#now check the list supports many todos'
+  .scenario('check the list supports many todos'
     , I.do(generate_todos, 10)
     , I.check('list contains all the items')
     , I.see(todos.list, has.length, 10)
@@ -75,7 +74,7 @@ feature()
     , I.see(todos.item_label_at(0), has.text, 'walk the dog')
   )
 
-  .scenario('check that todo item can be copy pasted by using clipboard'
+  .scenario('#now check that todo item can be copy pasted by using clipboard'
     , I.do(add_todo, 'feed dragon')
     , I.do(copy, todos.item_label_at(0))
     , I.do(paste, todos.what)

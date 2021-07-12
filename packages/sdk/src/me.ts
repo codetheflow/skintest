@@ -15,8 +15,7 @@ import { GotoStep } from './steps/goto';
 import { HoverStep } from './steps/hover';
 import { InspectStep } from './steps/inspect';
 import { MarkStep } from './steps/mark';
-import { NavigationBackStep } from './steps/navigation-back';
-import { NavigationForwardStep } from './steps/navigation-forward';
+import { NavigationStep } from './steps/navigate';
 import { OpenStep } from './steps/open';
 import { PauseStep } from './steps/pause';
 import { PressStep } from './steps/press';
@@ -28,6 +27,7 @@ import { SelectTextStep } from './steps/select-text';
 import { ThatStep } from './steps/that';
 import { TypeStep } from './steps/type';
 import { WaitStep } from './steps/wait';
+import { Value } from './value';
 
 class Me implements Ego {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,7 +55,7 @@ class Me implements Ego {
     return new SeeStep(() => getMeta(caller), targetOrRecipe, args[0], args[1]);
   }
 
-  mark<D, E extends DOMElement>(target: Query<E>, value: 'checked' | 'unchecked'): ClientStep<D> {
+  mark<D, E extends DOMElement>(target: Query<E>, value: Value<'checked' | 'unchecked', D>): ClientStep<D> {
     const caller = getCaller();
     return new MarkStep(() => getMeta(caller), target, value);
   }
@@ -65,7 +65,7 @@ class Me implements Ego {
     return new SelectTextStep(() => getMeta(caller), target);
   }
 
-  open<D>(name: string): ClientStep<D> {
+  open<D>(name: Value<string, D>): ClientStep<D> {
     const caller = getCaller();
     return new OpenStep(() => getMeta(caller), name);
   }
@@ -75,17 +75,14 @@ class Me implements Ego {
     return new DblClickStep(() => getMeta(caller), query);
   }
 
-  type<D, E extends DOMElement>(target: Query<E>, value: string): ClientStep<D> {
+  type<D, E extends DOMElement>(target: Query<E>, value: Value<string, D>): ClientStep<D> {
     const caller = getCaller();
     return new TypeStep(() => getMeta(caller), target, value);
   }
 
-  navigate<D>(direction: 'forward' | 'back'): ClientStep<D> {
+  navigate<D>(direction: Value<'forward' | 'back', D>): ClientStep<D> {
     const caller = getCaller();
-    switch (direction) {
-      case 'forward': return new NavigationForwardStep(() => getMeta(caller));
-      case 'back': return new NavigationBackStep(() => getMeta(caller));
-    }
+    return new NavigationStep(() => getMeta(caller), direction);
   }
 
   reload<D>(): ClientStep<D> {
@@ -98,7 +95,7 @@ class Me implements Ego {
     return new CheckExecuteStep(() => getMeta(caller), message);
   }
 
-  goto<D>(url: string): ClientStep<D> {
+  goto<D>(url: Value<string, D>): ClientStep<D> {
     const caller = getCaller();
     return new GotoStep(() => getMeta(caller), url);
   }
@@ -113,12 +110,12 @@ class Me implements Ego {
     return new HoverStep(() => getMeta(caller), target);
   }
 
-  press<D>(key: KeyboardKey): ClientStep<D> {
+  press<D>(key: Value<KeyboardKey, D>): ClientStep<D> {
     const caller = getCaller();
     return new PressStep(() => getMeta(caller), key);
   }
 
-  fill<D, E extends DOMElement>(target: Query<E>, value: string): ClientStep<D> {
+  fill<D, E extends DOMElement>(target: Query<E>, value: Value<string, D>): ClientStep<D> {
     const caller = getCaller();
     return new FillStep(() => getMeta(caller), target, value);
   }

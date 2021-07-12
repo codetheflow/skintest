@@ -1,9 +1,15 @@
-import { errors, reinterpret } from '@skintest/common';
-import { Browser, Command, fail, pass, RepeatEntry, Script, StepExecutionResult, Suite } from '@skintest/sdk';
+import { errors, Guard, isObject, reinterpret, Serializable } from '@skintest/common';
+import { Browser, Command, fail, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Suite, Value, VALUE_KEY } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { CommandScope, Staging } from './stage';
 
-const NO_SCENARIO = '';
+function noScenario(): Scenario {
+  return {
+    name: '',
+    steps: [],
+    attributes: {}
+  };
+}
 
 export class Scene {
   constructor(
@@ -33,7 +39,7 @@ export class Scene {
     const [ok] = await this.runPlan(
       'feature:before',
       script,
-      NO_SCENARIO,
+      noScenario(),
       script.beforeFeature
     );
 
@@ -42,10 +48,13 @@ export class Scene {
 
       const scenarios = script
         .scenarios
-        .filter(([name]) => operations.filterScenario(script.name, name));
+        .filter(scenario =>
+          operations
+            .filterScenario(script.name, scenario)
+        );
 
-      for (const [scenario, steps] of scenarios) {
-        await this.scenario(script, scenario, steps);
+      for (const scenario of scenarios) {
+        await this.scenario(script, scenario);
       }
     }
 
@@ -54,19 +63,19 @@ export class Scene {
     await this.runPlan(
       'feature:after',
       script,
-      NO_SCENARIO,
+      noScenario(),
       script.afterFeature
     );
   }
 
   private async scenario(
     script: Script,
-    scenario: string,
-    steps: ReadonlyArray<Command>,
+    scenario: Scenario
   ): Promise<void> {
 
     const beforeScenarioEffect = this.effect('scenario:before');
     const afterScenarioEffect = this.effect('scenario:after');
+    const dataScenarioEffect = this.effect('scenario:data');
 
     const scope = {
       suite: this.suite,
@@ -85,10 +94,15 @@ export class Scene {
     );
 
     if (ok) {
-      for (const step of steps) {
-        const result = await this.step(script, scenario, step);
-        if (!result) {
-          break;
+      const { steps, attributes } = scenario;
+      for (const datum of (attributes.data ?? [null])) {
+        await dataScenarioEffect({ ...scope, datum });
+
+        for (const step of steps) {
+          const result = await this.step(script, scenario, step, datum);
+          if (!result) {
+            break;
+          }
         }
       }
     }
@@ -105,8 +119,9 @@ export class Scene {
 
   private async step(
     script: Script,
-    scenario: string,
+    scenario: Scenario,
     step: Command,
+    datum: Serializable | null = null
   ): Promise<boolean> {
 
     const beforeStepEffect = this.effect('step:before');
@@ -118,6 +133,7 @@ export class Scene {
       script,
       scenario,
       step,
+      datum
     };
 
     await beforeStepEffect(scope);
@@ -134,7 +150,9 @@ export class Scene {
         'step',
         script,
         scenario,
-        [step]
+        [step],
+        [],
+        datum
       );
     }
 
@@ -153,9 +171,10 @@ export class Scene {
   private async runPlan(
     site: CommandScope['site'],
     script: Script,
-    scenario: string,
+    scenario: Scenario,
     steps: ReadonlyArray<Command>,
-    path: Array<StepExecutionResult['type']> = []
+    path: Array<StepExecutionResult['type']> = [],
+    datum: Serializable | null = null,
   ): Promise<[boolean, string[]]> {
 
     const { browser, attempt } = this;
@@ -171,6 +190,7 @@ export class Scene {
       site,
       script,
       scenario,
+      datum
     };
 
     let breakLoop = false;
@@ -184,7 +204,19 @@ export class Scene {
       await stepEffect({ ...scope, step, path });
 
       try {
-        const run = await attempt.step(() => step.execute({ browser }));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const materialize = (value: Value<any, Serializable>): any => {
+          if (isObject(value) && VALUE_KEY in value) {
+            Guard.notNull(datum, 'datum');
+
+            const key = value[VALUE_KEY];
+            return datum?.[key];
+          }
+
+          return value;
+        };
+
+        const run = await attempt.step(() => step.execute({ browser, materialize }));
 
         const runPlan =
           (commands: Command[]) =>
@@ -193,7 +225,8 @@ export class Scene {
               script,
               scenario,
               commands,
-              path.concat(run.type)
+              path.concat(run.type),
+              datum
             );
 
         switch (run.type) {

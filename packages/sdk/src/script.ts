@@ -1,12 +1,20 @@
-import { errors, Meta } from '@skintest/common';
+import { errors, Meta, Serializable } from '@skintest/common';
 import { Command } from './command';
-import { Feature, Scenario } from './feature';
-import { StorySchema } from './schema';
+import { Feature, OnlyScenario, TestScenario } from './schema';
+
+export interface Scenario {
+  name: string;
+  steps: Command[];
+  attributes: Partial<{
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: Array<any>
+  }>;
+}
 
 export interface Script {
   readonly name: string;
 
-  readonly scenarios: ReadonlyArray<[string, ReadonlyArray<Command>]>;
+  readonly scenarios: ReadonlyArray<Scenario>;
   readonly beforeFeature: ReadonlyArray<Command>;
   readonly afterFeature: ReadonlyArray<Command>
   readonly beforeScenario: ReadonlyArray<Command>;
@@ -17,7 +25,10 @@ export interface Script {
   getMeta(): Promise<Meta>;
 }
 
-export class RuntimeScript implements Script, Feature, Scenario {
+
+export class RuntimeScript implements Script, Feature, TestScenario {
+  private testAttributes: Scenario['attributes'] = {};
+
   beforeFeature: Command[] = [];
   afterFeature: Command[] = []
 
@@ -27,7 +38,7 @@ export class RuntimeScript implements Script, Feature, Scenario {
   beforeStep: Command[] = [];
   afterStep: Command[] = [];
 
-  scenarios: Array<[string, Command[]]> = [];
+  scenarios: Array<Scenario> = [];
 
   constructor(
     public name: string,
@@ -35,16 +46,21 @@ export class RuntimeScript implements Script, Feature, Scenario {
   ) {
   }
 
-  before(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema<unknown>): Feature {
+  test<T extends Serializable>(frame: 'data', ...data: T[]): OnlyScenario<T> {
+    this.testAttributes = { [frame]: data };
+    return this;
+  }
+
+  before(what: 'feature' | 'scenario' | 'step', ...steps: Command[]): Feature {
     switch (what) {
       case 'feature':
-        this.beforeFeature.push(...schema);
+        this.beforeFeature.push(...steps);
         break;
       case 'scenario':
-        this.beforeScenario.push(...schema);
+        this.beforeScenario.push(...steps);
         break;
       case 'step':
-        this.beforeStep.push(...schema);
+        this.beforeStep.push(...steps);
         break;
       default:
         throw errors.invalidArgument('what', what);
@@ -53,16 +69,16 @@ export class RuntimeScript implements Script, Feature, Scenario {
     return this;
   }
 
-  after(what: 'feature' | 'scenario' | 'step', ...schema: StorySchema<unknown>): Feature {
+  after(what: 'feature' | 'scenario' | 'step', ...steps: Command[]): Feature {
     switch (what) {
       case 'feature':
-        this.afterFeature.push(...schema);
+        this.afterFeature.push(...steps);
         break;
       case 'scenario':
-        this.afterScenario.push(...schema);
+        this.afterScenario.push(...steps);
         break;
       case 'step':
-        this.afterStep.push(...schema);
+        this.afterStep.push(...steps);
         break;
       default:
         throw errors.invalidArgument('what', what);
@@ -71,8 +87,14 @@ export class RuntimeScript implements Script, Feature, Scenario {
     return this;
   }
 
-  scenario(name: string, ...steps: Command[]): Scenario {
-    this.scenarios.push([name, steps]);
+  scenario(name: string, ...steps: Command[]): TestScenario {
+    this.scenarios.push({
+      name,
+      steps,
+      attributes: this.testAttributes,
+    });
+
+    this.testAttributes = {};
     return this;
   }
 }

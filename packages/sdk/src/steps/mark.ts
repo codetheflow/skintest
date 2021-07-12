@@ -2,6 +2,7 @@ import { Guard, Meta } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
 import { Query } from '../query';
+import { stringify, Value } from '../value';
 
 export class MarkStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
@@ -9,19 +10,20 @@ export class MarkStep<D> implements ClientStep<D> {
   constructor(
     public getMeta: () => Promise<Meta>,
     private query: Query,
-    private value: 'checked' | 'unchecked'
+    private value: Value<'checked' | 'unchecked', D>
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(query, 'query');
   }
 
   execute(context: StepContext): Promise<StepExecutionResult> {
-    const { browser } = context;
+    const { browser, materialize } = context;
 
     const page = browser.getCurrentPage();
     const selector = this.query.toString();
+    const value = materialize(this.value);
     return methodResult(
-      this.value === 'checked'
+      value === 'checked'
         ? page.check(selector)
         : page.uncheck(selector)
     );
@@ -29,6 +31,6 @@ export class MarkStep<D> implements ClientStep<D> {
 
   toString(): string {
     const selector = this.query.toString();
-    return `mark ${formatSelector(selector)} as ${this.value}`;
+    return `mark ${formatSelector(selector)} as ${stringify(this.value)}`;
   }
 }
