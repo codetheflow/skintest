@@ -58,9 +58,7 @@ function toggleSupportType() {
   const supportCards = document.querySelector('.support__cards');
 
   if(supportInput) {
-    supportInput.addEventListener('click', function (e) {
-      console.log('hi there');
-      console.log(supportCards);
+    supportInput.addEventListener('change', function (e) {
       supportCards.classList.toggle('sale');
     });
   };
