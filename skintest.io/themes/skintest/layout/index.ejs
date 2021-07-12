@@ -40,7 +40,7 @@
 
 <section class="example">
   <h2 class="title title-secondary">Coding and test run example</h2>
-  <div class="example__video">
+  <div class="example__video overlay" id="video-container">
     <video id="video">
       <source src="assets/video/batch-update.mp4" type="video/mp4" />
     </video>
@@ -62,7 +62,7 @@
   </div>
 </section>
 
-<section class="support" id="element1">
+<section class="support" id="support">
   <h2 class="title title-secondary">Price for support</h2>
   <div class="support__billtype">
     <label class="support__checkbox">
@@ -71,7 +71,6 @@
       <span class="support__type support__type-annually">Annually</span>
     </label>
   </div>
-
   <div class="support__cards wrapper">
     <article class="card">
       <h3 class="card__title">
@@ -92,8 +91,8 @@
         <a class="card__btn btn btn-secondary" href="#"><span>Go to GITHUB</span></a>
       </div>
     </article>
-    <article class="card card-active">
-      <h3 class="card__title card__title-sale">
+    <article class="card card-marked">
+      <h3 class="card__title">
         <span class="card__sup">TEAM</span>
         <span>$90<sup><span>$</span>23</sup><span>
         <span class="card__sale">You save 30% per year</span>
@@ -114,7 +113,8 @@
     <article class="card">
       <h3 class="card__title">
         <span class="card__sup">Enterprise</span>
-        <span>$350<span>
+        <span>$350<sup><span>$</span>23</sup><span>
+          <span class="card__sale">You save 30% per year</span>
       </h3>
       <div class="card__wrapper">
         <ul class="card__list">
