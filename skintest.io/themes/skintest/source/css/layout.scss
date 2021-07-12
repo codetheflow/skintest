@@ -79,6 +79,31 @@ a:not(.btn) {
     border: 1px solid $primary;
     color: $white;
   }
+
+  &-up,
+  &-up:hover {
+    background: url('../assets/images/skintest_arrow.svg'), linear-gradient(149.9deg, $primary 36.55%, $secondary 109.5%);
+    background-size: 42px 16px, 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  &-up {
+    position: fixed;
+    @include square(50px);
+    display: inline-block;
+    border-radius: 100%;
+    transform: rotate(-90deg);
+    right: 40px;
+    bottom: 40px;
+    cursor: pointer;
+    opacity: 1;
+    transition: all .15s ease-in-out;
+
+    &.hidden {
+      opacity: 0;
+    }
+  }
 }
 
 .container {
@@ -998,6 +1023,7 @@ a:not(.btn) {
   display: flex;
   padding-top: 80px;
   margin-bottom: 140px;
+  position: relative;
 
   &__container {
     display: flex;

@@ -544,11 +544,18 @@
   }
 
   .guide {
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+      background-color: $mobile-nav-color;
+    }
+
     &__article {
       padding-left: 0;
     }
 
-    &__aside {
+    ul {
       display: none;
     }
 
@@ -559,10 +566,6 @@
     p {
       @include fontStylingSet(15px, 20px, 400);
       margin: 0 0 20px 0;
-    }
-
-    .highlight.jsx span {
-      white-space: break-spaces;
     }
   }
 }
