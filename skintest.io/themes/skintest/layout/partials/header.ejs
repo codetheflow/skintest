@@ -1,25 +1,35 @@
 <div class="wrapper wrapper-header">
-  <div class="header__logo">
+  <a class="header__logo"
+     href="<%- url_for('index') %>">
     <picture>
-      <source srcset="<%- url_for('/assets/images/logo_mobile.svg') %>" media="only screen and (max-width: 768px)">
-        <img src="<%- url_for('/assets/images/logo.svg') %>" alt="Skintest logo">
-     </picture>
-   </div>
-   
-   <nav class="header__nav">
-     <a href="<%- url_for('guide') %>">
-       Documentation
-     </a>
-     <a href="#element1" class="btn btn-primary btn-request">REQUEST SUPPORT</a>
-   </nav>
+      <source srcset="<%- url_for('/assets/images/logo_mobile.svg') %>"
+              media="only screen and (max-width: 768px)">
+      <img src="<%- url_for('/assets/images/logo.svg') %>"
+           alt="Skintest logo">
+    </picture>
+  </a>
 
-   <nav class="header__mobile mobile">
+  <nav class="header__nav">
+    <a href="<%- url_for('guide') %>">
+      Documentation
+    </a>
+    <% var isIndex = page.path === 'index.html' %>
+      <% if (!isIndex) { %>
+      <a href="<%- url_for('index#support') %>"
+        class="btn btn-primary btn-request">REQUEST SUPPORT</a>
+       <% } else { %>
+      <a href="#support"
+        class="btn btn-primary btn-request btn-scroll">REQUEST SUPPORT</a>
+    <% } %>
+  </nav>
+
+  <nav class="header__mobile mobile">
     <button class="mobile__burger"><span></span></button>
     <div class="mobile__wraper">
       <ul class="mobile__list">
         <li class="mobile__item mobile__item-documentation"><span>Documentation</span>
           <ul class="mobile__secondary-list">
-            <li><a href="#">Architecture</a></li>
+            <li><a href="<%- url_for('guide') %>">Architecture</a></li>
             <li><a href="#">Features and scenarios</a></li>
             <li><a href="#">Component's eyes and selectors</a></li>
             <li><a href="#">Multi page support</a></li>
@@ -47,10 +57,15 @@
         <li class="social__item social__item-github"><a href="#">github</a></li>
         <li class="social__item social__item-telegram"><a href="#">telegram</a></li>
         <li class="social__item social__item-youtube"><a href="#">youtube</a></li>
-        </ul>
-        <a class="mobile__btn btn btn-primary" href="#">
-          <span>Sing in with GITHUB</span>
-        </a>
-      </div>
+      </ul>
+      <% var isIndex = page.path === 'index.html' %>
+      <% if (!isIndex) { %>
+      <a href="<%- url_for('index#support') %>"
+        class="btn btn-primary btn-request">REQUEST SUPPORT</a>
+       <% } else { %>
+      <a href="#support"
+        class="btn btn-primary btn-request btn-scroll">REQUEST SUPPORT</a>
+      <% } %>
+    </div>
   </nav>
 </div>

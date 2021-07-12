@@ -144,6 +144,10 @@ a:not(.btn) {
       @include fontStylingSet(16px, 19px, 400);
     }
   }
+
+  &__logo {
+    cursor: pointer;
+  }
 }
 
 .title {
@@ -256,6 +260,19 @@ a:not(.btn) {
     cursor: pointer;
     position: relative;
 
+    &.overlay {
+      &::before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        background-color: $card-color;
+      }  
+    }
+
     video {
       width: 1024px;
       height: 600px;
@@ -268,13 +285,14 @@ a:not(.btn) {
       position: absolute;
       background-color: $transparent;
 
-      &#start,
-      &#pause {
+      &#start::before,
+      &#pause::before {
         @include centeringSet;
         position: absolute;
         content: '';
         display: block;
         background-repeat: no-repeat;
+        z-index: 1;
       }
 
       &#start {
@@ -308,8 +326,8 @@ a:not(.btn) {
         }
       }
 
-      &#pause:disabled,
-      &#start:disabled {
+      &#start:disabled,
+      &#pause:disabled {
           display: none;
       }
     }
@@ -396,6 +414,7 @@ a:not(.btn) {
     display: flex;
     color: $white;
     cursor: pointer;
+    align-items: center;
 
     &::before {
       @include square(24px);
@@ -447,6 +466,16 @@ a:not(.btn) {
   &__cards {
     justify-content: space-between;
     align-items: end;
+
+    &.sale {
+      .card__title sup {
+        display: inline-flex;
+      }
+
+      .card__sale {
+        display: block;
+      }
+    }
   }
 }
 
@@ -464,10 +493,6 @@ a:not(.btn) {
     padding: 0 0 44px 4px;
     position: relative;
 
-    &-sale {
-      padding-bottom: 17px;
-    }
-
     &::after {
       content: '';
       width: 100%;
@@ -483,7 +508,7 @@ a:not(.btn) {
 
     sup {
       @include fontStylingSet(24px, 29px, 600);
-      display: inline-flex;
+      display: none;
       align-items: flex-start;
       color: $sup-color;
       position: relative;
@@ -524,8 +549,9 @@ a:not(.btn) {
 
   &__sale {
     @include fontStylingSet(12px, 15px, 400);
-    display: block;
+    display: none;
     margin-top: 8px;
+    position: absolute;
   }
 
   &__point {
@@ -564,9 +590,18 @@ a:not(.btn) {
     }
   }
 
-  &-active {
+  &-marked {
     margin-top: 39px;
     background: $linear-gradient;
+
+    .btn.btn-primary:hover {
+      background: $dark-gray;
+      color: $white;
+
+      span::after {
+        background-image: url('../assets/images/skintest_arrow.svg');
+      }
+    }
 
     .card__point::before {
       background-image: url('../assets/images/skintest-checkmark-dark.svg');
@@ -675,7 +710,8 @@ a:not(.btn) {
 
 .social {
   display: inline-flex;
-  padding: 0 25px;
+  align-items: baseline;
+  padding: 0 0 0 25px;
 
   &__item {
     cursor: pointer;
@@ -689,6 +725,8 @@ a:not(.btn) {
   &__item-youtube {
     background-repeat: no-repeat;
     background-size: contain;
+    background-position: center;
+    height: 20px;
 
     a {
       font-size: 0;
@@ -706,7 +744,6 @@ a:not(.btn) {
 
   &__item-npm {
     width: 52px;
-    height: 20px;
     background-image: url('../assets/images/npm.svg');
 
     &:hover {
@@ -715,7 +752,7 @@ a:not(.btn) {
   }
 
   &__item-github {
-    @include square(17px);
+    width: 17px;
     background-image: url('../assets/images/git.svg');
 
     &:hover {
@@ -724,7 +761,7 @@ a:not(.btn) {
   }
 
   &__item-telegram {
-    @include square(17px);
+    width: 17px;
     background-image: url('../assets/images/telegram.svg');
 
     &:hover {
@@ -734,7 +771,6 @@ a:not(.btn) {
 
   &__item-youtube {
     width: 20px;
-    height: 14px;
     background-image: url('../assets/images/youtube.svg');
 
     &:hover {
@@ -854,9 +890,9 @@ a:not(.btn) {
       content: '';
       display: block;
       position: absolute;
-      border: 13px solid transparent;
-      border-bottom: 13px solid $mobile-nav-color;
-      top: -25px;
+      border: 17px solid transparent;
+      border-bottom: 17px solid $mobile-nav-color;
+      top: -27px;
       right: 5px;
     }
   }
@@ -921,6 +957,11 @@ a:not(.btn) {
         @include fontStylingSet(15px, 24px, 400);
       }
     }
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 9px 19px;
   }
 
   &__burger.button-open + .mobile__wraper {
@@ -998,7 +1039,7 @@ a:not(.btn) {
 
   &::after {
     @include fontStylingSet(12px, 15px, 400);
-    content: 'skintest.jsx';
+    content: 'skintest.ts';
     color: $white;
     border-radius: 6px 6px 0px 0px;
     background-color: $card-color;
