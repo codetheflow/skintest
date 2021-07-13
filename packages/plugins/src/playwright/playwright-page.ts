@@ -1,11 +1,11 @@
 import { Data, reinterpret } from '@skintest/common';
 import { DOMElement, ElementRef, ElementRefList, KeyboardKey, Page } from '@skintest/sdk';
-import * as playwright from 'playwright';
+import * as pw from 'playwright';
 import { PlaywrightAction } from './playwright-action';
 import { PlaywrightElement } from './playwright-element';
 
 export class PlaywrightPage implements Page {
-  constructor(private page: playwright.Page) {
+  constructor(private page: pw.Page) {
   }
 
   @PlaywrightAction()
@@ -115,7 +115,7 @@ export class PlaywrightPage implements Page {
       const handle = await this.page.waitForSelector(selector);
       return new PlaywrightElement<T>(handle, this.page, selector);
     } catch (ex) {
-      if (ex instanceof playwright.errors.TimeoutError) {
+      if (ex instanceof pw.errors.TimeoutError) {
         return null;
       }
 

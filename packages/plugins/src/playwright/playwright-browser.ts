@@ -1,17 +1,19 @@
 import { errors } from '@skintest/common';
 import { Browser, Page } from '@skintest/sdk';
-import * as playwright from 'playwright';
+import * as pw from 'playwright';
 import { PlaywrightAction } from './playwright-action';
+import { PlaywrightMiddleware } from './playwright-middleware';
 import { PlaywrightPage } from './playwright-page';
 
 export class PlaywrightBrowser implements Browser {
-  private context: playwright.BrowserContext | null = null;
+  private context: pw.BrowserContext | null = null;
   private pages = new Map<string, PlaywrightPage>();
   private currentPage: PlaywrightPage | null = null;
 
   constructor(
-    private browser: playwright.Browser,
-    public timeout: number
+    private browser: pw.Browser,
+    private middleware: PlaywrightMiddleware,
+    public timeout: number,
   ) {
   }
 
@@ -23,10 +25,15 @@ export class PlaywrightBrowser implements Browser {
       return;
     }
 
-    const context = await this.getContext();
+    const context = await this.getContext(id);
     const newPage = await context.newPage();
-    newPage.setDefaultTimeout(this.timeout);
-    newPage.setDefaultNavigationTimeout(this.timeout);
+    await this.middleware
+      .accept('page:new', {
+        id,
+        browser: this.browser,
+        context,
+        page: newPage
+      });
 
     this.currentPage = new PlaywrightPage(newPage);
     this.pages.set(id, this.currentPage);
@@ -55,12 +62,19 @@ export class PlaywrightBrowser implements Browser {
     return this.currentPage;
   }
 
-  private async getContext(): Promise<playwright.BrowserContext> {
+  private async getContext(id: string): Promise<pw.BrowserContext> {
     if (this.context) {
       return this.context;
     }
 
-    const context = await this.browser.newContext({ acceptDownloads: true });
+    const options = await this.middleware
+      .accept('context:new', {
+        id,
+        browser: this.browser,
+        options: {}
+      });
+
+    const context = await this.browser.newContext(options);
     this.context = context;
     return context;
   }

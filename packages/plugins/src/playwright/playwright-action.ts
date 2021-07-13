@@ -1,5 +1,5 @@
 import { errors, qte } from '@skintest/common';
-import * as playwright from 'playwright';
+import * as pw from 'playwright';
 
 export function PlaywrightAction() {
   return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
@@ -18,7 +18,7 @@ export async function playwrightAction<T>(source: string, action: () => Promise<
     return await action();
   }
   catch (ex) {
-    if (ex instanceof playwright.errors.TimeoutError) {
+    if (ex instanceof pw.errors.TimeoutError) {
       throw errors.timeout(source, ex);
     }
 

@@ -23,24 +23,27 @@ export class NodeProject implements Project {
     try {
       await mount({ suite });
       await ready({ suite });
-      
+
       const scripts = suite
         .getScripts()
         .filter(x => suite.operations.filterFeature(x.name));
 
+      const browserFactories = await launch.getBrowsers();
       for (const script of scripts) {
-        const browser = await launch.createBrowser();
-        try {
-          const scene = new Scene(
-            suite,
-            effect,
-            browser,
-            attempt
-          );
+        for (const browserFactory of browserFactories) {
+          const browser = await browserFactory();
+          try {
+            const scene = new Scene(
+              suite,
+              effect,
+              browser,
+              attempt
+            );
 
-          await scene.play(script);
-        } finally {
-          await browser.close();
+            await scene.play(script);
+          } finally {
+            await browser.close();
+          }
         }
       }
 

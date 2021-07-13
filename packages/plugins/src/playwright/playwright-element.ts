@@ -1,11 +1,11 @@
 import { errors, Guard, NumberDictionary } from '@skintest/common';
 import { DOMElement, ElementClassList, ElementRef, ElementState } from '@skintest/sdk';
-import * as playwright from 'playwright';
+import * as pw from 'playwright';
 
 export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {
   constructor(
-    private handle: playwright.ElementHandle<DOMElement>,
-    private page: playwright.Page,
+    private handle: pw.ElementHandle<DOMElement>,
+    private page: pw.Page,
     private selector: string,
   ) {
     Guard.notNull(handle, 'handle');

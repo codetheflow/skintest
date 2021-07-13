@@ -1,13 +1,12 @@
 import { nodePlatform } from '@skintest/platform';
-import { exploreNodeFeatures, exploreNodeProjects, playwrightLauncher, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { exploreNodeFeatures, exploreNodeProjects, playwrightLauncher, playwrightMiddleware, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
+import * as pw from 'playwright';
 
 const PROJECTS_FOLDER = path.resolve(__dirname, '../..');
-
-const launcher = playwrightLauncher({
-  headless: true,
-  timeout: 30 * 1000,
-});
+const LAUNCH_OPTIONS = {
+  timeout: 30 * 1000
+}
 
 const plugins = [
   exploreNodeFeatures()
@@ -20,6 +19,11 @@ const plugins = [
     include: ['#now'],
   })
 ];
+
+const launcher = playwrightLauncher(
+  playwrightMiddleware('browser:type', async () => [pw.chromium])
+  , playwrightMiddleware('browser:new', async ({ options }) => ({ ...options, ...LAUNCH_OPTIONS }))
+);
 
 nodePlatform(...plugins)
   .then(platform =>
