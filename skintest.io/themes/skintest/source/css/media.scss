@@ -84,9 +84,17 @@
   }
 
   .example {
+    &__video,
     video {
       width: 688px;
       height: 512px;
+      margin: 0 auto;
+    }
+
+    
+    .progressbar {
+      width: 488px;
+      top: -35px;
     }
   }
 
@@ -373,14 +381,20 @@
   }
 
   .example {
+    &__video,
     video {
       width: 100%;
-      height: 320px;
+      height: auto;
     }
 
     &__play#start::before {
       width: 83px;
       height: 68px;
+    }
+
+    .progressbar {
+      width: 100%;
+      top: unset;
     }
   }
 
@@ -431,8 +445,9 @@
     padding: 32px 32px 12px 32px;
 
     &__title {
-      padding: 0 0 24px 0;
+      padding: 0 0 44px 0;
       margin-bottom: 24px;
+
       &::after {
         width: 100%;
         height: 1px;
@@ -529,11 +544,18 @@
   }
 
   .guide {
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+      background-color: $mobile-nav-color;
+    }
+
     &__article {
       padding-left: 0;
     }
 
-    &__aside {
+    ul {
       display: none;
     }
 
@@ -544,10 +566,6 @@
     p {
       @include fontStylingSet(15px, 20px, 400);
       margin: 0 0 20px 0;
-    }
-
-    .highlight.jsx span {
-      white-space: break-spaces;
     }
   }
 }

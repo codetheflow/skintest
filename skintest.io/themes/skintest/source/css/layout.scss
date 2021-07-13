@@ -5,6 +5,7 @@ body {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   margin: 0;
+  overflow-x: hidden;
 }
 
 section {
@@ -78,6 +79,31 @@ a:not(.btn) {
     border: 1px solid $primary;
     color: $white;
   }
+
+  &-up,
+  &-up:hover {
+    background: url('../assets/images/skintest_arrow.svg'), linear-gradient(149.9deg, $primary 36.55%, $secondary 109.5%);
+    background-size: 42px 16px, 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  &-up {
+    position: fixed;
+    @include square(50px);
+    display: inline-block;
+    border-radius: 100%;
+    transform: rotate(-90deg);
+    right: 40px;
+    bottom: 40px;
+    cursor: pointer;
+    opacity: 1;
+    transition: all .15s ease-in-out;
+
+    &.hidden {
+      opacity: 0;
+    }
+  }
 }
 
 .container {
@@ -142,6 +168,10 @@ a:not(.btn) {
     
     a:not(.btn) {
       @include fontStylingSet(16px, 19px, 400);
+    }
+
+    a.active {
+      color: $primary;
     }
   }
 
@@ -270,7 +300,11 @@ a:not(.btn) {
         top: 0;
         left: 0;
         background-color: $card-color;
-      }  
+      }
+
+      .progressbar {
+        opacity: 1;
+      }
     }
 
     video {
@@ -332,8 +366,14 @@ a:not(.btn) {
       }
     }
 
-    &:hover .example__play::before {
-      background-image: url('../assets/images/video_play_hover.svg');
+    &:hover {
+      .progressbar {
+        opacity: 1;
+      }
+
+      .example__play::before {
+        background-image: url('../assets/images/video_play_hover.svg');
+      }
     }
   }
 }
@@ -983,12 +1023,17 @@ a:not(.btn) {
   display: flex;
   padding-top: 80px;
   margin-bottom: 140px;
+  position: relative;
 
-  &__list {
+  &__container {
+    display: flex;
+  }
+
+  ul {
     margin-top: 80px;
   }
 
-  &__item {
+  ul li {
     @include fontStylingSet(17px, 24px, 400);
     margin-bottom: 12px;
 
@@ -1002,11 +1047,11 @@ a:not(.btn) {
     }
   }
   
-  &__article {
+  &__article  {
     padding-left: 155px;
   }
 
-  &__aside {
+  ul {
     min-width: 262px;
   }
 
@@ -1029,14 +1074,16 @@ a:not(.btn) {
   }
 }
 
-.highlight.jsx {
+pre[class*="language-"]{
   border-radius: 8px;
-  background-color: $card-color;
+  background-color: $card-color !important;
+  border: none !important;
+  border-top: 40px solid $btn-color !important;
   margin: 0;
-  padding: 16px;
-  border-top: 40px solid $btn-color;
+  padding: 16px !important;
   position: relative;
-
+  overflow: visible !important;
+  
   &::after {
     @include fontStylingSet(12px, 15px, 400);
     content: 'skintest.ts';
@@ -1060,13 +1107,47 @@ a:not(.btn) {
     left: 16px;
   }
 
-  .gutter {
-    display: none;
+  .token.punctuation,
+  code[class*="language-"] {
+    color: $white;
   }
 
-  span {
-    display: inline-block;
-    font-size: 15px;
-    margin-bottom: 8px;
+  .token.number {
+    color: $code-highlight-violet;
   }
+
+  .token.keyword,
+  .token.function {
+    color: $code-highlight-yellow;
+  }
+}
+
+.progressbar__butterfly { 
+  position: absolute; 
+  left: 0;
+  top: -9px;
+  background-color: $primary;
+  width: 20px; 
+  height: 20px;
+  border-radius: 20px;
+}
+
+.progressbar { 
+  display: block;
+  opacity: 0;
+  transition: all .15s ease-in-out;
+  width: 688px; 
+  top: -15px;
+  height: 4px;
+  position: relative; 
+  margin: 10px auto; 
+  border-radius: 4px;
+  background-color: $progressbar-color;
+}
+
+.progressbar__loading {
+ border-radius: 4px; 
+ height: 4px;
+ width: 0;
+ background-image: $linear-gradient; 
 }
