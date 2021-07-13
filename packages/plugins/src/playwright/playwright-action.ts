@@ -1,4 +1,4 @@
-import { errors } from '@skintest/common';
+import { errors, qte } from '@skintest/common';
 import * as playwright from 'playwright';
 
 export function PlaywrightAction() {
@@ -7,7 +7,7 @@ export function PlaywrightAction() {
 
     descriptor.value = function (...args: unknown[]) {
       // todo: use meta?
-      const source = `${propertyKey}(${args.map(x => `"${x}"`).join(', ')})`;
+      const source = `${propertyKey}(${args.map(x => qte('' + x)).join(', ')})`;
       return playwrightAction(source, () => method.apply(this, args));
     };
   };
@@ -25,7 +25,7 @@ export async function playwrightAction<T>(source: string, action: () => Promise<
     // remove logs from the playwright errors
     let { message } = (ex as Error);
     message = message.split('\n')[0];
-    
+
     throw errors.runtime(message, ex);
   }
 }

@@ -10,7 +10,10 @@ export class NodeProject implements Project {
 
   async run(launch: Launcher): Promise<void> {
     const { suite, effect } = this;
-    const attempt = new Attempt(launch.options.retries);
+
+    // todo: make it as a settings
+    const retries = 1;
+    const attempt = new Attempt(retries);
 
     const mount = effect('project:mount');
     const unmount = effect('project:unmount');
@@ -20,7 +23,7 @@ export class NodeProject implements Project {
     try {
       await mount({ suite });
       await ready({ suite });
-
+      
       const scripts = suite
         .getScripts()
         .filter(x => suite.operations.filterFeature(x.name));

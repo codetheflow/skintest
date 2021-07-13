@@ -1,7 +1,7 @@
 import { Meta } from '@skintest/common';
 import { Browser } from './browser';
-import { RecipeFunction } from './recipe';
 import { RepeatWrite } from './repeat';
+import { TaskFunction } from './task';
 import { InspectInfo, TestResult } from './test-result';
 import { Value } from './value';
 
@@ -25,7 +25,7 @@ export type StepExecutionResult =
   | StepExecutionInspectResult
   | StepExecutionMethodResult
   | StepExecutionPerformResult
-  | StepExecutionRecipeResult
+  | StepExecutionTaskResult
   | StepExecutionRepeatResult
   | StepExecutionAssertResult;
 
@@ -48,8 +48,8 @@ export type StepExecutionPerformResult = {
   plan: Command[],
 }
 
-export type StepExecutionRecipeResult = {
-  type: 'recipe',
+export type StepExecutionTaskResult = {
+  type: 'task',
   plan: Command[],
 }
 
@@ -102,7 +102,7 @@ export interface InfoStep<D> extends CommandBody<D> {
 
 export interface DoStep<D> extends CommandBody<D> {
   type: 'do';
-  recipe: RecipeFunction,
+  task: TaskFunction,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: any[],
 }

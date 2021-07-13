@@ -1,4 +1,4 @@
-import { ellipsis, errors, padRight, prettyStack, StringDictionary } from '@skintest/common';
+import { ellipsis, errors, padRight, prettyStack, qte, StringDictionary } from '@skintest/common';
 import { AssertHost, DOMElement, ElementRef, ElementState, InspectInfo, TestFail } from '@skintest/sdk';
 import * as chalk from 'chalk';
 import * as path from 'path';
@@ -18,6 +18,8 @@ const STACK_FILE_IGNORE = [
   path.join('common', 'src', 'retry.ts'),
   path.join('common', 'src', 'errors.ts'),
   path.join('common', 'src', 'guard.ts'),
+  path.join('common', 'src', 'transaction.ts'),
+
   // from playwright
   // todo: propagate it here for the launcher options
   path.join('lib', 'utils', 'stackTrace.js')
@@ -32,7 +34,8 @@ export const tty = {
 
   logo: chalk.grey,
   dev: chalk.yellow,
-  error: chalk.bgRedBright.white,
+  error: chalk.bgRed.yellow,
+  warn: chalk.yellow,
   fail: chalk.red,
   h1: chalk.cyan,
   h2: chalk.white,
@@ -45,6 +48,7 @@ export const tty = {
 
   test(stream: WriteStream): void {
     if (!stream.isTTY) {
+      // tty.warn('tty is disabled');
       throw errors.invalidArgument(
         'stream',
         'tty is not supported, try to use terminal where tty is on'
@@ -93,9 +97,10 @@ export const tty = {
 
     if (!KNOWN_ERRORS.has(reason.name) && reason.stack) {
       const stackTrace = await prettyStack(reason.stack);
+      const tsFiles = stackTrace.filter(x => x.file && x.file.endsWith('.ts'));
+      const jsFiles = stackTrace.filter(x => x.file && x.file.endsWith('.js'));
 
-      stackTrace
-        .filter(x => x.file && x.file.endsWith('.ts'))
+      (tsFiles.length ? tsFiles : jsFiles)
         .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
         .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
         .map(x => `${x.function || 'at'} (${x.file}:${x.line}:${x.column})`)
@@ -117,12 +122,12 @@ export const tty = {
       : target;
 
     if (!target) {
-      tty.newLine(stream, tty.error(`$(\`${selector}\`) didn't find any elements`));
+      tty.newLine(stream, tty.error(`$(${qte(selector)}) didn't find any elements`));
       return;
     }
 
     if (Array.isArray(target)) {
-      tty.newLine(stream, `$(\`${selector}\`) found ${target.length} elements`);
+      tty.newLine(stream, `$(${qte(selector)}) found ${target.length} elements`);
 
       const list: Array<StringDictionary<unknown>> = [];
       for (const element of target) {
@@ -137,7 +142,7 @@ export const tty = {
       console.table(list);
     } else {
       const elementRef = target as ElementRef<DOMElement>;
-      tty.newLine(stream, `$(\`${selector}\`) found 1 element`);
+      tty.newLine(stream, `$(${qte(selector)}) found 1 element`);
 
       const info: StringDictionary<unknown> = {
         tagName: ellipsis(await elementRef.tagName(), maxWidth),

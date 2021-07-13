@@ -1,0 +1,50 @@
+{
+  "name": "@skintest/drill",
+  "version": "1.0.19-alpha.0",
+  "private": true,
+  "description": "skintest exercise",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "build": "yarn clean && tsc --build",
+    "build:watch": "yarn clean && tsc --build --watch",
+    "clean": "rimraf dist",
+    "drill:watch": "nodemon --watch ../ --ext .js --no-stdin --delay 1 dist/src/skintest.js",
+    "drill": "node dist/src/skintest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codetheflow/skintest.git"
+  },
+  "keywords": [
+    "skintest",
+    "exercise",
+    "e2e",
+    "end to end",
+    "test",
+    "qa",
+    "quality"
+  ],
+  "author": "codetheflow",
+  "bugs": {
+    "url": "https://github.com/codetheflow/skintest/issues"
+  },
+  "homepage": "https://github.com/codetheflow/skintest#readme",
+  "devDependencies": {
+    "@types/node": "15.12.2",
+    "nodemon": "^2.0.7",
+    "rimraf": "3.0.2",
+    "typescript": "4.3.2"
+  },
+  "peerDependencies": {
+    "@skintest/common": "*",
+    "@skintest/enterprise": "*",
+    "@skintest/platform": "*",
+    "@skintest/plugins": "*",
+    "@skintest/sdk": "*"
+  }
+}

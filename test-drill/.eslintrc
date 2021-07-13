@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "../.eslintrc"
+  ],
+  "rules": {
+    "@typescript-eslint/no-this-alias": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "selector": ["property", "variable", "function"],
+        "format": [
+          "snake_case",
+          "UPPER_CASE"
+        ]
+      }
+    ]
+  }
+}

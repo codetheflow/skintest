@@ -1,4 +1,4 @@
-import { Guard, Meta, reinterpret } from '@skintest/common';
+import { Guard, Meta, qte, reinterpret } from '@skintest/common';
 import { AssertHost, BinaryAssert, ListBinaryAssert } from '../assert';
 import { AssertStep, StepContext, StepExecutionResult } from '../command';
 import { formatSelector } from '../format';
@@ -44,7 +44,7 @@ export class SeeStep<D> implements AssertStep<D> {
     const text =
       `see ${method}(${selector}).${host.what}:` +
       `${host.no ? 'not' : ''} ` +
-      `${host.how} \`${stringify(value)}\``;
+      `${host.how} ${qte(stringify(value))}`;
 
     return text;
   }

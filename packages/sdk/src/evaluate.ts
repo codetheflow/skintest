@@ -1,12 +1,12 @@
-import { Boxed, getCaller, getMeta, Optional, reinterpret, Serializable } from '@skintest/common';
-import { RecipeIterable, RecipeOperator } from './recipe';
+import { Boxed, Data, getCaller, getMeta, Optional, reinterpret } from '@skintest/common';
 import { EvalStep } from './steps/eval';
+import { TaskIterable, TaskOperator } from './task';
 
-export function serialize<V extends Serializable>(value: V): Boxed<V> {
-  return { value };
+export function serialize<V extends Data>(serializable: V): Boxed<V> {
+  return { value: serializable };
 }
 
-export function evaluate<A extends Serializable>(message: string, arg: Boxed<A>, pageFunction: (arg: A) => void): RecipeOperator<Optional<RecipeIterable>, RecipeIterable> {
+export function evaluate<V extends Data>(message: string, arg: Boxed<V>, pageFunction: (arg: V) => void): TaskOperator<Optional<TaskIterable>, TaskIterable> {
   const caller = getCaller();
   const getStepMeta = () => getMeta(caller);
 
@@ -14,7 +14,7 @@ export function evaluate<A extends Serializable>(message: string, arg: Boxed<A>,
   new EvalStep(
     getStepMeta,
     message,
-    reinterpret<(arg: Serializable) => void>(pageFunction),
+    reinterpret<(arg: Data) => void>(pageFunction),
     arg.value
   )];
 }

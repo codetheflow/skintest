@@ -1,4 +1,4 @@
-import { getCaller, getMeta, Serializable } from '@skintest/common';
+import { Data, getCaller, getMeta } from '@skintest/common';
 import { AssertStep, CheckStep, ClientStep, Command, ControlStep, DevStep, DoStep, InfoStep } from './command';
 import { RuntimeScript } from './script';
 
@@ -27,7 +27,7 @@ export interface OnlyScenario<T = undefined> {
 }
 
 export interface TestScenario {
-  test<T extends Serializable>(frame: 'data', ...data: T[]): OnlyScenario<T>;
+  test<T extends Data>(frame: 'data', ...data: T[]): OnlyScenario<T>;
   scenario(name: string, ...step: Command[]): TestScenario;
 }
 

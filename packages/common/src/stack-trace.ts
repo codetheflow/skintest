@@ -79,10 +79,15 @@ export function withSourceMap(caller: StackFrame): Promise<StackFrame> {
       throw errors.callerNotFound('source-map');
     }
 
+    let file = path.resolve(caller.file, '..' + path.sep + pos.source);
+    if (!fs.existsSync(file)) {
+      file = caller.file;
+    }
+
     return {
       ...caller,
       ...pos,
-      file: path.resolve(caller.file, '..' + path.sep + pos.source),
+      file,
     };
   });
 }

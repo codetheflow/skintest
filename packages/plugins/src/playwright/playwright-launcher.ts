@@ -1,33 +1,28 @@
-import { Launcher } from '@skintest/platform';
+import { Launcher, LaunchOptions } from '@skintest/platform';
 import * as playwright from 'playwright';
 import { playwrightAction } from './playwright-action';
 import { PlaywrightBrowser } from './playwright-browser';
 
-const DEFAULT_OPTIONS: playwright.LaunchOptions = {
+const DEFAULT_OPTIONS: LaunchOptions = {
   headless: true,
   timeout: 30000,
 };
 
-type LaunchOptions = Pick<playwright.LaunchOptions, 'timeout' | 'headless'>;
-
 export function playwrightLauncher(options: Partial<LaunchOptions> = {}): Launcher {
+  const launchOptions: LaunchOptions = {
+    ...DEFAULT_OPTIONS,
+    ...options
+  };
+
   async function createBrowser() {
-    const browserOptions: playwright.LaunchOptions = {
-      ...DEFAULT_OPTIONS,
-      ...options
-    };
-
     const chromium = playwright['chromium'];
-    const browser = await playwrightAction('browser launch', () => chromium.launch(browserOptions));
+    const browser = await playwrightAction('browser launch', () => chromium.launch(launchOptions));
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return new PlaywrightBrowser(browser, browserOptions.timeout!);
+    return new PlaywrightBrowser(browser, launchOptions.timeout);
   }
 
   return {
     createBrowser,
-    options: {
-      retries: 1
-    }
+    options: launchOptions
   };
 }

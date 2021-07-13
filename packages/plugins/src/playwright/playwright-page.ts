@@ -1,4 +1,4 @@
-import { reinterpret, Serializable } from '@skintest/common';
+import { Data, reinterpret } from '@skintest/common';
 import { DOMElement, ElementRef, ElementRefList, KeyboardKey, Page } from '@skintest/sdk';
 import * as playwright from 'playwright';
 import { PlaywrightAction } from './playwright-action';
@@ -147,7 +147,7 @@ export class PlaywrightPage implements Page {
   }
 
   @PlaywrightAction()
-  evaluate<V extends Serializable>(action: (arg: V) => void, arg: V): Promise<void> {
+  evaluate<V extends Data>(action: (arg: V) => void, arg: V): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.page.evaluate<void, V>(reinterpret<any>(action), arg);
   }

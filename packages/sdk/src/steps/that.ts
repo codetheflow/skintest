@@ -8,16 +8,16 @@ export class ThatStep<D> implements AssertStep<D> {
   constructor(
     public getMeta: () => Promise<Meta>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public recipe: ThatFunction,
+    public task: ThatFunction,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public args: any[]
   ) {
-    Guard.notNull(recipe, 'recipe');
+    Guard.notNull(task, 'task');
     Guard.notNull(args, 'args');
   }
 
   async execute(): Promise<StepExecutionResult> {
-    const result = await this.recipe(...this.args);
+    const result = await this.task(...this.args);
 
     return {
       type: 'assert',

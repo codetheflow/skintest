@@ -1,4 +1,4 @@
-import { Guard, Meta, Serializable } from '@skintest/common';
+import { Data, Guard, Meta } from '@skintest/common';
 import { ClientStep, methodResult, StepContext, StepExecutionResult } from '../command';
 
 export class EvalStep<D> implements ClientStep<D> {
@@ -7,8 +7,8 @@ export class EvalStep<D> implements ClientStep<D> {
   constructor(
     public getMeta: () => Promise<Meta>,
     private message: string,
-    private pageFunction: (arg: Serializable) => void,
-    private arg: Serializable,
+    private pageFunction: (arg: Data) => void,
+    private arg: Data,
   ) {
     Guard.notNull(getMeta, 'getMeta');
     Guard.notEmpty(message, 'message');

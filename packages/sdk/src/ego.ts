@@ -3,8 +3,8 @@ import { AssertStep, CheckStep, ClientStep, DevStep, DoStep, InfoStep } from './
 import { DOMElement } from './dom';
 import { KeyboardKey } from './keyboard';
 import { Query, QueryList } from './query';
-import { RecipeFunction0, RecipeFunction1, RecipeFunction2, RecipeFunction3, RecipeFunction4 } from './recipe';
 import { Breakpoint } from './steps/debug';
+import { TaskFunction0, TaskFunction1, TaskFunction2, TaskFunction3, TaskFunction4 } from './task';
 import { ThatFunction0, ThatFunction1, ThatFunction2, ThatFunction3, ThatFunction4 } from './that';
 import { Value } from './value';
 
@@ -38,11 +38,11 @@ export interface Ego {
   type<D, E extends HTMLInputElement | HTMLAreaElement>(target: Query<E>, text: Value<string, D>): ClientStep<D>;
   select<D, E extends DOMElement>(what: 'text', target: Query<E>): ClientStep<D>;
 
-  do<D>(recipe: RecipeFunction0): DoStep<D>;
-  do<D, T1>(recipe: RecipeFunction1<T1>, arg1: Value<T1, D>): DoStep<D>;
-  do<D, T1, T2>(recipe: RecipeFunction2<T1, T2>, arg1: Value<T1, D>, arg2: Value<T2, D>): DoStep<D>;
-  do<D, T1, T2, T3>(recipe: RecipeFunction3<T1, T2, T3>, arg1: Value<T1, D>, arg2: Value<T2, D>, arg3: Value<T3, D>): DoStep<D>;
-  do<D, T1, T2, T3, T4>(recipe: RecipeFunction4<T1, T2, T3, T4>, arg1: Value<T1, D>, arg2: Value<T2, D>, arg3: Value<T3, D>, arg4: Value<T4, D>): DoStep<D>;
+  do<D>(task: TaskFunction0): DoStep<D>;
+  do<D, T1>(task: TaskFunction1<T1>, arg1: Value<T1, D>): DoStep<D>;
+  do<D, T1, T2>(task: TaskFunction2<T1, T2>, arg1: Value<T1, D>, arg2: Value<T2, D>): DoStep<D>;
+  do<D, T1, T2, T3>(task: TaskFunction3<T1, T2, T3>, arg1: Value<T1, D>, arg2: Value<T2, D>, arg3: Value<T3, D>): DoStep<D>;
+  do<D, T1, T2, T3, T4>(task: TaskFunction4<T1, T2, T3, T4>, arg1: Value<T1, D>, arg2: Value<T2, D>, arg3: Value<T3, D>, arg4: Value<T4, D>): DoStep<D>;
 
   check<D>(message: Value<string, D>): CheckStep<D>;
 
