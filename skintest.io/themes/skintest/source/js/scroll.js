@@ -1,17 +1,55 @@
 document.addEventListener('DOMContentLoaded', function () {
-  setScroll();
+  setScrollToSupport();
+  setScrollOnParagraphs();
+  btnScrollUp();
   toggleMobileMenu();
   toggleMobileMenuList();
   toggleSupportType();
 });
 
-function setScroll() {
+function setScrollToAnchor(button, target) {
+  button.addEventListener('click', function (e) {
+    e.preventDefault();
+    document.querySelector(target).scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+  });
+};
+
+function setScrollToSupport() {
   const requestBtn = document.querySelector('.btn-scroll');
   if(requestBtn) {
-    requestBtn.addEventListener('click', function (e) {
+    const id = requestBtn.getAttribute('href');
+    setScrollToAnchor(requestBtn, id);
+  };
+};
+
+function setScrollOnParagraphs() {
+  const links = document.querySelectorAll('.guide__container ul li a');
+  if(links) {
+    for(let i = 0; i < links.length; i++) {
+      setScrollToAnchor(links[i], links[i].getAttribute('href'));
+    };
+  };
+};
+
+function btnScrollUp() {
+  const scrollUpBtn = document.querySelector('.btn-up');
+
+  if(scrollUpBtn) {
+    window.addEventListener('scroll', function(e) {
+      if(window.pageYOffset > 700) {
+        scrollUpBtn.classList.remove('hidden');
+      } else {
+        scrollUpBtn.classList.add('hidden');
+      };
+    });
+
+    scrollUpBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      const id = requestBtn.getAttribute('href');
-      document.querySelector(id).scrollIntoView({
+      const id = document.querySelector('.header__logo');
+      id.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
       });
@@ -41,7 +79,7 @@ function toggleMobileMenu() {
     
     if (!isMenu && !isBtnMenu && isMenuActive) {
       toggleMenu();
-    }
+    };
   });
 };
 
@@ -58,9 +96,7 @@ function toggleSupportType() {
   const supportCards = document.querySelector('.support__cards');
 
   if(supportInput) {
-    supportInput.addEventListener('click', function (e) {
-      console.log('hi there');
-      console.log(supportCards);
+    supportInput.addEventListener('change', function (e) {
       supportCards.classList.toggle('sale');
     });
   };
