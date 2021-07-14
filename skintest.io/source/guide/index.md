@@ -43,17 +43,11 @@ Architecture (Latin architectura, from the Greek ἀρχιτέκτων arkhitekt
 
 ```typescript
   .scenario(‘ check the list has all added items’
-
     , I.do(add_todo, ‘learn testing’)
-
     , I.do(add_todo, ‘be cool’)
-
     , I.test(‘list contains added items’)
-
     , I.see(todos.list, has.lenght, 2)
-
     , I.see(todos.item_label_at(0), has.text, ‘learn testing’)
-    
     , I.see(todos.item_label_at(1), has.text, ‘be cool’)
   )
 ```
@@ -64,19 +58,12 @@ Architecture (Latin architectura, from the Greek ἀρχιτέκτων arkhitekt
 
 ```typescript
   .scenario(‘ check the list has all added items’
-
     , I.do(add_todo, ‘learn testing’)
-
     , I.do(add_todo, ‘be cool’)
-
     , I.test(‘list contains added items’)
-    
     , I.see(todos.list, has.lenght, 2)
-
     , I.see(todos.item_label_at(0), has.text, ‘learn testing’)
-
     , I.see(todos.item_label_at(1), has.text, ‘be cool’)
   )
 ```
-
 </div>

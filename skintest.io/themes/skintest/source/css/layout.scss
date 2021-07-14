@@ -104,6 +104,29 @@ a:not(.btn) {
       opacity: 0;
     }
   }
+
+  &-copy {
+    @include square(20px);
+    position: absolute;
+    background: url('../assets/images/copy-skintest.svg'), $transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
+    display: block;
+    bottom: 16px;
+    right: 16px;
+    border: none;
+    outline: none;
+    overflow-x: hidden;
+    color: $transparent;
+  }
+}
+
+pre[class*="language-"]::selection, 
+pre[class*="language-"] ::selection, 
+code[class*="language-"]::selection, 
+code[class*="language-"] ::selection {
+  background: transparent !important;
 }
 
 .container {
@@ -237,7 +260,43 @@ a:not(.btn) {
   &__steps {
     width: 551px;
     height: 383px;
-    background-color: $white;
+
+    pre[class*="language-"] {
+      padding: 0 16px 0 16px !important;
+    }
+
+    code {
+      background-color: $dark-gray;
+      border-radius: 8px;
+      display: flex;
+      padding: 16px;
+      position: relative;
+
+      .setup__tooltip {
+        position: absolute;
+        color: $primary;
+        opacity: 0;
+        right: 41px;
+        bottom: 17px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
+        position: absolute;
+        transition: all .15s ease-in-out;
+      }
+
+      &.copied .setup__tooltip {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__step {
+    font-size: 15px;
+    color: $code-highlight-yellow;
+    display: inline-block;
+    margin: 16px 0 8px 0;
   }
 
   &__list {
@@ -381,8 +440,7 @@ a:not(.btn) {
 .helper {
   &__code {
     width: 514px;
-    height: 468px;
-    background-color: $white;
+    height: auto;
     margin-right: 48px;
   }
 
@@ -954,6 +1012,7 @@ a:not(.btn) {
           @include square(8px);
           content: '';
           background-image: url('../assets/images/dropdown-arrow.svg');
+          background-position: center;
           background-repeat: no-repeat;
           display: inline-block;
           margin-left: 8px;

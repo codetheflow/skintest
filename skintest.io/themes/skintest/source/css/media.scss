@@ -21,6 +21,15 @@
     &-helper {
       flex-direction: column-reverse;
     }
+
+    &-steps {
+      overflow-x: auto;
+
+      &::-webkit-scrollbar {
+        height: 4px;
+        background-color: $mobile-nav-color;
+      }
+    }
   }
 
   .wrapper-title {
@@ -78,8 +87,13 @@
 
   .setup {
     &__steps {
-      width: 449px;
+      width: 545px;
       height: 427px;
+    }
+
+    &__point {
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -251,6 +265,12 @@
   }
 }
 
+@media only screen and (max-width: 892px) {
+  .setup__point .setup__num {
+    opacity: 0;
+  }
+}
+
 @media only screen and (max-width: 768px) {
   .btn {
     font-size: 12px;
@@ -295,7 +315,13 @@
     }
 
     &-helper {
-      flex-direction: column-reverse;
+      flex-direction: column-reverse;    
+      overflow-x: auto;
+
+      &::-webkit-scrollbar {
+        height: 4px;
+        background-color: $mobile-nav-color;
+      }
     }
 
     &-title {
@@ -367,6 +393,10 @@
 
     &__point {
       margin-bottom: 39px;
+
+      .setup__num {
+        opacity: 1;
+      }
     }
 
     &__num {
@@ -376,7 +406,15 @@
 
     &__steps {
       width: 100%;
-      height: 379px;
+      height: 412px;
+      min-width: 600px;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      &::-webkit-scrollbar {
+        height: 4px;
+        background-color: $mobile-nav-color;
+      }
     }
   }
 
@@ -399,6 +437,7 @@
   }
 
   .helper {
+    overflow-x: auto;
     &__point {
       @include fontStylingSet(15px, 26px, 400);
       width: 98px;
@@ -422,6 +461,7 @@
 
     &__code {
       width: 100%;
+      min-width: 600px;
       height: 430px;
     }
   }

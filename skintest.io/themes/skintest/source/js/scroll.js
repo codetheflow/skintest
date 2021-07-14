@@ -101,3 +101,11 @@ function toggleSupportType() {
     });
   };
 };
+
+function onCopyText(event) {
+  var textToCopy = document.querySelector(".setup__steps .yaml.language-typescript input");
+  textToCopy.select();
+  document.execCommand("copy");
+  event.target.parentNode.classList.add('copied');
+  setTimeout(() => event.target.parentNode.classList.remove('copied'), 1500);
+}
