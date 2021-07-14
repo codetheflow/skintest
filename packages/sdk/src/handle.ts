@@ -1,4 +1,4 @@
-import { errors, getCaller, getMeta } from '@skintest/common';
+import { errors, getCaller, getMeta, Indexed } from '@skintest/common';
 import { EventStep } from './steps/event';
 import { Download, WaitDownloadStep } from './steps/wait-download';
 import { FileDialog, WaitFileDialogStep } from './steps/wait-file-dialog';
@@ -20,19 +20,18 @@ export function handle<E extends keyof ClientPageEvents>(event: E, options: Clie
       return source => [
         new EventStep(
           getStepMeta,
-          new WaitDownloadStep(getStepMeta, options as Download),
-          Array.from(source),
+          new Indexed([new WaitDownloadStep(getStepMeta, options as Download)]),
+          new Indexed(Array.from(source)),
         )
       ];
     case 'file-dialog':
       return source => [
         new EventStep(
           getStepMeta,
-          new WaitFileDialogStep(getStepMeta, options as FileDialog),
-          Array.from(source),
+          new Indexed([new WaitFileDialogStep(getStepMeta, options as FileDialog)]),
+          new Indexed(Array.from(source)),
         )
       ];
-      break;
     default: {
       throw errors.invalidArgument('event', event);
     }

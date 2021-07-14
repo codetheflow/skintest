@@ -1,4 +1,4 @@
-import { Guard, Meta } from '@skintest/common';
+import { Guard, Indexed, Meta } from '@skintest/common';
 import { DoStep, StepExecutionResult } from '../command';
 import { TaskFunction } from '../task';
 
@@ -21,7 +21,7 @@ export class TaskStep<D> implements DoStep<D> {
 
     return {
       type: 'task',
-      plan: Array.from(plan),
+      plan: new Indexed(Array.from(plan)),
     };
   }
 

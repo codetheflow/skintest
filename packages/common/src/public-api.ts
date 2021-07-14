@@ -1,6 +1,7 @@
 export { errors } from './errors';
 export { extend } from './extend';
 export { Guard } from './guard';
+export { Indexed } from './indexed';
 export { getCaller, getMeta, Meta } from './meta';
 export { retry, RetryOptions } from './retry';
 export { capture, prettyStack, StackFrame, withSourceMap } from './stack-trace';

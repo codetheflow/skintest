@@ -1,10 +1,13 @@
-import { Data, errors, Meta } from '@skintest/common';
+import { Data, errors, Indexed, Meta } from '@skintest/common';
 import { Command } from './command';
 import { Feature, OnlyScenario, TestScenario } from './schema';
 
+export type Step = [number, Command];
+export type Steps = Iterable<Step>;
+
 export interface Scenario {
   name: string;
-  commands: Command[];
+  steps: Steps;
   attributes: Partial<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: Array<Data>
@@ -12,36 +15,37 @@ export interface Scenario {
 }
 
 export interface Script {
+  readonly version: number;
   readonly name: string;
 
-  readonly scenarios: ReadonlyArray<Scenario>;
-  readonly beforeFeature: ReadonlyArray<Command>;
-  readonly afterFeature: ReadonlyArray<Command>
-  readonly beforeScenario: ReadonlyArray<Command>;
-  readonly afterScenario: ReadonlyArray<Command>;
-  readonly beforeStep: ReadonlyArray<Command>;
-  readonly afterStep: ReadonlyArray<Command>;
+  readonly scenarios: Iterable<Scenario>;
+  readonly beforeFeature: Steps;
+  readonly afterFeature: Steps
+  readonly beforeScenario: Steps;
+  readonly afterScenario: Steps;
+  readonly beforeStep: Steps;
+  readonly afterStep: Steps;
 
   getMeta(): Promise<Meta>;
 }
 
-
 export class RuntimeScript implements Script, Feature, TestScenario {
   private testAttributes: Scenario['attributes'] = {};
 
-  beforeFeature: Command[] = [];
-  afterFeature: Command[] = []
+  beforeFeature = new Indexed<Command>();
+  afterFeature = new Indexed<Command>();
 
-  beforeScenario: Command[] = [];
-  afterScenario: Command[] = [];
+  beforeScenario = new Indexed<Command>();
+  afterScenario = new Indexed<Command>();
 
-  beforeStep: Command[] = [];
-  afterStep: Command[] = [];
+  beforeStep = new Indexed<Command>();
+  afterStep = new Indexed<Command>()
 
   scenarios: Array<Scenario> = [];
 
   constructor(
     public name: string,
+    public version: number,
     public getMeta: () => Promise<Meta>,
   ) {
   }
@@ -54,13 +58,13 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   before(what: 'feature' | 'scenario' | 'step', ...steps: Command[]): Feature {
     switch (what) {
       case 'feature':
-        this.beforeFeature.push(...steps);
+        this.beforeFeature.items.push(...steps);
         break;
       case 'scenario':
-        this.beforeScenario.push(...steps);
+        this.beforeScenario.items.push(...steps);
         break;
       case 'step':
-        this.beforeStep.push(...steps);
+        this.beforeStep.items.push(...steps);
         break;
       default:
         throw errors.invalidArgument('what', what);
@@ -72,13 +76,13 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   after(what: 'feature' | 'scenario' | 'step', ...steps: Command[]): Feature {
     switch (what) {
       case 'feature':
-        this.afterFeature.push(...steps);
+        this.afterFeature.items.push(...steps);
         break;
       case 'scenario':
-        this.afterScenario.push(...steps);
+        this.afterScenario.items.push(...steps);
         break;
       case 'step':
-        this.afterStep.push(...steps);
+        this.afterStep.items.push(...steps);
         break;
       default:
         throw errors.invalidArgument('what', what);
@@ -90,7 +94,7 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   scenario(name: string, ...steps: Command[]): TestScenario {
     this.scenarios.push({
       name,
-      commands: steps,
+      steps: new Indexed(steps),
       attributes: this.testAttributes,
     });
 

@@ -1,5 +1,5 @@
 import { Data } from '@skintest/common';
-import { Browser, Command, InspectInfo, Scenario, Script, StepExecutionResult, Suite, TestFail, TestPass } from '@skintest/sdk';
+import { Browser, InspectInfo, Scenario, Script, Step, StepExecutionResult, Suite, TestFail, TestPass } from '@skintest/sdk';
 import { ScriptZone, Zone } from './zone';
 
 export interface Stage<Z extends Zone, S> {
@@ -23,7 +23,6 @@ export type FeatureScope = ProjectStartScope & { script: Script, browser: Browse
 
 export type ScenarioScope = FeatureScope & { scenario: Scenario };
 
-export type Step = [number, Command];
 export type Datum = [number, Data | undefined];
 export type StepScope = ScenarioScope & { step: Step, datum: Datum };
 

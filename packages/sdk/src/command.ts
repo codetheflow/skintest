@@ -1,6 +1,7 @@
 import { Meta } from '@skintest/common';
 import { Browser } from './browser';
 import { RepeatWrite } from './repeat';
+import { Steps } from './script';
 import { TaskFunction } from './task';
 import { InspectInfo, TestResult } from './test-result';
 import { Value } from './value';
@@ -45,31 +46,31 @@ export type StepExecutionMethodResult = {
 
 export type StepExecutionPerformResult = {
   type: 'perform',
-  plan: Command[],
+  plan: Steps,
 }
 
 export type StepExecutionTaskResult = {
   type: 'task',
-  plan: Command[],
+  plan: Steps,
 }
 
 export type StepExecutionEventResult = {
   type: 'event',
-  handler: Command,
-  trigger: Command[],
+  handler: Steps,
+  trigger: Steps,
 }
 
 export type StepExecutionRepeatResult = {
   type: 'repeat',
-  till: Command[],
-  plan: Command[],
+  till: Steps,
+  plan: Steps,
   writes: RepeatWrite[],
 }
 
 export type StepExecutionConditionResult = {
   type: 'condition',
-  cause: Command[],
-  plan: Command[],
+  cause: Steps,
+  plan: Steps,
 }
 
 export interface CommandBody<D> {

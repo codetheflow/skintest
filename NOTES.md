@@ -15,20 +15,6 @@
 5. if `no diff` - do nothing 
 * if scenario name was changed - hard rerun whole suite
 
-
-```typescript
-начальное состояние
-my-file.js >>>
-require('file1');
-
-console.log('hello world')
-
-hmr('my-file.js', ({modified, added, deleted}) => {
-   
-
-
-});
-
 ### cli
 
 * yarn st

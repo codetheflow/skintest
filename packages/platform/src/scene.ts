@@ -1,12 +1,12 @@
 import { Data, errors, Guard, isObject, reinterpret } from '@skintest/common';
-import { Browser, Command, fail, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Suite, Value, VALUE_REF } from '@skintest/sdk';
+import { Browser, fail, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Steps, Suite, Value, VALUE_REF } from '@skintest/sdk';
 import { Attempt } from './attempt';
-import { CommandScope, Datum, Staging, Step } from './stage';
+import { CommandScope, Datum, Staging } from './stage';
 
 function noScenario(): Scenario {
   return {
     name: '',
-    commands: [],
+    steps: [],
     attributes: {}
   };
 }
@@ -40,20 +40,11 @@ export class Scene {
       'feature:before',
       script,
       noScenario(),
-      toSteps(script.beforeFeature)
+      script.beforeFeature
     );
 
     if (ok) {
-      const { operations } = this.suite;
-
-      const scenarios = script
-        .scenarios
-        .filter(scenario =>
-          operations
-            .filterScenario(script.name, scenario)
-        );
-
-      for (const scenario of scenarios) {
+      for (const scenario of script.scenarios) {
         await this.scenario(script, scenario);
       }
     }
@@ -64,7 +55,7 @@ export class Scene {
       'feature:after',
       script,
       noScenario(),
-      toSteps(script.afterFeature)
+      script.afterFeature
     );
   }
 
@@ -88,7 +79,7 @@ export class Scene {
       'scenario:before',
       script,
       scenario,
-      toSteps(script.beforeScenario)
+      script.beforeScenario
     );
 
     if (ok) {
@@ -106,7 +97,7 @@ export class Scene {
       'scenario:after',
       script,
       scenario,
-      toSteps(script.afterScenario)
+      script.afterScenario
     );
   }
 
@@ -118,11 +109,9 @@ export class Scene {
 
     const beforeStepEffect = this.effect('step:before');
     const afterStepEffect = this.effect('step:after');
-    const { commands: steps } = scenario;
+    const { steps } = scenario;
 
-    for (let i = 0; i < steps.length; i++) {
-      const step: Step = [i, steps[i]];
-
+    for (const step of steps) {
       const scope = {
         suite: this.suite,
         browser: this.browser,
@@ -138,7 +127,7 @@ export class Scene {
         'step:before',
         script,
         scenario,
-        toSteps(script.beforeStep)
+        script.beforeStep
       );
 
       if (ok) {
@@ -158,7 +147,7 @@ export class Scene {
         'step:after',
         script,
         scenario,
-        script.afterStep.map((x, i) => [i, x])
+        script.afterStep
       ))[0] && ok;
 
       if (!ok) {
@@ -173,7 +162,7 @@ export class Scene {
     site: CommandScope['site'],
     script: Script,
     scenario: Scenario,
-    steps: Step[],
+    steps: Steps,
     path: Array<StepExecutionResult['type']> = [],
     datum: Datum = [0, undefined],
   ): Promise<[boolean, string[]]> {
@@ -224,12 +213,12 @@ export class Scene {
         });
 
         const runPlan =
-          (commands: Command[]) =>
+          (planSteps: Steps) =>
             this.plan(
               site,
               script,
               scenario,
-              toSteps(commands),
+              planSteps,
               path.concat(run.type),
               datum
             );
@@ -349,7 +338,7 @@ export class Scene {
           }
           case 'event': {
             const [handlerOk, triggerOk] = await Promise.all([
-              runPlan([run.handler]),
+              runPlan(run.handler),
               runPlan(run.trigger),
             ]);
 
@@ -391,8 +380,4 @@ export class Scene {
 
     return [errorSink.length === 0, errorSink];
   }
-}
-
-function toSteps(commands: ReadonlyArray<Command> | Command[]): Step[] {
-  return commands.map((cmd, i) => [i, cmd]);
 }

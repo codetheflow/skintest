@@ -29,6 +29,8 @@
 * `__pause` is frozen sometimes ??
 * add comments to the ego, selectors, tasks and keyboard keys
 * CI/CD integration
+* single quotes lint
+* semicolon lint
 
 # m.7
 * azure account

@@ -1,5 +1,5 @@
-import { errors, Guard, Meta } from '@skintest/common';
-import { ClientStep, DoStep, StepExecutionResult } from '../command';
+import { errors, Guard, Indexed, Meta } from '@skintest/common';
+import { ClientStep, Command, DoStep, StepExecutionResult } from '../command';
 import { RepeatYield } from '../repeat';
 import { PerformSchema } from '../schema';
 import { IIfStep } from './iif';
@@ -26,8 +26,8 @@ export class PerformStep<D> implements ClientStep<D> {
       if (marker instanceof IIfStep) {
         return {
           type: 'condition',
-          cause: plan.slice(index, plan.length),
-          plan: plan.slice(0, index),
+          cause: new Indexed(plan.slice(index, plan.length)),
+          plan: new Indexed(plan.slice(0, index)),
         };
       }
 
@@ -43,8 +43,8 @@ export class PerformStep<D> implements ClientStep<D> {
 
         return {
           type: 'repeat',
-          till: plan.slice(index, plan.length),
-          plan: plan.slice(0, index),
+          till: new Indexed(plan.slice(index, plan.length)),
+          plan: new Indexed(plan.slice(0, index)),
           writes
         };
       }
@@ -54,7 +54,7 @@ export class PerformStep<D> implements ClientStep<D> {
 
     return {
       type: 'perform',
-      plan,
+      plan: new Indexed<Command>(plan)
     };
   }
 

@@ -98,7 +98,6 @@ export function ttySummaryReport(): Plugin {
     'feature:before': async ({ script }) => {
       const row = newRow();
       row[FEATURES_COL] = script.name;
-      row[TESTS_COL] = script.scenarios.length;
       row[TIME_COL] = performance.now();
 
       statistics.push(row);
@@ -137,6 +136,10 @@ export function ttySummaryReport(): Plugin {
         scenario: '',
         reason
       });
+    },
+    'scenario:before': async () => {
+      const row = currentRow();
+      row[TESTS_COL] = (row[TESTS_COL] as number) + 1;
     }
   });
 }

@@ -31,6 +31,8 @@ export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
         require(featurePath);
 
         const features = suite.getScripts();
+
+        // todo: remove RuntimeScript cast
         const feature = features[features.length - 1] as RuntimeScript;
         feature.name = path.parse(featurePath).name;
 
@@ -39,7 +41,6 @@ export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
     }
   });
 }
-
 
 class OneFeaturePerFileConstraint implements Transaction {
   private numberAtStart = 0;

@@ -24,12 +24,8 @@ export class NodeProject implements Project {
       await mount({ suite });
       await ready({ suite });
 
-      const scripts = suite
-        .getScripts()
-        .filter(x => suite.operations.filterFeature(x.name));
-
       const browserFactories = await launch.getBrowsers();
-      for (const script of scripts) {
+      for (const script of suite.getScripts()) {
         for (const browserFactory of browserFactories) {
           const browser = await browserFactory();
           try {

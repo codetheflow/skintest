@@ -18,14 +18,13 @@ export { Page } from './page';
 export { perform } from './perform';
 export { $, $$, Query, QueryList } from './query';
 export { RepeatEntry, RepeatRead, RepeatWrite, RepeatYield } from './repeat';
-export { RuntimeScript, Scenario, Script } from './script';
+export { RuntimeScript, Scenario, Script, Step, Steps } from './script';
 export { Breakpoint, Debugger } from './steps/debug';
 export { download, Download } from './steps/wait-download';
 export { fileDialog, FileDialog } from './steps/wait-file-dialog';
-export { newSuite, Suite, SuiteOperations } from './suite';
+export { newSuite, ScriptBuilder, Suite } from './suite';
 export { task, Task, TaskFunction, TaskIterable, TaskOperator } from './task';
 export { fail, InspectInfo, pass, TestEffect, TestFail, TestPass, TestResult } from './test-result';
 export { ThatFunction } from './that';
 export { till, Till } from './till';
 export { Value, ValueRef, VALUE_REF } from './value';
-
