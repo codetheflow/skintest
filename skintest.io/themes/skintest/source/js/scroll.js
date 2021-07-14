@@ -103,7 +103,7 @@ function toggleSupportType() {
 };
 
 function onCopyText(event) {
-  var textToCopy = document.querySelector(".setup__steps .yaml.language-typescript input");
+  var textToCopy = event.target;
   textToCopy.select();
   document.execCommand("copy");
   event.target.parentNode.classList.add('copied');

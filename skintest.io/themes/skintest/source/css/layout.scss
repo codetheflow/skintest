@@ -99,6 +99,7 @@ a:not(.btn) {
     cursor: pointer;
     opacity: 1;
     transition: all .15s ease-in-out;
+    z-index: 1;
 
     &.hidden {
       opacity: 0;
@@ -119,6 +120,8 @@ a:not(.btn) {
     outline: none;
     overflow-x: hidden;
     color: $transparent;
+    text-indent: -9999px;
+    cursor: pointer;
   }
 }
 
@@ -172,13 +175,13 @@ code[class*="language-"] ::selection {
   }
 
   &-steps {
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     padding: 0 32px 0 172px;
   }
 
   &-helper {
-    align-items: flex-start;
+    align-items: center;
     padding: 0 164px 0 155px;
   }
 }
@@ -259,10 +262,15 @@ code[class*="language-"] ::selection {
 .setup {
   &__steps {
     width: 551px;
-    height: 383px;
+    height: 412px;
 
     pre[class*="language-"] {
       padding: 0 16px 0 16px !important;
+      margin: 0;
+
+      &::after {
+        content: 'sh';
+      }
     }
 
     code {
@@ -271,24 +279,6 @@ code[class*="language-"] ::selection {
       display: flex;
       padding: 16px;
       position: relative;
-
-      .setup__tooltip {
-        position: absolute;
-        color: $primary;
-        opacity: 0;
-        right: 41px;
-        bottom: 17px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 6px;
-        position: absolute;
-        transition: all .15s ease-in-out;
-      }
-
-      &.copied .setup__tooltip {
-        opacity: 1;
-      }
     }
   }
 
@@ -444,15 +434,15 @@ code[class*="language-"] ::selection {
     margin-right: 48px;
   }
 
-  &__list {
-    padding-top: 46px;
-  }
-
   &__point {
     @include fontStylingSet(17px, 20px, 400);
     width: 141px;
     text-align: center;
     margin-bottom: 64px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     &-execution::before,
     &-safty::before,
@@ -1117,9 +1107,33 @@ code[class*="language-"] ::selection {
   h2 {
     @include fontStylingSet(32px, 32px, 500);
     margin: 140px 0 24px 0;
+    position: relative;
+    padding-left: 30px;
+
+    &::before {
+      content: 'Copied!';
+      left: -60px;
+      bottom: -4px;
+      font-size: 14px;
+    }
+
+    &.copied::before {
+      opacity: 1;
+    }
 
     &:first-child {
       margin-top: 0;
+    }
+
+    a:hover {
+      color: inherit;
+    }
+
+    .btn-copy {
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background-size: 21px 21px;
     }
   }
 
@@ -1209,4 +1223,23 @@ pre[class*="language-"]{
  height: 4px;
  width: 0;
  background-image: $linear-gradient; 
+}
+
+.tooltip {
+  opacity: 0;
+  right: 47px;
+  bottom: 17px;
+}
+
+.tooltip,
+.guide h2::before {
+  position: absolute;
+  opacity: 0;
+  color: $primary;
+  display: block;
+  transition: all .15s ease-in-out;
+}
+
+.copied .tooltip {
+  opacity: 1;
 }
