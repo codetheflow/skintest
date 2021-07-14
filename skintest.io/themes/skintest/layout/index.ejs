@@ -25,15 +25,38 @@
   <div class="wrapper wrapper-steps">
     <ul class="setup__list">
       <li class="setup__point"><span class="setup__num">1</span><a class="link link-secondary"
-           href="#">Install git</a></li>
+           href="#">Install&nbspgit</a></li>
       <li class="setup__point"><span class="setup__num">2</span><a class="link link-secondary"
-           href="#">Install NodeJS</a></li>
+           href="#">Install&nbspNodeJS</a></li>
       <li class="setup__point"><span class="setup__num">3</span><a class="link link-secondary"
-           href="#">Install npm</a></li>
-      <li class="setup__point"><span class="setup__num">4</span><span>And just execute:</span></li>
+           href="#">Install&nbspnpm</a></li>
+      <li class="setup__point"><span class="setup__num">4</span><span>And&nbspjust&nbspexecute:</span></li>
     </ul>
     <div class="setup__steps">
-      <%- page.content %>
+      <pre class="language-typescript">
+<span class="setup__step">To get started with development:</span>
+<code class="yaml language-typescript">
+  <span>git clone https://github.com/codetheflow/skintest-starter.git
+cd skintest-starter
+npm i</span>
+  <input class="btn-copy" onclick="copyText(event)" type="text" value="git clone https://github.com/codetheflow/skintest-starter.git
+  cd skintest-starter
+  npm i"></input>
+  <span class="setup__tooltip">Copied!</span>
+</code>
+<span class="setup__step">In the first terminal:</span>
+<code class="yaml language-typescript">
+  <span>nmp run build:watch</span>
+  <input class="btn-copy" onclick="copyText(event)" type="text" value="nmp run build:watch"></input>
+  <span class="setup__tooltip">Copied!</span>
+</code>
+<span class="setup__step">In the second terminal:</span>
+<code class="yaml language-typescript">
+  <span>nmp run start:watch</span>
+  <input class="btn-copy" onclick="copyText(event)" type="text" value="nmp run start:watch"></input>
+  <span class="setup__tooltip">Copied!</span>
+</code>
+      </pre>
     </div>
   </div>
 </section>
@@ -57,6 +80,27 @@
   <h2 class="title title-secondary title-helper">Language that helps to develop</h2>
   <div class="wrapper wrapper-helper">
     <div class="helper__code">
+
+      <pre class="language-typescript">
+        <code class="yaml language-typescript">
+<span><span class="token function">feature</span>('todos add')</span>
+
+  <span>.<span class="token function">before</span>('scenario'</span>
+    <span>, I.<span class="token function">open</span>(page.start)</span>
+    <span>, I.<span class="token function">open</span>(todos.url)</span>
+    <span>, I.<span class="token function">open</span>(clear_todos)</span>
+  <span>)</span>
+
+  <span>.<span class="token function">scenario</span>(‘ check the list has all added items’</span>
+    <span>, I.<span class="token function">do</span>(add_todo, ‘learn testing’)</span>
+    <span>, I.<span class="token function">do</span>(add_todo, ‘be cool’)</span>
+    <span>, I.<span class="token function">test</span>(‘list contains added items’)</span>
+    <span>, I.<span class="token function">see</span>(todos.list, has.lenght, <span class="token number">2</span>)</span>
+    <span>, I.<span class="token function">see</span>(todos.<span class="token function">item_label_at</span>(<span class="token number">0</span>), has.text, ‘learn testing’)</span>
+    <span>, I.<span class="token function">see</span>(todos.<span class="token function">item_label_at</span>(<span class="token number">1</span>), has.text, ‘be cool’)</span>
+  <span>)</span>
+        </code>
+      </pre>
     </div>
     <ul class="helper__list">
       <li class="helper__point helper__point-execution"><span>Transparent</span></li>
