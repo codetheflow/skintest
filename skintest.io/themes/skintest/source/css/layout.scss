@@ -99,6 +99,7 @@ a:not(.btn) {
     cursor: pointer;
     opacity: 1;
     transition: all .15s ease-in-out;
+    z-index: 1;
 
     &.hidden {
       opacity: 0;
