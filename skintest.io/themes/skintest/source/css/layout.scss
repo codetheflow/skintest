@@ -1127,6 +1127,13 @@ code[class*="language-"] ::selection {
     a:hover {
       color: inherit;
     }
+
+    .btn-copy {
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background-size: 21px 21px;
+    }
   }
 
   p {
