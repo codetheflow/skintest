@@ -19,6 +19,7 @@ export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
       tty.newLine(stdout, tty.h1(`probe ${files.length} feature(s)`));
       for (const file of files) {
         const featurePath = path.join(cwd, file);
+
         const sink = new TransactionSink([
           new OneFeaturePerFileConstraint(suite, featurePath),
           new UniqScenarioNameConstraint(suite, featurePath),
@@ -34,6 +35,7 @@ export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
 
         // todo: remove RuntimeScript cast
         const feature = features[features.length - 1] as RuntimeScript;
+        feature.path = featurePath;
         feature.name = path.parse(featurePath).name;
 
         await sink.commit();

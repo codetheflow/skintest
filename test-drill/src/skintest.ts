@@ -1,5 +1,5 @@
 import { nodePlatform } from '@skintest/platform';
-import { exploreNodeFeatures, exploreNodeProjects, playwrightLauncher, playwrightMiddleware, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { exploreNodeFeatures, exploreNodeProjects, hmr, playwrightLauncher, playwrightMiddleware, tagFilter, ttyLogo, ttyPause, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
 import * as pw from 'playwright';
 
@@ -14,6 +14,9 @@ const plugins = [
   , ttyReport()
   , ttySummaryReport()
   , ttyPause()
+  , hmr({
+    include: '#now'
+  })
   , tagFilter({
     method: 'include-all-when-no-matches',
     include: ['#now'],
@@ -28,7 +31,7 @@ const launcher = playwrightLauncher(
 nodePlatform(...plugins)
   .then(platform =>
     exploreNodeProjects(PROJECTS_FOLDER)
-      // .filter(uri => /todo/.test(uri))
+      .filter(uri => /todo/.test(uri))
       .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
       .finally(() => platform.destroy())
   )

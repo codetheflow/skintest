@@ -80,3 +80,10 @@ export function ticksToTime(ms: number): string {
 export function qte(text: string): string {
   return '`' + text + '`';
 }
+
+export function match(search: string) {
+  return (target: string): boolean => {
+    const contains = new RegExp(`(^|\\s)${escapeRE(target)}(\\s|$)`, 'gi');
+    return contains.test(search);
+  };
+}

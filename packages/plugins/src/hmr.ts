@@ -1,65 +1,133 @@
+import { getCaller, getMeta, Guard, match, merge, Meta } from '@skintest/common';
+import { OnStage, Plugin } from '@skintest/platform';
+import { DevStep, Step, StepExecutionResult, tempSuite } from '@skintest/sdk';
+import * as chokidar from 'chokidar';
+import { stdout } from 'process';
+import { tty } from './tty';
 
-
-type Statistics = {
-  modified: string,
-  added: string,
-  deleted: string,
+type HMROptions = {
+  include: string,
 };
 
-export function hmr(file: string, fn: (stat: Statistics) => void): void {
-  console.log(file);
-  console.log(fn);
+type Hold = {
+  continue(): void,
+  step: number,
+};
+
+export function hmr(options: HMROptions): Plugin {
+  const { include } = options;
+
+  tty.test(stdout);
+
+  let hold: Hold | null = null;
+
+  return (stage: OnStage) => stage({
+    'scenario:before': async ({ suite, script, scenario }) => {
+      const test = match(scenario.name);
+      if (test(include)) {
+        chokidar
+          .watch(script.path)
+          .on('change', () => {
+            if (hold !== null) {
+              const [temp, dispose] = tempSuite();
+              try {
+
+                delete require.cache[script.path];
+                require(script.path);
+
+                const tempScript = temp.getScripts()[0];
+                const tempScenario = Array.from(tempScript!.scenarios).find(x => x.name === scenario.name);
+                const hotSteps = Array.from(tempScenario!.steps);
+                const oldSteps = Array.from(scenario.steps).filter(x => !(x instanceof NoChangesStep));
+
+                const compare = merge<Step>({
+                  update: (l) => l,
+                  equals: (l, r) => l[0] === r[0] && l[1].toString() === r[1].toString()
+                });
+
+                const diff = compare(
+                  hotSteps,
+                  oldSteps,
+                  []
+                );
+
+                console.log(diff);
+
+                const append = hotSteps
+                  .filter(([i, x]) => i > hold!.step)
+                  .map(([i, x]) => x);
+
+                if (!append.length) {
+                  const caller = getCaller();
+                  append.push(new NoChangesStep(() => getMeta(caller)));
+                }
+
+                suite
+                  .editScript(script)
+                  .modifyScenario(scenario.name, { append })
+                  .commit();
+
+              } finally {
+                dispose();
+                hold.continue();
+              }
+            }
+          });
+      }
+    },
+    'step:after': ({ scenario, step }) => {
+      const test = match(scenario.name);
+      if (test(include)) {
+        const steps = Array.from(scenario.steps);
+        const [index] = step;
+        const lastStep = index === steps.length - 1;
+        if (lastStep) {
+          tty.newLine(stdout, tty.dev(`waiting for the scenario changes...`));
+
+          return new Promise((resolve) => {
+            hold = {
+              step: index,
+              continue: resolve
+            };
+          });
+        }
+      }
+
+      return Promise.resolve();
+    },
+  });
 }
 
-// export class HMR {
-//   parentModuleName = module.parent?.filename as string;
-//   requireCache = require.cache;
+// function reload(module: NodeModule) {
+//   const modulesToReload : string[] = [module.id];
+//   let parentModule : NodeModule = module.parent;
 
-//   constructor(
-//     private watchDir: string,
-//     private callback: () => void) { 
-//     const watcher = this.setupWatcher();
-//     watcher.on('all', this.handleFileChange.bind(this));
-//     this.callback();
+//   while (parentModule && parentModule.id !== '.') {
+//       modulesToReload.push(parentModule.id);
+//       parentModule = parentModule.parent;
 //   }
 
-//   getCacheByModuleId(moduleId: string) {
-//     return this.requireCache[moduleId];
-//   }
-
-//   deleteModuleFromCache(moduleId: string) {
-//     delete this.requireCache[moduleId];
-//   }
-
-//   setupWatcher() {
-//     return chokidar.watch(['**/*.js'], {
-//       ignoreInitial: true,
-//       cwd: this.watchDir,
-//       ignored: [
-//         '.git',
-//         'node_modules',
-//       ],
-//     });
-//   }
-
-//   handleFileChange(event: unknown, file: string) {
-//     const moduleId = path.resolve(this.watchDir, file);
-//     const module = this.getCacheByModuleId(moduleId);
-
-//     if (module) {
-//       const modulesToReload = [module.id];
-//       let parentModule = module.parent;
-
-//       while (parentModule && parentModule.id !== '.') {
-//         modulesToReload.push(parentModule.id);
-//         parentModule = parentModule.parent;
-//       }
-
-//       modulesToReload.forEach((id) => {
-//         this.deleteModuleFromCache(id);
-//       });
-
-//       this.callback();
-//     }
-//   }
+//   modulesToReload.forEach((id) => {
+//      delete require.cache[id];
+//   });
 // }
+
+class NoChangesStep<D> implements DevStep<D> {
+  type: 'dev' = 'dev';
+
+  constructor(
+    public getMeta: () => Promise<Meta>
+  ) {
+    Guard.notNull(getMeta, 'getMeta');
+  }
+
+  async execute(): Promise<StepExecutionResult> {
+    return {
+      type: 'method',
+    };
+  }
+
+  toString(): string {
+    return `no changes`;
+  }
+}

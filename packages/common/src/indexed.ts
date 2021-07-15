@@ -1,5 +1,9 @@
-export class Indexed<T> implements Iterable<[number, T]> {
-  constructor(public items: T[] = []) {}
+export class Indexed<T> implements Iterable<[number, T]>, CanAppend<T> {
+  constructor(private items: T[] = []) { }
+
+  append(...items: T[]): void {
+    this.items.push(...items);
+  }
 
   [Symbol.iterator](): Iterator<[number, T]> {
     let cursor = 0;
@@ -21,4 +25,8 @@ export class Indexed<T> implements Iterable<[number, T]> {
       }
     };
   }
+}
+
+export interface CanAppend<T> {
+  append(...items: T[]): void;
 }

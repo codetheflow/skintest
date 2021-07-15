@@ -5,17 +5,16 @@ import { RuntimeScript } from './script';
 export const schema = {
   get dev(): Feature {
     const caller = getCaller();
-    const script = new RuntimeScript(`feature-dev-${Date.now()}`, 1, () => getMeta(caller));
+    const script = new RuntimeScript(1, () => getMeta(caller));
     return script;
   },
 
   get strict(): StrictFeature {
     const caller = getCaller();
-    const script = new RuntimeScript(`feature-strict-${Date.now()}`, 1, () => getMeta(caller));
+    const script = new RuntimeScript(1, () => getMeta(caller));
     return script;
   }
 };
-
 
 export interface Feature extends TestScenario {
   before(what: 'feature' | 'scenario' | 'step', ...step: Command[]): Feature;

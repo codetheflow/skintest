@@ -22,7 +22,7 @@ export { RuntimeScript, Scenario, Script, Step, Steps } from './script';
 export { Breakpoint, Debugger } from './steps/debug';
 export { download, Download } from './steps/wait-download';
 export { fileDialog, FileDialog } from './steps/wait-file-dialog';
-export { newSuite, ScriptBuilder, Suite } from './suite';
+export { getSuite, newSuite, ScriptBuilder, Suite, tempSuite } from './suite';
 export { task, Task, TaskFunction, TaskIterable, TaskOperator } from './task';
 export { fail, InspectInfo, pass, TestEffect, TestFail, TestPass, TestResult } from './test-result';
 export { ThatFunction } from './that';

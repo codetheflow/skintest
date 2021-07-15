@@ -1,4 +1,4 @@
-import { errors, escapeRE } from '@skintest/common';
+import { errors, match } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { ScriptBuilder } from '@skintest/sdk';
 
@@ -16,7 +16,7 @@ export function tagFilter(options: TagFilterOptions): Plugin {
       const transaction: ScriptBuilder[] = [];
       for (const script of suite.getScripts()) {
         for (const scenario of script.scenarios) {
-          if (!include.some(matchHashTag(scenario.name))) {
+          if (!include.some(match(scenario.name))) {
             transaction.push(
               suite
                 .editScript(script)
@@ -45,11 +45,4 @@ export function tagFilter(options: TagFilterOptions): Plugin {
       }
     }
   });
-}
-
-function matchHashTag(search: string) {
-  return (tag: string) => {
-    const contains = new RegExp(`(^|\\s)${escapeRE(tag)}(\\s|$)`, 'gi');
-    return contains.test(search);
-  };
 }

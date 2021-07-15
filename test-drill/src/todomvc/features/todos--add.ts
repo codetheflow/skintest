@@ -14,9 +14,16 @@ feature()
     , I.do(clear_todos)
   )
 
-  .scenario('check the input field should be in focus on initial load'
+  .scenario('#now check the input field should be in focus on initial load'
     , I.check('focus in the input field')
     , I.see($todos.what, has.state, 'focused')
+    , I.see($todos.what, has.state, 'focused') 
+    , I.see($todos.what, has.state, 'focused') 
+    , I.see($todos.what, has.state, 'focused') 
+    , I.see($todos.what, has.state, 'focused')
+    , I.see($todos.what, has.state, 'focused') 
+    , I.see($todos.what, has.state, 'focused') 
+    , I.see($todos.what, has.state, 'focused') 
   )
 
   .scenario('check the input field should have placeholder'
@@ -31,6 +38,7 @@ feature()
   .scenario('check the list has all added items'
     , I.do(add_todo, data('label'))
     , I.check('todo item is added')
+    , I.see($todos.item_label_last, has.text, data('label'))
     , I.see($todos.item_label_last, has.text, data('label'))
   )
 

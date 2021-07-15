@@ -17,6 +17,7 @@ export interface Scenario {
 export interface Script {
   readonly version: number;
   readonly name: string;
+  readonly path: string;
 
   readonly scenarios: Iterable<Scenario>;
   readonly beforeFeature: Steps;
@@ -32,6 +33,9 @@ export interface Script {
 export class RuntimeScript implements Script, Feature, TestScenario {
   private testAttributes: Scenario['attributes'] = {};
 
+  name = '';
+  path = '';
+
   beforeFeature = new Indexed<Command>();
   afterFeature = new Indexed<Command>();
 
@@ -44,7 +48,6 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   scenarios: Array<Scenario> = [];
 
   constructor(
-    public name: string,
     public version: number,
     public getMeta: () => Promise<Meta>,
   ) {
@@ -58,13 +61,13 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   before(what: 'feature' | 'scenario' | 'step', ...steps: Command[]): Feature {
     switch (what) {
       case 'feature':
-        this.beforeFeature.items.push(...steps);
+        this.beforeFeature.append(...steps);
         break;
       case 'scenario':
-        this.beforeScenario.items.push(...steps);
+        this.beforeScenario.append(...steps);
         break;
       case 'step':
-        this.beforeStep.items.push(...steps);
+        this.beforeStep.append(...steps);
         break;
       default:
         throw errors.invalidArgument('what', what);
@@ -76,13 +79,13 @@ export class RuntimeScript implements Script, Feature, TestScenario {
   after(what: 'feature' | 'scenario' | 'step', ...steps: Command[]): Feature {
     switch (what) {
       case 'feature':
-        this.afterFeature.items.push(...steps);
+        this.afterFeature.append(...steps);
         break;
       case 'scenario':
-        this.afterScenario.items.push(...steps);
+        this.afterScenario.append(...steps);
         break;
       case 'step':
-        this.afterStep.items.push(...steps);
+        this.afterStep.append(...steps);
         break;
       default:
         throw errors.invalidArgument('what', what);
