@@ -102,8 +102,11 @@ theme: skintest
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/codetheflow/skintest
+  branch: skintest.io
+  message: Site updated {{ now('YYYY-MM-DD HH:mm:ss') }}
 
 prism_plugin:
-  mode: 'preprocess'    # realtime/preprocess
+  mode: 'preprocess'
   theme: 'vs'
