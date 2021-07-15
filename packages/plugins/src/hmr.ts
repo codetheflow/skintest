@@ -1,4 +1,4 @@
-import { getCaller, getMeta, Guard, match, merge, Meta } from '@skintest/common';
+import { getCaller, getMeta, Guard, match, merge, Meta, Tidy } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { DevStep, Step, StepExecutionResult, tempSuite } from '@skintest/sdk';
 import * as chokidar from 'chokidar';
@@ -15,17 +15,23 @@ type Hold = {
 };
 
 export function hmr(options: HMROptions): Plugin {
-  const { include } = options;
-
   tty.test(stdout);
+
+  const { include } = options;
+  const tidy = new Tidy();
+
+
 
   let hold: Hold | null = null;
 
   return (stage: OnStage) => stage({
+    'platform:unmount': async () => {
+      await tidy.run();
+    },
     'scenario:before': async ({ suite, script, scenario }) => {
       const test = match(scenario.name);
       if (test(include)) {
-        chokidar
+        const watch = chokidar
           .watch(script.path)
           .on('change', () => {
             if (hold !== null) {
@@ -73,6 +79,8 @@ export function hmr(options: HMROptions): Plugin {
               }
             }
           });
+
+        tidy.add(() => watch.close());
       }
     },
     'step:after': ({ scenario, step }) => {
