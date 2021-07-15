@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <title>skintest</title>
+
+  <meta charset="utf-8">
+  <meta name="description"
+        content="skintest - modern web UI automatization tool">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta property="og:type"
+        content="article">
+  <meta property="og:title"
+        content="skintest">
+  <meta property="og:description"
+        content="">
+  <meta property="og:image"
+        content="https:////images/logo.png">
+
+  <link rel="apple-touch-icon"
+        sizes="57x57"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="60x60"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="72x72"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="76x76"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="114x114"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="120x120"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="144x144"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="152x152"
+        href="/assets/favicons/favicon.svg">
+  <link rel="apple-touch-icon"
+        sizes="180x180"
+        href="/assets/favicons/favicon.svg">
+  <link rel="icon"
+        type="image/png"
+        sizes="192x192"
+        href="/assets/favicons/favicon.svg">
+  <link rel="icon"
+        type="image/png"
+        sizes="384x384"
+        href="/assets/favicons/favicon.svg">
+  <link rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/assets/favicons/favicon.svg">
+  <link rel="icon"
+        type="image/png"
+        sizes="96x96"
+        href="/assets/favicons/favicon.svg">
+  <link rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/assets/favicons/favicon.svg">
+  <meta name="msapplication-TileImage"
+        content='/assets/favicons/favicon.svg.png'>
+  <link rel="icon"
+        href="/assets/logo.png"
+        type="image/png">
+
+  <meta name="msapplication-TileColor"
+        content="#2f80ed">
+  <meta name="theme-color"
+        content="#2f80ed">
+
+  <meta name="msapplication-config"
+        content="browserconfig.xml">
+  <link rel="manifest"
+        href="/manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+
+
+    <script src="/js/scroll.js"></script>
+    <script src="/js/video.js"></script>
+    <script>window.PAGE_TYPE = ""</script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="stylesheet" href="/css/prism-vs.css" type="text/css"></head>
+
+<body>
+    <header class="container container-header">
+      <div class="wrapper wrapper-header">
+  <a class="header__logo"
+     href="/">
+    <picture>
+      <source srcset="/assets/images/logo_mobile.svg"
+              media="only screen and (max-width: 768px)">
+      <img src="/assets/images/logo.svg"
+           alt="Skintest logo">
+    </picture>
+  </a>
+
+  <nav class="header__nav">
+    
+      
+      <a class='active' href="/guide">
+        Documentation
+      </a>
+      <a href="/#support"
+        class="btn btn-primary btn-request">REQUEST SUPPORT</a>
+       
+  </nav>
+
+  <nav class="header__mobile mobile">
+    <button class="mobile__burger"><span></span></button>
+    <div class="mobile__wraper">
+      <ul class="mobile__list">
+        <li class="mobile__item mobile__item-documentation"><span>Documentation</span>
+          <ul class="mobile__secondary-list">
+            <li><a href="/guide">Architecture</a></li>
+            <li><a href="#">Features and scenarios</a></li>
+            <li><a href="#">Component's eyes and selectors</a></li>
+            <li><a href="#">Multi page support</a></li>
+            <li><a href="#">Fluent asserts</a></li>
+            <li><a href="#">Cooking tasks</a></li>
+            <li><a href="#">The runner - skintest.ts</a></li>
+            <li><a href="#">Debugging</a></li>
+            <li><a href="#">Tag-filter</a></li>
+            <li><a href="#">Custom plugins</a></li>
+            <li><a href="#">Test data</a></li>
+            <li><a href="#">Secrets and environment</a></li>
+            <li><a href="#">Reporting</a></li>
+            <li><a href="#">Iframes</a></li>
+            <li><a href="#">Shadow dom</a></li>
+            <li><a href="#">Parallel execution</a></li>
+            <li><a href="#">Browser support</a></li>
+            <li><a href="#">CI\CD</a></li>
+          </ul>
+        </li>
+        <li class="mobile__item"><a href="#">Email us</a></li>
+      </ul>
+      <ul class="mobile__social social">
+        <li class="social__item social__item-playwright"><a href="#">Playwright</a></li>
+        <li class="social__item social__item-npm"><a href="#">npm</a></li>
+        <li class="social__item social__item-github"><a href="#">github</a></li>
+        <li class="social__item social__item-telegram"><a href="#">telegram</a></li>
+        <li class="social__item social__item-youtube"><a href="#">youtube</a></li>
+      </ul>
+      
+      
+      <a href="/#support"
+        class="btn btn-primary btn-request">REQUEST SUPPORT</a>
+       
+    </div>
+  </nav>
+</div>
+    </header>
+
+    <main class="container container-main">
+      <div class="wrapper wrapper-title">
+  <h1 class="title title-main">Modern web UI automatization platform</h1>
+</div>
+
+<section class="features wrapper">
+  <div class="features__item">
+    <span class="features__title">Designed for end&#8209;to&#8209;end tests</span>
+    <p class="features__text">Out of box testing architecture, unflaky tolerance, great debugging, and development
+      experience.</p>
+  </div>
+  <div class="features__item">
+    <span class="features__title">Test across all modern browsers</span>
+    <p class="features__text">Single API to automate Chromium, Firefox and WebKit, device emulation, multi page
+      scenarios.</p>
+  </div>
+  <div class="features__item">
+    <span class="features__title">Loved by testers and developers</span>
+    <p class="features__text">Ego language drives to write certain style tests that are type safe, fluent and reduce
+      copy&#8209;paste.</p>
+  </div>
+</section>
+
+<section class="setup">
+  <h2 class="title title-secondary">A few minutes for set up</h2>
+  <div class="wrapper wrapper-steps">
+    <ul class="setup__list">
+      <li class="setup__point"><span class="setup__num">1</span><a class="link link-secondary"
+           href="#">Install&nbspgit</a></li>
+      <li class="setup__point"><span class="setup__num">2</span><a class="link link-secondary"
+           href="#">Install&nbspNodeJS</a></li>
+      <li class="setup__point"><span class="setup__num">3</span><a class="link link-secondary"
+           href="#">Install&nbspnpm</a></li>
+      <li class="setup__point"><span class="setup__num">4</span><span>And&nbspjust&nbspexecute:</span></li>
+    </ul>
+    <div class="setup__steps">
+      <pre class="language-typescript">
+<span class="setup__step">To get started with development:</span>
+<code class="yaml language-typescript">
+  <span>git clone https://github.com/codetheflow/skintest-starter.git
+cd skintest-starter
+npm i</span>
+  <input class="btn-copy" onclick="onCopyText(event)" type="text" value="git clone https://github.com/codetheflow/skintest-starter.git
+  cd skintest-starter
+  npm i"></input>
+  <span class="setup__tooltip tooltip">Copied!</span>
+</code>
+<span class="setup__step">In the first terminal:</span>
+<code class="yaml language-typescript">
+  <span>nmp run build:watch</span>
+  <input class="btn-copy" onclick="onCopyText(event)" type="text" value="nmp run build:watch"></input>
+  <span class="setup__tooltip tooltip">Copied!</span>
+</code>
+<span class="setup__step">In the second terminal:</span>
+<code class="yaml language-typescript">
+  <span>nmp run start:watch</span>
+  <input class="btn-copy" onclick="onCopyText(event)" type="text" value="nmp run start:watch"></input>
+  <span class="setup__tooltip tooltip">Copied!</span>
+</code>
+      </pre>
+    </div>
+  </div>
+</section>
+
+<section class="example">
+  <h2 class="title title-secondary">Coding and test run example</h2>
+  <div class="example__video overlay" id="video-container">
+    <video id="video">
+      <source src="assets/video/batch-update.mp4" type="video/mp4" />
+    </video>
+    <button class="example__play" id="start" type="button"></button>
+    <button class="example__play" id="pause" type="button" disabled></button>
+    <div class="progressbar" id="progressbar">
+      <div class="progressbar__loading" id="loadingprogress"></div>
+      <div class="progressbar__butterfly" id="butterfly"></div>
+   </div>
+  </div>
+</section>
+
+<section class="helper">
+  <h2 class="title title-secondary title-helper">Language that helps to develop</h2>
+  <div class="wrapper wrapper-helper">
+    <div class="helper__code">
+
+      <pre class="language-typescript">
+        <code class="yaml language-typescript">
+<span><span class="token function">feature</span>('todos add')</span>
+
+  <span>.<span class="token function">before</span>('scenario'</span>
+    <span>, I.<span class="token function">open</span>(page.start)</span>
+    <span>, I.<span class="token function">open</span>(todos.url)</span>
+    <span>, I.<span class="token function">open</span>(clear_todos)</span>
+  <span>)</span>
+
+  <span>.<span class="token function">scenario</span>(‘ check the list has all added items’</span>
+    <span>, I.<span class="token function">do</span>(add_todo, ‘learn testing’)</span>
+    <span>, I.<span class="token function">do</span>(add_todo, ‘be cool’)</span>
+    <span>, I.<span class="token function">test</span>(‘list contains added items’)</span>
+    <span>, I.<span class="token function">see</span>(todos.list, has.lenght, <span class="token number">2</span>)</span>
+    <span>, I.<span class="token function">see</span>(todos.<span class="token function">item_label_at</span>(<span class="token number">0</span>), has.text, ‘learn testing’)</span>
+    <span>, I.<span class="token function">see</span>(todos.<span class="token function">item_label_at</span>(<span class="token number">1</span>), has.text, ‘be cool’)</span>
+  <span>)</span>
+        </code>
+      </pre>
+    </div>
+    <ul class="helper__list">
+      <li class="helper__point helper__point-execution"><span>Transparent</span></li>
+      <li class="helper__point helper__point-safty"><span>Type safety</span></li>
+      <li class="helper__point helper__point-api"><span>Unified APIs</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <h2 class="title title-secondary">Price for support</h2>
+  <div class="support__billtype">
+    <label class="support__checkbox">
+      <input type="checkbox" id="support-type" name="support-type" checked>
+      <span class="support__type support__type-monthly">Bill Monthly</span>
+      <span class="support__type support__type-annually">Annually</span>
+    </label>
+  </div>
+  <div class="support__cards wrapper">
+    <article class="card">
+      <h3 class="card__title">
+        <span class="card__sup">free</span>
+        <span>$0<span>
+      </h3>
+      <div class="card__wrapper">
+        <ul class="card__list">
+          <li class="card__point">Community support</li>
+          <li class="card__point">No limits for the public projects</li>
+          <li class="card__point">CI\CD integrations</li>
+          <li class="card__point">Parallelization</li>
+          <li class="card__point">Debugging</li>
+          <li class="card__point">Flake detection</li>
+          <li class="card__point">Local reporting</li>
+          <li class="card__point">All browsers support</li>
+        </ul>
+        <a class="card__btn btn btn-secondary" href="#"><span>Go to GITHUB</span></a>
+      </div>
+    </article>
+    <article class="card card-marked">
+      <h3 class="card__title">
+        <span class="card__sup">TEAM</span>
+        <span>$90<sup><span>$</span>23</sup><span>
+        <span class="card__sale">You save 30% per year</span>
+      </h3>
+      <div class="card__wrapper">
+        <ul class="card__list">
+          <li class="card__point">Email reporting</li>
+          <li class="card__point">Telegram integration</li>
+          <li class="card__point">Screenshots and videos on fail</li>
+          <li class="card__point">Common recipes</li>
+          <li class="card__point">Smart assertions</li>
+          <li class="card__point">Test data utilities</li>
+          <li class="card__point">Smart runners</li>
+        </ul>
+        <a class="card__btn btn btn-primary" href="#"><span>Become a Member</span></a>
+      </div>
+    </article>
+    <article class="card">
+      <h3 class="card__title">
+        <span class="card__sup">Enterprise</span>
+        <span>$350<sup><span>$</span>23</sup><span>
+          <span class="card__sale">You save 30% per year</span>
+      </h3>
+      <div class="card__wrapper">
+        <ul class="card__list">
+          <li class="card__point">First access to latest features</li>
+          <li class="card__point">Direct impact on platform</li>
+          <li class="card__point">Invite to core team telegram channel</li>
+          <li class="card__point">Step recorder</li>
+          <li class="card__point">Analytics [coming soon]</li>
+          <li class="card__point">Jira integration [coming soon]</li>
+          <li class="card__point">Teams and slack integration [coming soon]</li>
+          <li class="card__point">sso [coming soon]</li>
+        </ul>
+        <a class="card__btn btn btn-secondary" href="#">
+          <span>Become a Member</span>
+        </a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="additional">
+  <h2 class="title title-secondary">One more thing about skintest</h2>
+  <ul class="additional__list wrapper">
+    <li class="additional__point additional__point-support">Easy to support</li>
+    <li class="additional__point additional__point-execution">Parallel execution</li>
+    <li class="additional__point additional__point-ready">CI/CD ready</li>
+    <li class="additional__point additional__point-architecture">Solid architecture</li>
+    <li class="additional__point additional__point-playright">Based on Playwright</li>
+    <li class="additional__point additional__point-opensource">Open source</li>
+  </ul>
+</section>
+    </main>
+
+    <footer class="container container-footer">
+      <section class="contact">
+  <h3 class="title title-third">Still have questions?</h3>
+  <span class="contact__subtitle">Email us if you have a problem or just want to chat.</span>
+  <a class="contact__link"
+     href="mailto:hello@skintest.io">hello@skintest.io</a>
+</section>
+
+
+
+<nav class="footer__nav wrapper">
+  <picture>
+    <source srcset="/assets/images/logo_mobile.svg" media="only screen and (max-width: 768px)">
+      <img src="/assets/images/logo.svg" alt="Skintest logo">
+   </picture>
+
+  <div class="footer__links">
+    <a href="/guide">
+      Documentation
+    </a>
+    <a href="mailto:hello@skintest.io">
+      Email us
+    </a>
+  </div>
+
+  <ul class="social wrapper">
+    <li class="social__item social__item-playwright"><a href="#">Playwright</a></li>
+    <li class="social__item social__item-npm"><a href="#">npm</a></li>
+    <li class="social__item social__item-github"><a href="#">github</a></li>
+    <li class="social__item social__item-telegram"><a href="#">telegram</a></li>
+    <li class="social__item social__item-youtube"><a href="#">youtube</a></li>
+  </ul>
+</nav>
+
+<span class="footer__copyright">© 2021 Skintest.io. All Rights Reserved.</span>
+    </footer>
+</body>
+
+</html>
