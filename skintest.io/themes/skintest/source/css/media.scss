@@ -23,12 +23,8 @@
     }
 
     &-steps {
+      @include scrollBarStyling;
       overflow-x: auto;
-
-      &::-webkit-scrollbar {
-        height: 4px;
-        background-color: $mobile-nav-color;
-      }
     }
   }
 
@@ -42,7 +38,7 @@
 
     &::after {
       @include square(85px);
-      top: -56px;
+      bottom: -46px;
     }
   }
 
@@ -132,6 +128,7 @@
   .support {
     &__cards {
       flex-direction: column;
+      align-items: center;
     }
 
     &__billtype {
@@ -144,16 +141,24 @@
     margin: 0 0 32px 0;
     padding: 32px 50px;
     width: 100%;
+    width: 688px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     &__title {
       margin: 0;
-      padding: 0 50px 40px 0;
+      padding: 0 35px 0 0;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
 
       &::after {
         right: 0;
         left: auto;
         top: 0;
-        height: 100%;
+        height: auto;
         width: 1px;
       }
     }
@@ -163,21 +168,26 @@
       display: none;
     }
 
+    &__sale {
+      max-width: 125px;
+      margin-top: 0;
+    }
+
     &__wrapper {
       display: flex;
       flex-direction: column;
     }
 
     &__list {
-      @include flexStylingSet(flex, center, space-between);
+      @include flexStylingSet(flex, flex-start, space-between);
       flex-wrap: wrap;
-      padding-left: 50px;
+      padding-left: 24px;
       margin-bottom: 12px;
     }
 
     &__btn {
-      margin-left: 50px;
-      padding: 19px 13px;
+      margin-left: 24px;
+      max-width: fit-content;
     }
 
     &__point {
@@ -201,6 +211,7 @@
 
     &__list {
       width: 100%;
+      max-width: 688px;
       padding: 0 15px;
     }
   }
@@ -213,6 +224,11 @@
 
   .guide {
     margin-bottom: 120px;
+
+    &__container {
+      @include scrollBarStyling;
+      overflow: auto;
+    }
 
     &__article {
       padding-left: 40px;
@@ -315,13 +331,9 @@
     }
 
     &-helper {
+      @include scrollBarStyling;
       flex-direction: column-reverse;    
       overflow-x: auto;
-
-      &::-webkit-scrollbar {
-        height: 4px;
-        background-color: $mobile-nav-color;
-      }
     }
 
     &-steps {
@@ -409,16 +421,12 @@
     }
 
     &__steps {
+      @include scrollBarStyling;
       width: 100%;
       height: 412px;
       min-width: 600px;
       overflow-x: auto;
       overflow-y: hidden;
-
-      &::-webkit-scrollbar {
-        height: 4px;
-        background-color: $mobile-nav-color;
-      }
     }
   }
 
@@ -486,10 +494,11 @@
 
   .card {
     flex-direction: column;
-    padding: 32px 32px 12px 32px;
+    padding: 32px 32px 32px 32px;
+    width: auto;
 
     &__title {
-      padding: 0 0 44px 0;
+      padding: 0 0 24px 0;
       margin-bottom: 24px;
 
       &::after {
@@ -500,17 +509,25 @@
       }
     }
 
+    &__sale {
+      max-width: 100%;
+    }
+
     &__sup {
       margin-bottom: 9px;
     }
 
     &__list {
       padding: 0;
-      margin: 0;
+      margin: 0 0 24px 0;
     }
 
     &__point {
       width: 100%;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
 
     &__btn {
@@ -588,12 +605,8 @@
   }
 
   .guide {
+    @include scrollBarStyling;
     overflow-x: auto;
-
-    &::-webkit-scrollbar {
-      height: 4px;
-      background-color: $mobile-nav-color;
-    }
 
     &__article {
       padding-left: 0;

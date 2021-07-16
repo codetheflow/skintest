@@ -4,8 +4,6 @@ title: Architecture
 date: 2021-06-25 11:43:53
 ---
 
-
-
 * [Architecture](#Architecture)
 * [Features and scenarios](#Features-and-scenarios)
 * [Multi page support](#Multi-page-support)
@@ -29,7 +27,7 @@ date: 2021-06-25 11:43:53
 
 <div class="guide__article">
 
-## <a name="Architecture">Architecture</a> <input class="btn-copy" onclick="onCopyText(event)" type="text" value="#Architecture"></input> 
+## <a name="Architecture">Architecture</a> <input class="btn-copy" onclick="onCopyText(event)" type="text" value="skintest.io/guide#Architecture"></input> 
 
 
 Architecture (Latin architectura, from the Greek ἀρχιτέκτων arkhitekton "architect", from ἀρχι- "chief" and τέκτων "creator") is both the process and the product of planning, designing, and constructing buildings or other structures.[3] Architectural works, in the material form of buildings, are often perceived as cultural symbols and as works of art. Historical civilizations are often identified with their surviving architectural achievements.[4]
@@ -38,7 +36,7 @@ The practice, which began in the prehistoric era, has been used as a way of expr
 
 Architecture began as rural, oral vernacular architecture that developed from trial and error to successful replication. Ancient urban architecture was preoccupied with building religious structures and buildings symbolizing the political power of rulers until Greek and Roman architecture shifted focus to civic virtues. Indian and Chinese architecture influenced forms all over Asia and Buddhist architecture in particular took diverse local flavors. During the European Middle Ages, pan-European styles of Romanesque and Gothic cathedrals and abbeys emerged while the Renaissance favored Classical forms implemented by architects known by name. Later, the roles of architects and engineers became separated. Modern architecture began after World War I as an avant-garde movement that sought to develop a completely new style appropriate for a new post-war social and economic order focused on meeting the needs of the middle and working classes. Emphasis was put on modern techniques, materials, and simplified geometric forms, paving the way for high-rise superstructures. Many architects became disillusioned with modernism which they perceived as ahistorical and anti-aesthetic, and postmodern and contemporary architecture developed.
 
-## <a name="Features-and-scenarios">Features and scenarios</a><input class="btn-copy" onclick="onCopyText(event)" type="text" value="#Features-and-scenarios"></input> 
+## <a name="Features-and-scenarios">Features and scenarios</a><input class="btn-copy" onclick="onCopyText(event)" type="text" value="skintest.io/guide#Features-and-scenarios"></input> 
 
 Architecture (Latin architectura, from the Greek ἀρχιτέκτων arkhitekton "architect", from ἀρχι- "chief" and τέκτων "creator") is both the process and the product of planning, designing, and constructing buildings or other structures.[3] Architectural works, in the material form of buildings, are often perceived as cultural symbols and as works of art. Historical civilizations are often identified with their surviving architectural achievements.
 
@@ -53,7 +51,7 @@ Architecture (Latin architectura, from the Greek ἀρχιτέκτων arkhitekt
   )
 ```
 
-## <a name="Multi-page-support">Multi page support</a><input class="btn-copy" onclick="onCopyText(event)" type="text" value="#Multi-page-support"></input> 
+## <a name="Multi-page-support">Multi page support</a><input class="btn-copy" onclick="onCopyText(event)" type="text" value="skintest.io/guide#Multi-page-support"></input> 
 
 Architecture (Latin architectura, from the Greek ἀρχιτέκτων arkhitekton "architect", from ἀρχι- "chief" and τέκτων "creator") is both the process and the product of planning, designing, and constructing buildings or other structures.[3] Architectural works, in the material form of buildings, are often perceived as cultural symbols and as works of art. Historical civilizations are often identified with their surviving architectural achievements.
 
