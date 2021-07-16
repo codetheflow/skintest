@@ -26,3 +26,10 @@
   align-items: $flex-ai;
   justify-content: $flex-jc;
 }
+
+@mixin scrollBarStyling { 
+  &::-webkit-scrollbar {
+    height: 4px;
+    background-color: $mobile-nav-color;
+  }
+}
