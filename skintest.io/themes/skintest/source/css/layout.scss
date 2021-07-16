@@ -233,6 +233,7 @@ code[class*="language-"] ::selection {
 
 .features {
   align-items: flex-start;
+  justify-content: center;
 
   &__item {
     max-width: 258px;
