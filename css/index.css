@@ -200,7 +200,8 @@ code[class*="language-"] ::selection {
   margin: 0 0 40px 0; }
 
 .features {
-  align-items: flex-start; }
+  align-items: flex-start;
+  justify-content: center; }
   .features__item {
     max-width: 258px;
     padding: 0 45px; }
@@ -982,7 +983,7 @@ pre[class*="language-"] {
     .wrapper-title::after {
       width: 85px;
       height: 85px;
-      top: -56px; }
+      bottom: -46px; }
   .title-main {
     font-size: 60px;
     max-width: 613px; }
@@ -1030,39 +1031,49 @@ pre[class*="language-"] {
     margin-right: auto;
     margin-left: auto; }
   .support__cards {
-    flex-direction: column; }
+    flex-direction: column;
+    align-items: center; }
   .support__billtype {
     margin-bottom: 40px; }
   .card {
     display: flex;
     margin: 0 0 32px 0;
     padding: 32px 50px;
-    width: 100%; }
+    width: 100%;
+    width: 688px; }
+    .card:last-child {
+      margin-bottom: 0; }
     .card__title {
       margin: 0;
-      padding: 0 50px 40px 0; }
+      padding: 0 35px 0 0;
+      display: flex;
+      justify-content: center;
+      flex-direction: column; }
       .card__title::after {
         right: 0;
         left: auto;
         top: 0;
-        height: 100%;
+        height: auto;
         width: 1px; }
     .card__sale,
     .card sup {
       display: none; }
+    .card__sale {
+      max-width: 125px;
+      margin-top: 0; }
     .card__wrapper {
       display: flex;
       flex-direction: column; }
     .card__list {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       flex-wrap: wrap;
-      padding-left: 50px;
+      padding-left: 24px;
       margin-bottom: 12px; }
     .card__btn {
-      margin-left: 50px;
-      padding: 19px 13px; }
+      margin-left: 24px;
+      max-width: fit-content; }
     .card__point {
       width: 188px;
       margin-bottom: 20px; }
@@ -1074,6 +1085,7 @@ pre[class*="language-"] {
     margin-bottom: 7px; }
   .additional__list {
     width: 100%;
+    max-width: 688px;
     padding: 0 15px; }
   .contact__subtitle {
     font-size: 22px;
@@ -1081,6 +1093,11 @@ pre[class*="language-"] {
     font-weight: 400; }
   .guide {
     margin-bottom: 120px; }
+    .guide__container {
+      overflow: auto; }
+      .guide__container::-webkit-scrollbar {
+        height: 4px;
+        background-color: #272727; }
     .guide__article {
       padding-left: 40px; }
     .guide__aside {
@@ -1243,22 +1260,27 @@ pre[class*="language-"] {
     left: 98px; }
   .card {
     flex-direction: column;
-    padding: 32px 32px 12px 32px; }
+    padding: 32px 32px 32px 32px;
+    width: auto; }
     .card__title {
-      padding: 0 0 44px 0;
+      padding: 0 0 24px 0;
       margin-bottom: 24px; }
       .card__title::after {
         width: 100%;
         height: 1px;
         top: unset;
         bottom: 0; }
+    .card__sale {
+      max-width: 100%; }
     .card__sup {
       margin-bottom: 9px; }
     .card__list {
       padding: 0;
-      margin: 0; }
+      margin: 0 0 24px 0; }
     .card__point {
       width: 100%; }
+      .card__point:last-child {
+        margin-bottom: 0; }
     .card__btn {
       max-width: 100%;
       margin-left: 0;
