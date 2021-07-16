@@ -26,7 +26,7 @@ export class Tidy {
       return;
     }
 
-    throw errors.constraint(`resource ${qte('' + resource)} is not a tidy`);
+    throw errors.invalidOperation(`resource ${qte('' + resource)} is not a tidy`);
   }
 
   async run(): Promise<void> {

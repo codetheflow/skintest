@@ -1,19 +1,42 @@
 # NOTES
 
 ### hmr
+* ops, NO_IO - check/assert/dev/info, 
+** mov: op NO_IO - nothing, IO - if between oldIndex and newIndex there are only NO_IO steps - nothing, else exit
 
-* use #hmr/#now tag in particular scenario to stop and continue
-* `stop` is an end of the scenario or error in the scenario, browser and page are not closing
-* only one #hmr/#now tag can be in the suite
-* save `stop` location in memory
-* watch file change in the scenario file and all it's imports
-* on file change:
-1. if not scenario file was changed(one of the imports) - hard rerun whole scenario
-2. if scenario file was changed calculate scenario diff:
-3. if `diff` is green(previous `stop` is bellow diff) - run diff steps
-4. if `diff` is red(previous `stop` is above diff) - hard rerun whole scenario
-5. if `no diff` - do nothing 
-* if scenario name was changed - hard rerun whole suite
+
+* if op.index < step
+** del: op`NO_IO - nothing, IO - exit
+** add: op`NO_IO - nothing, IO - exit
+
+* if op.oldIndex < step
+** mov: op`NO_IO - if newIndex is greater or eq than step then append, else nothing, IO - if between oldIndex and newIndex there are only NO_IO steps - nothing, else exit
+
+* if op.oldIndex > step
+** mov: invalid operation
+
+* if op.oldIndex == step
+** mov: op`NO_IO - if newIndex is greater than step then append, else nothing, IO - if between oldIndex and newIndex there are only NO_IO steps - nothing, else exit
+
+* if op > step
+** del: invalid operation
+** add: append to the current steps
+
+* if op == step
+** del: op`NO_IO - nothing, IO - exit if cmd was CLIENT and succeed 
+** add: nothing
+
+a    a     
+b    c
+c    d
+     b  
+
+[c, d]
+[d]
+
+a   c
+b 
+c
 
 ### cli
 

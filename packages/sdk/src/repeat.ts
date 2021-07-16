@@ -25,7 +25,7 @@ export class RepeatYield implements RepeatRead, RepeatWrite {
 
   current(): RepeatEntry {
     if (!this.entry) {
-      throw errors.constraint('till.yield can be used only in conjunction with till(`message`) step');
+      throw errors.invalidOperation('till.yield can be used only in conjunction with till(`message`) step');
     }
 
     return this.entry as RepeatEntry;

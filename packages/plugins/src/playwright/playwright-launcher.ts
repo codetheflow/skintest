@@ -42,7 +42,7 @@ export function playwrightLauncher(...use: PlaywrightMiddlewareUse<any>[]): Laun
         .accept('browser:type', { types: [pw.chromium] });
 
       if (!browserTypes.length) {
-        throw errors.constraint('at least one browser type should be defined');
+        throw errors.invalidOperation('at least one browser type should be defined');
       }
 
       return browserTypes.map(browserType => async () => {

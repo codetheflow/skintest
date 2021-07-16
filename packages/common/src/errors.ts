@@ -17,6 +17,9 @@ export const errors = {
   invalidArgument<T = unknown>(name: string, value: T): Exception {
     return error('invalidArgument', `${qte(name)} with value ${qte('' + value)}`);
   },
+  invalidOperation(message: string): Exception {
+    return error('invalidOperation', message);
+  },
   undefined(name: string): Exception {
     return error('undefined', name);
   },

@@ -12,8 +12,8 @@ export function my(keys: TemplateStringsArray, ...args: any[]): string {
   return value;
 }
 
-my.prefix = '#e2e';
-my.stamp = Symbol('skintest.my.stamp');
+my.prefix = 'e2e';
+my.stamp = Symbol('@skintest/enterprise/my/stamp');
 
 my.clear = clear;
 my.raw = raw;

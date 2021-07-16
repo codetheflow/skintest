@@ -77,6 +77,10 @@ export interface CommandBody<D> {
   token?: D;
 
   execute(context: StepContext): Promise<StepExecutionResult>;
+
+  /**
+   * Calculates only once
+   */
   getMeta(): Promise<Meta>;
   toString(): string;
 }

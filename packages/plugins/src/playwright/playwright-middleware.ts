@@ -51,7 +51,7 @@ export class PlaywrightMiddleware {
   async accept<S extends PlaywrightMiddlewareSite>(site: S, context: Parameters<PlaywrightMiddlewareCatalog[S]>[0]): Promise<ReturnType<PlaywrightMiddlewareCatalog[S]>> {
     const useList = this.middlewareList.filter(x => x.site === site);
     if (useList.length === 0) {
-      throw errors.constraint(`at least one middleware of type ${site} should be presented`);
+      throw errors.invalidOperation(`at least one middleware of type ${site} should be presented`);
     }
 
     let state;

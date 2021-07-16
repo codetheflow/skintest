@@ -52,7 +52,7 @@ class ProjectSuite implements Suite {
 
   editScript(script: Script): ScriptBuilder {
     if (!this.scripts.includes(script)) {
-      throw errors.constraint(`script ${qte(script.name)} is not found`);
+      throw errors.invalidOperation(`script ${qte(script.name)} is not found`);
     }
 
     return new ProjectScriptBuilder(this, script as RuntimeScript);
@@ -101,7 +101,7 @@ class ProjectScriptBuilder implements ScriptBuilder {
     const getScenarioIndex = (scenario: string) => {
       const index = script.scenarios.findIndex(x => x.name === scenario);
       if (index < 0) {
-        throw errors.constraint(`${qte(scenario)} is not found in ${qte(script.name)}`);
+        throw errors.invalidOperation(`${qte(scenario)} is not found in ${qte(script.name)}`);
       }
 
       return index;

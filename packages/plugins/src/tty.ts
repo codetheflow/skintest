@@ -57,7 +57,7 @@ export const tty = {
   },
 
   replaceLine(stream: WriteStream, ...text: string[]): void {
-    stream.clearScreenDown();
+    stream.clearLine(-1);
 
     const line = text.join('');
     stream.write(tty.CARET + line);
