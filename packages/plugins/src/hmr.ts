@@ -76,7 +76,7 @@ export function hmr(options: HMROptions): Plugin {
               .find(x => x.name === scenario.name);
 
             if (!hotScenario) {
-              exit(`scenario ${qte(scenario.name)} is not found,`);
+              exit(`scenario ${qte(scenario.name)} is not found`);
               return;
             }
 

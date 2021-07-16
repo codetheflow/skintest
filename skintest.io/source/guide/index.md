@@ -41,7 +41,7 @@ Architecture began as rural, oral vernacular architecture that developed from tr
 Architecture (Latin architectura, from the Greek ἀρχιτέκτων arkhitekton "architect", from ἀρχι- "chief" and τέκτων "creator") is both the process and the product of planning, designing, and constructing buildings or other structures.[3] Architectural works, in the material form of buildings, are often perceived as cultural symbols and as works of art. Historical civilizations are often identified with their surviving architectural achievements.
 
 ```typescript
-  .scenario(‘ check the list has all added items’
+  .scenario(‘check the list has all added items’
     , I.do(add_todo, ‘learn testing’)
     , I.do(add_todo, ‘be cool’)
     , I.test(‘list contains added items’)
