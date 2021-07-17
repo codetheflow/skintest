@@ -1,4 +1,4 @@
-name: azure-static-web-apps-BLACK_DUNE_08792BA03
+name: azure-static-web-apps-black-dune
 
 on:
   push:
@@ -7,13 +7,10 @@ on:
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

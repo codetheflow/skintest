@@ -17,7 +17,7 @@ date: 2021-06-25 11:43:53
 * [Test data](#Test-data)
 * [Secrets and environment](#Secrets-and-environment)
 * [Reporting](#Reporting)
-* [Iframes](#Iframes)
+* [IFrames](#IFrames)
 * [Shadow dom](#Shadow-dom)
 * [Parallel execution](#Parallel-execution)
 * [Browser-support](#Browser-support)
