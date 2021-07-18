@@ -41,8 +41,8 @@ export const errors = {
   callerNotFound(site: string): Exception {
     return error('callerNotFound', `here ${site}`);
   },
-  timeout(source: string, ex?: Error): Exception {
-    return error('timeout', `${source} timeout exceed`, ex);
+  timeout(source: string, value: number | 'unknown', ex?: Error): Exception {
+    return error('timeout', `${source} timeout exceed ${value}ms`, ex);
   },
   constraint(message: string): Exception {
     return error('constraint', message);

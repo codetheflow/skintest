@@ -38,12 +38,6 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
   tty.test(stdout);
 
   return async (stage: OnStage) => stage({
-    'project:mount': async () => {
-      tty.newLine(stdout);
-    },
-    'project:unmount': async () => {
-      tty.newLine(stdout);
-    },
     'feature:before': async ({ script }) => {
       const info = await script.getMeta();
       tty.newLine(stdout, tty.h1(info.file + `:${info.line}:${info.column}`));
@@ -91,8 +85,8 @@ export function ttyReport(options?: Partial<TTYReportOptions>): Plugin {
       // todo: make it better
       if (isObject(reason) && 'status' in reason
         && (command.type === 'do'
-          || step.toString().startsWith('perform')
-          || step.toString().startsWith('event'))) {
+          || command.toString().startsWith('perform')
+          || command.toString().startsWith('event'))) {
         // inner error was shown, there is no need to duplicate it here
         return;
       }

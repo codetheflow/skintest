@@ -31,7 +31,7 @@ const launcher = playwrightLauncher(
 nodePlatform(...plugins)
   .then(platform =>
     exploreNodeProjects(PROJECTS_FOLDER)
-      .filter(uri => /todo/.test(uri))
+     // .filter(uri => /qgrid/.test(uri))
       .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
       .finally(() => platform.destroy())
   )

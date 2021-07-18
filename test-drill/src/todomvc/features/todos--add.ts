@@ -15,7 +15,7 @@ feature()
   )
 
   .scenario('#now check the input field should be in focus on initial load'
-  , I.click($todos.what)
+    , I.click($todos.what)
     , I.check('focus in the input field')
     , I.see($todos.what, has.state, 'focused')
     , I.see($todos.what, has.state, 'disabled')

@@ -80,7 +80,7 @@ export function ttySummaryReport(): Plugin {
         }
       });
 
-      stdout.write(table(statistics, config));
+      tty.newLine(stdout, table(statistics, config));
 
       if (issues.length) {
         tty.newLine(stdout, tty.fail('FAILURES:'));

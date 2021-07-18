@@ -3,12 +3,8 @@ import { OnStage, Plugin } from '@skintest/platform';
 import { RuntimeScript, Suite } from '@skintest/sdk';
 import * as glob from 'glob';
 import * as path from 'path';
-import { stdout } from 'process';
-import { tty } from './tty';
 
 export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
-  tty.test(stdout);
-
   return (stage: OnStage) => stage({
     'project:mount': async ({ suite }) => {
       const cwd = path.join(suite.uri, 'features');
@@ -16,7 +12,6 @@ export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
       const files: string[] = [];
       patterns.forEach(x => files.push(...glob.sync(x, { cwd })));
 
-      tty.newLine(stdout, tty.h1(`probe ${files.length} feature(s)`));
       for (const file of files) {
         const featurePath = path.join(cwd, file);
 
@@ -26,8 +21,6 @@ export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
         ]);
 
         await sink.begin();
-
-        tty.newLine(stdout, tty.h2(featurePath));
 
         require(featurePath);
 

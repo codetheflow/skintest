@@ -84,7 +84,7 @@ export function hmr(options: HMROptions): Plugin {
               .then(right => {
                 const ops = compare(left, right, lineEquals);
                 if (!ops.length) {
-                  debug('no diff, wait for changes');
+                  debug('no changes, wait - CTRL+C to exit');
                   return;
                 }
 
@@ -154,7 +154,7 @@ export function hmr(options: HMROptions): Plugin {
 
                   proceed();
                 } else {
-                  debug('no diff, wait for changes');
+                  debug('no changes, wait - CTRL+C to exit');
                 }
               });
 
@@ -170,7 +170,7 @@ export function hmr(options: HMROptions): Plugin {
         const isLast = index === steps.length - 1;
         if (isLast) {
           tty.newLine(stdout);
-          debug('wait for changes');
+          debug('wait for changes - CTRL+C to exit');
 
           return new Promise((resolve) => {
             wait = {

@@ -19,7 +19,10 @@ export async function playwrightAction<T>(source: string, action: () => Promise<
   }
   catch (ex) {
     if (ex instanceof pw.errors.TimeoutError) {
-      throw errors.timeout(source, ex);
+      const re = /Timeout ([0-9]+)ms exceeded/;
+      const xs = re.exec(ex.message);
+      const value = xs ? Number.parseInt(xs[1]) : 'unknown';
+      throw errors.timeout(source, value, ex);
     }
 
     // remove logs from the playwright errors
