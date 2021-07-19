@@ -23,8 +23,6 @@ date: 2021-06-25 11:43:53
 * [Browser-support](#Browser-support)
 * [CI\CD](#CI\CD)
 
-
-
 <div class="guide__article">
 
 ## Architecture
