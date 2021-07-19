@@ -5,13 +5,14 @@
      href="mailto:hello@skintest.io">hello@skintest.io</a>
 </section>
 
-
-
 <nav class="footer__nav wrapper">
-  <picture>
-    <source srcset="<%- url_for('/assets/images/logo_mobile.svg') %>" media="only screen and (max-width: 768px)">
+  <a class="footer__logo logo"
+  href="<%- url_for('/') %>">
+    <picture>
+      <source srcset="<%- url_for('/assets/images/logo_mobile.svg') %>" media="only screen and (max-width: 768px)">
       <img src="<%- url_for('/assets/images/logo.svg') %>" alt="Skintest logo">
    </picture>
+  </a>
 
   <div class="footer__links">
     <a href="<%- url_for('guide') %>">

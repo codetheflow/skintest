@@ -3,6 +3,11 @@
     margin-bottom: 160px;
   }
 
+  .overflow {
+    @include scrollBarStyling;
+    overflow: auto;
+  }
+
   .container {
     max-width: 100%;
     padding: 0 40px;
@@ -20,11 +25,6 @@
 
     &-helper {
       flex-direction: column-reverse;
-    }
-
-    &-steps {
-      @include scrollBarStyling;
-      overflow-x: auto;
     }
   }
 
@@ -225,13 +225,9 @@
   .guide {
     margin-bottom: 120px;
 
-    &__container {
-      @include scrollBarStyling;
-      overflow: auto;
-    }
-
     &__article {
       padding-left: 40px;
+      width: calc(100vw - 362px);
     }
 
     &__aside {
@@ -281,12 +277,6 @@
   }
 }
 
-@media only screen and (max-width: 892px) {
-  .setup__point .setup__num {
-    opacity: 0;
-  }
-}
-
 @media only screen and (max-width: 768px) {
   .btn {
     font-size: 12px;
@@ -301,10 +291,19 @@
     margin-bottom: 90px;
   }
 
+  .additional__list {
+    margin-right: 0;
+    padding: 0;
+  }
+
   .header {
     &__nav {
       display: none;
     }
+  }
+
+  .logo.footer__logo {
+    margin: 0 auto 24px auto; 
   }
 
   .mobile {
@@ -331,13 +330,12 @@
     }
 
     &-helper {
-      @include scrollBarStyling;
-      flex-direction: column-reverse;    
-      overflow-x: auto;
+      flex-direction: column-reverse;
+      align-items: unset;
     }
 
     &-steps {
-      align-items: flex-start;
+      align-items: unset;
     }
 
     &-title {
@@ -409,10 +407,6 @@
 
     &__point {
       margin-bottom: 39px;
-
-      .setup__num {
-        opacity: 1;
-      }
     }
 
     &__num {
@@ -421,12 +415,9 @@
     }
 
     &__steps {
-      @include scrollBarStyling;
       width: 100%;
       height: 412px;
       min-width: 600px;
-      overflow-x: auto;
-      overflow-y: hidden;
     }
   }
 
@@ -449,7 +440,6 @@
   }
 
   .helper {
-    overflow-x: auto;
     &__point {
       @include fontStylingSet(15px, 26px, 400);
       width: 98px;
@@ -588,12 +578,24 @@
       margin-bottom: 24px;
       text-align: center;
     }
+
+    &__copyright {
+      margin: 24px 0 32px 0;
+    }
   }
 
-  .social.wrapper {
-    flex-direction: row;
-    max-width: 300px;
-    margin: 0 auto;
+  .social {
+    &.wrapper {
+      flex-direction: row;
+      max-width: 300px;
+      margin: 0 auto;
+      padding-left: 0;
+    }
+
+    &.mobile__social {
+      padding: 26px 10px 22px 10px;
+      box-sizing: border-box;
+    }
   }
 
   .contact {
@@ -605,11 +607,11 @@
   }
 
   .guide {
-    @include scrollBarStyling;
-    overflow-x: auto;
-
+    margin-bottom: 90px;
+    
     &__article {
       padding-left: 0;
+      width: calc(100vw - 20px);
     }
 
     ul {
@@ -618,6 +620,11 @@
 
     h2 {
       @include fontStylingSet(24px, 29px, 500);
+
+      &::before {
+        bottom: 28px;
+        left: 2px;
+      }
     }
 
     p {
