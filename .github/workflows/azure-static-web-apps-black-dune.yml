@@ -1,9 +1,10 @@
 name: azure-static-web-apps-black-dune
 
-on:
+on: 
   push:
     branches:
       - skintest.io
+  workflow_dispatch:
 
 jobs:
   build_and_deploy_job:
