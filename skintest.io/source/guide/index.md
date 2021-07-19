@@ -4,7 +4,7 @@ title: Architecture
 date: 2021-06-25 11:43:53
 ---
 
-* [Architecture](#Architecture) 
+* [Architecture](#Architecture)
 * [Features and scenarios](#Features-and-scenarios)
 * [Multi page support](#Multi-page-support)
 * [Component's eyes and selectors](#Component-eyes)
