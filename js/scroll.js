@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
   toggleMobileMenu();
   toggleMobileMenuList();
   toggleSupportType();
-  putCopyTextButton();
+  setCopyTextButton('.guide h2');
+  setCopyTextButton('code');
 });
 
 function setScrollToAnchor(button, target) {
@@ -111,13 +112,14 @@ function onCopyText(event) {
   setTimeout(() => event.target.parentNode.classList.remove('copied'), 1500);
 }
 
-function putCopyTextButton() {
-  const titles = document.querySelectorAll('.guide h2');
-  if (titles) {
-    for (var i = 0; i < titles.length; i++) {
-      const title = titles[i];
-      const copyBtnValue = title.id;
-      title.innerHTML += `<input class="btn-copy" onclick="onCopyText(event)" type="text" value="skintest.io/guide#${copyBtnValue}"></input>`;
+function setCopyTextButton(elementsForCopy) {
+  const items = document.querySelectorAll(elementsForCopy);
+  if (items) {
+    for (var i = 0; i < items.length; i++) {
+      const item = items[i];
+      const copyBtnValue =  elementsForCopy === 'code' ? item.innerText : item.id ;
+      item.innerHTML += `<input class="btn-copy" onclick="onCopyText(event)" type="text" value="skintest.io/guide#${copyBtnValue}"></input>
+      <span class="setup__tooltip tooltip">Copied!</span>`;
     }
   }
 }
