@@ -911,7 +911,7 @@ pre[class*="language-"] {
   background-color: #171717 !important;
   border: none !important;
   border-top: 40px solid #212121 !important;
-  margin: 0;
+  margin: 0 !important;
   padding: 16px !important;
   position: relative;
   overflow: visible !important; }
@@ -994,7 +994,7 @@ pre[class*="language-"] {
   section {
     margin-bottom: 160px; }
   .overflow {
-    overflow: auto; }
+    overflow-x: auto; }
     .overflow::-webkit-scrollbar {
       height: 6px;
       border-radius: 4px;
@@ -1258,7 +1258,8 @@ pre[class*="language-"] {
     height: 68px; }
   .example .progressbar {
     width: 100%;
-    top: unset; }
+    top: unset;
+    bottom: 0; }
   .helper__point {
     font-size: 15px;
     line-height: 26px;
@@ -1272,8 +1273,6 @@ pre[class*="language-"] {
   .helper__point-safty::before {
     width: 33px;
     height: 40px; }
-  .helper__code {
-    height: 430px; }
   .support__checkbox span {
     font-size: 14px; }
   .support__billtype {
