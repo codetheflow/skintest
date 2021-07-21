@@ -62,10 +62,31 @@ a:not(.btn) {
   border-radius: 8px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  position: relative;
+  transition: color .2s ease-in-out;
+  z-index: 1;
+
+  &::before {
+    border-radius: inherit;
+    background-image: $linear-gradient;
+    content: '';    
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0; 
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: -1;
+    transition: opacity .2s ease-in-out;
+  }
 
   &:hover {
-    background: $linear-gradient;
     color: $white;
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   &:active {
@@ -681,12 +702,24 @@ code[class*="language-"] ::selection {
     margin-top: 39px;
     background: $linear-gradient;
 
-    .btn.btn-primary:hover {
-      background: $dark-gray;
-      color: $white;
+    .btn.btn-primary {
+      transition: color .2s ease-in-out, background-color .2s ease-in-out;
 
       span::after {
-        background-image: url('../assets/images/skintest_arrow.svg');
+        transition: background-image .2s ease-in-out;
+      }
+
+      &:hover {
+        background-color: $dark-gray;
+        color: $white;
+  
+        &::before {
+          display: none;
+        }
+  
+        span::after {
+          background-image: url('../assets/images/skintest_arrow.svg');
+        }
       }
     }
 
