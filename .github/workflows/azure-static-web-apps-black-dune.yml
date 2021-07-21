@@ -1,7 +1,5 @@
 name: azure-static-web-apps-black-dune
-
 on: workflow_dispatch
-
 jobs:
   build_and_deploy_job:
     runs-on: ubuntu-latest
