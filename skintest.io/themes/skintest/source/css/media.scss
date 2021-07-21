@@ -83,7 +83,7 @@
 
   .setup {
     &__steps {
-      width: 545px;
+      @include fixedWidth(545px);
       height: 427px;
     }
 
@@ -359,7 +359,7 @@
 
   .title {
     &-main {
-      @include fontStylingSet(32px, 1.5, 700);
+      @include fontStylingSet(32px, 36px, 700);
       max-width: 267px;
       padding: 0 16px;
     }
@@ -415,7 +415,6 @@
     }
 
     &__steps {
-      width: 100%;
       height: 412px;
       min-width: 600px;
     }
@@ -462,8 +461,6 @@
     }
 
     &__code {
-      width: 100%;
-      min-width: 600px;
       height: 430px;
     }
   }
@@ -524,6 +521,13 @@
       max-width: 100%;
       margin-left: 0;
       text-align: center;
+      line-height: 16px;
+
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 
@@ -608,6 +612,7 @@
 
   .guide {
     margin-bottom: 90px;
+    padding-top: 27px;
     
     &__article {
       padding-left: 0;
