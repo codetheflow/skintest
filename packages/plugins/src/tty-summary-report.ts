@@ -1,6 +1,5 @@
 import { Meta, ticksToTime } from '@skintest/common';
-import { OnStage, Plugin } from '@skintest/platform';
-import { TestFail } from '@skintest/sdk';
+import { FeedbackResult, OnStage, Plugin } from '@skintest/platform';
 import { performance } from 'perf_hooks';
 import { getBorderCharacters, table, TableUserConfig } from 'table';
 import { tty } from './tty';
@@ -25,7 +24,7 @@ export function ttySummaryReport(): Plugin {
 
   const issues: Array<{
     stage: 'step' | 'project' | 'platform',
-    reason: TestFail | Error,
+    issuer: FeedbackResult['issuer'],
     feature?: string,
     scenario?: string,
     meta?: Meta
@@ -106,14 +105,16 @@ export function ttySummaryReport(): Plugin {
       const row = currentRow();
       row[TIME_COL] = tty.info(ticksToTime(performance.now() - (row[TIME_COL] as number)));
     },
-    'step:fail': async ({ reason, script, scenario, step }) => {
-      const [_, command] = step;
+    'step': async ({ feedback, script, scenario, step }) => {
+      const [, command] = step;
+      const { issuer } = await feedback.get();
       const meta = await command.getMeta();
+
       issues.push({
         stage: 'step',
         feature: script.name,
         scenario: scenario.name,
-        reason,
+        issuer,
         meta
       });
 
@@ -126,7 +127,7 @@ export function ttySummaryReport(): Plugin {
     'project:error': async ({ reason }) => {
       issues.push({
         stage: 'project',
-        reason
+        issuer: [reason]
       });
     },
     'platform:error': async ({ reason }) => {
@@ -134,7 +135,7 @@ export function ttySummaryReport(): Plugin {
         stage: 'platform',
         feature: '',
         scenario: '',
-        reason
+        issuer: [reason]
       });
     },
     'scenario:before': async () => {

@@ -19,7 +19,6 @@ export class ColumnDirective implements OnInit {
   ngOnInit(): void {
     // todo: change to ngOnChanges
 
-    // exercise comment:
     // for simplicity we use onInit instead of ngChanges
     // and `this` as a meta info container
     if (!this.key) {

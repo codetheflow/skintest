@@ -37,7 +37,7 @@ export function hmr(options: HMROptions): Plugin {
         };
 
         const exit = (message: string) => {
-          debug(message + ', exit');
+          info(message + ', exit');
 
           tidy.run();
           proceed();
@@ -59,7 +59,7 @@ export function hmr(options: HMROptions): Plugin {
             delete require.cache[script.path];
 
             try {
-              debug('module reload');
+              info('module reload');
               require(script.path);
             } finally {
               dispose();
@@ -84,7 +84,7 @@ export function hmr(options: HMROptions): Plugin {
               .then(right => {
                 const ops = compare(left, right, lineEquals);
                 if (!ops.length) {
-                  debug('no changes, wait - CTRL+C to exit');
+                  info('no changes, wait - CTRL+C to exit');
                   return;
                 }
 
@@ -104,7 +104,7 @@ export function hmr(options: HMROptions): Plugin {
                     }
                     case 'del': {
                       if (op.leftIndex > cursor) {
-                        throw errors.invalidOperation(`unexpected del op`);
+                        throw errors.invalidOperation('unexpected del op');
                       }
 
                       if (notPure(op.leftItem)) {
@@ -116,7 +116,7 @@ export function hmr(options: HMROptions): Plugin {
                     }
                     case 'mov': {
                       if (op.leftIndex > cursor) {
-                        throw errors.invalidOperation(`unexpected mov op`);
+                        throw errors.invalidOperation('unexpected mov op');
                       }
 
                       if (notPure(op.leftItem)) {
@@ -142,7 +142,7 @@ export function hmr(options: HMROptions): Plugin {
 
                 left = right;
                 if (newSteps.length) {
-                  debug(`detect ${newSteps.length} new step(s)`);
+                  info(`detect ${newSteps.length} new step(s)`);
 
                   newSteps.sort((a, b) => a[0] - b[0]);
                   const append = newSteps.map(x => x[1]);
@@ -154,7 +154,7 @@ export function hmr(options: HMROptions): Plugin {
 
                   proceed();
                 } else {
-                  debug('no changes, wait - CTRL+C to exit');
+                  info('no changes, wait - CTRL+C to exit');
                 }
               });
 
@@ -170,7 +170,7 @@ export function hmr(options: HMROptions): Plugin {
         const isLast = index === steps.length - 1;
         if (isLast) {
           tty.newLine(stdout);
-          debug('wait for changes - CTRL+C to exit');
+          info('wait for changes - CTRL+C to exit');
 
           return new Promise((resolve) => {
             wait = {
@@ -185,7 +185,7 @@ export function hmr(options: HMROptions): Plugin {
   });
 }
 
-function debug(message: string): void {
+function info(message: string): void {
   tty.replaceLine(stdout, tty.dev('hmr: '), tty.dev(message));
 }
 

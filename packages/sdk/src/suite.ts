@@ -1,4 +1,4 @@
-import { CanAppend, errors, qte, reinterpret } from '@skintest/common';
+import { CanAppend, errors, Guard, qte, reinterpret } from '@skintest/common';
 import { Command } from './command';
 import { RuntimeScript, Script } from './script';
 
@@ -20,13 +20,30 @@ export function getSuite(): Suite {
 export function tempSuite(): [Suite, () => void] {
   const restore = currentSuite;
   currentSuite = newSuite('temp');
-  
+
   return [
     currentSuite,
     () => currentSuite = restore
   ];
 }
 
+// class SceneFlow {
+//   constructor(private path: string[]) {
+//   }
+
+//   async unhappy(result: Error | TestFail): Promise<[boolean, string]> {
+//     const { path } = this;
+
+//     if (result instanceof Error) {
+//       return [true, result.message];
+//     }
+
+//     const host = path[path.length - 1];
+//     const controlFlow = host === 'condition' || host === 'repeat';
+//     const breakLoop = result.effect === 'break' || controlFlow;
+//     return [breakLoop, result.description];
+//   }
+// }
 
 export interface Suite {
   readonly uri: string;
@@ -43,6 +60,8 @@ class ProjectSuite implements Suite {
   }
 
   addScript(script: Script): void {
+    Guard.notNull(script, 'script');
+
     this.scripts.push(script);
   }
 
@@ -51,6 +70,8 @@ class ProjectSuite implements Suite {
   }
 
   editScript(script: Script): ScriptBuilder {
+    Guard.notNull(script, 'script');
+
     if (!this.scripts.includes(script)) {
       throw errors.invalidOperation(`script ${qte(script.name)} is not found`);
     }

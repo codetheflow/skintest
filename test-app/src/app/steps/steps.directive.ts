@@ -10,12 +10,12 @@ const TIDY_PREVIOUS_STEP = new InjectionToken<Tidy>('tidy.previous-step');
   ]
 })
 export class StepsDirective implements OnChanges {
-  @Input('stSteps') firstStep: TemplateRef<any>;
+  @Input('stSteps') firstStep: TemplateRef<unknown>;
 
   constructor(
     @Inject(TIDY_PREVIOUS_STEP) private readonly tidyPreviousStep: Tidy,
     private readonly viewContainerRef: ViewContainerRef,
-    readonly templateRef: TemplateRef<any>,
+    readonly templateRef: TemplateRef<unknown>,
   ) {
     viewContainerRef.createEmbeddedView(templateRef, this.createContext());
   }
@@ -28,7 +28,7 @@ export class StepsDirective implements OnChanges {
     }
   }
 
-  next(template: TemplateRef<any>) {
+  next(template: TemplateRef<unknown>): void {
     this.tidyPreviousStep.run();
 
     let view = this.viewContainerRef.createEmbeddedView(template, this.createContext());

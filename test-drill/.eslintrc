@@ -3,6 +3,11 @@
     "../.eslintrc"
   ],
   "rules": {
+    "regex/invalid": [
+      "warn", [
+        "#now"
+      ]
+    ],
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/naming-convention": [

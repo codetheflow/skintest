@@ -10,4 +10,3 @@ export { Tidy } from './tidy';
 export { Transaction, TransactionSink } from './transaction';
 export { Boxed, Data, KeyValue, NumberDictionary, Optional, Predicate, StringDictionary } from './types';
 export { ellipsis, escapeRE, isFunction, isObject, isRegExp, isString, isUndefined, likeKeyValue, match, padRight, qte, reinterpret, ticksToTime, yes } from './utils';
-

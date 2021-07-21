@@ -1,10 +1,11 @@
 import { Data } from '@skintest/common';
-import { Browser, InspectInfo, Scenario, Script, Step, StepExecutionResult, Suite, TestFail, TestPass } from '@skintest/sdk';
+import { Browser, Scenario, Script, Step, StepExecutionResult, Suite } from '@skintest/sdk';
+import { Feedback } from './feedback';
 import { ScriptZone, Zone } from './zone';
 
-export interface Stage<Z extends Zone, S> {
+export interface Stage<Z extends Zone, S, R = void> {
   token?: Z;
-  (scope: S): Promise<void>;
+  (scope: S): Promise<R>;
 }
 
 export type StageSite = Exclude<ScriptZone, 'step:fail' | 'step:pass' | 'step:inspect'>;
@@ -26,10 +27,7 @@ export type ScenarioScope = FeatureScope & { scenario: Scenario };
 export type Datum = [number, Data | undefined];
 export type StepScope = ScenarioScope & { step: Step, datum: Datum };
 
-export type CommandScope = StepScope & { site: StageSite, path: Array<StepExecutionResult['type']> };
-export type CommandPassScope = CommandScope & { result: TestPass };
-export type CommandFailScope = CommandScope & { reason: TestFail | Error };
-export type CommandInspectScope = CommandScope & { inspect: InspectInfo };
+export type CommandScope = StepScope & { site: StageSite, path: Array<StepExecutionResult['type']>, feedback: Feedback };
 
 export type Stages = {
   'platform:mount': Stage<'platform:mount', PlatformMountScope>;
@@ -51,9 +49,6 @@ export type Stages = {
   'step:before': Stage<'step:before', StepScope>;
   'step:after': Stage<'step:after', StepScope>;
   'step': Stage<'step', CommandScope>;
-  'step:pass': Stage<'step:pass', CommandPassScope>;
-  'step:fail': Stage<'step:fail', CommandFailScope>;
-  'step:inspect': Stage<'step:inspect', CommandInspectScope>;
 };
 
 export type Staging = <Z extends Zone>(zone: Z) => (...stageScope: Parameters<Stages[Z]>) => Promise<void>;

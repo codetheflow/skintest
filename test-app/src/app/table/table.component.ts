@@ -8,7 +8,6 @@ import { TemplateCacheService } from '../template/template-cache.service';
 import { Column, Row } from './table-meta';
 import { TableService } from './table.service';
 
-// exercise comment:
 // the basic idea of st-table API is taken from the angular material
 // but with some reasonable simplifications, like default header cell and
 // cell templates, redundant row directive and cell components
@@ -74,12 +73,10 @@ export class TableComponent {
     private readonly renderer: Renderer2,
     readonly elementRef: ElementRef,
   ) {
-    // exercise comment:
     // we don't need to unsubscribe here, because service and
     // component have the same lifetime cycle
     this.state$.subscribe(([state]) => this.stateClass = `${TABLE_CLASS}--${state}`);
 
-    // exercise comment:
     // as we're using onPush and not @HostListener we
     // don't need to invoke below out of NgZone
     fromEvent(this.elementRef.nativeElement, 'mouseleave')
@@ -96,22 +93,22 @@ export class TableComponent {
       .subscribe(x => this.rowHover.prob(x as HTMLTableRowElement));
   }
 
-  rowId(index: number, row: Row) {
+  rowId(index: number, row: Row): unknown {
     // as a future enhancement
     // we can pass id configuration to better utilize *ngFor
     return row;
   }
 
-  columnId(index: number, column: Column) {
+  columnId(index: number, column: Column): unknown {
     return column;
   }
 
-  getHeaderCellTemplate(column: Column): TemplateRef<any> {
+  getHeaderCellTemplate(column: Column): TemplateRef<unknown> {
     return this.templateCache.get(`${HEADER_CELL_TEMPLATE_PREFIX}-${column}`)
       || this.templateCache.get(`${HEADER_CELL_TEMPLATE_PREFIX}-$default`);
   }
 
-  getCellTemplate(column: Column): TemplateRef<any> {
+  getCellTemplate(column: Column): TemplateRef<unknown> {
     return this.templateCache.get(`${CELL_TEMPLATE_PREFIX}-${column}`)
       || this.templateCache.get(`${CELL_TEMPLATE_PREFIX}-$default`);
   }

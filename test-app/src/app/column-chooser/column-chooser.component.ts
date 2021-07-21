@@ -43,7 +43,7 @@ export class ColumnChooserComponent implements OnChanges {
   constructor(private readonly table: TableService) {
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.columns) {
       const { meta } = this.table;
       const nonControlColumns = (this.columns || [])

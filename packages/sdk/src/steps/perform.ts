@@ -27,7 +27,7 @@ export class PerformStep<D> implements ClientStep<D> {
         return {
           type: 'condition',
           cause: new Indexed(plan.slice(index, plan.length)),
-          plan: new Indexed(plan.slice(0, index)),
+          body: new Indexed(plan.slice(0, index)),
         };
       }
 
@@ -44,7 +44,7 @@ export class PerformStep<D> implements ClientStep<D> {
         return {
           type: 'repeat',
           till: new Indexed(plan.slice(index, plan.length)),
-          plan: new Indexed(plan.slice(0, index)),
+          body: new Indexed(plan.slice(0, index)),
           writes
         };
       }
@@ -54,7 +54,7 @@ export class PerformStep<D> implements ClientStep<D> {
 
     return {
       type: 'perform',
-      plan: new Indexed<Command>(plan)
+      body: new Indexed<Command>(plan)
     };
   }
 

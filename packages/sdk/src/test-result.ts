@@ -5,21 +5,17 @@ import { ElementRef } from './element';
 import { formatSelector } from './format';
 import { Query, QueryList } from './query';
 
-export type TestEffect = 'break' | 'continue';
-
 // todo: make enum, solution as hyperlink?
 export interface TestFail {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: StringDictionary<any>;
   description: string;
-  effect: TestEffect;
   solution: string;
   status: 'fail';
 }
 
 export interface TestPass {
   status: 'pass';
-  effect: TestEffect;
 }
 
 export interface InspectInfo {
@@ -29,10 +25,9 @@ export interface InspectInfo {
 
 export type TestResult = TestFail | TestPass;
 
-export function pass(effect: TestEffect = 'continue'): TestPass {
+export function pass(): TestPass {
   return {
     status: 'pass',
-    effect
   };
 }
 
@@ -45,9 +40,7 @@ export const fail = {
       etalon: any,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       actual: any,
-    },
-    effect: TestEffect = 'continue'): TestFail {
-
+    }): TestFail {
     const selector = formatSelector(body.query.toString());
     const method = body.query.type === 'query' ? '$' : '$$';
 
@@ -60,7 +53,6 @@ export const fail = {
     return {
       body,
       description,
-      effect,
       solution: 'check assert condition',
       status: 'fail',
     };
@@ -68,16 +60,14 @@ export const fail = {
   element(
     body: {
       query: Query | QueryList,
-    },
-    effect: TestEffect = 'break'): TestFail {
-
+    }
+  ): TestFail {
     const selector = formatSelector(body.query.toString());
     const method = body.query.type === 'query' ? '$' : '$$';
 
     return {
       body,
       description: `${method}(${selector}) is not reachable`,
-      effect,
       solution: 'check selector correctness and availability',
       status: 'fail',
     };
@@ -86,13 +76,11 @@ export const fail = {
     body: {
       description: string,
       solution: string,
-    },
-    effect: TestEffect = 'break'): TestFail {
-
+    }
+  ): TestFail {
     return {
       body,
       description: body.description,
-      effect,
       solution: body.solution,
       status: 'fail',
     };

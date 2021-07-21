@@ -1,6 +1,7 @@
 import { Data, errors, Guard, isObject, reinterpret } from '@skintest/common';
-import { Browser, fail, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Steps, Suite, Value, VALUE_REF } from '@skintest/sdk';
+import { Browser, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Steps, Suite, TestResult, Value, VALUE_REF } from '@skintest/sdk';
 import { Attempt } from './attempt';
+import { Feedback, FeedbackList, FeedbackResult } from './feedback';
 import { CommandScope, Datum, Staging } from './stage';
 
 function noScenario(): Scenario {
@@ -36,14 +37,14 @@ export class Scene {
 
     await beforeFeatureEffect(scope);
 
-    const [ok] = await this.plan(
+    const feedback = await this.plan(
       'feature:before',
       script,
       noScenario(),
       script.beforeFeature
     );
 
-    if (ok) {
+    if (feedback.signal === 'continue') {
       for (const scenario of script.scenarios) {
         await this.scenario(script, scenario);
       }
@@ -75,14 +76,14 @@ export class Scene {
 
     await beforeScenarioEffect(scope);
 
-    const [ok] = await this.plan(
+    const feedback = await this.plan(
       'scenario:before',
       script,
       scenario,
       script.beforeScenario
     );
 
-    if (ok) {
+    if (feedback.signal === 'continue') {
       const { attributes } = scenario;
       const data = attributes.data ?? [undefined];
       for (let i = 0; i < data.length; i++) {
@@ -105,11 +106,11 @@ export class Scene {
     script: Script,
     scenario: Scenario,
     datum: Datum,
-  ): Promise<boolean> {
-
+  ): Promise<FeedbackResult> {
     const beforeStepEffect = this.effect('step:before');
     const afterStepEffect = this.effect('step:after');
     const { steps } = scenario;
+    const feedback = new FeedbackList();
 
     for (const step of steps) {
       const scope = {
@@ -123,39 +124,48 @@ export class Scene {
 
       await beforeStepEffect(scope);
 
-      let [ok] = await this.plan(
-        'step:before',
-        script,
-        scenario,
-        script.beforeStep
-      );
-
-      if (ok) {
-        [ok] = await this.plan(
-          'step',
+      feedback.add(
+        await this.plan(
+          'step:before',
           script,
           scenario,
-          [step],
-          [],
-          datum
+          script.beforeStep
+        )
+      );
+
+      if (feedback.ok()) {
+        feedback.add(
+          await this.plan(
+            'step',
+            script,
+            scenario,
+            [step],
+            [],
+            datum
+          )
         );
       }
 
       await afterStepEffect(scope);
 
-      ok = (await this.plan(
-        'step:after',
-        script,
-        scenario,
-        script.afterStep
-      ))[0] && ok;
+      feedback.add(
+        await this.plan(
+          'step:after',
+          script,
+          scenario,
+          script.afterStep
+        )
+      );
 
-      if (!ok) {
-        return false;
+      const loop = feedback.reduce();
+      if (loop.signal === 'exit') {
+        // only returns on `exit` signal,
+        // `break` signal is for the plan loop
+        return loop;
       }
     }
 
-    return true;
+    return feedback.reduce();
   }
 
   private async plan(
@@ -165,14 +175,11 @@ export class Scene {
     steps: Steps,
     path: Array<StepExecutionResult['type']> = [],
     datum: Datum = [0, undefined],
-  ): Promise<[boolean, string[]]> {
+  ): Promise<FeedbackResult> {
 
     const { browser, attempt } = this;
 
     const stepEffect = this.effect('step');
-    const passEffect = this.effect('step:pass');
-    const failEffect = this.effect('step:fail');
-    const inspectEffect = this.effect('step:inspect');
 
     const scope = {
       suite: this.suite,
@@ -183,32 +190,34 @@ export class Scene {
       datum
     };
 
-    let breakLoop = false;
-    const errorSink: string[] = [];
+    const loop = new FeedbackList();
 
-    for (const step of steps) {
-      if (breakLoop) {
-        break;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const materialize = (value: Value<any, Data>): any => {
+      if (isObject(value) && VALUE_REF in value) {
+        const [, data] = datum;
+        Guard.notNull(data, 'data');
+
+        const key = value[VALUE_REF];
+        return data?.[key];
       }
 
-      await stepEffect({ ...scope, step, path });
+      return value;
+    };
+
+    const getFeedback = () => loop.reduce();
+
+    for (const step of steps) {
+      const addFeedback = async (reason: TestResult | Error | FeedbackResult): Promise<void> => {
+        const feed = { ...scope, step, path };
+        const feedback = new Feedback(feed, reason);
+        await stepEffect({ ...feed, feedback });
+        loop.add(await feedback.get());
+      };
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const materialize = (value: Value<any, Data>): any => {
-          if (isObject(value) && VALUE_REF in value) {
-            const [_, data] = datum;
-            Guard.notNull(data, 'data');
-
-            const key = value[VALUE_REF];
-            return data?.[key];
-          }
-
-          return value;
-        };
-
         const run = await attempt.step(() => {
-          const [_, command] = step;
+          const [, command] = step;
           return command.execute({ browser, materialize });
         });
 
@@ -225,75 +234,28 @@ export class Scene {
 
         switch (run.type) {
           case 'method': {
-            await passEffect({ ...scope, step, result: pass(), path });
+            await addFeedback(pass());
             break;
           }
           case 'assert': {
             const { result } = run;
-            if (result.status === 'pass') {
-              await passEffect({ ...scope, step, result, path });
-              break;
-            }
-
-            const host = path[path.length - 1];
-            const controlFlow = host === 'condition' || host === 'repeat';
-            if (result.effect === 'break' || controlFlow) {
-              errorSink.push(result.description);
-              breakLoop = true;
-            }
-
-            if (controlFlow) {
-              await passEffect({ ...scope, step, result: pass(), path });
-              break;
-            }
-
-            await failEffect({ ...scope, step, reason: result, path });
-            break;
-          }
-          case 'inspect': {
-            await inspectEffect({ ...scope, step, inspect: run.info, path });
-            await passEffect({ ...scope, step, result: pass(), path });
+            await addFeedback(result);
             break;
           }
           case 'task':
           case 'perform': {
-            const [ok, innerErrors] = await runPlan(run.plan);
-            if (ok) {
-              await passEffect({ ...scope, step, result: pass(), path });
-              break;
-            }
-
-            const error = {
-              description: innerErrors.join('\n'),
-              solution: 'debug'
-            };
-
-            breakLoop = true;
-            errorSink.push(...innerErrors);
-            await failEffect({ ...scope, step, reason: fail.reason(error), path });
+            const plan = await runPlan(run.body);
+            await addFeedback(plan);
             break;
           }
           case 'condition': {
-            const [yes] = await runPlan(run.cause);
-            if (!yes) {
-              await passEffect({ ...scope, step, result: pass(), path });
-              break;
+            const condition = new FeedbackList();
+            condition.add(await runPlan(run.cause));
+            if (condition.ok()) {
+              condition.add(await runPlan(run.body));
             }
 
-            const [ok, innerErrors] = await runPlan(run.plan);
-            if (ok) {
-              await passEffect({ ...scope, step, result: pass(), path });
-            } else {
-              const error = {
-                description: innerErrors.join('\n'),
-                solution: 'debug'
-              };
-
-              breakLoop = true;
-              errorSink.push(...innerErrors);
-              await failEffect({ ...scope, step, reason: fail.reason(error), path });
-            }
-
+            await addFeedback(condition.reduce());
             break;
           }
           case 'repeat': {
@@ -302,6 +264,8 @@ export class Scene {
             let odd = false;
             let even = true;
             let first = true;
+
+            const repeat = new FeedbackList();
 
             do {
               const entry: RepeatEntry = { first, index, odd, even, };
@@ -313,58 +277,33 @@ export class Scene {
 
               run.writes.forEach(x => x.next(entry));
 
-              const [next] = await runPlan(run.till);
-              if (!next) {
-                break;
+              repeat.add(await runPlan(run.till));
+              if (repeat.ok()) {
+                repeat.add(await runPlan(run.body));
+                if (repeat.ok()) {
+                  continue;
+                }
               }
 
-              const [ok, innerErrors] = await runPlan(run.plan);
-              if (!ok) {
-                const error = {
-                  description: innerErrors.join('\n'),
-                  solution: 'debug'
-                };
+              break;
 
-                breakLoop = true;
-                errorSink.push(...innerErrors);
-                await failEffect({ ...scope, step, reason: fail.reason(error), path });
-                break;
-              }
               // eslint-disable-next-line no-constant-condition
             } while (true);
 
-            await passEffect({ ...scope, step, result: pass(), path });
+            await addFeedback(repeat.reduce());
             break;
           }
           case 'event': {
-            const [handlerOk, triggerOk] = await Promise.all([
+            const [handler, trigger] = await Promise.all([
               runPlan(run.handler),
               runPlan(run.trigger),
             ]);
 
-            breakLoop = !(handlerOk[0] && triggerOk[0]);
-            if (breakLoop) {
-              const innerErrors: string[] = [];
-              if (!handlerOk[0]) {
-                innerErrors.push(...handlerOk[1]);
-              }
-
-              if (!triggerOk[0]) {
-                innerErrors.push(...triggerOk[1]);
-              }
-
-              breakLoop = true;
-              errorSink.push(...innerErrors);
-
-              const error = {
-                description: innerErrors.join('\n'),
-                solution: 'debug'
-              };
-
-              await failEffect({ ...scope, step, reason: fail.reason(error), path });
-            } else {
-              await passEffect({ ...scope, step, result: pass(), path });
-            }
+            const event = new FeedbackList();
+            event.add(handler);
+            event.add(trigger);
+            
+            await addFeedback(event.reduce());
             break;
           }
           default: {
@@ -372,12 +311,15 @@ export class Scene {
           }
         }
       } catch (ex) {
-        await failEffect({ ...scope, step, reason: ex, path });
-        errorSink.push(ex.message);
-        break;
+        await addFeedback(ex);
+      }
+
+      const feedback = getFeedback();
+      if (feedback.signal !== 'continue') {
+        return feedback;
       }
     }
 
-    return [errorSink.length === 0, errorSink];
+    return getFeedback();
   }
 }

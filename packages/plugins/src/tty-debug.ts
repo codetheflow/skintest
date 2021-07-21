@@ -5,12 +5,12 @@ import { tty } from './tty';
 
 const { stdin, stdout, stderr } = process;
 
-export function ttyPause(): Plugin {
+export function ttyDebug(): Plugin {
   tty.test(stdout);
 
   return async (stage: OnStage) => stage({
-    'step:pass': async ({ step, browser }) => {
-      const [_, command] = step;
+    'step:after': async ({ step, browser }) => {
+      const [, command] = step;
 
       if (command.type === 'dev' && command.toString() === '__pause') {
         tty.newLine(stdout, tty.dev(`- type a selector and hit ${tty.shortcut('ENTER')}`));

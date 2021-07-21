@@ -1,5 +1,6 @@
 
 export function eventPath(event: MouseEvent): EventTarget[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const path = (event.composedPath && event.composedPath()) || (event as any).path;
   const target = event.target;
 

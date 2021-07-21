@@ -21,7 +21,7 @@ export class TaskStep<D> implements DoStep<D> {
 
     return {
       type: 'task',
-      plan: new Indexed(Array.from(plan)),
+      body: new Indexed(Array.from(plan)),
     };
   }
 

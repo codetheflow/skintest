@@ -14,8 +14,8 @@ const TIDY_EVENT = new InjectionToken<Tidy>('tidy.event');
 })
 // tslint:disable-next-line:no-conflicting-lifecycle
 export class CommandDirective implements DoCheck, OnChanges {
-  @Input('stCommand') command: Command<any>;
-  @Input() arg: any;
+  @Input('stCommand') command: Command<unknown>;
+  @Input() arg: unknown;
   @Input() trigger = 'click';
 
   constructor(
@@ -27,13 +27,13 @@ export class CommandDirective implements DoCheck, OnChanges {
     this.registerEvent();
   }
 
-  ngDoCheck() {
+  ngDoCheck(): void {
     if (this.command) {
       this.updateState();
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.command) {
       this.unregisterCommand();
 

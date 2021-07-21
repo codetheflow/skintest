@@ -20,7 +20,7 @@ export class Command<T = void> {
     this.canExecute = body.canExecute ?? yes;
   }
 
-  prob(arg: T) {
+  prob(arg: T): boolean {
     if (this.canExecute(arg) === true) {
       this.execute(arg);
       return true;

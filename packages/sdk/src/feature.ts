@@ -9,7 +9,7 @@ export function feature<S extends Feature = StrictFeature>(pattern?: S): S {
   // todo: make error from errors
   Guard.notNull(
     suite,
-    `suite is not defined, make sure that you are running tests by using skintest platform() function`
+    'suite is not defined, make sure that you are running tests by using skintest platform() function'
   );
 
   if (!pattern) {

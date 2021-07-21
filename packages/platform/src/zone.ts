@@ -17,10 +17,7 @@ export type ScriptZone =
   | 'scenario:after'
   | 'step:before'
   | 'step:after'
-  | 'step'
-  | 'step:pass'
-  | 'step:fail'
-  | 'step:inspect';
+  | 'step';
 
 export type Zone =
   PlatformZone

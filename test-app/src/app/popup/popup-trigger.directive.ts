@@ -13,8 +13,8 @@ import { Tidy } from '../common/tidy';
 export class PopupTriggerDirective {
   private overlayRef: OverlayRef;
 
-  @Input() data: any;
-  @Input('stPopupTrigger') templateRef: TemplateRef<any>;
+  @Input() data: unknown;
+  @Input('stPopupTrigger') templateRef: TemplateRef<unknown>;
   @Input() panelClass = 'popup-trigger-panel';
 
   constructor(
@@ -26,7 +26,7 @@ export class PopupTriggerDirective {
   }
 
   @HostListener('click')
-  click() {
+  click(): void {
     if (!this.templateRef) {
       throw new AppError('template should be defined before popup was triggered');
     }
@@ -60,7 +60,7 @@ export class PopupTriggerDirective {
     );
   }
 
-  close() {
+  close(): void {
     if (this.overlayRef) {
       this.overlayRef.detach();
       this.overlayRef = null;
@@ -68,7 +68,7 @@ export class PopupTriggerDirective {
   }
 
   @HostListener('document:keydown.escape')
-  escape() {
+  escape(): void {
     this.close();
   }
 

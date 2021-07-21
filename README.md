@@ -1,2 +1,3 @@
 # skintest
-ui automatization framework
+
+modern web UI automatization platform https://skintest.io

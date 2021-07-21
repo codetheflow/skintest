@@ -18,7 +18,6 @@ export class TableService {
    * @param rows table rows
    */
   setRows(rows: Row[]): void {
-    // exercise comment:
     // if we build a shared library component we could protect
     // rows and columns by using not exported Symbol check
     this.rows = rows || [];
@@ -41,7 +40,7 @@ export class TableService {
     return this.rows;
   }
 
-  checkState() {
+  checkState(): void {
     const state = this.getRows().length ? 'has-rows' : 'empty';
     this.updateStateRequest$.next(state);
   }

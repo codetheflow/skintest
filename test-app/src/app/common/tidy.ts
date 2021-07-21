@@ -30,7 +30,7 @@ export class Tidy implements OnDestroy {
     throw new AppError(`resource "${resource}" is not a tidy`);
   }
 
-  run() {
+  run(): void {
     const temp = this.disposes;
     this.disposes = [];
 
@@ -39,11 +39,11 @@ export class Tidy implements OnDestroy {
     }
   }
 
-  isEmpty() {
+  isEmpty(): boolean {
     return this.disposes.length === 0;
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.run();
   }
 }

@@ -46,12 +46,12 @@ export type StepExecutionMethodResult = {
 
 export type StepExecutionPerformResult = {
   type: 'perform',
-  plan: Steps,
+  body: Steps,
 }
 
 export type StepExecutionTaskResult = {
   type: 'task',
-  plan: Steps,
+  body: Steps,
 }
 
 export type StepExecutionEventResult = {
@@ -63,14 +63,14 @@ export type StepExecutionEventResult = {
 export type StepExecutionRepeatResult = {
   type: 'repeat',
   till: Steps,
-  plan: Steps,
+  body: Steps,
   writes: RepeatWrite[],
 }
 
 export type StepExecutionConditionResult = {
   type: 'condition',
   cause: Steps,
-  plan: Steps,
+  body: Steps,
 }
 
 export interface CommandBody<D> {

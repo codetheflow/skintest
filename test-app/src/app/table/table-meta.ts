@@ -1,15 +1,15 @@
 import { AppError } from '../common/error';
 
-// exercise comment:
 // another way is to have instead of String, an Object type for the column definition
 // with properties like `isVisible`, but we are experimenting here with a simple API
 // which is extendable by column meta concept, let's see how it works
 export type Column = string;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Row = any;
 
 export type ColumnCategory = 'data' | 'control';
 
-// exercise comment:
 // we introduce meta concept to filter out row-actions column
 // in the column-chooser component
 export interface ColumnMeta {

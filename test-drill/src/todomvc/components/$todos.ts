@@ -4,7 +4,7 @@ import { env } from '../project/env';
 export const $todos = {
   url: env.base_url
 
-  , what: $<HTMLInputElement>`.new-todo`
+  , what: $<HTMLInputElement>`.new-todo1`
 
   , list: $$<HTMLElement>`.todo-list > li`
   , clear_completed: $<HTMLButtonElement>`.clear-completed`

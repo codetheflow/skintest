@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Observable, of, zip } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { entries } from '../data/entries';
+import { folders } from '../data/folders';
+import { users } from '../data/users';
 import { Entry, Folder, User } from '../types';
 import { EntryDataModule } from './entry-data.module';
 import { EntryRow } from './entry-row';
-import { folders } from '../data/folders';
-import { map } from 'rxjs/operators';
-import { Observable, of, zip } from 'rxjs';
-import { users } from '../data/users';
 
 @Injectable({
   providedIn: EntryDataModule
@@ -40,7 +40,6 @@ export class EntryDataService {
 
   // for testing many rows in the UI
   generateEntriesView(count: number): Observable<EntryRow[]> {
-    // exercise comment:
     // I'd like to use "faker" but for the exercise next approach
     // should be sufficient
     const rows: EntryRow[] = [];
@@ -58,7 +57,6 @@ export class EntryDataService {
   }
 
   private getEntries(): Observable<Entry[]> {
-    // exercise comment:
     // to show rxjs skills emulate real data service
     return of(entries);
   }

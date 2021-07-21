@@ -10,12 +10,12 @@ export class TableStateDirective implements OnChanges {
   @Input('stTableState') state: TableState;
 
   constructor(
-    private readonly templateRef: TemplateRef<any>,
+    private readonly templateRef: TemplateRef<unknown>,
     private readonly templateCache: TemplateCacheService,
     private readonly table: TableService,
   ) { }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.state) {
       if (changes.state.previousValue) {
         this.templateCache.delete(`state-${this.state}`);

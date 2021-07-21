@@ -9,7 +9,7 @@ import { CELL_TEMPLATE_PREFIX } from './table.component';
 export class CellDirective implements OnInit {
   constructor(
     private readonly column: ColumnDirective,
-    private readonly templateRef: TemplateRef<any>,
+    private readonly templateRef: TemplateRef<unknown>,
     private readonly templateCache: TemplateCacheService,
   ) { }
 

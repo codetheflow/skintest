@@ -1,3 +1,4 @@
+export { Feedback, FeedbackList, FeedbackResult } from './feedback';
 export { BrowserFactory, Launcher } from './launcher';
 export { nodePlatform, Platform } from './platform';
 export { Plugin } from './plugin';
