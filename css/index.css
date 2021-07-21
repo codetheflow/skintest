@@ -61,11 +61,27 @@ a:not(.btn) {
   color: #212121;
   border-radius: 8px;
   text-transform: uppercase;
-  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-  letter-spacing: 0.02em; }
+  letter-spacing: 0.02em;
+  position: relative;
+  transition: color .2s ease-in-out;
+  z-index: 1; }
+  .btn::before {
+    border-radius: inherit;
+    background-image: linear-gradient(149.9deg, #AC8DF8 36.55%, #86D6E9 109.5%);
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: -1;
+    transition: opacity .2s ease-in-out; }
   .btn:hover {
-    background: linear-gradient(149.9deg, #AC8DF8 36.55%, #86D6E9 109.5%);
     color: #fff; }
+    .btn:hover::before {
+      opacity: 1; }
   .btn:active {
     background: #AC8DF8;
     color: #fff; }
@@ -115,7 +131,8 @@ pre[class*="language-"]::selection,
 pre[class*="language-"] ::selection,
 code[class*="language-"]::selection,
 code[class*="language-"] ::selection {
-  background: transparent !important; }
+  background: #e7f1ff;
+  color: #000; }
 
 .container {
   max-width: 1024px;
@@ -223,6 +240,8 @@ code[class*="language-"] ::selection {
 
 .setup__steps {
   width: 551px;
+  max-width: 551px;
+  min-width: 551px;
   height: 412px; }
   .setup__steps pre[class*="language-"] {
     padding: 0 16px 0 16px !important;
@@ -280,10 +299,12 @@ code[class*="language-"] ::selection {
 
 .example__video {
   width: 100%;
-  background-color: #fff;
+  width: 1024px;
+  height: 600px;
   border-radius: 13px;
   cursor: pointer;
-  position: relative; }
+  position: relative;
+  overflow: hidden; }
   .example__video.overlay::before {
     content: '';
     width: 100%;
@@ -295,9 +316,6 @@ code[class*="language-"] ::selection {
     background-color: #171717; }
   .example__video.overlay .progressbar {
     opacity: 1; }
-  .example__video video {
-    width: 1024px;
-    height: 600px; }
   .example__video .example__play {
     width: 100%;
     height: 100%;
@@ -342,7 +360,9 @@ code[class*="language-"] ::selection {
     background-image: url("../assets/images/video_play_hover.svg"); }
 
 .helper__code {
-  width: 514px;
+  width: 570px;
+  max-width: 570px;
+  min-width: 570px;
   height: auto;
   margin-right: 48px; }
 
@@ -530,6 +550,7 @@ code[class*="language-"] ::selection {
   .card__btn {
     display: block;
     box-sizing: border-box;
+    text-align: center;
     max-width: 230px;
     padding: 20px 16px; }
     .card__btn span::after {
@@ -544,11 +565,17 @@ code[class*="language-"] ::selection {
   .card-marked {
     margin-top: 39px;
     background: linear-gradient(149.9deg, #AC8DF8 36.55%, #86D6E9 109.5%); }
-    .card-marked .btn.btn-primary:hover {
-      background: #343434;
-      color: #fff; }
-      .card-marked .btn.btn-primary:hover span::after {
-        background-image: url("../assets/images/skintest_arrow.svg"); }
+    .card-marked .btn.btn-primary {
+      transition: color .2s ease-in-out, background-color .2s ease-in-out; }
+      .card-marked .btn.btn-primary span::after {
+        transition: background-image .2s ease-in-out; }
+      .card-marked .btn.btn-primary:hover {
+        background-color: #343434;
+        color: #fff; }
+        .card-marked .btn.btn-primary:hover::before {
+          display: none; }
+        .card-marked .btn.btn-primary:hover span::after {
+          background-image: url("../assets/images/skintest_arrow.svg"); }
     .card-marked .card__point::before {
       background-image: url("../assets/images/skintest-checkmark-dark.svg"); }
     .card-marked .card__btn span::after {
@@ -622,7 +649,7 @@ code[class*="language-"] ::selection {
       width: 120px;
       height: 120px;
       display: inline-block;
-      margin-right: 64px;
+      margin-right: 32px;
       border-radius: 100%;
       background: url("../assets/images/skintest_arrow.svg"), linear-gradient(149.9deg, #AC8DF8 36.55%, #86D6E9 109.5%);
       background-size: 62px 32px, 100%;
@@ -707,8 +734,8 @@ code[class*="language-"] ::selection {
 .mobile {
   position: relative; }
   .mobile__burger {
-    width: 18px;
-    height: 18px;
+    width: 32px;
+    height: 32px;
     display: none;
     background-color: rgba(255, 255, 255, 0);
     cursor: pointer; }
@@ -716,7 +743,7 @@ code[class*="language-"] ::selection {
     .mobile__burger span::before,
     .mobile__burger span::after {
       content: '';
-      width: 18px;
+      width: 32px;
       height: 1px; }
     .mobile__burger span {
       background-color: #fff;
@@ -743,7 +770,7 @@ code[class*="language-"] ::selection {
     position: absolute;
     background-color: #272727;
     border-radius: 8px;
-    top: 38px;
+    top: 50px;
     right: 0;
     width: calc(100vw - 20px);
     padding: 24px 16px;
@@ -857,13 +884,10 @@ code[class*="language-"] ::selection {
       height: 39px;
       position: absolute;
       display: inline-block; }
-    .guide h2::before {
-      content: 'Copied!';
+    .guide h2 .tooltip {
       left: -60px;
       bottom: -4px;
       font-size: 14px; }
-    .guide h2.copied::before {
-      opacity: 1; }
     .guide h2:first-child {
       margin-top: 0; }
     .guide h2 a:hover {
@@ -935,9 +959,11 @@ pre[class*="language-"] {
   opacity: 0;
   transition: all .15s ease-in-out;
   width: 688px;
-  top: -15px;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
   height: 4px;
-  position: relative;
+  position: absolute;
   margin: 10px auto;
   border-radius: 4px;
   background-color: #cccccc; }
@@ -953,12 +979,12 @@ pre[class*="language-"] {
   right: 47px;
   bottom: 17px; }
 
-.tooltip,
-.guide h2::before {
+.tooltip {
   position: absolute;
   opacity: 0;
   color: #AC8DF8;
-  display: block;
+  display: inline-block;
+  width: fit-content;
   transition: all .15s ease-in-out; }
 
 .copied .tooltip {
@@ -970,8 +996,13 @@ pre[class*="language-"] {
   .overflow {
     overflow: auto; }
     .overflow::-webkit-scrollbar {
-      height: 4px;
+      height: 6px;
+      border-radius: 4px;
       background-color: #272727; }
+    .overflow::-webkit-scrollbar-thumb {
+      height: 6px;
+      background: linear-gradient(149.9deg, #AC8DF8 36.55%, #86D6E9 109.5%);
+      border-radius: 4px; }
   .container {
     max-width: 100%;
     padding: 0 40px; }
@@ -1017,6 +1048,8 @@ pre[class*="language-"] {
     font-weight: 400; }
   .setup__steps {
     width: 545px;
+    max-width: 545px;
+    min-width: 545px;
     height: 427px; }
   .setup__point {
     display: flex;
@@ -1180,7 +1213,7 @@ pre[class*="language-"] {
         bottom: -31px; }
   .title-main {
     font-size: 32px;
-    line-height: 1.5;
+    line-height: 36px;
     font-weight: 700;
     max-width: 267px;
     padding: 0 16px; }
@@ -1214,7 +1247,6 @@ pre[class*="language-"] {
     height: 40px;
     margin-right: 24px; }
   .setup__steps {
-    width: 100%;
     height: 412px;
     min-width: 600px; }
   .example__video,
@@ -1241,8 +1273,6 @@ pre[class*="language-"] {
     width: 33px;
     height: 40px; }
   .helper__code {
-    width: 100%;
-    min-width: 600px;
     height: 430px; }
   .support__checkbox span {
     font-size: 14px; }
@@ -1276,7 +1306,12 @@ pre[class*="language-"] {
     .card__btn {
       max-width: 100%;
       margin-left: 0;
-      text-align: center; }
+      text-align: center;
+      line-height: 16px; }
+      .card__btn span {
+        display: flex;
+        align-items: center;
+        justify-content: center; }
   .additional__point {
     margin-bottom: 57px; }
     .additional__point:last-child {
@@ -1328,7 +1363,8 @@ pre[class*="language-"] {
     line-height: 15px;
     font-weight: 400; }
   .guide {
-    margin-bottom: 90px; }
+    margin-bottom: 90px;
+    padding-top: 27px; }
     .guide__article {
       padding-left: 0;
       width: calc(100vw - 20px); }
