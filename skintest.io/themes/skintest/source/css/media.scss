@@ -5,7 +5,7 @@
 
   .overflow {
     @include scrollBarStyling;
-    overflow: auto;
+    overflow-x: auto;
   }
 
   .container {
@@ -435,6 +435,7 @@
     .progressbar {
       width: 100%;
       top: unset;
+      bottom: 0;
     }
   }
 
@@ -458,10 +459,6 @@
     &__point-safty::before {
       width: 33px;
       height: 40px;
-    }
-
-    &__code {
-      height: 430px;
     }
   }
 
