@@ -29,7 +29,20 @@
 
 @mixin scrollBarStyling { 
   &::-webkit-scrollbar {
-    height: 4px;
+    height: 6px;
+    border-radius: 4px;
     background-color: $mobile-nav-color;
   }
+
+  &::-webkit-scrollbar-thumb {
+    height: 6px;
+    background: $linear-gradient;
+    border-radius: 4px;
+  }
+}
+
+@mixin fixedWidth($width) {
+  width: $width;
+  max-width: $width;
+  min-width: $width;
 }

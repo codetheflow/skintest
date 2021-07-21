@@ -61,12 +61,32 @@ a:not(.btn) {
   color: $btn-color;
   border-radius: 8px;
   text-transform: uppercase;
-  transition: $btn-transition;
   letter-spacing: 0.02em;
+  position: relative;
+  transition: color .2s ease-in-out;
+  z-index: 1;
+
+  &::before {
+    border-radius: inherit;
+    background-image: $linear-gradient;
+    content: '';    
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0; 
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: -1;
+    transition: opacity .2s ease-in-out;
+  }
 
   &:hover {
-    background: $linear-gradient;
     color: $white;
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   &:active {
@@ -129,7 +149,8 @@ pre[class*="language-"]::selection,
 pre[class*="language-"] ::selection, 
 code[class*="language-"]::selection, 
 code[class*="language-"] ::selection {
-  background: transparent !important;
+  background: $color-code-selection;
+  color: $black;
 }
 
 .container {
@@ -262,7 +283,7 @@ code[class*="language-"] ::selection {
 
 .setup {
   &__steps {
-    width: 551px;
+    @include fixedWidth(551px);
     height: 412px;
 
     pre[class*="language-"] {
@@ -335,10 +356,12 @@ code[class*="language-"] ::selection {
 .example {
   &__video {
     width: 100%;
-    background-color: $white;
+    width: 1024px;
+    height: 600px;
     border-radius: 13px;
     cursor: pointer;
     position: relative;
+    overflow: hidden;
 
     &.overlay {
       &::before {
@@ -355,11 +378,6 @@ code[class*="language-"] ::selection {
       .progressbar {
         opacity: 1;
       }
-    }
-
-    video {
-      width: 1024px;
-      height: 600px;
     }
 
     .example__play {
@@ -430,7 +448,7 @@ code[class*="language-"] ::selection {
 
 .helper {
   &__code {
-    width: 514px;
+    @include fixedWidth(570px);
     height: auto;
     margin-right: 48px;
   }
@@ -664,6 +682,7 @@ code[class*="language-"] ::selection {
   &__btn {
     display: block;
     box-sizing: border-box;
+    text-align: center;
     max-width: 230px;
     padding: 20px 16px;
 
@@ -683,12 +702,24 @@ code[class*="language-"] ::selection {
     margin-top: 39px;
     background: $linear-gradient;
 
-    .btn.btn-primary:hover {
-      background: $dark-gray;
-      color: $white;
+    .btn.btn-primary {
+      transition: color .2s ease-in-out, background-color .2s ease-in-out;
 
       span::after {
-        background-image: url('../assets/images/skintest_arrow.svg');
+        transition: background-image .2s ease-in-out;
+      }
+
+      &:hover {
+        background-color: $dark-gray;
+        color: $white;
+  
+        &::before {
+          display: none;
+        }
+  
+        span::after {
+          background-image: url('../assets/images/skintest_arrow.svg');
+        }
       }
     }
 
@@ -787,7 +818,7 @@ code[class*="language-"] ::selection {
       content: '';
       @include square(120px);
       display: inline-block;
-      margin-right: 64px;
+      margin-right: 32px;
       border-radius: 100%;
       background: url('../assets/images/skintest_arrow.svg'), linear-gradient(149.9deg, $primary 36.55%, $secondary 109.5%);
       background-size: 62px 32px, 100%;
@@ -911,7 +942,7 @@ code[class*="language-"] ::selection {
   position: relative;
   
   &__burger {
-    @include square(18px);
+    @include square(32px);
     display: none;
     background-color: $transparent;
     cursor: pointer;
@@ -920,7 +951,7 @@ code[class*="language-"] ::selection {
     span::before,
     span::after {
       content: '';
-      width: 18px;
+      width: 32px;
       height: 1px;
     }
   
@@ -967,7 +998,7 @@ code[class*="language-"] ::selection {
     position: absolute;
     background-color: $mobile-nav-color;
     border-radius: 8px;
-    top: 38px;
+    top: 50px;
     right: 0;
     width: calc(100vw - 20px);
     padding: 24px 16px;
@@ -1119,15 +1150,10 @@ code[class*="language-"] ::selection {
       display: inline-block;
     }
 
-    &::before {
-      content: 'Copied!';
+    .tooltip {
       left: -60px;
       bottom: -4px;
       font-size: 14px;
-    }
-
-    &.copied::before {
-      opacity: 1;
     }
 
     &:first-child {
@@ -1157,7 +1183,7 @@ code[class*="language-"] ::selection {
   }
 }
 
-pre[class*="language-"]{
+pre[class*="language-"] {
   border-radius: 8px;
   background-color: $card-color !important;
   border: none !important;
@@ -1220,9 +1246,11 @@ pre[class*="language-"]{
   opacity: 0;
   transition: all .15s ease-in-out;
   width: 688px; 
-  top: -15px;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
   height: 4px;
-  position: relative; 
+  position: absolute; 
   margin: 10px auto; 
   border-radius: 4px;
   background-color: $progressbar-color;
@@ -1241,12 +1269,12 @@ pre[class*="language-"]{
   bottom: 17px;
 }
 
-.tooltip,
-.guide h2::before {
+.tooltip {
   position: absolute;
   opacity: 0;
   color: $primary;
-  display: block;
+  display: inline-block;
+  width: fit-content;
   transition: all .15s ease-in-out;
 }
 
