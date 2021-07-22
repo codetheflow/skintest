@@ -1,10 +1,10 @@
 import { Meta, ticksToTime } from '@skintest/common';
 import { FeedbackResult, OnStage, Plugin } from '@skintest/platform';
+import { TestFail } from '@skintest/sdk';
 import { performance } from 'perf_hooks';
+import { stderr } from 'process';
 import { getBorderCharacters, table, TableUserConfig } from 'table';
 import { tty } from './tty';
-
-const { stdout } = process;
 
 const FEATURES_COL = 0;
 const TESTS_COL = 1;
@@ -18,7 +18,7 @@ function newRow(): Row {
 }
 
 export function ttySummaryReport(): Plugin {
-  tty.test(stdout);
+  tty.test(stderr);
 
   let startTime: number;
 
@@ -79,19 +79,30 @@ export function ttySummaryReport(): Plugin {
         }
       });
 
-      tty.newLine(stdout, table(statistics, config));
+      tty.newLine(stderr, table(statistics, config));
 
       if (issues.length) {
-        tty.newLine(stdout, tty.fail('FAILURES:'));
+        tty.newLine(stderr, tty.h2('failures:'));
+        let index = 0;
         for (const issue of issues) {
           if (issue.meta) {
-            const { scenario, meta } = issue;
-            tty.newLine(stdout, scenario as string);
-            tty.newLine(stdout, tty.h1(`${meta.file}:${meta.line}:${meta.column}`));
-          }
+            for (const reason of issue.issuer) {
+              index++;
 
-          tty.newLine(stdout);
+              if (reason instanceof Error) {
+                tty.newLine(stderr, tty.ident(2), tty.fail(`${index}) ${reason.name}:`));
+                await tty.writeError(stderr, reason);
+              } else {
+                tty.newLine(stderr, tty.ident(2), tty.fail(`${index}) skintest.assertError:`));
+                tty.writeFail(stderr, reason as TestFail);
+                tty.newLine(stderr, tty.ident(3), tty.fail(` at (${issue.meta.file}:${issue.meta.line}:${issue.meta.column})`));
+              }
+
+              tty.newLine(stderr);
+            }
+          }
         }
+        tty.newLine(stderr);
       }
     },
     'feature:before': async ({ script }) => {
@@ -105,8 +116,8 @@ export function ttySummaryReport(): Plugin {
       const row = currentRow();
       row[TIME_COL] = tty.info(ticksToTime(performance.now() - (row[TIME_COL] as number)));
     },
-    'step': async ({ feedback, script, scenario, step, site }) => {
-      if (site !== 'step') {
+    'step': async ({ feedback, script, scenario, step, path }) => {
+      if (path.length > 0) {
         return;
       }
 
@@ -115,7 +126,7 @@ export function ttySummaryReport(): Plugin {
       const meta = await command.getMeta();
       const errors = issuer.filter(x => x instanceof Error || x.status === 'fail');
 
-      if (issues.length) {
+      if (errors.length) {
         issues.push({
           stage: 'step',
           feature: script.name,

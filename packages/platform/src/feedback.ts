@@ -7,7 +7,7 @@ export type FeedbackResult = {
   issuer: Array<Error | TestResult>;
 };
 
-export class Feedback implements Feedback {
+export class Feedback {
   private feedback = async (): Promise<FeedbackResult> => {
     const { path, step } = this.scope;
     const { issuer } = this;

@@ -80,8 +80,8 @@ export function ttyReport(): Plugin {
         return;
       }
 
-      const [, command] = step;
       let index = 0;
+      const [, command] = step;
       for (const reason of issuer) {
         index++;
 

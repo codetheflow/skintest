@@ -186,7 +186,7 @@ export function hmr(options: HMROptions): Plugin {
 }
 
 function info(message: string): void {
-  tty.replaceLine(stdout, tty.ident(), tty.dev('hmr: '), tty.dev(message));
+  tty.replaceLine(stdout, tty.dev('hmr: '), tty.dev(message));
 }
 
 async function getLines(steps: Steps): Promise<Line[]> {
