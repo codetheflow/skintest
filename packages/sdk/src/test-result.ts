@@ -16,6 +16,7 @@ export interface TestFail {
 
 export interface TestPass {
   status: 'pass';
+  description: string;
 }
 
 export interface InspectInfo {
@@ -25,9 +26,10 @@ export interface InspectInfo {
 
 export type TestResult = TestFail | TestPass;
 
-export function pass(): TestPass {
+export function pass(description = ''): TestPass {
   return {
     status: 'pass',
+    description
   };
 }
 

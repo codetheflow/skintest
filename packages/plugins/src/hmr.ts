@@ -54,7 +54,6 @@ export function hmr(options: HMROptions): Plugin {
             }
 
             const cursor = left.length - 1;
-
             const [hotSuite, dispose] = tempSuite();
             delete require.cache[script.path];
 
@@ -162,13 +161,14 @@ export function hmr(options: HMROptions): Plugin {
           });
       }
     },
-    'step:after': ({ scenario, step }) => {
+    'step': async ({ scenario, step, site, feedback }) => {
       const test = match(scenario.name);
-      if (test(include)) {
+      if (site === 'step' && test(include)) {
         const steps = Array.from(scenario.steps);
         const [index] = step;
         const isLast = index === steps.length - 1;
-        if (isLast) {
+        const { signal } = await feedback.get();
+        if (signal === 'exit' || isLast) {
           tty.newLine(stdout);
           info('wait for changes - CTRL+C to exit');
 
@@ -186,7 +186,7 @@ export function hmr(options: HMROptions): Plugin {
 }
 
 function info(message: string): void {
-  tty.replaceLine(stdout, tty.dev('hmr: '), tty.dev(message));
+  tty.replaceLine(stdout, tty.ident(), tty.dev('hmr: '), tty.dev(message));
 }
 
 async function getLines(steps: Steps): Promise<Line[]> {

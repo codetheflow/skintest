@@ -249,13 +249,24 @@ export class Scene {
             break;
           }
           case 'condition': {
-            const condition = new FeedbackList();
-            condition.add(await runPlan(run.cause));
-            if (condition.ok()) {
-              condition.add(await runPlan(run.body));
+            const condition = await runPlan(run.cause);
+            if (condition.signal === 'break') {
+              // override `break` to `continue` to not stop the loop
+              // override fail tests to pass
+              await addFeedback({
+                signal: 'continue',
+                issuer: overrideFails(condition.issuer)
+              });
+              break;
             }
 
-            await addFeedback(condition.reduce());
+            if (condition.signal === 'exit') {
+              await addFeedback(condition);
+              break;
+            }
+
+            const body = await runPlan(run.body);
+            await addFeedback(body);
             break;
           }
           case 'repeat': {
@@ -277,15 +288,26 @@ export class Scene {
 
               run.writes.forEach(x => x.next(entry));
 
-              repeat.add(await runPlan(run.till));
-              if (repeat.ok()) {
-                repeat.add(await runPlan(run.body));
-                if (repeat.ok()) {
-                  continue;
-                }
+              const condition = await runPlan(run.till);
+              if (condition.signal === 'break') {
+                // override `break` to `continue` to not stop the loop
+                // override fail tests to pass
+                repeat.add({
+                  signal: 'continue',
+                  issuer: overrideFails(condition.issuer)
+                });
+                break;
               }
 
-              break;
+              if (condition.signal === 'exit') {
+                repeat.add(condition);
+                break;
+              }
+
+              repeat.add(await runPlan(run.body));
+              if (!repeat.ok()) {
+                break;
+              }
 
               // eslint-disable-next-line no-constant-condition
             } while (true);
@@ -302,7 +324,7 @@ export class Scene {
             const event = new FeedbackList();
             event.add(handler);
             event.add(trigger);
-            
+
             await addFeedback(event.reduce());
             break;
           }
@@ -322,4 +344,18 @@ export class Scene {
 
     return getFeedback();
   }
+}
+
+function overrideFails(issuer: FeedbackResult['issuer']): FeedbackResult['issuer'] {
+  return issuer.map(x => {
+    if (x instanceof Error) {
+      return x;
+    }
+
+    if (x.status === 'pass') {
+      return x;
+    }
+
+    return pass(x.description);
+  });
 }

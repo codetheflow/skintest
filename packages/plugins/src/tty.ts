@@ -1,4 +1,4 @@
-import { ellipsis, errors, padRight, prettyStack, qte, StringDictionary } from '@skintest/common';
+import { ellipsis, errors, prettyStack, qte, StringDictionary } from '@skintest/common';
 import { AssertHost, DOMElement, ElementRef, ElementState, InspectInfo, TestFail } from '@skintest/sdk';
 import * as chalk from 'chalk';
 import * as path from 'path';
@@ -19,6 +19,7 @@ const STACK_FILE_IGNORE = [
   path.join('common', 'src', 'errors.ts'),
   path.join('common', 'src', 'guard.ts'),
   path.join('common', 'src', 'transaction.ts'),
+  path.join('sdk', 'src', 'steps', 'task.ts'),
 
   // from playwright
   // todo: propagate it here for the launcher options
@@ -31,10 +32,11 @@ export const tty = {
   CHECK_MARK: '\u2713',
   CROSS_MARK: '\u2613',
   PROMPT: '> ',
+  ident: (count = 1): string => Array(count).fill('  ').join(''),
 
   logo: chalk.grey,
   dev: chalk.yellow,
-  error: chalk.bgRed.yellow,
+  error: chalk.bgRed.white,
   warn: chalk.yellow,
   fail: chalk.red,
   h1: chalk.cyan,
@@ -42,8 +44,8 @@ export const tty = {
   hidden: chalk.hidden,
   info: chalk.grey,
   pass: chalk.green,
-  tag: chalk.bgGrey.white,
-  testValue: chalk.redBright,
+  tag: (text: string): string => chalk.bgGrey.black('[' + text + ']'),
+  testValue: (text: string): string => qte(chalk.yellow(text)),
   shortcut: chalk.bold,
 
   test(stream: WriteStream): void {
@@ -72,7 +74,7 @@ export const tty = {
     const { body } = reason;
 
     // todo: make it better
-    const pivot = ['query', 'assert', 'actual', 'etalon'];
+    const pivot = ['query', 'host', 'actual', 'etalon'];
     const isBinaryAssert = pivot.every(key => key in body);
 
     if (isBinaryAssert) {
@@ -80,20 +82,24 @@ export const tty = {
       const method = body.query.type === 'query' ? '$' : '$$';
       const host: AssertHost = body.host;
 
-      tty.newLine(stream, tty.fail(
+      tty.newLine(stream, tty.ident(3), ' ', tty.error(
         `${method}(${selector}).${host.what}: ` +
-        `expected ${tty.testValue('`' + body.actual + '`')} ` +
+        `expected ${tty.testValue(body.actual)} ` +
         `to${host.no ? ' not' : ''} ${host.how} ` +
-        `${tty.testValue('`' + body.etalon + '`')}`
+        `${tty.testValue(body.etalon)}`
       ));
+
+      // tty.newLine(stream, tty.ident(3), ' ', tty.error(`${method}(${selector}).${host.what} to${host.no ? ' not' : ''} ${host.how}`));
+      // tty.newLine(stream, tty.ident(3), ' ', tty.fail('expected result: '), tty.testValue(body.etalon));
+      // tty.newLine(stream, tty.ident(3), ' ', tty.fail('actual result: '), tty.testValue(body.actual));
     } else {
-      tty.newLine(stream, tty.fail(reason.description));
+      tty.newLine(stream, tty.ident(4), ' ', tty.fail(reason.description));
     }
   },
 
   async writeError(stream: WriteStream, reason: Error): Promise<void> {
-    const message = (reason.name || 'Error') + ': ' + (reason.message || 'unknown error');
-    tty.newLine(stream, tty.error(padRight(message, stream.columns)));
+    const message = reason.message || 'unknown error';
+    tty.newLine(stream, tty.ident(3), ' ', tty.error(message));
 
     if (!KNOWN_ERRORS.has(reason.name) && reason.stack) {
       const stackTrace = await prettyStack(reason.stack);
@@ -103,8 +109,8 @@ export const tty = {
       (tsFiles.length ? tsFiles : jsFiles)
         .filter(x => !STACK_FUNC_IGNORE.some(func => x.function === func))
         .filter(x => !STACK_FILE_IGNORE.some(file => x.file.includes(file)))
-        .map(x => `${x.function || 'at'} (${x.file}:${x.line}:${x.column})`)
-        .forEach(x => tty.newLine(stream, tty.fail(x)));
+        .map(x => `at (${x.file}:${x.line}:${x.column})`)
+        .forEach(x => tty.newLine(stream, tty.ident(3), ' ', tty.fail(x)));
     }
   },
 

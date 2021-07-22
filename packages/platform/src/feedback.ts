@@ -1,5 +1,5 @@
-import { errors, Guard } from '@skintest/common';
-import { TestResult } from '@skintest/sdk';
+import { errors, Guard, isObject, qte } from '@skintest/common';
+import { fail, TestResult } from '@skintest/sdk';
 import { CommandScope } from './stage';
 
 export type FeedbackResult = {
@@ -12,7 +12,7 @@ export class Feedback implements Feedback {
     const { path, step } = this.scope;
     const { issuer } = this;
 
-    if ('signal' in issuer) {
+    if (isObject(issuer) && 'signal' in issuer) {
       // we have feedback already, so just return it
       return issuer;
     }
@@ -25,7 +25,7 @@ export class Feedback implements Feedback {
       };
     }
 
-    if ('status' in issuer) {
+    if (isObject(issuer) && 'status' in issuer) {
       if (issuer.status === 'pass') {
         return {
           signal: 'continue',
@@ -53,7 +53,13 @@ export class Feedback implements Feedback {
       }
     }
 
-    throw errors.invalidOperation(`unknown issuer ${issuer}`);
+    return {
+      signal: 'exit',
+      issuer: [fail.reason({
+        description: `unknown issuer ${qte('' + issuer)}`,
+        solution: 'debug'
+      })]
+    };
   };
 
   constructor(

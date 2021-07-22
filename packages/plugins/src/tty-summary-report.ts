@@ -105,23 +105,30 @@ export function ttySummaryReport(): Plugin {
       const row = currentRow();
       row[TIME_COL] = tty.info(ticksToTime(performance.now() - (row[TIME_COL] as number)));
     },
-    'step': async ({ feedback, script, scenario, step }) => {
+    'step': async ({ feedback, script, scenario, step, site }) => {
+      if (site !== 'step') {
+        return;
+      }
+
       const [, command] = step;
       const { issuer } = await feedback.get();
       const meta = await command.getMeta();
+      const errors = issuer.filter(x => x instanceof Error || x.status === 'fail');
 
-      issues.push({
-        stage: 'step',
-        feature: script.name,
-        scenario: scenario.name,
-        issuer,
-        meta
-      });
+      if (issues.length) {
+        issues.push({
+          stage: 'step',
+          feature: script.name,
+          scenario: scenario.name,
+          issuer: errors,
+          meta
+        });
 
-      const credited = issues.findIndex(x => x.feature === script.name && x.scenario === scenario.name);
-      if (!credited) {
-        const row = currentRow();
-        row[FAILS_COL] = (row[FAILS_COL] as number) + 1;
+        const credited = issues.findIndex(x => x.feature === script.name && x.scenario === scenario.name);
+        if (!credited) {
+          const row = currentRow();
+          row[FAILS_COL] = (row[FAILS_COL] as number) + 1;
+        }
       }
     },
     'project:error': async ({ reason }) => {
