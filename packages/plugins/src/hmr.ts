@@ -83,7 +83,7 @@ export function hmr(options: HMROptions): Plugin {
               .then(right => {
                 const ops = compare(left, right, lineEquals);
                 if (!ops.length) {
-                  info('no changes, wait - CTRL+C to exit');
+                  info('no changes, wait');
                   return;
                 }
 
@@ -153,7 +153,7 @@ export function hmr(options: HMROptions): Plugin {
 
                   proceed();
                 } else {
-                  info('no changes, wait - CTRL+C to exit');
+                  info('no changes, wait');
                 }
               });
 
@@ -170,7 +170,7 @@ export function hmr(options: HMROptions): Plugin {
         const { signal } = await feedback.get();
         if (signal === 'exit' || isLast) {
           tty.newLine(stdout);
-          info('wait for changes - CTRL+C to exit');
+          info('wait for changes');
 
           return new Promise((resolve) => {
             wait = {

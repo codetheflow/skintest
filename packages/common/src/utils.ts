@@ -74,7 +74,9 @@ export function ticksToTime(ms: number): string {
   const minute = Math.floor((seconds / 60) % 60);
   const second = seconds % 60;
 
-  return pad2(hour) + ':' + pad2(minute) + ':' + pad2(second);
+  return hour
+    ? pad2(hour) + ':' + pad2(minute) + ':' + pad2(second)
+    : pad2(minute) + ':' + pad2(second);
 }
 
 export function qte(text: string): string {
