@@ -21,7 +21,7 @@
   },
   "keywords": [
     "skintest",
-    "api",
+    "enterprise",
     "e2e",
     "test",
     "qa"
@@ -37,8 +37,8 @@
     "@skintest/sdk": "*"
   },
   "devDependencies": {
-    "@types/node": "15.12.2",
+    "@types/node": "16.4.1",
     "rimraf": "3.0.2",
-    "typescript": "4.3.2"
+    "typescript": "4.3.5"
   }
 }

@@ -2,7 +2,8 @@
 
 import { extend } from '@skintest/common';
 import { nodePlatform } from '@skintest/platform';
-import { exploreNodeFeatures, exploreNodeProjects, playwrightLauncher, playwrightUse as playwrightUse, tagFilter, ttyDebug, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { playwrightLauncher, playwrightUse } from '@skintest/playwright';
+import { exploreNodeFeatures, exploreNodeProjects, tagFilter, ttyDebug, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
 import * as pw from 'playwright';
 

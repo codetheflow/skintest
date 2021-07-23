@@ -1,8 +1,6 @@
 export { exploreNodeFeatures } from './explore-node-features';
 export { exploreNodeProjects } from './explore-node-projects';
 export { hmr } from './hmr';
-export { playwrightLauncher } from './playwright/playwright-launcher';
-export { playwrightUse } from './playwright/playwright-middleware';
 export { tagFilter } from './tag-filter';
 export { ttyDebug } from './tty-debug';
 export { ttyLogo } from './tty-logo';

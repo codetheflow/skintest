@@ -21,7 +21,7 @@
   },
   "keywords": [
     "skintest",
-    "api",
+    "common",
     "e2e",
     "test",
     "qa"
@@ -32,10 +32,10 @@
   },
   "homepage": "https://github.com/codetheflow/skintest#readme",
   "devDependencies": {
-    "@types/node": "15.12.2",
-    "@types/stack-utils": "2.0.0",
+    "@types/node": "16.4.1",
+    "@types/stack-utils": "2.0.1",
     "rimraf": "3.0.2",
-    "typescript": "4.3.2"
+    "typescript": "4.3.5"
   },
   "dependencies": {
     "source-map": "0.7.3",

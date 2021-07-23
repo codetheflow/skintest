@@ -1,7 +1,7 @@
 {
-  "name": "@skintest/platform",
+  "name": "@skintest/playwright",
   "version": "1.0.19-alpha.0",
-  "description": "skintest platform",
+  "description": "skintest playwright",
   "main": "dist/src/public-api.js",
   "types": "dist/src/public-api.d.ts",
   "publishConfig": {
@@ -21,7 +21,7 @@
   },
   "keywords": [
     "skintest",
-    "platform",
+    "playwright",
     "e2e",
     "test",
     "qa"
@@ -32,14 +32,16 @@
   },
   "homepage": "https://github.com/codetheflow/skintest#readme",
   "devDependencies": {
-    "@types/glob": "7.1.4",
     "@types/node": "16.4.1",
     "rimraf": "3.0.2",
     "typescript": "4.3.5"
   },
+  "dependencies": {
+    "playwright": "1.13.0"
+  },
   "peerDependencies": {
     "@skintest/common": "*",
+    "@skintest/platform": "*",
     "@skintest/sdk": "*"
-  },
-  "gitHead": "dbf2fed6614ab8bb65ea7b3af488197044ea1d0b"
+  }
 }

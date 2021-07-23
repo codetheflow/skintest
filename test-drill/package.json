@@ -35,16 +35,18 @@
   },
   "homepage": "https://github.com/codetheflow/skintest#readme",
   "devDependencies": {
-    "@types/node": "15.12.2",
-    "nodemon": "^2.0.7",
+    "@types/node": "16.4.1",
+    "nodemon": "^2.0.12",
     "rimraf": "3.0.2",
-    "typescript": "4.3.2"
+    "typescript": "4.3.5"
   },
   "peerDependencies": {
     "@skintest/common": "*",
     "@skintest/enterprise": "*",
     "@skintest/platform": "*",
     "@skintest/plugins": "*",
-    "@skintest/sdk": "*"
+    "@skintest/sdk": "*",
+    "@skintest/playwright": "*",
+    "playwright": "1.13.0"
   }
 }
