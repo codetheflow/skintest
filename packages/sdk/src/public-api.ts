@@ -18,6 +18,7 @@ export { Page } from './page';
 export { perform } from './perform';
 export { $, $$, Query, QueryList } from './query';
 export { RepeatEntry, RepeatRead, RepeatWrite, RepeatYield } from './repeat';
+export { Feature, schema } from './schema';
 export { RuntimeScript, Scenario, Script, Step, Steps } from './script';
 export { Breakpoint, Debugger } from './steps/debug';
 export { download, Download } from './steps/wait-download';

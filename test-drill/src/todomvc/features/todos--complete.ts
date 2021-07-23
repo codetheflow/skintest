@@ -3,6 +3,7 @@ import { $page } from '../components/$page';
 import { $todos } from '../components/$todos';
 import { add_todo } from '../tasks/add-todo';
 import { clear_todos } from '../tasks/clear-todos';
+
 feature()
 
   .before('scenario'
@@ -28,4 +29,4 @@ feature()
     , I.check('completed todos are not visible after click clear')
     , I.see($todos.list, has.length, 1)
     , I.see($todos.item_at(0), has.text, 'drink a wine')
-  )
+  );

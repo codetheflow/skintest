@@ -11,7 +11,6 @@ import { Value } from './value';
 export interface Ego {
   __pause<D>(): DevStep<D>;
   __debug<D>(breakpoint: Breakpoint): DevStep<D>;
-  __inspect<D, E extends DOMElement>(selector: string | Query<E> | QueryList<E>): DevStep<D>;
 
   open<D>(name: Value<string, D>): ClientStep<D>;
   goto<D>(url: Value<string, D>): ClientStep<D>;

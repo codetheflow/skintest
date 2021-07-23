@@ -2,7 +2,7 @@ import { CanAppend, errors, Guard, qte, reinterpret } from '@skintest/common';
 import { Command } from './command';
 import { RuntimeScript, Script } from './script';
 
-// todo: apply immutable approach
+// todo: investigate better approach in the script builder
 // todo: better currentSuite management
 
 let currentSuite: Suite;
@@ -27,23 +27,12 @@ export function tempSuite(): [Suite, () => void] {
   ];
 }
 
-// class SceneFlow {
-//   constructor(private path: string[]) {
-//   }
-
-//   async unhappy(result: Error | TestFail): Promise<[boolean, string]> {
-//     const { path } = this;
-
-//     if (result instanceof Error) {
-//       return [true, result.message];
-//     }
-
-//     const host = path[path.length - 1];
-//     const controlFlow = host === 'condition' || host === 'repeat';
-//     const breakLoop = result.effect === 'break' || controlFlow;
-//     return [breakLoop, result.description];
-//   }
-// }
+type Event = {
+  type: 'modify' | 'remove';
+  timestamp: number;
+  script: Script;
+  scenario: string;
+}
 
 export interface Suite {
   readonly uri: string;
@@ -51,10 +40,12 @@ export interface Suite {
   addScript(script: Script): void;
   editScript(script: Script): ScriptBuilder;
   getScripts(): Script[];
+  getHistory(script: Script): Event[];
 }
 
 class ProjectSuite implements Suite {
   private scripts: Script[] = [];
+  readonly history: Event[] = [];
 
   constructor(public uri: string) {
   }
@@ -78,21 +69,25 @@ class ProjectSuite implements Suite {
 
     return new ProjectScriptBuilder(this, script as RuntimeScript);
   }
+
+  getHistory(script: Script) {
+    return this.history.filter(x => x.script === script);
+  }
 }
 
-type HowToModifyScenario = {
+type EditScenario = {
   append: Command[];
 };
 
 export interface ScriptBuilder {
   commit(): void;
   removeScenario(name: string): ScriptBuilder;
-  modifyScenario(name: string, how: HowToModifyScenario): ScriptBuilder;
+  modifyScenario(name: string, how: EditScenario): ScriptBuilder;
 }
 
 class ProjectScriptBuilder implements ScriptBuilder {
   private scenariosToRemove = new Set<string>();
-  private scenariosToModify = new Map<string, HowToModifyScenario[]>();
+  private scenariosToModify = new Map<string, EditScenario[]>();
 
   constructor(
     private suite: ProjectSuite,
@@ -104,8 +99,7 @@ class ProjectScriptBuilder implements ScriptBuilder {
     return this;
   }
 
-
-  modifyScenario(name: string, how: HowToModifyScenario): ScriptBuilder {
+  modifyScenario(name: string, how: EditScenario): ScriptBuilder {
     if (this.scenariosToModify.has(name)) {
       this.scenariosToModify.get(name)?.push(how);
     } else {
@@ -136,11 +130,24 @@ class ProjectScriptBuilder implements ScriptBuilder {
           reinterpret<CanAppend<Command>>(scenario.steps).append(...how.append);
         }
       }
+
+      this.suite.history.push({
+        type: 'modify',
+        timestamp: Date.now(),
+        script,
+        scenario: name,
+      });
     }
 
     for (const name of this.scenariosToRemove) {
       const index = getScenarioIndex(name);
       script.scenarios.splice(index, 1);
+      this.suite.history.push({
+        type: 'remove',
+        timestamp: Date.now(),
+        script,
+        scenario: name,
+      });
     }
   }
 }

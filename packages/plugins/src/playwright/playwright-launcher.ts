@@ -1,9 +1,9 @@
-import { errors } from '@skintest/common';
+import { errors, extend } from '@skintest/common';
 import { Launcher } from '@skintest/platform';
 import * as pw from 'playwright';
 import { playwrightAction } from './playwright-action';
 import { PlaywrightBrowser } from './playwright-browser';
-import { PlaywrightMiddleware, playwrightMiddleware, PlaywrightMiddlewareUse } from './playwright-middleware';
+import { PlaywrightMiddleware, PlaywrightUse, playwrightUse } from './playwright-middleware';
 
 const DEFAULT_OPTIONS = {
   headless: true,
@@ -11,23 +11,16 @@ const DEFAULT_OPTIONS = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function playwrightLauncher(...use: PlaywrightMiddlewareUse<any>[]): Launcher {
+export function playwrightLauncher(...use: PlaywrightUse<any>[]): Launcher {
   use = [
-    playwrightMiddleware('browser:new', async ({ options }) => {
-      return {
-        ...options, ...{
-          timeout: DEFAULT_OPTIONS.timeout
-        }
-      };
+    playwrightUse('browser:types', async () => [pw.chromium]),
+    playwrightUse('browser:options', async ({ options }) => {
+      return extend(options, { timeout: DEFAULT_OPTIONS.timeout });
     }),
-    playwrightMiddleware('context:new', async ({ options }) => {
-      return {
-        ...options, ... {
-          acceptDownloads: true,
-        }
-      };
+    playwrightUse('context:options', async ({ options }) => {
+      return extend(options, { acceptDownloads: true });
     }),
-    playwrightMiddleware('page:new', async ({ page }) => {
+    playwrightUse('page:new', async ({ page }) => {
       page.setDefaultTimeout(DEFAULT_OPTIONS.timeout);
       page.setDefaultNavigationTimeout(DEFAULT_OPTIONS.timeout);
     }),
@@ -39,7 +32,7 @@ export function playwrightLauncher(...use: PlaywrightMiddlewareUse<any>[]): Laun
   return {
     async getBrowsers() {
       const browserTypes = await middleware
-        .accept('browser:type', { types: [pw.chromium] });
+        .accept('browser:types', { types: [] });
 
       if (!browserTypes.length) {
         throw errors.invalidOperation('at least one browser type should be defined');
@@ -47,7 +40,7 @@ export function playwrightLauncher(...use: PlaywrightMiddlewareUse<any>[]): Laun
 
       return browserTypes.map(browserType => async () => {
         const options = await middleware
-          .accept('browser:new', {
+          .accept('browser:options', {
             type: pw.chromium,
             options: {}
           });

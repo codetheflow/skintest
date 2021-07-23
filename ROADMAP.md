@@ -1,16 +1,20 @@
 # ROAD-MAP
 
 ### m.1
-* HMR support
-* another way to filter features and scenarios
-* middleware
+* [done] another way to filter features and scenarios
+* [done] better reporting UX (error showing and summary table)
+* [done] azure account
+* [done] skintest.io
+* [done] single quotes, semicolon, #now lints
 
 ### m.2
-* possibility to setup a global suite level fn to intercept routing, page settings, session storage update, global navigation event etc.
-* config to define pw options: window size, browser, device emulation etc.
+* [progress] playwright middleware
+* [progress] possibility to setup a global suite level fn to intercept routing, page settings, session storage update, global navigation event etc.
+* [progress] config to define pw options: window size, browser, device emulation etc.
+* skintest server
+* `grep` plugin
 
 ### m.3
-* define the final folder structure and naming convention
 * better assert task, test effect('break', 'continue', 'exit')
 * define final test data, till, iif and wait APIs, use Value<> in `till` fn.
 * define tags for the future
@@ -20,30 +24,31 @@
 * in debug pause access to the components
 
 ### m.5
-* better reporting UX (better summary table, show code pieces)
-* add max time that scenario could take (for `till` operations)
 * multiple file download support api
 
 # m.6
-* multiple selector strategy in $ and $$, data-test-id, search by the text
-* `__pause` is frozen sometimes ??
-* add comments to the ego, selectors, tasks and keyboard keys
-* CI/CD integration
-* single quotes lint
-* semicolon lint
-
+* multiple selector strategy in $ and $$
+  
 # m.7
-* azure account
-* skintest.io
 * skintest-starter
 * default launch.json in skintest-starter
 * define skintest-dev.ts to modify local data without pushing to the git.
+
+# m.8
+* fill documentation
 * LICENSE
 * CODE_OF_CONDUCT
 * CONTRIBUTING
 * BUG REPORTING
 * CODE_STYLE
 * CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
+ 
+# m.9
+* [alpha] HMR support
+* define the final folder structure and naming convention
+* [bug] `__pause` is frozen sometimes
+* add comments to the ego, selectors, tasks and keyboard keys
+* CI/CD integration
 
 # m.backlog
 * in multi-page scenarios show the tab near the step in tty-report
@@ -56,7 +61,7 @@
 * retryFailed
 * cancelOnFail
 * runFailedFirst
-
+* on failure show code pieces in tty report
 * custom timeout?
 * https://playwright.dev/docs/api/class-dialog
 * test data in operators
@@ -94,6 +99,7 @@
 * https://playwright.dev/docs/test-runners
 * browser and node runners?
 * https://gist.github.com/vzaidman/ef6e4b772b311ffb98368da5f7a9582a#file-codecept-example-js
+* selector strategy - data-test-id, search by the text
 
 # m.enterprise
 * stripe integration
@@ -103,3 +109,4 @@
 * wrike, jira integration
 * telegram, slack reporting
 * oauth logins
+* test runner panel

@@ -18,4 +18,4 @@ feature()
     , I.click($todos.item_remove_at(0))
     , I.check('todos list is empty after remove button clicked')
     , I.see($todos.list, has.length, 0)
-  )
+  );

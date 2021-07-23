@@ -4,7 +4,7 @@ import { add_todo } from './add-todo';
 
 function add_next_todo(read: RepeatRead): Promise<Task> {
   const { index } = read.current();
-  return add_todo(`generate todo #${index}`)
+  return add_todo(`generate todo #${index}`);
 }
 
 /**

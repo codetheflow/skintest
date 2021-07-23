@@ -18,7 +18,7 @@ export function ttyLogo(): Plugin {
 
   return async (stage: OnStage) => stage({
     'platform:mount': async () => {
-      tty.newLine(stdout, tty.logo(ART));
+      tty.newLine(stdout, tty.muted(ART));
       tty.newLine(stdout);
     }
   });

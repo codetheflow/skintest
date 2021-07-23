@@ -68,7 +68,7 @@ export class PlaywrightBrowser implements Browser {
     }
 
     const options = await this.middleware
-      .accept('context:new', {
+      .accept('context:options', {
         id,
         browser: this.browser,
         options: {}

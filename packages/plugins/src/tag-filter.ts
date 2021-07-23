@@ -4,11 +4,12 @@ import { ScriptBuilder } from '@skintest/sdk';
 
 type TagFilterOptions = {
   include: string[],
+  exclude: string[],
   method: 'include-only-matched' | 'include-all-when-no-matches'
 };
 
 export function tagFilter(options: TagFilterOptions): Plugin {
-  const { include, method } = options;
+  const { include, exclude, method } = options;
 
   return async (stage: OnStage) => stage({
     'project:ready': async ({ suite }) => {
@@ -16,7 +17,8 @@ export function tagFilter(options: TagFilterOptions): Plugin {
       const transaction: ScriptBuilder[] = [];
       for (const script of suite.getScripts()) {
         for (const scenario of script.scenarios) {
-          if (!include.some(match(scenario.name))) {
+          const test = match(scenario.name);
+          if ((exclude.length && exclude.some(test)) || (include.length && !include.some(test))) {
             transaction.push(
               suite
                 .editScript(script)

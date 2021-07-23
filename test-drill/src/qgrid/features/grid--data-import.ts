@@ -17,4 +17,4 @@ feature()
     , I.check('grid has rows')
     , I.see($grid.row_at(0), has.state, 'visible')
     , I.see($grid.row_list, has.length, 50)
-  )
+  );

@@ -2,7 +2,6 @@ import { isUndefined } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command, TestFail } from '@skintest/sdk';
 import { tty } from './tty';
-import chalk = require('chalk');
 
 const { stdout, stderr } = process;
 const TAG_RE = /(^|\s)(#[^\s$]+)(\s|$)/gi;
@@ -27,7 +26,7 @@ export function ttyReport(): Plugin {
       }
 
       const info = await script.getMeta();
-      tty.newLine(stdout, tty.h1(info.file + `:${info.line}:${info.column}`));
+      tty.newLine(stdout, tty.link(info.file + `:${info.line}:${info.column}`));
     },
     'feature:after': async ({ script }) => {
       if (Array.from(script.scenarios).length === 0) {
@@ -38,7 +37,7 @@ export function ttyReport(): Plugin {
     },
     'scenario:before': async ({ scenario }) => {
       const label = scenario.name.replace(TAG_RE, (...args) => args[1] + tty.tag(args[2]) + args[3]);
-      tty.newLine(stdout, tty.h2(label));
+      tty.newLine(stdout, tty.primary(label));
     },
     'scenario:after': async () => {
       tty.newLine(stdout);
@@ -46,17 +45,17 @@ export function ttyReport(): Plugin {
     'step:before': async ({ step, datum }) => {
       const [index, command] = step;
       if (index === 0 && !isUndefined(datum[1])) {
-        tty.newLine(stdout, tty.ident(), tty.h2(datum[0] + 1), tty.h2('. '), tty.h2(stringify(datum[1])));
+        tty.newLine(stdout, tty.ident(), tty.primary(datum[0] + 1), tty.primary('. '), tty.primary(stringify(datum[1])));
       }
 
       if (command.type === 'dev') {
         const commandText = await getText(command);
-        tty.newLine(stdout, tty.dev(commandText));
+        tty.newLine(stdout, tty.debug(commandText));
         return;
       }
 
       const commandText = await getText(command);
-      tty.newLine(stdout, tty.ident(), tty.hidden(tty.CHECK_MARK), ' ', tty.info(commandText));
+      tty.newLine(stdout, tty.ident(), tty.hidden(tty.CHECK_MARK), ' ', tty.muted(commandText));
     },
     'step': async ({ site, step, path, feedback }) => {
       if (path.length > 0) {
@@ -74,7 +73,7 @@ export function ttyReport(): Plugin {
 
         if (site === 'step') {
           const commandText = await getText(command);
-          tty.replaceLine(stdout, tty.ident(), tty.pass(tty.CHECK_MARK), ' ', tty.info(commandText));
+          tty.replaceLine(stdout, tty.ident(), tty.pass(tty.CHECK_MARK), ' ', tty.muted(commandText));
         }
 
         return;
@@ -82,11 +81,11 @@ export function ttyReport(): Plugin {
 
       let index = 0;
       const [, command] = step;
-      for (const reason of issuer) {
+      for (const reason of issues) {
         index++;
 
         const commandText = await getText(command);
-        const line = [tty.ident(), tty.fail(tty.CROSS_MARK), ' ', tty.info(commandText)];
+        const line = [tty.ident(), tty.fail(tty.CROSS_MARK), ' ', tty.muted(commandText)];
         if (site === 'step') {
           tty.replaceLine(stderr, ...line);
         } else {
@@ -95,14 +94,15 @@ export function ttyReport(): Plugin {
 
         tty.newLine(stderr);
 
+        const meta = await command.getMeta();
         if (reason instanceof Error) {
           tty.newLine(stderr, tty.ident(2), tty.fail(`${index}) ${reason.name}:`));
+          tty.newLine(stderr, tty.ident(3), tty.fail(` at (${meta.file}:${meta.line}:${meta.column})`));
           await tty.writeError(stderr, reason);
         } else {
           tty.newLine(stderr, tty.ident(2), tty.fail(`${index}) skintest.assertError:`));
-          tty.writeFail(stderr, reason as TestFail);
-          const meta = await command.getMeta();
           tty.newLine(stderr, tty.ident(3), tty.fail(` at (${meta.file}:${meta.line}:${meta.column})`));
+          tty.writeFail(stderr, reason as TestFail);
         }
 
         tty.newLine(stderr);

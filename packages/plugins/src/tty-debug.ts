@@ -13,8 +13,8 @@ export function ttyDebug(): Plugin {
       const [, command] = step;
 
       if (command.type === 'dev' && command.toString() === '__pause') {
-        tty.newLine(stdout, tty.dev(`- type a selector and hit ${tty.shortcut('ENTER')}`));
-        tty.newLine(stdout, tty.dev(`- type ${tty.shortcut('CTRL+C')} to exit from pause`));
+        tty.newLine(stdout, tty.debug(`- type a selector and hit ${tty.strong('ENTER')}`));
+        tty.newLine(stdout, tty.debug(`- type ${tty.strong('CTRL+C')} to exit from pause`));
         tty.newLine(stdout);
 
         const rl = readline.createInterface({

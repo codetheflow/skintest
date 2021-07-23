@@ -34,19 +34,17 @@ export const tty = {
   PROMPT: '> ',
   ident: (count = 1): string => Array(count).fill('  ').join(''),
 
-  logo: chalk.grey,
-  dev: chalk.yellow,
+  debug: chalk.yellow,
   error: chalk.bgRed.white,
-  warn: chalk.yellow,
   fail: chalk.red,
-  h1: chalk.cyan,
-  h2: chalk.white,
+  link: chalk.cyan,
+  primary: chalk.white,
   hidden: chalk.hidden,
-  info: chalk.grey,
+  muted: chalk.grey,
   pass: chalk.green,
   tag: (text: string): string => chalk.bgGrey.black('[' + text + ']'),
-  testValue: (text: string): string => qte(chalk.yellow(text)),
-  shortcut: chalk.bold,
+  value: (text: string): string => qte(chalk.yellow(text)),
+  strong: chalk.bold,
 
   test(stream: WriteStream): void {
     if (!stream.isTTY) {
@@ -84,16 +82,12 @@ export const tty = {
 
       tty.newLine(stream, tty.ident(3), ' ', tty.error(
         `${method}(${selector}).${host.what}: ` +
-        `expected ${tty.testValue(body.actual)} ` +
+        `expected ${tty.value(body.actual)} ` +
         `to${host.no ? ' not' : ''} ${host.how} ` +
-        `${tty.testValue(body.etalon)}`
+        `${tty.value(body.etalon)}`
       ));
-
-      // tty.newLine(stream, tty.ident(3), ' ', tty.error(`${method}(${selector}).${host.what} to${host.no ? ' not' : ''} ${host.how}`));
-      // tty.newLine(stream, tty.ident(3), ' ', tty.fail('expected result: '), tty.testValue(body.etalon));
-      // tty.newLine(stream, tty.ident(3), ' ', tty.fail('actual result: '), tty.testValue(body.actual));
     } else {
-      tty.newLine(stream, tty.ident(4), ' ', tty.fail(reason.description));
+      tty.newLine(stream, tty.ident(3), ' ', tty.error(reason.description));
     }
   },
 

@@ -14,9 +14,8 @@ feature()
     , I.do(clear_todos)
   )
 
-  .scenario('#now check the input field should be in focus on initial load'
+  .scenario('check the input field should be in focus on initial load'
     , I.check('focus in the input field')
-    , I.see($todos.what, has.state, 'disabled')
     , I.see($todos.what, has.state, 'focused')
   )
 
@@ -82,4 +81,4 @@ feature()
     , I.do(paste, $todos.what)
     , I.check('input has the same value as first todo')
     , I.see($todos.what, has.text, 'feed dragon')
-  )
+  );

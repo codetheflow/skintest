@@ -1,6 +1,6 @@
 import { Meta, ticksToTime } from '@skintest/common';
 import { FeedbackResult, OnStage, Plugin } from '@skintest/platform';
-import { TestFail } from '@skintest/sdk';
+import { Scenario, TestFail } from '@skintest/sdk';
 import { performance } from 'perf_hooks';
 import { stderr, stdout } from 'process';
 import { getBorderCharacters, table, TableUserConfig } from 'table';
@@ -9,13 +9,14 @@ import { tty } from './tty';
 const FEATURES_COL = 0;
 const TIME_COL = 1;
 const TESTS_COL = 2;
-const FAILING_COL = 3;
-const SKIPPED_COL = 4;
+const PASSING_COL = 3;
+const FAILING_COL = 4;
+const SKIPPED_COL = 5;
 
-type Row = [string, number | string, number | string, number | string, number | string];
+type Row = [string, number | string, number | string, number | string, number | string, number | string];
 
 function newRow(): Row {
-  return ['', 0, 0, 0, 0];
+  return ['', 0, 0, 0, 0, 0];
 }
 
 export function ttySummaryReport(): Plugin {
@@ -32,13 +33,15 @@ export function ttySummaryReport(): Plugin {
   }> = [];
 
   const header = newRow();
-  header[FEATURES_COL] = tty.info('features');
-  header[TESTS_COL] = tty.info('tests');
-  header[FAILING_COL] = tty.info('failing');
-  header[SKIPPED_COL] = tty.info('skipped');
-  header[TIME_COL] = tty.info();
+  header[FEATURES_COL] = tty.muted('features');
+  header[TESTS_COL] = tty.muted('tests');
+  header[FAILING_COL] = tty.muted('failing');
+  header[PASSING_COL] = tty.muted('passing');
+  header[SKIPPED_COL] = tty.muted('skipped');
+  header[TIME_COL] = tty.muted();
 
   const summary: Array<Row> = [header];
+  const failedScenarios = new Set<Scenario>();
 
   function currentRow(): Row {
     return summary[summary.length - 1];
@@ -51,25 +54,19 @@ export function ttySummaryReport(): Plugin {
     'platform:unmount': async () => {
       const stopTime = performance.now();
 
-      const headerStyle = issues.length ? tty.error : tty.pass;
       const config: TableUserConfig = {
         border: getBorderCharacters('norc'), // norc
-        // header: {
-        //   content: headerStyle(`executed in ${ticksToTime(stopTime - startTime)}`),
-        // },
         columns: {
-          [FEATURES_COL]: { width: Math.max(40, stdout.columns - 50), wrapWord: false, paddingRight: 2, paddingLeft: 2 },
+          [FEATURES_COL]: { width: Math.min(40, Math.max(20, stdout.columns - 50)), wrapWord: false, paddingRight: 2, paddingLeft: 2 },
           [TESTS_COL]: { alignment: 'right', paddingRight: 2 },
           [FAILING_COL]: { alignment: 'right', paddingRight: 2 },
           [TIME_COL]: { paddingLeft: 2, paddingRight: 2, alignment: 'center' },
+          [PASSING_COL]: { alignment: 'right', paddingRight: 2 },
           [SKIPPED_COL]: { alignment: 'right', paddingRight: 2 },
         },
         drawVerticalLine(lineIndex, columnCount) {
           return lineIndex === 0 || lineIndex === columnCount;
         },
-        // drawHorizontalLine(index, size) {
-        //   return index > 0 && index < size;
-        // }
       };
 
       const total = newRow();
@@ -88,13 +85,18 @@ export function ttySummaryReport(): Plugin {
           return;
         }
 
+        row[PASSING_COL] = (row[TESTS_COL] as number) - (row[FAILING_COL] as number) - (row[SKIPPED_COL] as number);
+        if (!footer) {
+          total[PASSING_COL] = (total[PASSING_COL] as number) + (row[PASSING_COL] as number);
+        }
+
         const fails = row[FAILING_COL] as number;
         if (fails) {
-          row[FEATURES_COL] = tty.fail(tty.CROSS_MARK) + ' ' + tty.h2(row[FEATURES_COL]);
+          row[FEATURES_COL] = tty.fail(tty.CROSS_MARK) + ' ' + tty.primary(row[FEATURES_COL]);
           row[FAILING_COL] = tty.fail(fails);
         } else {
-          row[FEATURES_COL] = tty.pass(row[TESTS_COL] ? tty.CHECK_MARK : ' ') + ' ' + (row[TESTS_COL] ? tty.h2(row[FEATURES_COL]) : tty.info(row[FEATURES_COL]));
-          row[FAILING_COL] = tty.info('-');
+          row[FEATURES_COL] = tty.pass(row[TESTS_COL] ? tty.CHECK_MARK : ' ') + ' ' + (row[TESTS_COL] ? tty.primary(row[FEATURES_COL]) : tty.muted(row[FEATURES_COL]));
+          row[FAILING_COL] = tty.muted('-');
         }
 
         if (footer) {
@@ -104,23 +106,29 @@ export function ttySummaryReport(): Plugin {
         }
 
         if (row[TESTS_COL] === 0) {
-          row[TESTS_COL] = tty.info('-');
+          row[TESTS_COL] = tty.muted('-');
         } else {
-          row[TESTS_COL] = tty.h2(row[TESTS_COL]);
+          row[TESTS_COL] = tty.primary(row[TESTS_COL]);
         }
 
         if (row[SKIPPED_COL] === 0) {
-          row[SKIPPED_COL] = tty.info('-');
+          row[SKIPPED_COL] = tty.muted('-');
         } else {
-          row[SKIPPED_COL] = tty.dev(SKIPPED_COL);
+          row[SKIPPED_COL] = tty.debug(row[SKIPPED_COL]);
+        }
+
+        if (row[PASSING_COL] === 0) {
+          row[PASSING_COL] = tty.muted('-');
+        } else {
+          row[PASSING_COL] = tty.pass(row[PASSING_COL]);
         }
 
       });
 
-      tty.newLine(stderr, tty.info(table(summary, config)));
+      tty.newLine(stderr, tty.muted(table(summary, config)));
 
       if (issues.length) {
-        tty.newLine(stderr, tty.h2('failures:'));
+        tty.newLine(stderr, tty.primary('failures:'));
         let index = 0;
         for (const issue of issues) {
           if (issue.meta) {
@@ -129,12 +137,13 @@ export function ttySummaryReport(): Plugin {
 
               if (reason instanceof Error) {
                 tty.newLine(stderr, tty.ident(2), tty.fail(`${index}) ${reason.name}:`));
+                tty.newLine(stderr, tty.ident(3), tty.fail(` at (${issue.meta.file}:${issue.meta.line}:${issue.meta.column})`));
                 await tty.writeError(stderr, reason);
               } else {
                 tty.newLine(stderr, tty.ident(2), tty.fail(`${index}) skintest.assertError:`));
-                tty.writeFail(stderr, reason as TestFail);
                 tty.newLine(stderr, tty.ident(3), tty.fail(` at (${issue.meta.file}:${issue.meta.line}:${issue.meta.column})`));
-              }
+                tty.writeFail(stderr, reason as TestFail);
+              } 
 
               tty.newLine(stderr);
             }
@@ -143,16 +152,19 @@ export function ttySummaryReport(): Plugin {
         tty.newLine(stderr);
       }
     },
-    'feature:before': async ({ script }) => {
+    'feature:before': async ({ suite, script }) => {
       const row = newRow();
       row[FEATURES_COL] = script.name;
       row[TIME_COL] = performance.now();
+
+      row[SKIPPED_COL] = suite.getHistory(script).filter(x => x.type === 'remove').length;
+      row[TESTS_COL] = (row[SKIPPED_COL] as number) + Array.from(script.scenarios).length;
 
       summary.push(row);
     },
     'feature:after': async () => {
       const row = currentRow();
-      row[TIME_COL] = tty.info(ticksToTime(performance.now() - (row[TIME_COL] as number)));
+      row[TIME_COL] = tty.muted(ticksToTime(performance.now() - (row[TIME_COL] as number)));
     },
     'step': async ({ feedback, script, scenario, step, path }) => {
       if (path.length > 0) {
@@ -173,10 +185,13 @@ export function ttySummaryReport(): Plugin {
           meta
         });
 
-        const credited = issues.findIndex(x => x.feature === script.name && x.scenario === scenario.name);
-        if (!credited) {
-          const row = currentRow();
-          row[FAILING_COL] = (row[FAILING_COL] as number) + 1;
+        if (!failedScenarios.has(scenario)) {
+          const credited = issues.findIndex(x => x.feature === script.name && x.scenario === scenario.name);
+          if (!credited) {
+            const row = currentRow();
+            row[FAILING_COL] = (row[FAILING_COL] as number) + 1;
+            failedScenarios.add(scenario);
+          }
         }
       }
     },
@@ -193,10 +208,6 @@ export function ttySummaryReport(): Plugin {
         scenario: '',
         issuer: [reason]
       });
-    },
-    'scenario:before': async () => {
-      const row = currentRow();
-      row[TESTS_COL] = (row[TESTS_COL] as number) + 1;
     }
   });
 }

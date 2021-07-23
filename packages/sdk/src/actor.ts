@@ -3,7 +3,7 @@ import { AssertStep, CheckStep, ClientStep, DevStep, DoStep, InfoStep } from './
 import { DOMElement } from './dom';
 import { Ego } from './ego';
 import { KeyboardKey } from './keyboard';
-import { Query, QueryList } from './query';
+import { Query } from './query';
 import { CheckExecuteStep } from './steps/check';
 import { ClickStep } from './steps/click';
 import { DblClickStep } from './steps/dblclick';
@@ -12,7 +12,6 @@ import { FillStep } from './steps/fill';
 import { FocusStep } from './steps/focus';
 import { GotoStep } from './steps/goto';
 import { HoverStep } from './steps/hover';
-import { InspectStep } from './steps/inspect';
 import { MarkStep } from './steps/mark';
 import { NavigationStep } from './steps/navigate';
 import { OpenStep } from './steps/open';
@@ -30,6 +29,7 @@ import { TaskFunction } from './task';
 import { Value } from './value';
 
 class Actor implements Ego {
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wait<D>(targetOrTask: any, ...args: any[]): ClientStep<D> {
     const caller = getCaller();
@@ -133,11 +133,6 @@ class Actor implements Ego {
   __debug<D>(breakpoint: Breakpoint): DevStep<D> {
     const caller = getCaller();
     return new DebugStep(() => getMeta(caller), breakpoint);
-  }
-
-  __inspect<D, T extends DOMElement>(selector: string | Query<T> | QueryList<T>): DevStep<D> {
-    const caller = getCaller();
-    return new InspectStep(() => getMeta(caller), selector);
   }
 
   __pause<D>(): DevStep<D> {

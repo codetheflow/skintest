@@ -1,4 +1,4 @@
-import { compare, errors, match, qte, reinterpret, Tidy } from '@skintest/common';
+import { compare, errors, match, qte, reinterpret, ticksToTime, Tidy } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { Command, Step, Steps, tempSuite } from '@skintest/sdk';
 import * as chokidar from 'chokidar';
@@ -21,6 +21,7 @@ export function hmr(options: HMROptions): Plugin {
   const { include } = options;
   const tidy = new Tidy();
 
+  let debug = startLog();
   let wait: Wait | null = null;
 
   return (stage: OnStage) => stage({
@@ -37,7 +38,7 @@ export function hmr(options: HMROptions): Plugin {
         };
 
         const exit = (message: string) => {
-          info(message + ', exit');
+          debug(message + ' - exit');
 
           tidy.run();
           proceed();
@@ -58,7 +59,7 @@ export function hmr(options: HMROptions): Plugin {
             delete require.cache[script.path];
 
             try {
-              info('module reload');
+              debug('module reload');
               require(script.path);
             } finally {
               dispose();
@@ -83,7 +84,7 @@ export function hmr(options: HMROptions): Plugin {
               .then(right => {
                 const ops = compare(left, right, lineEquals);
                 if (!ops.length) {
-                  info('no changes, wait');
+                  debug('no new steps, wait for changes');
                   return;
                 }
 
@@ -141,7 +142,7 @@ export function hmr(options: HMROptions): Plugin {
 
                 left = right;
                 if (newSteps.length) {
-                  info(`detect ${newSteps.length} new step(s)`);
+                  debug(`detect ${newSteps.length} new step(s)`);
 
                   newSteps.sort((a, b) => a[0] - b[0]);
                   const append = newSteps.map(x => x[1]);
@@ -153,12 +154,25 @@ export function hmr(options: HMROptions): Plugin {
 
                   proceed();
                 } else {
-                  info('no changes, wait');
+                  debug('no impacting steps, wait for changes');
                 }
               });
 
             tidy.add(() => watch.close());
           });
+
+        if (!Array.from(scenario.steps).length) {
+          debug = startLog();
+
+          tty.newLine(stdout);
+          debug('no steps, wait for changes');
+
+          return new Promise((resolve) => {
+            wait = {
+              stop: resolve
+            };
+          });
+        }
       }
     },
     'step': async ({ scenario, step, site, feedback }) => {
@@ -169,8 +183,10 @@ export function hmr(options: HMROptions): Plugin {
         const isLast = index === steps.length - 1;
         const { signal } = await feedback.get();
         if (signal === 'exit' || isLast) {
+          debug = startLog();
+
           tty.newLine(stdout);
-          info('wait for changes');
+          debug('end of scenario, wait for changes');
 
           return new Promise((resolve) => {
             wait = {
@@ -185,8 +201,11 @@ export function hmr(options: HMROptions): Plugin {
   });
 }
 
-function info(message: string): void {
-  tty.replaceLine(stdout, tty.dev('hmr: '), tty.dev(message));
+function startLog() {
+  const start = Date.now();
+  return (message: string) => {
+    tty.replaceLine(stdout, tty.debug('hmr'), ' ', tty.debug(message), ' ', tty.link('+' + ticksToTime(Date.now() - start)));
+  };
 }
 
 async function getLines(steps: Steps): Promise<Line[]> {
