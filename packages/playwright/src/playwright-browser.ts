@@ -18,7 +18,7 @@ export class PlaywrightBrowser implements Browser {
   }
 
   @PlaywrightAction()
-  async openTab(id: string): Promise<void> {
+  async openPage(id: string): Promise<void> {
     const existingPage = this.pages.get(id);
     if (existingPage) {
       this.currentPage = existingPage;
@@ -40,35 +40,18 @@ export class PlaywrightBrowser implements Browser {
   }
 
   @PlaywrightAction()
-  async openWindow(id: string): Promise<void> {
-    const existingPage = this.pages.get(id);
-    if (existingPage) {
-      this.currentPage = existingPage;
-      return;
-    }
-
-    const context = await this.getContext(id);
-    const newPage = await context.newPage();
-    await this.middleware
-      .accept('page:new', {
-        id,
-        browser: this.browser,
-        context,
-        page: newPage
-      });
-
-    this.currentPage = new PlaywrightPage(newPage);
-    this.pages.set(id, this.currentPage);
-  }
-
-  @PlaywrightAction()
-  async closePage(id: string): Promise<void> {
-    const existingPage = this.pages.get(id);
-    if (!existingPage) {
+  closePage(id: string): Promise<void> {
+    const page = this.pages.get(id);
+    if (!page) {
       throw errors.pageNotFound(id);
     }
 
-    return existingPage.close();
+    if (this.currentPage === page) {
+      this.currentPage = null;
+    }
+
+    this.pages.delete(id);
+    return page.close();
   }
 
   @PlaywrightAction()
@@ -84,25 +67,16 @@ export class PlaywrightBrowser implements Browser {
     return this.currentPage;
   }
 
-  private async openPage(id: string): Promise<void> {
-    const existingPage = this.pages.get(id);
-    if (existingPage) {
-      this.currentPage = existingPage;
-      return;
+  async clear(): Promise<void> {
+    const pages = this.pages.entries();
+    for (const [id] of pages) {
+      await this.closePage(id);
     }
 
-    const context = await this.getContext(id);
-    const newPage = await context.newPage();
-    await this.middleware
-      .accept('page:new', {
-        id,
-        browser: this.browser,
-        context,
-        page: newPage
-      });
-
-    this.currentPage = new PlaywrightPage(newPage);
-    this.pages.set(id, this.currentPage);
+    if (this.context) {
+      this.context.close();
+      this.context = null;
+    }
   }
 
   private async getContext(id: string): Promise<pw.BrowserContext> {

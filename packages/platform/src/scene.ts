@@ -100,6 +100,8 @@ export class Scene {
       scenario,
       script.afterScenario
     );
+
+    await this.browser.clear();
   }
 
   private async steps(

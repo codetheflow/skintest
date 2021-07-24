@@ -3,8 +3,10 @@ import { Page } from './page';
 export interface Browser {
   readonly timeout: number;
 
-  openTab(id: string): Promise<void>;
-  openWindow(id: string): Promise<void>;
+  openPage(id: string): Promise<void>;
+  closePage(id: string): Promise<void>;
   getCurrentPage(): Page;
+
+  clear(): Promise<void>;
   close(): Promise<void>;
 }
