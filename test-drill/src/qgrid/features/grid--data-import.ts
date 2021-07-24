@@ -1,5 +1,5 @@
+import { named } from '@skintest/enterprise';
 import { feature, has, I } from '@skintest/sdk';
-import { named } from 'packages/enterprise/src/named';
 import { $example_data_import } from '../components/$example-data-import';
 import { $grid } from '../components/$grid';
 import { assets } from '../project/assets';

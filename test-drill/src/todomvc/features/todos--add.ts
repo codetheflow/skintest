@@ -58,7 +58,7 @@ feature()
     , I.see($todos.list, has.length, 10)
   )
 
-  .scenario('#now check that second todo page has updated list after reload'
+  .scenario('check that second todo page has updated list after reload'
     , I.open('page', named.b)
     , I.goto($todos.url)
 

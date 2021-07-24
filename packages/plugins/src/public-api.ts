@@ -1,5 +1,4 @@
 export { exploreNodeFeatures } from './explore-node-features';
-export { exploreNodeProjects } from './explore-node-projects';
 export { hmr } from './hmr';
 export { tagFilter } from './tag-filter';
 export { ttyDebug } from './tty-debug';

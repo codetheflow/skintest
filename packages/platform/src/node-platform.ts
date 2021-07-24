@@ -24,10 +24,11 @@ export class NodePlatform implements Platform {
     }
   }
 
-  newProject(uri: string, build: (project: Project) => Promise<void>): Promise<void> {
+  async newProject(uri: string, build: (project: Project) => Promise<void>): Promise<Platform> {
     const suite = newSuite(uri);
     const project = new NodeProject(suite, this.effect);
-    return build(project);
+    await build(project);
+    return this;
   }
 
   async destroy(): Promise<void> {

@@ -3,7 +3,7 @@
 import { extend } from '@skintest/common';
 import { nodePlatform } from '@skintest/platform';
 import { playwrightLauncher, playwrightUse } from '@skintest/playwright';
-import { exploreNodeFeatures, exploreNodeProjects, tagFilter, ttyDebug, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
+import { exploreNodeFeatures, tagFilter, ttyDebug, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
 import * as pw from 'playwright';
 
@@ -37,8 +37,7 @@ const launcher = playwrightLauncher(
 
 nodePlatform(...plugins)
   .then(platform =>
-    exploreNodeProjects(PROJECTS_FOLDER)
-      .filter(uri => /todomvc/.test(uri))
-      .forEach(uri => platform.newProject(uri, project => project.run(launcher)))
+    platform
+      .newProject(PROJECTS_FOLDER, project => project.run(launcher))
       .finally(() => platform.destroy())
   );

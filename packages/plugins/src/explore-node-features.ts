@@ -3,14 +3,23 @@ import { OnStage, Plugin } from '@skintest/platform';
 import { RuntimeScript, Suite } from '@skintest/sdk';
 import * as glob from 'glob';
 import * as path from 'path';
+import { stdout } from 'process';
+import { tty } from './tty';
 
-export function exploreNodeFeatures(patterns: string[] = ['*.js']): Plugin {
+export function exploreNodeFeatures(patterns: string[] = ['**/*--*.js']): Plugin {
+  tty.test(stdout);
+
   return (stage: OnStage) => stage({
     'project:mount': async ({ suite }) => {
-      const cwd = path.join(suite.uri, 'features');
+      const cwd = suite.uri;
+
+      tty.newLine(stdout, tty.debug('explore features: '), tty.link(cwd));
 
       const files: string[] = [];
       patterns.forEach(x => files.push(...glob.sync(x, { cwd })));
+
+      tty.newLine(stdout, tty.debug('explore features: '), tty.primary(`found ${files.length} possible matches`));
+      tty.newLine(stdout);
 
       for (const file of files) {
         const featurePath = path.join(cwd, file);

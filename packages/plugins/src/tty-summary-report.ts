@@ -95,14 +95,16 @@ export function ttySummaryReport(): Plugin {
           row[FEATURES_COL] = tty.fail(tty.CROSS_MARK) + ' ' + tty.primary(row[FEATURES_COL]);
           row[FAILING_COL] = tty.fail(fails);
         } else {
-          row[FEATURES_COL] = tty.pass(row[TESTS_COL] ? tty.CHECK_MARK : ' ') + ' ' + (row[TESTS_COL] ? tty.primary(row[FEATURES_COL]) : tty.muted(row[FEATURES_COL]));
+          row[FEATURES_COL] = tty.pass(row[PASSING_COL] ? tty.CHECK_MARK : ' ') + ' ' + (row[TESTS_COL] ? tty.primary(row[FEATURES_COL]) : tty.muted(row[FEATURES_COL]));
           row[FAILING_COL] = tty.muted('-');
         }
 
         if (footer) {
           row[FEATURES_COL] = fails
             ? tty.fail('  has failed tests!')
-            : tty.pass('  all tests passed!');
+            : summary.length > 2 
+              ? tty.pass('  all tests passed!')
+              : tty.debug('  no tests found!');
         }
 
         if (row[TESTS_COL] === 0) {
