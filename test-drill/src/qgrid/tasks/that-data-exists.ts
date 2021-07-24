@@ -2,7 +2,7 @@ import { qte } from '@skintest/common';
 import { fail, pass, TestResult } from '@skintest/sdk';
 import * as fs from 'fs';
 import * as path from 'path';
-import { data } from '../project/data';
+import { assets } from '../project/assets';
 
 /**
  * assert that file is not empty
@@ -11,7 +11,7 @@ import { data } from '../project/data';
  * @returns assertion
  */
 export async function that_data_exists(file_name: string): Promise<TestResult> {
-  const file_path = path.join(data.downloads_path, file_name);
+  const file_path = path.join(assets.downloads_path, file_name);
 
   if (fs.existsSync(file_path)) {
     const { size } = fs.statSync(file_path);

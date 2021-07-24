@@ -8,8 +8,10 @@ import { $grid } from '../components/$grid';
  */
 export async function wait_until_grid_has_rows(): Promise<Task> {
   return task(
+
     perform('wait for the first grid row'
       , I.wait($grid.row_at(0), has.state, 'visible')
-    )
+    ),
+    
   );
 }

@@ -1,6 +1,5 @@
-import { copy, paste } from '@skintest/enterprise';
-import { data, feature, has, I } from '@skintest/sdk';
-import { $page } from '../components/$page';
+import { copy, named, paste } from '@skintest/enterprise';
+import { feature, from as from, has, I } from '@skintest/sdk';
 import { $todos } from '../components/$todos';
 import { add_todo } from '../tasks/add-todo';
 import { clear_todos } from '../tasks/clear-todos';
@@ -9,7 +8,7 @@ import { generate_todos } from '../tasks/generate-todos';
 feature()
 
   .before('scenario'
-    , I.open($page.start)
+    , I.open('page', named.a)
     , I.goto($todos.url)
     , I.do(clear_todos)
   )
@@ -29,10 +28,10 @@ feature()
     , { label: 'be cool' }
   )
   .scenario('check the list has all added items'
-    , I.do(add_todo, data('label'))
+    , I.do(add_todo, from('label'))
     , I.check('todo item is added')
-    , I.see($todos.item_label_last, has.text, data('label'))
-    , I.see($todos.item_label_last, has.text, data('label'))
+    , I.see($todos.item_label_last, has.text, from('label'))
+    , I.see($todos.item_label_last, has.text, from('label'))
   )
 
   .scenario('check the input field should contain entered text'
@@ -59,15 +58,15 @@ feature()
     , I.see($todos.list, has.length, 10)
   )
 
-  .scenario('check that second todo page has updated list after reload'
-    , I.open($page.one)
+  .scenario('#now check that second todo page has updated list after reload'
+    , I.open('page', named.b)
     , I.goto($todos.url)
 
-    , I.open($page.two)
+    , I.open('page', named.c)
     , I.goto($todos.url)
     , I.do(add_todo, 'walk the dog')
 
-    , I.open($page.one)
+    , I.open('page', named.b)
     , I.reload()
 
     , I.check('page one has the same items as page two')

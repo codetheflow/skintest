@@ -2,7 +2,7 @@ import { qte } from '@skintest/common';
 import { download, handle, I, perform, task, Task } from '@skintest/sdk';
 import * as path from 'path';
 import { $grid } from '../components/$grid';
-import { data } from '../project/data';
+import { assets } from '../project/assets';
 
 /**
  * waits for download completed after the click to the grid action
@@ -19,11 +19,15 @@ export async function export_data_as(file_name: string): Promise<Task> {
   )
     .toUpperCase();
 
-  const file_path = path.join(data.downloads_path, file_name);
+  const file_path = path.join(assets.downloads_path, file_name);
+
   return task(
+
     perform(`click ${qte('Export to ${ext}')} to download`
       , I.click($grid.action(`Export to ${ext}`))
     ),
+
     handle('download', download.save(file_path)),
+
   );
 }

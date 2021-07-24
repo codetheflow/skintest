@@ -4,7 +4,7 @@ export { AssertHost, BinaryAssert, ListBinaryAssert, ListNumberAssert, NumberAss
 export { Browser } from './browser';
 export { Client, ClientElement, ClientElementList, ClientPage } from './client';
 export { AssertStep, ClientStep, Command, CommandBody, ControlStep, DevStep, DoStep, InfoStep, StepContext, StepExecutionResult } from './command';
-export { data } from './data';
+export { from } from './data';
 export { DOMElement } from './dom';
 export { Ego } from './ego';
 export { ElementClassList, ElementRef, ElementRefList, ElementState } from './element';
@@ -29,3 +29,4 @@ export { fail, InspectInfo, pass, TestFail, TestPass, TestResult } from './test-
 export { ThatFunction } from './that';
 export { till, Till } from './till';
 export { Value, ValueRef, VALUE_REF } from './value';
+

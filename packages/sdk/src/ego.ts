@@ -12,7 +12,8 @@ export interface Ego {
   __pause<D>(): DevStep<D>;
   __debug<D>(breakpoint: Breakpoint): DevStep<D>;
 
-  open<D>(name: Value<string, D>): ClientStep<D>;
+  open<D>(what: 'page', name: Value<string, D>): ClientStep<D>;
+
   goto<D>(url: Value<string, D>): ClientStep<D>;
   navigate<D>(direction: Value<'back' | 'forward', D>): ClientStep<D>;
   reload<D>(): ClientStep<D>;

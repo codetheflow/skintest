@@ -9,9 +9,12 @@ import { $grid } from '../components/$grid';
  */
 export async function import_data_from(file_path: string): Promise<Task> {
   return task(
+
     perform('click `Import file`'
       , I.click($grid.action('Import file'))
     ),
-    handle('file-dialog', fileDialog.open(file_path))
+
+    handle('file-dialog', fileDialog.open(file_path)),
+    
   );
 }

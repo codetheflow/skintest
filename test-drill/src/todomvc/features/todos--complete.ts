@@ -1,5 +1,5 @@
+import { named } from '@skintest/enterprise';
 import { feature, has, I } from '@skintest/sdk';
-import { $page } from '../components/$page';
 import { $todos } from '../components/$todos';
 import { add_todo } from '../tasks/add-todo';
 import { clear_todos } from '../tasks/clear-todos';
@@ -7,7 +7,7 @@ import { clear_todos } from '../tasks/clear-todos';
 feature()
 
   .before('scenario'
-    , I.open($page.start)
+    , I.open('page', named.a)
     , I.goto($todos.url)
     , I.do(clear_todos)
   )

@@ -17,7 +17,7 @@ export class OpenStep<D> implements ClientStep<D> {
     const { browser, materialize } = context;
 
     const name = materialize(this.name);
-    return methodResult(browser.openPage(name));
+    return methodResult(browser.openTab(name));
   }
 
   toString(): string {

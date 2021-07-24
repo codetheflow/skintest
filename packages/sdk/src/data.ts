@@ -3,7 +3,7 @@ import { Value, VALUE_REF } from './value';
 
 export type InvalidData<Type, Data, Key> = ['invalid data', Type, Data, Key];
 
-export function data<Type, Data, Key extends keyof Data>(key: Key): Data[Key] extends Type ? Value<Type, Data> : InvalidData<Type, Data, Key> {
+export function from<Type, Data, Key extends keyof Data>(key: Key): Data[Key] extends Type ? Value<Type, Data> : InvalidData<Type, Data, Key> {
   const result: Value<Type, Data> = {
     [VALUE_REF]: key,
   };

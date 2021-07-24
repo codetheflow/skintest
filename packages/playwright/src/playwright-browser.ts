@@ -18,7 +18,29 @@ export class PlaywrightBrowser implements Browser {
   }
 
   @PlaywrightAction()
-  async openPage(id: string): Promise<void> {
+  async openTab(id: string): Promise<void> {
+    const existingPage = this.pages.get(id);
+    if (existingPage) {
+      this.currentPage = existingPage;
+      return;
+    }
+
+    const context = await this.getContext(id);
+    const newPage = await context.newPage();
+    await this.middleware
+      .accept('page:new', {
+        id,
+        browser: this.browser,
+        context,
+        page: newPage
+      });
+
+    this.currentPage = new PlaywrightPage(newPage);
+    this.pages.set(id, this.currentPage);
+  }
+
+  @PlaywrightAction()
+  async openWindow(id: string): Promise<void> {
     const existingPage = this.pages.get(id);
     if (existingPage) {
       this.currentPage = existingPage;
@@ -62,11 +84,36 @@ export class PlaywrightBrowser implements Browser {
     return this.currentPage;
   }
 
+  private async openPage(id: string): Promise<void> {
+    const existingPage = this.pages.get(id);
+    if (existingPage) {
+      this.currentPage = existingPage;
+      return;
+    }
+
+    const context = await this.getContext(id);
+    const newPage = await context.newPage();
+    await this.middleware
+      .accept('page:new', {
+        id,
+        browser: this.browser,
+        context,
+        page: newPage
+      });
+
+    this.currentPage = new PlaywrightPage(newPage);
+    this.pages.set(id, this.currentPage);
+  }
+
   private async getContext(id: string): Promise<pw.BrowserContext> {
     if (this.context) {
       return this.context;
     }
 
+    return this.newContext(id);
+  }
+
+  private async newContext(id: string): Promise<pw.BrowserContext> {
     const options = await this.middleware
       .accept('context:options', {
         id,

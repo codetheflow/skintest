@@ -15,10 +15,12 @@ function add_next_todo(read: RepeatRead): Promise<Task> {
  */
 export async function generate_todos(count: number): Promise<Task> {
   return task(
+
     perform(`generate ${count} todos`
       , I.do(add_next_todo, till.item)
       , till(`list has no ${count} items`)
       , I.see($todos.list, has.no.length, count)
-    )
+    ),
+
   );
 }

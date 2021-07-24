@@ -10,9 +10,11 @@ import { $todos } from '../components/$todos';
  */
 export async function add_todo(name: string): Promise<Task> {
   return task(
+
     perform(`add todo ${qte(name)}`
       , I.fill($todos.what, name)
       , I.press('Enter')
-    )
+    ),
+    
   );
 }
