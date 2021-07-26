@@ -105,20 +105,19 @@ function toggleSupportType() {
 };
 
 function onCopyText(event) {
-  var textToCopy = event.target;
-  textToCopy.select();
-  document.execCommand("copy");
+  new ClipboardJS('.btn-copy');
   event.target.parentNode.classList.add('copied');
   setTimeout(() => event.target.parentNode.classList.remove('copied'), 1500);
 }
 
 function setCopyTextButton(elementsForCopy) {
   const items = document.querySelectorAll(elementsForCopy);
+  const isCode = elementsForCopy === 'code';
   if (items) {
     for (var i = 0; i < items.length; i++) {
       const item = items[i];
-      const copyBtnValue =  elementsForCopy === 'code' ? item.innerText : item.id ;
-      item.innerHTML += `<input class="btn-copy" onclick="onCopyText(event)" type="text" value="skintest.io/guide#${copyBtnValue}"></input>
+      const dataForCopy = isCode ? item.innerText : `skintest.io/guide#${item.id}`;
+      item.innerHTML += `<button class="btn-copy" onclick="onCopyText(event)" data-clipboard-text="${dataForCopy}"></button>
       <span class="setup__tooltip tooltip">Copied!</span>`;
     }
   }
