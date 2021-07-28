@@ -6,14 +6,14 @@ import { TaskFunction } from './task';
 import { InspectInfo, TestResult } from './test-result';
 import { Value } from './value';
 
-export type Command<T = unknown> =
-  AssertStep<T>
-  | ControlStep<T>
-  | DevStep<T>
-  | DoStep<T>
-  | InfoStep<T>
-  | CheckStep<T>
-  | ClientStep<T>;
+export type Command<D = unknown> =
+  AssertStep<D>
+  | ControlStep<D>
+  | DevStep<D>
+  | DoStep<D>
+  | InfoStep<D>
+  | CheckStep<D>
+  | ClientStep<D>;
 
 export interface StepContext {
   browser: Browser;

@@ -8,33 +8,26 @@
 * [done] single quotes, semicolon, #now lints
 
 ### m.2
-* [progress] playwright middleware
-* [progress] possibility to setup a global suite level fn to intercept routing, page settings, session storage update, global navigation event etc.
-* [progress] config to define pw options: window size, browser, device emulation etc.
+* [done] get rid of the project node explorer
+* [done] search features by `--` attribute
+* [done] playwright custom code as a task operation
+* [done] playwright middleware
+* [done] config to define pw options: window size, browser, device emulation etc.
 * skintest server
-* `grep` plugin
+* [done] grep for feature explorer
 
 ### m.3
 * better assert task, test effect('break', 'continue', 'exit')
 * define final test data, till, iif and wait APIs, use Value<> in `till` fn.
 * define tags for the future
-
-### m.4
-* and inspect to dbg in .debug, better debugging experience
-* in debug pause access to the components
-
-### m.5
-* multiple file download support api
-
-# m.6
-* multiple selector strategy in $ and $$
   
-# m.7
+# m.4
+* skintest-server
 * skintest-starter
 * default launch.json in skintest-starter
 * define skintest-dev.ts to modify local data without pushing to the git.
 
-# m.8
+# m.5
 * fill documentation
 * LICENSE
 * CODE_OF_CONDUCT
@@ -43,14 +36,22 @@
 * CODE_STYLE
 * CODE_REVIEW, CODING_STANDARDS https://github.com/angular/components
  
-# m.9
-* [alpha] HMR support
+# m.6
 * define the final folder structure and naming convention
 * [bug] `__pause` is frozen sometimes
 * add comments to the ego, selectors, tasks and keyboard keys
 * CI/CD integration
-
+* parallel runs
+  
 # m.backlog
+* multiple file download support api
+* multiple selector strategy in $ and $$
+* [alpha] HMR support
+* and inspect to dbg in .debug, better debugging experience
+* in debug pause access to the components
+* possibility to setup a global suite level fn to intercept routing, page settings, session storage update, global navigation event etc.
+* custom code between task operations
+* tty-report verbose mode (show up task's steps)
 * in multi-page scenarios show the tab near the step in tty-report
 * skintest runner, cli, bin, ts-node support(debugging)?
 * better code parsing in the `meta.ts`

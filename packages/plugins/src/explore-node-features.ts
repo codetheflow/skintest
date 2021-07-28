@@ -1,4 +1,4 @@
-import { errors, qte, Transaction, TransactionSink } from '@skintest/common';
+import { errors, extend, qte, Transaction, TransactionSink } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { RuntimeScript, Suite } from '@skintest/sdk';
 import * as glob from 'glob';
@@ -6,23 +6,36 @@ import * as path from 'path';
 import { stdout } from 'process';
 import { tty } from './tty';
 
-export function exploreNodeFeatures(patterns: string[] = ['**/*--*.js']): Plugin {
+const DEFAULT_OPTIONS: ExploreNodeFeaturesOptions = {
+  patterns: ['**/*--*.js'],
+  grep: /.*/
+};
+
+type ExploreNodeFeaturesOptions = {
+  patterns: string[],
+  grep: RegExp,
+};
+
+export function exploreNodeFeatures(options: Partial<ExploreNodeFeaturesOptions> = {}): Plugin {
   tty.test(stdout);
+
+  const { patterns, grep } = extend(DEFAULT_OPTIONS, options);
 
   return (stage: OnStage) => stage({
     'project:mount': async ({ suite }) => {
       const cwd = suite.uri;
 
-      tty.newLine(stdout, tty.debug('explore features: '), tty.link(cwd));
+      tty.newLine(stdout, tty.strong('explore features: '), tty.link(cwd));
 
-      const files: string[] = [];
-      patterns.forEach(x => files.push(...glob.sync(x, { cwd })));
+      const fileNames: string[] = [];
+      patterns.forEach(x => fileNames.push(...glob.sync(x, { cwd })));
+      const paths = fileNames.map(x => path.join(cwd, x)).filter(x => grep.test(x));
 
-      tty.newLine(stdout, tty.debug('explore features: '), tty.primary(`found ${files.length} possible matches`));
+      tty.newLine(stdout, tty.strong('explore features: '), 'found ', tty.pass(fileNames.length), ' possible matches');
+      tty.newLine(stdout, tty.strong('explore features: '), 'skipped ', tty.warn(fileNames.length - paths.length), ' by grep ', '' + grep);
       tty.newLine(stdout);
 
-      for (const file of files) {
-        const featurePath = path.join(cwd, file);
+      for (const featurePath of paths) {
 
         const sink = new TransactionSink([
           new OneFeaturePerFileConstraint(suite, featurePath),

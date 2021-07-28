@@ -9,10 +9,10 @@ import * as pw from 'playwright';
 // 4. create a new page
 // 5. close browser
 
-type BrowserTypeSite = { types: pw.BrowserType[] };
-type BrowserNewSite = { type: pw.BrowserType, options: pw.LaunchOptions };
-type ContextNewSite = { id: string, browser: pw.Browser, options: pw.BrowserContextOptions };
-type PageNewSite = { id: string, browser: pw.Browser, context: pw.BrowserContext, page: pw.Page };
+type BrowserTypeSite = { state: pw.BrowserType[] };
+type BrowserNewSite = { type: pw.BrowserType, state: pw.LaunchOptions };
+type ContextNewSite = { id: string, browser: pw.Browser, state: pw.BrowserContextOptions };
+type PageNewSite = { id: string, browser: pw.Browser, state: pw.Page };
 
 export interface PlaywrightUse<S extends PlaywrightUseSite> {
   site: S
@@ -29,7 +29,7 @@ interface PlaywrightUseCatalog {
   'browser:types': (context: BrowserTypeSite) => Promise<pw.BrowserType[]>;
   'browser:options': (context: BrowserNewSite) => Promise<pw.LaunchOptions>;
   'context:options': (context: ContextNewSite) => Promise<pw.BrowserContextOptions>;
-  'page:new': (context: PageNewSite) => Promise<void>;
+  'page:new': (context: PageNewSite) => Promise<pw.Page>;
 }
 
 export function playwrightUse<S extends PlaywrightUseSite>(site: S, callback: PlaywrightUseCatalog[S]): PlaywrightUse<S> {
@@ -54,12 +54,13 @@ export class PlaywrightMiddleware {
       throw errors.invalidOperation(`at least one middleware of type ${site} should be presented`);
     }
 
-    let state;
-    for (const use of reinterpret<PlaywrightUse<S>[]>(useList)) {
+    // for debugging using here `for (let i = 0; ...)`, not `for of`
+    for (let i = 0, length = useList.length; i < length; i++) {
+      const use = reinterpret<PlaywrightUse<S>>(useList[i]);
       const nextState = await use.accept(context);
-      state = nextState;
+      context.state = nextState;
     }
 
-    return state;
+    return context.state;
   }
 }

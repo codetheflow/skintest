@@ -1,4 +1,4 @@
-import { uuid } from './uuid';
+import { uuid } from '@skintest/common';
 
 export const named = {
   a: 'a',

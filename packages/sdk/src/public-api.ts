@@ -29,4 +29,3 @@ export { fail, InspectInfo, pass, TestFail, TestPass, TestResult } from './test-
 export { ThatFunction } from './that';
 export { till, Till } from './till';
 export { Value, ValueRef, VALUE_REF } from './value';
-

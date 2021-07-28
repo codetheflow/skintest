@@ -11,7 +11,7 @@ export class PlaywrightBrowser implements Browser {
   private currentPage: PlaywrightPage | null = null;
 
   constructor(
-    private browser: pw.Browser,
+    public browser: pw.Browser,
     private middleware: PlaywrightMiddleware,
     public timeout: number,
   ) {
@@ -26,13 +26,12 @@ export class PlaywrightBrowser implements Browser {
     }
 
     const context = await this.getContext(id);
-    const newPage = await context.newPage();
-    await this.middleware
+    const page = await context.newPage();
+    const newPage = await this.middleware
       .accept('page:new', {
         id,
         browser: this.browser,
-        context,
-        page: newPage
+        state: page,
       });
 
     this.currentPage = new PlaywrightPage(newPage);
@@ -92,7 +91,7 @@ export class PlaywrightBrowser implements Browser {
       .accept('context:options', {
         id,
         browser: this.browser,
-        options: {}
+        state: {}
       });
 
     const context = await this.browser.newContext(options);

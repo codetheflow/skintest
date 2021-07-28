@@ -35,6 +35,7 @@ export const tty = {
   ident: (count = 1): string => Array(count).fill('  ').join(''),
 
   debug: chalk.yellow,
+  warn: chalk.yellow,
   error: chalk.bgRed.white,
   fail: chalk.red,
   link: chalk.cyan,

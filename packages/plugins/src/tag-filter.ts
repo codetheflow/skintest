@@ -1,6 +1,12 @@
-import { errors, match } from '@skintest/common';
+import { errors, extend, match } from '@skintest/common';
 import { OnStage, Plugin } from '@skintest/platform';
 import { ScriptBuilder } from '@skintest/sdk';
+
+const DEFAULT_OPTIONS: TagFilterOptions = {
+  include: [],
+  exclude: [],
+  method: 'include-only-matched',
+};
 
 type TagFilterOptions = {
   include: string[],
@@ -8,8 +14,8 @@ type TagFilterOptions = {
   method: 'include-only-matched' | 'include-all-when-no-matches'
 };
 
-export function tagFilter(options: TagFilterOptions): Plugin {
-  const { include, exclude, method } = options;
+export function tagFilter(options: Partial<TagFilterOptions> = {}): Plugin {
+  const { include, exclude, method } = extend(DEFAULT_OPTIONS, options);
 
   return async (stage: OnStage) => stage({
     'project:ready': async ({ suite }) => {

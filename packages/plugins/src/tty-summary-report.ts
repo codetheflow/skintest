@@ -104,7 +104,7 @@ export function ttySummaryReport(): Plugin {
             ? tty.fail('  has failed tests!')
             : summary.length > 2 
               ? tty.pass('  all tests passed!')
-              : tty.debug('  no tests found!');
+              : tty.warn('  no tests found!');
         }
 
         if (row[TESTS_COL] === 0) {
@@ -116,7 +116,7 @@ export function ttySummaryReport(): Plugin {
         if (row[SKIPPED_COL] === 0) {
           row[SKIPPED_COL] = tty.muted('-');
         } else {
-          row[SKIPPED_COL] = tty.debug(row[SKIPPED_COL]);
+          row[SKIPPED_COL] = tty.warn(row[SKIPPED_COL]);
         }
 
         if (row[PASSING_COL] === 0) {

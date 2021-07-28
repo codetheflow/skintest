@@ -5,7 +5,7 @@ import { PlaywrightAction } from './playwright-action';
 import { PlaywrightElement } from './playwright-element';
 
 export class PlaywrightPage implements Page {
-  constructor(private page: pw.Page) {
+  constructor(public page: pw.Page) {
   }
 
   @PlaywrightAction()

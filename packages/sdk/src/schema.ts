@@ -21,12 +21,12 @@ export interface Feature extends TestScenario {
   after(what: 'feature' | 'scenario' | 'step', ...step: Command[]): Feature;
 }
 
-export interface OnlyScenario<T = undefined> {
-  scenario(name: string, ...step: Command<T>[]): TestScenario;
+export interface OnlyScenario<D = undefined> {
+  scenario(name: string, ...step: Command<D>[]): TestScenario;
 }
 
 export interface TestScenario {
-  test<T extends Data>(frame: 'data', ...data: T[]): OnlyScenario<T>;
+  test<D extends Data>(frame: 'data', ...data: D[]): OnlyScenario<D>;
   scenario(name: string, ...step: Command[]): TestScenario;
 }
 
@@ -35,8 +35,8 @@ export interface StrictFeature extends StrictTestScenario {
   after(what: 'feature' | 'scenario' | 'step', ...step: StorySchema<undefined>): StrictFeature;
 }
 
-export interface StrictOnlyScenario<T = undefined> extends OnlyScenario<T> {
-  scenario(name: string, ...step: ScenarioSchema<T>): TestScenario;
+export interface StrictOnlyScenario<D = undefined> extends OnlyScenario<D> {
+  scenario(name: string, ...step: ScenarioSchema<D>): TestScenario;
 }
 
 export interface StrictTestScenario extends TestScenario {

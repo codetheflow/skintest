@@ -1,20 +1,19 @@
 /* eslint-disable regex/invalid */
 
-import { extend } from '@skintest/common';
 import { nodePlatform } from '@skintest/platform';
-import { playwrightLauncher, playwrightUse } from '@skintest/playwright';
+import { playwrightLauncherBuilder } from '@skintest/playwright';
 import { exploreNodeFeatures, tagFilter, ttyDebug, ttyLogo, ttyReport, ttySummaryReport } from '@skintest/plugins';
 import * as path from 'path';
 import * as pw from 'playwright';
 
 const PROJECTS_FOLDER = path.resolve(__dirname, '../..');
-const LAUNCH_OPTIONS = {
+const LAUNCH_OPTIONS: pw.LaunchOptions = {
   timeout: 10 * 1000,
   headless: false,
 };
 
 const plugins = [
-  exploreNodeFeatures()
+  exploreNodeFeatures({ grep: /.*todomvc.*/ })
   , ttyLogo()
   , ttyReport()
   , ttySummaryReport()
@@ -29,11 +28,11 @@ const plugins = [
   })
 ];
 
-const launcher = playwrightLauncher(
-  playwrightUse('browser:types', async () => [pw.chromium])
-  , playwrightUse('browser:options', async ({ options }) => extend(options, LAUNCH_OPTIONS))
-  , playwrightUse('page:new', async ({ page }) => { page.setDefaultTimeout(LAUNCH_OPTIONS.timeout); })
-);
+const launcher = playwrightLauncherBuilder()
+  .browserTypes(pw.chromium)
+  .browserOptions(LAUNCH_OPTIONS)
+  .timeout(LAUNCH_OPTIONS.timeout || 30 * 1000)
+  .build();
 
 nodePlatform(...plugins)
   .then(platform =>
