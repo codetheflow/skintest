@@ -1,8 +1,14 @@
 import { ellipsis, errors, prettyStack, qte, StringDictionary } from '@skintest/common';
-import { AssertHost, DOMElement, ElementRef, ElementState, InspectInfo, TestFail } from '@skintest/sdk';
+import { TestFail } from '@skintest/sdk';
+import { DOMElement, ElementRef, ElementState } from '@skintest/web';
 import * as chalk from 'chalk';
 import * as path from 'path';
 import { WriteStream } from 'tty';
+
+export interface InspectInfo {
+  selector: string;
+  target: ElementRef<DOMElement> | ElementRef<DOMElement>[] | null;
+}
 
 const KNOWN_ERRORS = new Set(['skintest.timeout']);
 
@@ -26,6 +32,8 @@ const STACK_FILE_IGNORE = [
   path.join('lib', 'utils', 'stackTrace.js')
 ];
 
+// todo: rename to print
+// todo: add color themes - white and dark
 export const tty = {
   NEW_LINE: '\n',
   CARET: '\x1b[0G',
@@ -70,26 +78,26 @@ export const tty = {
   },
 
   writeFail(stream: WriteStream, reason: TestFail): void {
-    const { body } = reason;
+    // const { body } = reason;
 
-    // todo: make it better
-    const pivot = ['query', 'host', 'actual', 'etalon'];
-    const isBinaryAssert = pivot.every(key => key in body);
+    // // todo: make it better
+    // const pivot = ['query', 'host', 'actual', 'etalon'];
+    // const isBinaryAssert = pivot.every(key => key in body);
 
-    if (isBinaryAssert) {
-      const selector = body.query.toString();
-      const method = body.query.type === 'query' ? '$' : '$$';
-      const host: AssertHost = body.host;
+    // if (isBinaryAssert) {
+    //   const selector = body.query.toString();
+    //   const method = body.query.type === 'query' ? '$' : '$$';
+    //   const host: AssertHost = body.host;
 
-      tty.newLine(stream, tty.ident(3), ' ', tty.error(
-        `${method}(${selector}).${host.what}: ` +
-        `expected ${tty.value(body.actual)} ` +
-        `to${host.no ? ' not' : ''} ${host.how} ` +
-        `${tty.value(body.etalon)}`
-      ));
-    } else {
-      tty.newLine(stream, tty.ident(3), ' ', tty.error(reason.description));
-    }
+    //   tty.newLine(stream, tty.ident(3), ' ', tty.error(
+    //     `${method}(${selector}).${host.what}: ` +
+    //     `expected ${tty.value(body.actual)} ` +
+    //     `to${host.no ? ' not' : ''} ${host.how} ` +
+    //     `${tty.value(body.etalon)}`
+    //   ));
+    // } else {
+    tty.newLine(stream, tty.ident(3), ' ', tty.error(reason.description));
+    // }
   },
 
   async writeError(stream: WriteStream, reason: Error): Promise<void> {

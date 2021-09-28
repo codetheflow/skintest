@@ -1,5 +1,5 @@
-import { errors, getCaller, getMeta, Guard, Meta, Optional } from '@skintest/common';
-import { ClientStep, StepContext, StepExecutionResult, TaskIterable, TaskOperator } from '@skintest/sdk';
+import { errors, Guard, Meta } from '@skintest/common';
+import { ClientStep, StepExecutionResult } from '@skintest/sdk';
 import * as pw from 'playwright';
 import { PlaywrightBrowser } from './playwright-browser';
 import { PlaywrightPage } from './playwright-page';
@@ -14,29 +14,30 @@ export type PlaywrightPerformActionContext = {
   }
 }
 
-export function playwrightPerform(message: string, action: (context: PlaywrightPerformActionContext) => Promise<void>): TaskOperator<Optional<TaskIterable>, TaskIterable> {
-  const caller = getCaller();
-  const getStepMeta = () => getMeta(caller);
+// export function playwrightPerform(message: string, action: (context: PlaywrightPerformActionContext) => Promise<void>): TaskOperator<Optional<TaskIterable>, TaskIterable> {
+//   const caller = getCaller();
+//   const getStepMeta = () => getMeta(caller);
 
-  return source => [...(source || []), new PlaywrightPerformStep(getStepMeta, message, action)];
-}
-
+//   return source => [...(source || []), new PlaywrightPerformStep(getStepMeta, message, action)];
+// }
 
 export class PlaywrightPerformStep<D> implements ClientStep<D> {
   type: 'client' = 'client';
 
   constructor(
     public getMeta: () => Promise<Meta>,
+    private host: PlaywrightBrowser,
     private message: string,
     private action: (context: PlaywrightPerformActionContext) => Promise<void>
   ) {
+    Guard.notNull(host, 'host');
     Guard.notNull(getMeta, 'getMeta');
     Guard.notNull(action, 'action');
   }
 
-  async execute(context: StepContext): Promise<StepExecutionResult> {
-    const browserWrapper = context.browser as PlaywrightBrowser;
-    const browser = browserWrapper.browser;
+  async execute(): Promise<StepExecutionResult> {
+    const { host } = this;
+    const browser = host.browser;
     if (!browser) {
       throw errors.invalidOperation('browser is not found, tests are running not under the playwright');
     }
@@ -45,17 +46,17 @@ export class PlaywrightPerformStep<D> implements ClientStep<D> {
       browser,
       host: {
         getCurrentPage() {
-          const pageWrapper = (browserWrapper.getCurrentPage() as PlaywrightPage).page;
+          const pageWrapper = (host.getCurrentPage() as PlaywrightPage).page;
           return pageWrapper;
         },
         openPage(id: string) {
-          return browserWrapper.openPage(id);
+          return host.openPage(id);
         },
         closePage(id: string) {
-          return browserWrapper.closePage(id);
+          return host.closePage(id);
         },
         close() {
-          return browserWrapper.close();
+          return host.close();
         }
       }
     });

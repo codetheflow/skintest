@@ -1,5 +1,5 @@
 import { errors, Guard, NumberDictionary } from '@skintest/common';
-import { DOMElement, ElementClassList, ElementRef, ElementState } from '@skintest/sdk';
+import { DOMElement, ElementClassList, ElementRef, ElementState } from '@skintest/web';
 import * as pw from 'playwright';
 
 export class PlaywrightElement<T extends DOMElement> implements ElementRef<T> {

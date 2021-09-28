@@ -1,4 +1,6 @@
-import { has, I, perform, Task, task, till } from '@skintest/sdk';
+import { perform, Task, task, till } from '@skintest/sdk';
+import { has } from '@skintest/web';
+import { Actor } from '../../actor';
 import { $todos } from '../components/$todos';
 
 /**
@@ -6,7 +8,7 @@ import { $todos } from '../components/$todos';
  * 
  * @returns task
  */
-export async function clear_todos(): Promise<Task> {
+export async function clear_todos(I: Actor): Promise<Task> {
   return task(
 
     perform('remove items'
@@ -15,6 +17,5 @@ export async function clear_todos(): Promise<Task> {
       , till('list has items')
       , I.see($todos.list, has.length.above, 0)
     ),
-    
   );
 }

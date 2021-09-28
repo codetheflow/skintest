@@ -1,9 +1,11 @@
 import { named } from '@skintest/enterprise';
-import { feature, has, I } from '@skintest/sdk';
+import { feature } from '@skintest/sdk';
+import { I } from '../../actor';
 import { $example_data_import } from '../components/$example-data-import';
 import { $grid } from '../components/$grid';
 import { assets } from '../project/assets';
 import { import_data_from } from '../tasks/import-data-from';
+
 
 feature()
 

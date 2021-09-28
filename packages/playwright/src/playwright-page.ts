@@ -1,5 +1,6 @@
 import { Data, reinterpret } from '@skintest/common';
-import { DOMElement, ElementRef, ElementRefList, KeyboardKey, Page } from '@skintest/sdk';
+import { KeyboardKey } from '@skintest/sdk';
+import { DOMElement, ElementRef, ElementRefList, Page } from '@skintest/web';
 import * as pw from 'playwright';
 import { PlaywrightAction } from './playwright-action';
 import { PlaywrightElement } from './playwright-element';

@@ -34,7 +34,8 @@
   "peerDependencies": {
     "@skintest/common": "*",
     "@skintest/platform": "*",
-    "@skintest/sdk": "*"
+    "@skintest/sdk": "*",
+    "@skintest/web": "*"
   },
   "devDependencies": {
     "@types/node": "16.4.1",

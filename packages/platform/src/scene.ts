@@ -1,5 +1,5 @@
 import { Data, errors, Guard, isObject, reinterpret } from '@skintest/common';
-import { Browser, pass, RepeatEntry, Scenario, Script, StepExecutionResult, Steps, Suite, TestResult, Value, VALUE_REF } from '@skintest/sdk';
+import { pass, RepeatEntry, Scenario, Script, StepExecutionResult, Steps, Suite, TestResult, Value, VALUE_REF } from '@skintest/sdk';
 import { Attempt } from './attempt';
 import { Feedback, FeedbackList, FeedbackResult } from './feedback';
 import { CommandScope, Datum, Staging } from './stage';
@@ -16,7 +16,6 @@ export class Scene {
   constructor(
     private suite: Suite,
     private effect: Staging,
-    private browser: Browser,
     private attempt: Attempt,
   ) {
   }
@@ -31,7 +30,6 @@ export class Scene {
 
     const scope = {
       suite: this.suite,
-      browser: this.browser,
       script,
     };
 
@@ -69,7 +67,6 @@ export class Scene {
     const afterScenarioEffect = this.effect('scenario:after');
     const scope = {
       suite: this.suite,
-      browser: this.browser,
       script,
       scenario,
     };
@@ -100,8 +97,6 @@ export class Scene {
       scenario,
       script.afterScenario
     );
-
-    await this.browser.clear();
   }
 
   private async steps(
@@ -117,7 +112,6 @@ export class Scene {
     for (const step of steps) {
       const scope = {
         suite: this.suite,
-        browser: this.browser,
         script,
         scenario,
         step,
@@ -179,13 +173,12 @@ export class Scene {
     datum: Datum = [0, undefined],
   ): Promise<FeedbackResult> {
 
-    const { browser, attempt } = this;
+    const { attempt } = this;
 
     const stepEffect = this.effect('step');
 
     const scope = {
       suite: this.suite,
-      browser,
       site,
       script,
       scenario,
@@ -220,7 +213,7 @@ export class Scene {
       try {
         const run = await attempt.step(() => {
           const [, command] = step;
-          return command.execute({ browser, materialize });
+          return command.execute({ materialize });
         });
 
         const runPlan =

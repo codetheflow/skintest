@@ -1,10 +1,19 @@
-import { has, I, perform, RepeatRead, Task, task, till } from '@skintest/sdk';
+import { perform, RepeatRead, Task, task, till } from '@skintest/sdk';
+import { has } from '@skintest/web';
+import { Actor } from '../../actor';
 import { $todos } from '../components/$todos';
 import { add_todo } from './add-todo';
 
-function add_next_todo(read: RepeatRead): Promise<Task> {
+async function add_next_todo(I: Actor, read: RepeatRead): Promise<Task> {
   const { index } = read.current();
-  return add_todo(`generate todo #${index}`);
+  
+  return task(
+    
+    perform('add next todo'
+      , I.do(add_todo, `generate todo #${index}`)
+    )
+
+  );
 }
 
 /**
@@ -13,7 +22,8 @@ function add_next_todo(read: RepeatRead): Promise<Task> {
  * @param count number of items to generate
  * @returns generate todos client task
  */
-export async function generate_todos(count: number): Promise<Task> {
+export async function generate_todos(I: Actor, count: number): Promise<Task> {
+
   return task(
 
     perform(`generate ${count} todos`

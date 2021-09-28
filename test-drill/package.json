@@ -44,9 +44,10 @@
     "@skintest/common": "*",
     "@skintest/enterprise": "*",
     "@skintest/platform": "*",
+    "@skintest/playwright": "*",
     "@skintest/plugins": "*",
     "@skintest/sdk": "*",
-    "@skintest/playwright": "*",
+    "@skintest/web": "*",
     "playwright": "1.13.0"
   }
 }

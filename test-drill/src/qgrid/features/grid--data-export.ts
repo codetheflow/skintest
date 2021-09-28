@@ -1,8 +1,9 @@
 import { my, named } from '@skintest/enterprise';
-import { feature, I } from '@skintest/sdk';
+import { feature } from '@skintest/sdk';
+import { I } from '../../actor';
+import { that_data_exists } from '../claims/that-data-exists';
 import { $example_data_export } from '../components/$example-data-export';
 import { export_data_as } from '../tasks/export-data-as';
-import { that_data_exists } from '../tasks/that-data-exists';
 import { wait_until_grid_has_rows } from '../tasks/wait-until-grid-has-rows';
 
 feature()

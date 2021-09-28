@@ -1,4 +1,5 @@
-import { fileDialog, handle, I, perform, Task, task } from '@skintest/sdk';
+import { handle, perform, Task, task } from '@skintest/sdk';
+import { CanBrowseTheWeb } from 'packages/web/src/abilities/can-browse-the-web';
 import { $grid } from '../components/$grid';
 
 /**
@@ -7,14 +8,16 @@ import { $grid } from '../components/$grid';
  * @param file_path import file path
  * @returns task
  */
-export async function import_data_from(file_path: string): Promise<Task> {
+export async function import_data_from(I: CanBrowseTheWeb, file_path: string): Promise<Task> {
   return task(
 
     perform('click `Import file`'
       , I.click($grid.action('Import file'))
     ),
 
-    handle('file-dialog', fileDialog.open(file_path)),
-    
+    handle('open file from the toolbar action'
+      , I.wait('file-dialog', file_path)
+    ),
+
   );
 }

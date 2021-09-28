@@ -1,5 +1,7 @@
 import { copy, named, paste } from '@skintest/enterprise';
-import { feature, from as from, has, I } from '@skintest/sdk';
+import { feature, from } from '@skintest/sdk';
+import { has } from '@skintest/web';
+import { I } from '../../actor';
 import { $todos } from '../components/$todos';
 import { add_todo } from '../tasks/add-todo';
 import { clear_todos } from '../tasks/clear-todos';

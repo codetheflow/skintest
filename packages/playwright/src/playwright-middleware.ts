@@ -9,8 +9,8 @@ import * as pw from 'playwright';
 // 4. create a new page
 // 5. close browser
 
-type BrowserTypeSite = { state: pw.BrowserType[] };
-type BrowserNewSite = { type: pw.BrowserType, state: pw.LaunchOptions };
+type BrowserTypeSite = { state: pw.BrowserType };
+type BrowserNewSite = { state: pw.LaunchOptions };
 type ContextNewSite = { id: string, browser: pw.Browser, state: pw.BrowserContextOptions };
 type PageNewSite = { id: string, browser: pw.Browser, state: pw.Page };
 
@@ -20,13 +20,13 @@ export interface PlaywrightUse<S extends PlaywrightUseSite> {
 }
 
 type PlaywrightUseSite =
-  'browser:types'
+  'browser:type'
   | 'browser:options'
   | 'context:options'
   | 'page:new';
 
 interface PlaywrightUseCatalog {
-  'browser:types': (context: BrowserTypeSite) => Promise<pw.BrowserType[]>;
+  'browser:type': (context: BrowserTypeSite) => Promise<pw.BrowserType>;
   'browser:options': (context: BrowserNewSite) => Promise<pw.LaunchOptions>;
   'context:options': (context: ContextNewSite) => Promise<pw.BrowserContextOptions>;
   'page:new': (context: PageNewSite) => Promise<pw.Page>;

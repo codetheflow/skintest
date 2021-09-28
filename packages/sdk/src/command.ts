@@ -1,9 +1,8 @@
 import { Meta } from '@skintest/common';
-import { Browser } from './browser';
 import { RepeatWrite } from './repeat';
 import { Steps } from './script';
 import { TaskFunction } from './task';
-import { InspectInfo, TestResult } from './test-result';
+import { TestResult } from './test-result';
 import { Value } from './value';
 
 export type Command<D = unknown> =
@@ -16,24 +15,17 @@ export type Command<D = unknown> =
   | ClientStep<D>;
 
 export interface StepContext {
-  browser: Browser;
   materialize<V, D>(value: Value<V, D>): V;
 }
 
 export type StepExecutionResult =
   StepExecutionConditionResult
   | StepExecutionEventResult
-  | StepExecutionInspectResult
   | StepExecutionMethodResult
   | StepExecutionPerformResult
   | StepExecutionTaskResult
   | StepExecutionRepeatResult
   | StepExecutionAssertResult;
-
-export type StepExecutionInspectResult = {
-  type: 'inspect',
-  info: InspectInfo,
-}
 
 export type StepExecutionAssertResult = {
   type: 'assert',

@@ -4,6 +4,7 @@ export { extend } from './extend';
 export { Guard } from './guard';
 export { CanAppend, Indexed } from './indexed';
 export { getCaller, getMeta, Meta } from './meta';
+export { mixin } from './mixin';
 export { retry, RetryOptions } from './retry';
 export { capture, prettyStack, StackFrame, withSourceMap } from './stack-trace';
 export { Tidy } from './tidy';

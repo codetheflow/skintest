@@ -66,3 +66,49 @@ lint ?
 
 * yarn cli feature:
 * -- project: [project1, project2, project3]
+
+
+```typescript
+export async function clear_todos(I: Actor): Promise<Task> {
+  return task(
+
+    perform('remove items'
+      , I.hover($todos.item_label_at(0))
+      , I.click($todos.item_remove_at(0))
+      , till('list has items')
+      , I.see($todos.list, has.length.above, 0)
+    ),
+
+    perform('remove items'
+      , I.do(clear_todos)
+      , iif('list has items')
+      , I.see($todos.list, has.length.above, 0)
+    ),
+
+    perform('remove items' 
+      , I.do('remove items')
+      , I.see(that_list_has_items)
+      , I.wait('download', )
+    )
+
+    iif('list has items'
+      , I.see($todos.list, has.length.above, 0)
+      , I.say('remove items')
+      , I.do(clear_todos)
+    )
+
+    till('list has items'
+      , I.see($todos.list, has.length.above, 0)
+      , I.say('remove item')
+      , I.hover($todos.item_label_at(0))
+      , I.click($todos.item_remove_at(0))
+    ),
+
+    perform('export csv file'
+      , I.click('')
+      , I.click('')
+    )
+    
+  );
+}
+```

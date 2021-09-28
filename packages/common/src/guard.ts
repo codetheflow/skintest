@@ -1,6 +1,7 @@
 import { errors, Exception } from './errors';
 import { isUndefined } from './utils';
 
+// todo: refactor to ensure, ensure<T>(name: string, value: T, isDefined())
 export class Guard {
   static notUndefined<T>(value: T, name: string): Exception | void {
     if (isUndefined(value)) {

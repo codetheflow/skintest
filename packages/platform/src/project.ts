@@ -1,5 +1,4 @@
-import { Launcher } from './launcher';
 
-export interface Project {
-  run(launcher: Launcher): Promise<void>;
+export interface Project<S> {
+  run(settings: S): Promise<void>;
 }

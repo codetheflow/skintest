@@ -1,4 +1,4 @@
-import { $, $$ } from '@skintest/sdk';
+import { $, $$ } from '@skintest/web';
 import { env } from '../project/env';
 
 export const $todos = {

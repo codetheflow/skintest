@@ -41,7 +41,7 @@
   },
   "peerDependencies": {
     "@skintest/common": "*",
-    "@skintest/platform": "*",
-    "@skintest/sdk": "*"
+    "@skintest/sdk": "*",
+    "@skintest/web": "*"
   }
 }

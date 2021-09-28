@@ -1,5 +1,6 @@
 import { qte } from '@skintest/common';
-import { download, handle, I, perform, task, Task } from '@skintest/sdk';
+import { perform, task, Task } from '@skintest/sdk';
+import { CanBrowseTheWeb, download } from '@skintest/web';
 import * as path from 'path';
 import { $grid } from '../components/$grid';
 import { assets } from '../project/assets';
@@ -10,7 +11,7 @@ import { assets } from '../project/assets';
  * @param file_name name of the file
  * @returns task
  */
-export async function export_data_as(file_name: string): Promise<Task> {
+export async function export_data_as(I: CanBrowseTheWeb, file_name: string): Promise<Task> {
   const ext = (
     path
       .extname(file_name)
@@ -25,9 +26,10 @@ export async function export_data_as(file_name: string): Promise<Task> {
 
     perform(`click ${qte('Export to ${ext}')} to download`
       , I.click($grid.action(`Export to ${ext}`))
+      , I.wait('download', download.save(file_path))
     ),
 
-    handle('download', download.save(file_path)),
+    wait('download', download.save(file_path)),
 
   );
 }

@@ -1,4 +1,5 @@
-import { has, I, perform, Task, task } from '@skintest/sdk';
+import { perform, Task, task } from '@skintest/sdk';
+import { CanBrowseTheWeb } from 'packages/web/src/abilities/can-browse-the-web';
 import { $grid } from '../components/$grid';
 
 /**
@@ -6,7 +7,7 @@ import { $grid } from '../components/$grid';
  * 
  * @returns task
  */
-export async function wait_until_grid_has_rows(): Promise<Task> {
+export async function wait_until_grid_has_rows(I: CanBrowseTheWeb): Promise<Task> {
   return task(
 
     perform('wait for the first grid row'

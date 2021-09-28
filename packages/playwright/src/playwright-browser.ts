@@ -1,5 +1,5 @@
 import { errors } from '@skintest/common';
-import { Browser, Page } from '@skintest/sdk';
+import { Browser, Page } from '@skintest/web';
 import * as pw from 'playwright';
 import { PlaywrightAction } from './playwright-action';
 import { PlaywrightMiddleware } from './playwright-middleware';
@@ -13,7 +13,6 @@ export class PlaywrightBrowser implements Browser {
   constructor(
     public browser: pw.Browser,
     private middleware: PlaywrightMiddleware,
-    public timeout: number,
   ) {
   }
 

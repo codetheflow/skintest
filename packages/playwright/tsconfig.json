@@ -16,7 +16,7 @@
       "path": "../sdk"
     },
     {
-      "path": "../platform"
+      "path": "../web"
     }
   ]
 }

@@ -1,7 +1,7 @@
 import { getCaller, getMeta, reinterpret } from '@skintest/common';
 import { ControlStep } from './command';
 import { RepeatRead, RepeatYield } from './repeat';
-import { TillStep } from './steps/till';
+import { TillStep } from './steps/till-step';
 
 export interface Till {
   <D>(message: string): ControlStep<D>;

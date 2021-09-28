@@ -8,7 +8,7 @@ export type ValueRef<Data> = {
 
 export type Value<Type, Data> = Type | ValueRef<Data>;
 
-export function stringify<T, D>(value: Value<T, D>): string {
+export function stringifyValue<T, D>(value: Value<T, D>): string {
   if (isObject(value) && VALUE_REF in value) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const key = reinterpret<any>(value)[VALUE_REF];

@@ -1,10 +1,16 @@
 import { newSuite } from '@skintest/sdk';
-import { NodeProject } from './node-project';
+import { NodeProject, NodeProjectSettings } from './node-project';
 import { Platform } from './platform';
 import { orchestrate, Plugin } from './plugin';
 import { Project } from './project';
 
-export class NodePlatform implements Platform {
+export async function nodePlatform<S extends NodeProjectSettings>(plugins: Plugin[]): Promise<Platform<S>> {
+  const platform = new NodePlatform(plugins);
+  await platform.init();
+  return platform;
+}
+
+class NodePlatform<S extends NodeProjectSettings> implements Platform<S> {
   private effect = orchestrate([
     ...this.plugins
   ]);
@@ -24,10 +30,11 @@ export class NodePlatform implements Platform {
     }
   }
 
-  async newProject(uri: string, build: (project: Project) => Promise<void>): Promise<Platform> {
+  async newProject(uri: string, build: (project: Project<S>) => Promise<void>): Promise<Platform<S>> {
     const suite = newSuite(uri);
     const project = new NodeProject(suite, this.effect);
-    await build(project);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await build(project as any);
     return this;
   }
 

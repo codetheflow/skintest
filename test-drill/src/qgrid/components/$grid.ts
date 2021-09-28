@@ -1,4 +1,4 @@
-import { $, $$ } from '@skintest/sdk';
+import { $, $$ } from '@skintest/web';
 
 export const $grid = {
   row_list: $$<HTMLTableRowElement>`tr[q-grid-core-source="body"]`

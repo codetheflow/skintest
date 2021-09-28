@@ -1,9 +1,4 @@
-import { qte, StringDictionary } from '@skintest/common';
-import { AssertHost } from './assert';
-import { DOMElement } from './dom';
-import { ElementRef } from './element';
-import { formatSelector } from './format';
-import { Query, QueryList } from './query';
+import { StringDictionary } from '@skintest/common';
 
 // todo: make enum, solution as hyperlink?
 export interface TestFail {
@@ -19,11 +14,6 @@ export interface TestPass {
   description: string;
 }
 
-export interface InspectInfo {
-  selector: string;
-  target: ElementRef<DOMElement> | ElementRef<DOMElement>[] | null;
-}
-
 export type TestResult = TestFail | TestPass;
 
 export function pass(description = ''): TestPass {
@@ -34,46 +24,46 @@ export function pass(description = ''): TestPass {
 }
 
 export const fail = {
-  condition(
-    body: {
-      host: AssertHost,
-      query: Query | QueryList,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      etalon: any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      actual: any,
-    }): TestFail {
-    const selector = formatSelector(body.query.toString());
-    const method = body.query.type === 'query' ? '$' : '$$';
+  // statement(
+  //   body: {
+  //     assert: AssertHost,
+  //     query: Query | QueryList,
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     expected: any,
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     received: any,
+  //   }): TestFail {
+  //   const selector = body.query.toString();
+  //   const method = body.query.type === 'query' ? '$' : '$$';
 
-    const description =
-      `${method}(${selector}).${body.host.what}: ` +
-      `expected ${qte(body.actual)} to ` +
-      `${body.host.no ? 'not' : ''} ` +
-      `${body.host.how} ${qte(body.etalon)}`;
+  //   const description =
+  //     `${method}(${selector}).${body.assert.what}: ` +
+  //     `expected ${qte(body.received)} to ` +
+  //     `${body.assert.no ? 'not' : ''} ` +
+  //     `${body.assert.how} ${qte(body.expected)}`;
 
-    return {
-      body,
-      description,
-      solution: 'check assert condition',
-      status: 'fail',
-    };
-  },
-  element(
-    body: {
-      query: Query | QueryList,
-    }
-  ): TestFail {
-    const selector = formatSelector(body.query.toString());
-    const method = body.query.type === 'query' ? '$' : '$$';
+  //   return {
+  //     body,
+  //     description,
+  //     solution: 'check assert condition',
+  //     status: 'fail',
+  //   };
+  // },
+  // element(
+  //   body: {
+  //     query: Query | QueryList,
+  //   }
+  // ): TestFail {
+  //   const selector = body.query.toString();
+  //   const method = body.query.type === 'query' ? '$' : '$$';
 
-    return {
-      body,
-      description: `${method}(${selector}) is not reachable`,
-      solution: 'check selector correctness and availability',
-      status: 'fail',
-    };
-  },
+  //   return {
+  //     body,
+  //     description: `${method}(${selector}) is not reachable`,
+  //     solution: 'check selector correctness and availability',
+  //     status: 'fail',
+  //   };
+  // },
   reason(
     body: {
       description: string,

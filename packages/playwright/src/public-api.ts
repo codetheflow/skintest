@@ -1,3 +1,3 @@
-export { playwrightLauncherBuilder } from './playwright-launcher-builder';
+export { playwrightBrowserBuilder } from './playwright-browser-builder';
 export { playwrightUse } from './playwright-middleware';
-export { playwrightPerform, PlaywrightPerformActionContext } from './playwright-perform';
+export { PlaywrightPerformActionContext } from './playwright-perform';

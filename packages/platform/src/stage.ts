@@ -1,5 +1,5 @@
 import { Data } from '@skintest/common';
-import { Browser, Scenario, Script, Step, StepExecutionResult, Suite } from '@skintest/sdk';
+import { Scenario, Script, Step, StepExecutionResult, Suite } from '@skintest/sdk';
 import { Feedback } from './feedback';
 import { ScriptZone, Zone } from './zone';
 
@@ -20,13 +20,11 @@ export type ProjectStopScope = ProjectStartScope;
 export type ProjectReadyScope = ProjectStartScope;
 export type ProjectErrorScope = ProjectStartScope & { reason: Error };
 
-export type FeatureScope = ProjectStartScope & { script: Script, browser: Browser };
-
+export type FeatureScope = ProjectStartScope & { script: Script };
 export type ScenarioScope = FeatureScope & { scenario: Scenario };
 
 export type Datum = [number, Data | undefined];
 export type StepScope = ScenarioScope & { step: Step, datum: Datum };
-
 export type CommandScope = StepScope & { site: StageSite, path: Array<StepExecutionResult['type']>, feedback: Feedback };
 
 export type Stages = {
