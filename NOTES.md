@@ -69,6 +69,31 @@ lint ?
 
 
 ```typescript
+
+export const clear_todos = (I: Actor, mode: 'up' | 'down') => 
+  tap(async () => console.log(`I'm in clear_todos task`),
+
+  perform('open clear todos pages'
+    , I.open('clear_todos.com')
+  ),
+
+  perform('remove first item'
+    , I.hover($todos.item_label_at(0))
+    , I.click($todos.item_remove_at(0))
+  ),
+
+  till('there are items'
+    , I.see($todos.list, has.length.above, 0)
+    , perform('remove first item'
+        , I.hover($todos.item_label_at(0))
+        , I.click($todos.item_remove_at(0)
+      )  
+  )
+
+  // how to implement forEach?
+
+);
+
 export async function clear_todos(I: Actor): Promise<Task> {
   return task(
 
@@ -97,16 +122,48 @@ export async function clear_todos(I: Actor): Promise<Task> {
       , I.do(clear_todos)
     )
 
+    when('list has one item'
+      ,  I.see($todos.list, has.length, 1)
+      
+      ,  perform('remove first item'
+          , I.hover($todos.item_label_at(0))
+          , I.click($todos.item_remove_at(0))
+      )
+    )
+
     till('list has items'
       , I.see($todos.list, has.length.above, 0)
-      , I.say('remove item')
-      , I.hover($todos.item_label_at(0))
-      , I.click($todos.item_remove_at(0))
+      
+      , perform('remove top item'
+          , I.hover($todos.item_label_at(0))
+          , I.click($todos.item_remove_at(0))
+      )
     ),
+
+    // till , continue and break
+    // when - skip, skip.if, nested if, nested loop
+
+    // test($todos.list, has.length
+    //   , when(0)
+    //   , perform()
+    //   , when
+    // )
+    //   , I.test($todos.list, has.length ,{
+    //     0: perform()
+    //   })
+    // )
 
     perform('export csv file'
       , I.click('')
       , I.click('')
+    ),
+
+    handle('download csv file'
+      , I.wait('download')
+    
+      , perform('export csv file'
+          , I.click('export button')
+      ),
     )
     
   );
